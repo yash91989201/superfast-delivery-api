@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
+
+enum AuthType {
+  CUSTOMER = 0;
+  DELIVERY_PARTNER = 1;
+  VENDOR = 2;
+  ADMIN = 3;
+}
+
+message Auth {
+  string id = 1;
+  optional string email = 2;
+  bool email_verified = 3;
+  optional string phone = 4;
+  AuthType type = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  optional google.protobuf.Timestamp deleted_at = 8;
+}
+
+message SignInWithEmailReq {
+  string email = 1;
+optional  string otp = 2;
+}
+
+message SignInWithPhoneReq {
+  string phone = 1;
+  optional string otp = 2;
+}
+
+message SignInWithGoogleReq {
+  string id_token = 1;
+}
+
+message GetAuthByIdReq{
+string id =1;
+}
+
+message GetAuthReq{
+optional string email=1;
+optional string phone=2;
+}
+
+service AuthenticationService {
+  rpc SignInWithEmail(SignInWithEmailReq) returns (Auth) {}
+  rpc SignInWithPhone(SignInWithPhoneReq) returns (Auth) {}
+  rpc SignInWithGoogle(SignInWithGoogleReq) returns (Auth) {}
+  rpc GetAuthById(GetAuthByIdReq) returns(Auth){}
+  rpc GetAuth(GetAuthReq) returns(Auth){}
+}

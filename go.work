@@ -1,0 +1,9 @@
+go 1.23.0
+
+use (
+	./common
+	./gateways/graphql
+	./gateways/rest
+	./services/user
+	./services/authentication
+)

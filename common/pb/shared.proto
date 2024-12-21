@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
+
+message EmptyReq{}
+message EmptyRes{}
+
+message Date {
+  int32 year = 1;
+  int32 month = 2;
+  int32 day = 3;
+}
+
+message Location {
+  double latitude = 1;
+  double longitude = 2;
+}
+

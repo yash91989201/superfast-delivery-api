@@ -1,0 +1,78 @@
+scalar Date
+scalar DateTime
+
+enum AuthType {
+  CUSTOMER
+  DELIVERY_PARTNER
+  VENDOR
+  ADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHERS
+  UNDISCLOSED
+}
+
+type Profile {
+  id: String!
+  name: String!
+  image_url: String
+  dob: Date
+  anniversary: Date
+  gender: Gender
+  auth_id: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type Auth {
+  id: String!
+  email: String
+  email_verified: Boolean
+  phone: String
+  type: AuthType!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type User {
+  auth: Auth!
+  profile: Profile
+}
+
+input SignInWithEmailInput {
+  email: String!
+  otp: String
+}
+
+input SignInWithPhoneInput {
+  phone: String!
+  otp: String
+}
+
+input SignInWithGoogleInput {
+  id_token: String!
+}
+
+input GetAuthByIdInput {
+  id: String!
+}
+
+input GetAuthInput {
+  email: String
+  phone: String
+}
+
+type Query {
+  authById(input: GetAuthByIdInput!): Auth
+  auth(input: GetAuthInput!): Auth
+}
+
+type Mutation {
+  SignInWithEmail(input: SignInWithEmailInput!): User!
+  SignInWithPhone(input: SignInWithPhoneInput!): User!
+  SignInWithGoogle(input: SignInWithGoogleInput!): User!
+}

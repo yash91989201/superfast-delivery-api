@@ -1,0 +1,151 @@
+name: superfast_delivery_api
+
+services:
+  rest_gateway:
+    build:
+      context: .
+      dockerfile: ./gateways/rest/Dockerfile
+    container_name: rest_gateway
+    environment:
+      PORT: ${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    networks:
+      - superfast_delivery
+    mem_limit: 128m
+    cpus: 1
+    restart: on-failure
+
+  graphql_gateway:
+    build:
+      context: .
+      dockerfile: ./gateways/graphql/Dockerfile
+    container_name: graphql_gateway
+    environment:
+      PORT: ${GRAPHQL_PORT}
+      AUTHENTICATION_SERVICE_URL: ${AUTHENTICATION_SERVICE_URL}
+      USER_SERVICE_URL: ${USER_SERVICE_URL}
+    ports:
+      - "${GRAPHQL_PORT}:${GRAPHQL_PORT}"
+    networks:
+      - superfast_delivery
+    mem_limit: 128m
+    cpus: 1
+    depends_on:
+      - authentication_service
+    restart: on-failure
+
+  authentication_service:
+    build:
+      context: .
+      dockerfile: ./services/authentication/Dockerfile
+    container_name: authentication_service
+    environment:
+      DATABASE_URL: ${AUTHENTICATION_DATABASE_URL}
+      SERVICE_URL: ${AUTHENTICATION_SERVICE_URL}
+    networks:
+      - superfast_delivery
+    mem_limit: 128m
+    cpus: 1
+    depends_on:
+      - authentication_db
+    restart: on-failure
+
+  authentication_db:
+    image: mysql:9.1.0
+    container_name: authentication_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${AUTHENTICATION_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${AUTHENTICATION_DB_NAME}
+      MYSQL_USER: ${AUTHENTICATION_DB_USER}
+      MYSQL_PASSWORD: ${AUTHENTICATION_DB_PASSWORD}
+    mem_limit: 1024m
+    cpus: 1
+    networks:
+      - superfast_delivery
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin --user=root --password=${AUTHENTICATION_DB_ROOT_PASSWORD} --host=localhost --port=3306 ping",
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  authentication_db_migrator:
+    image: migrate/migrate
+    volumes:
+      - ./services/authentication/db/migrations:/migrations
+    working_dir: /migrations
+    command:
+      [
+        "-database",
+        "mysql://${AUTHENTICATION_DB_USER}:${AUTHENTICATION_DB_PASSWORD}@tcp(${AUTHENTICATION_DB_HOST}:${AUTHENTICATION_DB_PORT})/${AUTHENTICATION_DB_NAME}",
+        "-path",
+        "/migrations",
+        "up",
+      ]
+    container_name: authentication_db_migrator
+    depends_on:
+      authentication_db:
+        condition: service_healthy
+    restart: none
+    mem_limit: 64m
+    cpus: 0.25
+    networks:
+      - superfast_delivery
+
+  user_db:
+    image: mysql:9.1.0
+    container_name: user_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${USER_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${USER_DB_NAME}
+      MYSQL_USER: ${USER_DB_USER}
+      MYSQL_PASSWORD: ${USER_DB_PASSWORD}
+    mem_limit: 1024m
+    cpus: 1
+    networks:
+      - superfast_delivery
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin --user=root --password=${USER_DB_ROOT_PASSWORD} --host=localhost --port=3306 ping",
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  user_db_migrator:
+    image: migrate/migrate
+    volumes:
+      - ./services/user/db/migrations:/migrations
+    working_dir: /migrations
+    command:
+      [
+        "-database",
+        "mysql://${USER_DB_USER}:${USER_DB_PASSWORD}@tcp(${USER_DB_HOST}:${USER_DB_PORT})/${USER_DB_NAME}",
+        "-path",
+        "/migrations",
+        "up",
+      ]
+    container_name: user_db_migrator
+    depends_on:
+      user_db:
+        condition: service_healthy
+    restart: none
+    mem_limit: 64m
+    cpus: 0.25
+    networks:
+      - superfast_delivery
+
+networks:
+  superfast_delivery:
+    driver: bridge
+    name: superfast_delivery_network
