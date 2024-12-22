@@ -7,18 +7,18 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func ToPbAuthType(a AuthType) pb.AuthType {
+func ToPbAuthRole(a AuthRole) pb.AuthRole {
 	switch a {
-	case AuthTypeCustomer:
-		return pb.AuthType_CUSTOMER
-	case AuthTypeDeliveryPartner:
-		return pb.AuthType_DELIVERY_PARTNER
-	case AuthTypeVendor:
-		return pb.AuthType_VENDOR
-	case AuthTypeAdmin:
-		return pb.AuthType_ADMIN
+	case AuthRoleCustomer:
+		return pb.AuthRole_CUSTOMER
+	case AuthRoleDeliveryPartner:
+		return pb.AuthRole_DELIVERY_PARTNER
+	case AuthRoleVendor:
+		return pb.AuthRole_VENDOR
+	case AuthRoleAdmin:
+		return pb.AuthRole_ADMIN
 	default:
-		return pb.AuthType_CUSTOMER
+		return pb.AuthRole_CUSTOMER
 	}
 }
 
@@ -85,7 +85,7 @@ func ToPbAuth(a *Auth) *pb.Auth {
 		Email:         a.Email,
 		EmailVerified: *a.EmailVerified,
 		Phone:         a.Phone,
-		Type:          ToPbAuthType(a.Type),
+		Role:          ToPbAuthRole(a.Role),
 		CreatedAt:     ToPbTime(&a.CreatedAt),
 		UpdatedAt:     ToPbTime(&a.UpdatedAt),
 		DeletedAt:     ToPbTime(a.DeletedAt),
@@ -106,18 +106,18 @@ func ToPbProfile(p *Profile) *pb.Profile {
 	}
 }
 
-func ToAuthType(t pb.AuthType) AuthType {
+func ToAuthRole(t pb.AuthRole) AuthRole {
 	switch t {
-	case pb.AuthType_CUSTOMER:
-		return AuthTypeCustomer
-	case pb.AuthType_DELIVERY_PARTNER:
-		return AuthTypeDeliveryPartner
-	case pb.AuthType_VENDOR:
-		return AuthTypeVendor
-	case pb.AuthType_ADMIN:
-		return AuthTypeAdmin
+	case pb.AuthRole_CUSTOMER:
+		return AuthRoleCustomer
+	case pb.AuthRole_DELIVERY_PARTNER:
+		return AuthRoleDeliveryPartner
+	case pb.AuthRole_VENDOR:
+		return AuthRoleVendor
+	case pb.AuthRole_ADMIN:
+		return AuthRoleAdmin
 	default:
-		return AuthTypeCustomer
+		return AuthRoleCustomer
 	}
 }
 
@@ -178,7 +178,7 @@ func ToAuth(a *pb.Auth) *Auth {
 		Email:         a.Email,
 		EmailVerified: &a.EmailVerified,
 		Phone:         a.Phone,
-		Type:          ToAuthType(a.Type),
+		Role:          ToAuthRole(a.Role),
 		CreatedAt:     *ToTime(a.CreatedAt),
 		UpdatedAt:     *ToTime(a.UpdatedAt),
 		DeletedAt:     ToTime(a.DeletedAt),

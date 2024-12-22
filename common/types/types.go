@@ -6,15 +6,15 @@ import (
 	geo "github.com/kellydunn/golang-geo"
 )
 
-type AuthType string
+type AuthRole string
 type Gender string
 type AddressAlias string
 
 const (
-	Customer        AuthType = "customer"
-	DeliveryPartner AuthType = "delivery_partner"
-	Vendor          AuthType = "vendor"
-	Admin           AuthType = "auth"
+	Customer        AuthRole = "customer"
+	DeliveryPartner AuthRole = "delivery_partner"
+	Vendor          AuthRole = "vendor"
+	Admin           AuthRole = "auth"
 )
 
 const (
@@ -47,10 +47,17 @@ type Auth struct {
 	Email         *string    `json:"email" db:"email"`
 	EmailVerified bool       `json:"email_verified" db:"email_verified"`
 	Phone         *string    `json:"phone" db:"phone"`
-	Type          AuthType   `json:"type" db:"type"`
+	Role          AuthRole   `json:"role" db:"role"`
 	CreatedAt     time.Time  `json:"created_at" db:"created_at"`
 	UpdatedAt     time.Time  `json:"updated_at" db:"updated_at"`
 	DeletedAt     *time.Time `json:"deleted_at" db:"deleted_at"`
+}
+
+type CreateAuth struct {
+	Email         *string  `json:"email" db:"email"`
+	EmailVerified bool     `json:"email_verified" db:"email_verified"`
+	Phone         *string  `json:"phone" db:"phone"`
+	Role          AuthRole `json:"role" db:"role"`
 }
 
 type EmailVerification struct {
@@ -75,6 +82,15 @@ type Profile struct {
 	AuthId      string     `json:"auth_id" db:"auth_id"`
 	CreatedAt   time.Time  `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at" db:"updated_at"`
+}
+
+type CreateProfile struct {
+	Name        string     `json:"name" db:"name"`
+	ImageUrl    *string    `json:"image_url" db:"image_url"`
+	Dob         *time.Time `json:"dob" db:"dob"`
+	Anniversary *time.Time `json:"anniversary" db:"anniversary"`
+	Gender      *Gender    `json:"gender" db:"gender"`
+	AuthId      string     `json:"auth_id" db:"auth_id"`
 }
 
 type DeliveryAddress struct {

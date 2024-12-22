@@ -13,7 +13,7 @@ type Auth struct {
 	Email         *string  `json:"email,omitempty"`
 	EmailVerified *bool    `json:"email_verified,omitempty"`
 	Phone         *string  `json:"phone,omitempty"`
-	Type          AuthType `json:"type"`
+	Role          AuthRole `json:"role"`
 	CreatedAt     string   `json:"created_at"`
 	UpdatedAt     string   `json:"updated_at"`
 	DeletedAt     *string  `json:"deleted_at,omitempty"`
@@ -46,6 +46,12 @@ type Profile struct {
 type Query struct {
 }
 
+type SignInOutput struct {
+	Auth      *Auth    `json:"auth,omitempty"`
+	Profile   *Profile `json:"profile,omitempty"`
+	VerifyOtp *bool    `json:"verify_otp,omitempty"`
+}
+
 type SignInWithEmailInput struct {
 	Email string  `json:"email"`
 	Otp   *string `json:"otp,omitempty"`
@@ -60,53 +66,48 @@ type SignInWithPhoneInput struct {
 	Otp   *string `json:"otp,omitempty"`
 }
 
-type User struct {
-	Auth    *Auth    `json:"auth"`
-	Profile *Profile `json:"profile,omitempty"`
-}
-
-type AuthType string
+type AuthRole string
 
 const (
-	AuthTypeCustomer        AuthType = "CUSTOMER"
-	AuthTypeDeliveryPartner AuthType = "DELIVERY_PARTNER"
-	AuthTypeVendor          AuthType = "VENDOR"
-	AuthTypeAdmin           AuthType = "ADMIN"
+	AuthRoleCustomer        AuthRole = "CUSTOMER"
+	AuthRoleDeliveryPartner AuthRole = "DELIVERY_PARTNER"
+	AuthRoleVendor          AuthRole = "VENDOR"
+	AuthRoleAdmin           AuthRole = "ADMIN"
 )
 
-var AllAuthType = []AuthType{
-	AuthTypeCustomer,
-	AuthTypeDeliveryPartner,
-	AuthTypeVendor,
-	AuthTypeAdmin,
+var AllAuthRole = []AuthRole{
+	AuthRoleCustomer,
+	AuthRoleDeliveryPartner,
+	AuthRoleVendor,
+	AuthRoleAdmin,
 }
 
-func (e AuthType) IsValid() bool {
+func (e AuthRole) IsValid() bool {
 	switch e {
-	case AuthTypeCustomer, AuthTypeDeliveryPartner, AuthTypeVendor, AuthTypeAdmin:
+	case AuthRoleCustomer, AuthRoleDeliveryPartner, AuthRoleVendor, AuthRoleAdmin:
 		return true
 	}
 	return false
 }
 
-func (e AuthType) String() string {
+func (e AuthRole) String() string {
 	return string(e)
 }
 
-func (e *AuthType) UnmarshalGQL(v any) error {
+func (e *AuthRole) UnmarshalGQL(v any) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = AuthType(str)
+	*e = AuthRole(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AuthType", str)
+		return fmt.Errorf("%s is not a valid AuthRole", str)
 	}
 	return nil
 }
 
-func (e AuthType) MarshalGQL(w io.Writer) {
+func (e AuthRole) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

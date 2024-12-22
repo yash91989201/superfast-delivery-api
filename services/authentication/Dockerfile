@@ -21,5 +21,4 @@ RUN go build -o authentication_service ./services/authentication/cmd/authenticat
 FROM alpine:3.21.0
 WORKDIR /
 COPY --from=builder /authentication_service ./
-EXPOSE 8080
 CMD ["./authentication_service"]

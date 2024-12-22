@@ -49,7 +49,7 @@ services:
     cpus: 1
     depends_on:
       - authentication_db
-    restart: on-failure
+    restart: on-failure:8
 
   authentication_db:
     image: mysql:9.1.0
@@ -92,11 +92,27 @@ services:
     depends_on:
       authentication_db:
         condition: service_healthy
-    restart: none
+    restart: on-failure:8
     mem_limit: 64m
     cpus: 0.25
     networks:
       - superfast_delivery
+
+  user_service:
+    build:
+      context: .
+      dockerfile: ./services/user/Dockerfile
+    container_name: user_service
+    environment:
+      DATABASE_URL: ${USER_DATABASE_URL}
+      SERVICE_URL: ${USER_SERVICE_URL}
+    networks:
+      - superfast_delivery
+    mem_limit: 128m
+    cpus: 1
+    depends_on:
+      - user_db
+    restart: on-failure:8
 
   user_db:
     image: mysql:9.1.0
@@ -139,7 +155,7 @@ services:
     depends_on:
       user_db:
         condition: service_healthy
-    restart: none
+    restart: on-failure
     mem_limit: 64m
     cpus: 0.25
     networks:

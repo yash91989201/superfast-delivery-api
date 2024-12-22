@@ -53,7 +53,7 @@ type ComplexityRoot struct {
 		EmailVerified func(childComplexity int) int
 		ID            func(childComplexity int) int
 		Phone         func(childComplexity int) int
-		Type          func(childComplexity int) int
+		Role          func(childComplexity int) int
 		UpdatedAt     func(childComplexity int) int
 	}
 
@@ -80,16 +80,17 @@ type ComplexityRoot struct {
 		AuthByID func(childComplexity int, input GetAuthByIDInput) int
 	}
 
-	User struct {
-		Auth    func(childComplexity int) int
-		Profile func(childComplexity int) int
+	SignInOutput struct {
+		Auth      func(childComplexity int) int
+		Profile   func(childComplexity int) int
+		VerifyOtp func(childComplexity int) int
 	}
 }
 
 type MutationResolver interface {
-	SignInWithEmail(ctx context.Context, input SignInWithEmailInput) (*User, error)
-	SignInWithPhone(ctx context.Context, input SignInWithPhoneInput) (*User, error)
-	SignInWithGoogle(ctx context.Context, input SignInWithGoogleInput) (*User, error)
+	SignInWithEmail(ctx context.Context, input SignInWithEmailInput) (*SignInOutput, error)
+	SignInWithPhone(ctx context.Context, input SignInWithPhoneInput) (*SignInOutput, error)
+	SignInWithGoogle(ctx context.Context, input SignInWithGoogleInput) (*SignInOutput, error)
 }
 type QueryResolver interface {
 	AuthByID(ctx context.Context, input GetAuthByIDInput) (*Auth, error)
@@ -157,12 +158,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Auth.Phone(childComplexity), true
 
-	case "Auth.type":
-		if e.complexity.Auth.Type == nil {
+	case "Auth.role":
+		if e.complexity.Auth.Role == nil {
 			break
 		}
 
-		return e.complexity.Auth.Type(childComplexity), true
+		return e.complexity.Auth.Role(childComplexity), true
 
 	case "Auth.updated_at":
 		if e.complexity.Auth.UpdatedAt == nil {
@@ -294,19 +295,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AuthByID(childComplexity, args["input"].(GetAuthByIDInput)), true
 
-	case "User.auth":
-		if e.complexity.User.Auth == nil {
+	case "SignInOutput.auth":
+		if e.complexity.SignInOutput.Auth == nil {
 			break
 		}
 
-		return e.complexity.User.Auth(childComplexity), true
+		return e.complexity.SignInOutput.Auth(childComplexity), true
 
-	case "User.profile":
-		if e.complexity.User.Profile == nil {
+	case "SignInOutput.profile":
+		if e.complexity.SignInOutput.Profile == nil {
 			break
 		}
 
-		return e.complexity.User.Profile(childComplexity), true
+		return e.complexity.SignInOutput.Profile(childComplexity), true
+
+	case "SignInOutput.verify_otp":
+		if e.complexity.SignInOutput.VerifyOtp == nil {
+			break
+		}
+
+		return e.complexity.SignInOutput.VerifyOtp(childComplexity), true
 
 	}
 	return 0, false
@@ -796,8 +804,8 @@ func (ec *executionContext) fieldContext_Auth_phone(_ context.Context, field gra
 	return fc, nil
 }
 
-func (ec *executionContext) _Auth_type(ctx context.Context, field graphql.CollectedField, obj *Auth) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Auth_type(ctx, field)
+func (ec *executionContext) _Auth_role(ctx context.Context, field graphql.CollectedField, obj *Auth) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Auth_role(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -810,7 +818,7 @@ func (ec *executionContext) _Auth_type(ctx context.Context, field graphql.Collec
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Type, nil
+		return obj.Role, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -822,19 +830,19 @@ func (ec *executionContext) _Auth_type(ctx context.Context, field graphql.Collec
 		}
 		return graphql.Null
 	}
-	res := resTmp.(AuthType)
+	res := resTmp.(AuthRole)
 	fc.Result = res
-	return ec.marshalNAuthType2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthType(ctx, field.Selections, res)
+	return ec.marshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Auth_type(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Auth_role(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Auth",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type AuthType does not have child fields")
+			return nil, errors.New("field of type AuthRole does not have child fields")
 		},
 	}
 	return fc, nil
@@ -995,9 +1003,9 @@ func (ec *executionContext) _Mutation_SignInWithEmail(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*User)
+	res := resTmp.(*SignInOutput)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUser(ctx, field.Selections, res)
+	return ec.marshalNSignInOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInOutput(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_SignInWithEmail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1009,11 +1017,13 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithEmail(ctx context.Co
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "auth":
-				return ec.fieldContext_User_auth(ctx, field)
+				return ec.fieldContext_SignInOutput_auth(ctx, field)
 			case "profile":
-				return ec.fieldContext_User_profile(ctx, field)
+				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "verify_otp":
+				return ec.fieldContext_SignInOutput_verify_otp(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type SignInOutput", field.Name)
 		},
 	}
 	defer func() {
@@ -1056,9 +1066,9 @@ func (ec *executionContext) _Mutation_SignInWithPhone(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*User)
+	res := resTmp.(*SignInOutput)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUser(ctx, field.Selections, res)
+	return ec.marshalNSignInOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInOutput(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_SignInWithPhone(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1070,11 +1080,13 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithPhone(ctx context.Co
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "auth":
-				return ec.fieldContext_User_auth(ctx, field)
+				return ec.fieldContext_SignInOutput_auth(ctx, field)
 			case "profile":
-				return ec.fieldContext_User_profile(ctx, field)
+				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "verify_otp":
+				return ec.fieldContext_SignInOutput_verify_otp(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type SignInOutput", field.Name)
 		},
 	}
 	defer func() {
@@ -1117,9 +1129,9 @@ func (ec *executionContext) _Mutation_SignInWithGoogle(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*User)
+	res := resTmp.(*SignInOutput)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUser(ctx, field.Selections, res)
+	return ec.marshalNSignInOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInOutput(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_SignInWithGoogle(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1131,11 +1143,13 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithGoogle(ctx context.C
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "auth":
-				return ec.fieldContext_User_auth(ctx, field)
+				return ec.fieldContext_SignInOutput_auth(ctx, field)
 			case "profile":
-				return ec.fieldContext_User_profile(ctx, field)
+				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "verify_otp":
+				return ec.fieldContext_SignInOutput_verify_otp(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type SignInOutput", field.Name)
 		},
 	}
 	defer func() {
@@ -1580,8 +1594,8 @@ func (ec *executionContext) fieldContext_Query_authById(ctx context.Context, fie
 				return ec.fieldContext_Auth_email_verified(ctx, field)
 			case "phone":
 				return ec.fieldContext_Auth_phone(ctx, field)
-			case "type":
-				return ec.fieldContext_Auth_type(ctx, field)
+			case "role":
+				return ec.fieldContext_Auth_role(ctx, field)
 			case "created_at":
 				return ec.fieldContext_Auth_created_at(ctx, field)
 			case "updated_at":
@@ -1650,8 +1664,8 @@ func (ec *executionContext) fieldContext_Query_auth(ctx context.Context, field g
 				return ec.fieldContext_Auth_email_verified(ctx, field)
 			case "phone":
 				return ec.fieldContext_Auth_phone(ctx, field)
-			case "type":
-				return ec.fieldContext_Auth_type(ctx, field)
+			case "role":
+				return ec.fieldContext_Auth_role(ctx, field)
 			case "created_at":
 				return ec.fieldContext_Auth_created_at(ctx, field)
 			case "updated_at":
@@ -1805,8 +1819,8 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _User_auth(ctx context.Context, field graphql.CollectedField, obj *User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_auth(ctx, field)
+func (ec *executionContext) _SignInOutput_auth(ctx context.Context, field graphql.CollectedField, obj *SignInOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SignInOutput_auth(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1826,19 +1840,16 @@ func (ec *executionContext) _User_auth(ctx context.Context, field graphql.Collec
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*Auth)
 	fc.Result = res
-	return ec.marshalNAuth2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuth(ctx, field.Selections, res)
+	return ec.marshalOAuth2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuth(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_auth(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SignInOutput_auth(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "User",
+		Object:     "SignInOutput",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1852,8 +1863,8 @@ func (ec *executionContext) fieldContext_User_auth(_ context.Context, field grap
 				return ec.fieldContext_Auth_email_verified(ctx, field)
 			case "phone":
 				return ec.fieldContext_Auth_phone(ctx, field)
-			case "type":
-				return ec.fieldContext_Auth_type(ctx, field)
+			case "role":
+				return ec.fieldContext_Auth_role(ctx, field)
 			case "created_at":
 				return ec.fieldContext_Auth_created_at(ctx, field)
 			case "updated_at":
@@ -1867,8 +1878,8 @@ func (ec *executionContext) fieldContext_User_auth(_ context.Context, field grap
 	return fc, nil
 }
 
-func (ec *executionContext) _User_profile(ctx context.Context, field graphql.CollectedField, obj *User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_profile(ctx, field)
+func (ec *executionContext) _SignInOutput_profile(ctx context.Context, field graphql.CollectedField, obj *SignInOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SignInOutput_profile(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1895,9 +1906,9 @@ func (ec *executionContext) _User_profile(ctx context.Context, field graphql.Col
 	return ec.marshalOProfile2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐProfile(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_profile(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SignInOutput_profile(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "User",
+		Object:     "SignInOutput",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1923,6 +1934,47 @@ func (ec *executionContext) fieldContext_User_profile(_ context.Context, field g
 				return ec.fieldContext_Profile_updated_at(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SignInOutput_verify_otp(ctx context.Context, field graphql.CollectedField, obj *SignInOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SignInOutput_verify_otp(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VerifyOtp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SignInOutput_verify_otp(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SignInOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3887,8 +3939,8 @@ func (ec *executionContext) _Auth(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Auth_email_verified(ctx, field, obj)
 		case "phone":
 			out.Values[i] = ec._Auth_phone(ctx, field, obj)
-		case "type":
-			out.Values[i] = ec._Auth_type(ctx, field, obj)
+		case "role":
+			out.Values[i] = ec._Auth_role(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -4145,24 +4197,23 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
-var userImplementors = []string{"User"}
+var signInOutputImplementors = []string{"SignInOutput"}
 
-func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *User) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
+func (ec *executionContext) _SignInOutput(ctx context.Context, sel ast.SelectionSet, obj *SignInOutput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, signInOutputImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	deferred := make(map[string]*graphql.FieldSet)
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("User")
+			out.Values[i] = graphql.MarshalString("SignInOutput")
 		case "auth":
-			out.Values[i] = ec._User_auth(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
+			out.Values[i] = ec._SignInOutput_auth(ctx, field, obj)
 		case "profile":
-			out.Values[i] = ec._User_profile(ctx, field, obj)
+			out.Values[i] = ec._SignInOutput_profile(ctx, field, obj)
+		case "verify_otp":
+			out.Values[i] = ec._SignInOutput_verify_otp(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4512,23 +4563,13 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNAuth2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuth(ctx context.Context, sel ast.SelectionSet, v *Auth) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._Auth(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNAuthType2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthType(ctx context.Context, v any) (AuthType, error) {
-	var res AuthType
+func (ec *executionContext) unmarshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx context.Context, v any) (AuthRole, error) {
+	var res AuthRole
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAuthType2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthType(ctx context.Context, sel ast.SelectionSet, v AuthType) graphql.Marshaler {
+func (ec *executionContext) marshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx context.Context, sel ast.SelectionSet, v AuthRole) graphql.Marshaler {
 	return v
 }
 
@@ -4572,6 +4613,20 @@ func (ec *executionContext) unmarshalNGetAuthInput2githubᚗcomᚋyash91989201�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNSignInOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInOutput(ctx context.Context, sel ast.SelectionSet, v SignInOutput) graphql.Marshaler {
+	return ec._SignInOutput(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSignInOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInOutput(ctx context.Context, sel ast.SelectionSet, v *SignInOutput) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SignInOutput(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNSignInWithEmailInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInWithEmailInput(ctx context.Context, v any) (SignInWithEmailInput, error) {
 	res, err := ec.unmarshalInputSignInWithEmailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4600,20 +4655,6 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) marshalNUser2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUser(ctx context.Context, sel ast.SelectionSet, v User) graphql.Marshaler {
-	return ec._User(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUser(ctx context.Context, sel ast.SelectionSet, v *User) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._User(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

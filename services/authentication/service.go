@@ -9,7 +9,7 @@ import (
 )
 
 type Service interface {
-	CreateAuth(ctx context.Context, email *string, email_verified bool, phone *string, authType types.AuthType) (*types.Auth, error)
+	CreateAuth(ctx context.Context, ca *types.CreateAuth) (*types.Auth, error)
 	GetAuthById(ctx context.Context, id string) (*types.Auth, error)
 	GetAuth(ctx context.Context, email *string, phone *string) (*types.Auth, error)
 	DeleteAuth(ctx context.Context, id string) error
@@ -30,23 +30,20 @@ func New(r Repository) Service {
 	return &authenticationService{r: r}
 }
 
-func (s *authenticationService) CreateAuth(ctx context.Context, email *string, email_verified bool, phone *string, authType types.AuthType) (*types.Auth, error) {
-	if email == nil && phone == nil {
+func (s *authenticationService) CreateAuth(ctx context.Context, ca *types.CreateAuth) (*types.Auth, error) {
+	if ca.Email == nil && ca.Phone == nil {
 		return nil, fmt.Errorf("One of email or phone is required")
 	}
 
-	auth, err := s.r.CreateAuth(
-		ctx,
-		&types.Auth{
-			Id:            cuid2.Generate(),
-			Email:         email,
-			EmailVerified: email_verified,
-			Phone:         phone,
-			Type:          authType,
-		},
-	)
+	auth := &types.Auth{
+		Id:            cuid2.Generate(),
+		Email:         ca.Email,
+		EmailVerified: ca.EmailVerified,
+		Phone:         ca.Phone,
+		Role:          ca.Role,
+	}
 
-	if err != nil {
+	if err := s.r.CreateAuth(ctx, auth); err != nil {
 		return nil, err
 	}
 
@@ -59,11 +56,11 @@ func (s *authenticationService) GetAuthById(ctx context.Context, id string) (*ty
 
 func (s *authenticationService) GetAuth(ctx context.Context, email *string, phone *string) (*types.Auth, error) {
 	if email != nil && phone != nil {
-		return nil, fmt.Errorf("Either email or phone is required")
+		return nil, fmt.Errorf("Either email or phone is needed")
 	}
 
 	if email == nil && phone == nil {
-		return nil, fmt.Errorf("one of email or phone is required")
+		return nil, fmt.Errorf("One of email or phone is required")
 	}
 
 	if phone != nil {

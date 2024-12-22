@@ -1,7 +1,7 @@
 scalar Date
 scalar DateTime
 
-enum AuthType {
+enum AuthRole {
   CUSTOMER
   DELIVERY_PARTNER
   VENDOR
@@ -32,15 +32,10 @@ type Auth {
   email: String
   email_verified: Boolean
   phone: String
-  type: AuthType!
+  role: AuthRole!
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-}
-
-type User {
-  auth: Auth!
-  profile: Profile
 }
 
 input SignInWithEmailInput {
@@ -55,6 +50,12 @@ input SignInWithPhoneInput {
 
 input SignInWithGoogleInput {
   id_token: String!
+}
+
+type SignInOutput {
+  auth: Auth
+  profile: Profile
+  verify_otp: Boolean
 }
 
 input GetAuthByIdInput {
@@ -72,7 +73,7 @@ type Query {
 }
 
 type Mutation {
-  SignInWithEmail(input: SignInWithEmailInput!): User!
-  SignInWithPhone(input: SignInWithPhoneInput!): User!
-  SignInWithGoogle(input: SignInWithGoogleInput!): User!
+  SignInWithEmail(input: SignInWithEmailInput!): SignInOutput!
+  SignInWithPhone(input: SignInWithPhoneInput!): SignInOutput!
+  SignInWithGoogle(input: SignInWithGoogleInput!): SignInOutput!
 }

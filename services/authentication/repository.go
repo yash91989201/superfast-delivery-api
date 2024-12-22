@@ -12,7 +12,7 @@ import (
 
 type Repository interface {
 	Close() error
-	CreateAuth(ctx context.Context, a *types.Auth) (*types.Auth, error)
+	CreateAuth(ctx context.Context, a *types.Auth) error
 	GetAuthById(ctx context.Context, id string) (*types.Auth, error)
 	GetAuthByEmail(ctx context.Context, email string) (*types.Auth, error)
 	GetAuthByPhone(ctx context.Context, phone string) (*types.Auth, error)
@@ -46,17 +46,17 @@ func (r *mysqlRepository) Close() error {
 	return r.db.Close()
 }
 
-func (r *mysqlRepository) CreateAuth(ctx context.Context, a *types.Auth) (*types.Auth, error) {
+func (r *mysqlRepository) CreateAuth(ctx context.Context, a *types.Auth) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_AUTH, &a)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return nil, fmt.Errorf("Failed to insert product, 0 rows affected: %w", err)
+		return fmt.Errorf("Failed to insert product, 0 rows affected: %w", err)
 	}
 
-	return a, nil
+	return nil
 }
 func (r *mysqlRepository) GetAuthById(ctx context.Context, id string) (*types.Auth, error) {
 	var auth *types.Auth
@@ -67,8 +67,9 @@ func (r *mysqlRepository) GetAuthById(ctx context.Context, id string) (*types.Au
 	return auth, nil
 }
 func (r *mysqlRepository) GetAuthByEmail(ctx context.Context, email string) (*types.Auth, error) {
-	var auth *types.Auth
-	if err := r.db.GetContext(ctx, queries.GET_AUTH_BY_EMAIL, email); err != nil {
+	auth := &types.Auth{}
+	if err := r.db.GetContext(ctx, &auth, queries.GET_AUTH_BY_EMAIL, email); err != nil {
+		fmt.Print(err)
 		return nil, err
 	}
 
@@ -124,8 +125,8 @@ func (r *mysqlRepository) CreatePhoneVerification(ctx context.Context, v *types.
 }
 
 func (r *mysqlRepository) GetEmailVerification(ctx context.Context, email string) (*types.EmailVerification, error) {
-	var ev *types.EmailVerification
-	if err := r.db.QueryRowContext(ctx, queries.GET_EMAIL_VERIFICATION, &ev); err != nil {
+	ev := &types.EmailVerification{}
+	if err := r.db.GetContext(ctx, ev, queries.GET_EMAIL_VERIFICATION, email); err != nil {
 		return nil, fmt.Errorf("Error getting email verification")
 	}
 

@@ -6,8 +6,12 @@ import (
 	"net/http"
 
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/lru"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/vektah/gqlparser/v2/ast"
 	graphql "github.com/yash91989201/superfast-delivery-api/gateways/graphql"
 )
 
@@ -28,10 +32,22 @@ func main() {
 		log.Fatal("Failed to start graphql server: %w", err)
 	}
 
-	http.Handle("/graphql", handler.New(s.ToExecutableSchema()))
-	http.Handle("/playground", playground.Handler("Superfast Delivery Graphql Gateway", "/graphql"))
+	srv := handler.New(s.ToExecutableSchema())
+
+	srv.AddTransport(transport.Options{})
+	srv.AddTransport(transport.GET{})
+	srv.AddTransport(transport.POST{})
+
+	srv.SetQueryCache(lru.New[*ast.QueryDocument](1000))
+
+	srv.Use(extension.Introspection{})
+	srv.Use(extension.AutomaticPersistedQuery{
+		Cache: lru.New[string](100),
+	})
+
+	http.Handle("/graphql", srv)
+	http.Handle("/playground", playground.Handler("GraphQL playground", "/graphql"))
 
 	log.Printf("Graphql server started at :%d", cfg.Port)
-
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), nil))
 }

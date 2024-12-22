@@ -6,7 +6,7 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
 
-enum AuthType {
+enum AuthRole {
   CUSTOMER = 0;
   DELIVERY_PARTNER = 1;
   VENDOR = 2;
@@ -18,7 +18,7 @@ message Auth {
   optional string email = 2;
   bool email_verified = 3;
   optional string phone = 4;
-  AuthType type = 5;
+  AuthRole role= 5;
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
   optional google.protobuf.Timestamp deleted_at = 8;

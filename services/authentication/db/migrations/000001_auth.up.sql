@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `auth`(
   `email` VARCHAR(256) UNIQUE DEFAULT NULL,
   `email_verified` BOOLEAN DEFAULT FALSE NOT NULL,
   `phone` VARCHAR(10) UNIQUE DEFAULT NULL,
-  `type` ENUM("customer","delivery_partner", "vendor", "admin") NOT NULL,
+  `role` ENUM("customer","delivery_partner", "vendor", "admin") NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
   `deleted_at` TIMESTAMP DEFAULT NULL

@@ -47,12 +47,13 @@ message GetProfileReq {
 }
 
 message UpdateProfileReq {
-  optional string name = 1;
-  optional string image_url = 2;
-  optional Date dob = 3;
-  optional Date anniversary = 4;
-  optional Gender gender = 5;
-  string auth_id = 6;
+  string id = 1;
+  optional string name = 2;
+  optional string image_url = 3;
+  optional Date dob = 4;
+  optional Date anniversary = 5;
+  optional Gender gender = 6;
+  string auth_id = 7;
 }
 
 message DeleteProfileReq {
