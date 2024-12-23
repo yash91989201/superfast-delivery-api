@@ -3,6 +3,7 @@ package authentication
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/nrednav/cuid2"
 	"github.com/yash91989201/superfast-delivery-api/common/types"
@@ -41,6 +42,8 @@ func (s *authenticationService) CreateAuth(ctx context.Context, ca *types.Create
 		EmailVerified: ca.EmailVerified,
 		Phone:         ca.Phone,
 		Role:          ca.Role,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
 	}
 
 	if err := s.r.CreateAuth(ctx, auth); err != nil {

@@ -3,7 +3,6 @@ package authentication
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
@@ -33,14 +32,6 @@ func Start(s Service, serviceUrl string) error {
 }
 
 func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmailReq) (*pb.Auth, error) {
-	// Check if the account already exists
-	auth, err := s.service.GetAuth(ctx, &req.Email, nil)
-	if err == nil {
-		log.Println("1. account not found")
-		// Account found, return the authentication details
-		return types.ToPbAuth(auth), nil
-	}
-
 	if req.Otp != nil {
 		ev, err := s.service.GetEmailVerification(ctx, req.Email)
 		if err != nil {
@@ -57,7 +48,14 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 
 		_ = s.service.DeleteEmailVerification(ctx, ev.Email)
 
-		auth, err := s.service.CreateAuth(
+		// TODO: if auth exists then return it
+		auth, err := s.service.GetAuth(ctx, &ev.Email, nil)
+		if err == nil {
+			return types.ToPbAuth(auth), nil
+		}
+
+		// create new auth and return it
+		auth, err = s.service.CreateAuth(
 			ctx,
 			&types.CreateAuth{
 				Email:         &ev.Email,
@@ -70,7 +68,6 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 			return nil, fmt.Errorf("Error creating account, try again :%w", err)
 		}
 
-		log.Println("2. account created")
 		return types.ToPbAuth(auth), nil
 	}
 
@@ -93,10 +90,7 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 	}
 
 	if isTokenExpired(ev.ExpiresAt) {
-		err = s.service.DeleteEmailVerification(ctx, ev.Email)
-		if err != nil {
-			return nil, fmt.Errorf("Verification failed, try again :%w", err)
-		}
+		_ = s.service.DeleteEmailVerification(ctx, ev.Email)
 
 		err := s.service.CreateEmailVerification(
 			ctx,
@@ -119,7 +113,84 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 }
 
 func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhoneReq) (*pb.Auth, error) {
-	return nil, nil
+	if req.Otp != nil {
+		pv, err := s.service.GetPhoneVerification(ctx, req.Phone)
+		if err != nil {
+			return nil, fmt.Errorf("Verification failed, try again: %w", err)
+		}
+
+		if isTokenExpired(pv.ExpiresAt) {
+			return nil, fmt.Errorf("Otp expired, try again: %w", err)
+		}
+
+		if !isTokenValid(req.Otp, pv.Token) {
+			return nil, fmt.Errorf("Otp incorrect, try again")
+		}
+
+		_ = s.service.DeletePhoneVerification(ctx, pv.Phone)
+
+		// TODO: if auth exists then return it
+		auth, err := s.service.GetAuth(ctx, &pv.Phone, nil)
+		if err == nil {
+			return types.ToPbAuth(auth), nil
+		}
+
+		// create new auth and return it
+		auth, err = s.service.CreateAuth(
+			ctx,
+			&types.CreateAuth{
+				Email:         nil,
+				EmailVerified: false,
+				Phone:         &pv.Phone,
+				Role:          types.Customer,
+			})
+
+		if err != nil {
+			return nil, fmt.Errorf("Error creating account, try again :%w", err)
+		}
+
+		return types.ToPbAuth(auth), nil
+	}
+
+	pv, err := s.service.GetPhoneVerification(ctx, req.Phone)
+	if err != nil {
+		err := s.service.CreatePhoneVerification(
+			ctx,
+			&types.PhoneVerification{
+				Token:     generateToken(),
+				Phone:     req.Phone,
+				ExpiresAt: getTokenExpiresAt(),
+			})
+
+		if err != nil {
+			return nil, fmt.Errorf("Verification failed, try again :%w", err)
+		}
+
+		// TODO: send otp using email service
+		return &pb.Auth{}, nil
+	}
+
+	if isTokenExpired(pv.ExpiresAt) {
+		_ = s.service.DeletePhoneVerification(ctx, pv.Phone)
+
+		err := s.service.CreatePhoneVerification(
+			ctx,
+			&types.PhoneVerification{
+				Token:     generateToken(),
+				Phone:     req.Phone,
+				ExpiresAt: getTokenExpiresAt(),
+			})
+
+		if err != nil {
+			return nil, fmt.Errorf("Verification failed, try again :%w", err)
+		}
+
+		// TODO: send otp using email service
+		return &pb.Auth{}, nil
+	}
+
+	// TODO: existing token not expired send email again
+	return &pb.Auth{}, nil
 }
 
 func (s *grpcServer) SignInWithGoogle(ctx context.Context, req *pb.SignInWithGoogleReq) (*pb.Auth, error) {

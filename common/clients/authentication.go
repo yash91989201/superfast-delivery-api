@@ -2,7 +2,6 @@ package clients
 
 import (
 	"context"
-	"log"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
 	"google.golang.org/grpc"
@@ -37,7 +36,6 @@ func (c *AuthenticationClient) SignInWithEmail(ctx context.Context, req *pb.Sign
 	if err != nil {
 		return nil, err
 	}
-	log.Print(res)
 
 	return res, nil
 }

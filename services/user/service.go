@@ -48,6 +48,7 @@ func (s *userService) GetProfile(ctx context.Context, auth_id string) (*types.Pr
 }
 
 func (s *userService) UpdateProfile(ctx context.Context, p *types.Profile) error {
+	p.UpdatedAt = time.Now()
 	return s.r.UpdateProfile(ctx, p)
 }
 

@@ -47,7 +47,7 @@ func (r *mysqlRepository) Close() error {
 }
 
 func (r *mysqlRepository) CreateAuth(ctx context.Context, a *types.Auth) error {
-	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_AUTH, &a)
+	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_AUTH, a)
 	if err != nil {
 		return nil
 	}
@@ -59,8 +59,8 @@ func (r *mysqlRepository) CreateAuth(ctx context.Context, a *types.Auth) error {
 	return nil
 }
 func (r *mysqlRepository) GetAuthById(ctx context.Context, id string) (*types.Auth, error) {
-	var auth *types.Auth
-	if err := r.db.GetContext(ctx, queries.GET_AUTH_BY_ID, id); err != nil {
+	auth := &types.Auth{}
+	if err := r.db.GetContext(ctx, auth, queries.GET_AUTH_BY_ID, id); err != nil {
 		return nil, err
 	}
 
@@ -68,7 +68,7 @@ func (r *mysqlRepository) GetAuthById(ctx context.Context, id string) (*types.Au
 }
 func (r *mysqlRepository) GetAuthByEmail(ctx context.Context, email string) (*types.Auth, error) {
 	auth := &types.Auth{}
-	if err := r.db.GetContext(ctx, &auth, queries.GET_AUTH_BY_EMAIL, email); err != nil {
+	if err := r.db.GetContext(ctx, auth, queries.GET_AUTH_BY_EMAIL, email); err != nil {
 		fmt.Print(err)
 		return nil, err
 	}
@@ -77,8 +77,8 @@ func (r *mysqlRepository) GetAuthByEmail(ctx context.Context, email string) (*ty
 }
 
 func (r *mysqlRepository) GetAuthByPhone(ctx context.Context, phone string) (*types.Auth, error) {
-	var auth *types.Auth
-	if err := r.db.GetContext(ctx, queries.GET_AUTH_BY_PHONE, phone); err != nil {
+	auth := &types.Auth{}
+	if err := r.db.GetContext(ctx, auth, queries.GET_AUTH_BY_PHONE, phone); err != nil {
 		return nil, err
 	}
 
@@ -99,7 +99,7 @@ func (r *mysqlRepository) DeleteAuth(ctx context.Context, id string) error {
 }
 
 func (r *mysqlRepository) CreateEmailVerification(ctx context.Context, v *types.EmailVerification) error {
-	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_EMAIL_VERIFICATION, &v)
+	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_EMAIL_VERIFICATION, v)
 	if err != nil {
 		return fmt.Errorf("Error creating email verification: %w", err)
 	}
@@ -112,7 +112,7 @@ func (r *mysqlRepository) CreateEmailVerification(ctx context.Context, v *types.
 }
 
 func (r *mysqlRepository) CreatePhoneVerification(ctx context.Context, v *types.PhoneVerification) error {
-	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_PHONE_VERIFICATION, &v)
+	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_PHONE_VERIFICATION, v)
 	if err != nil {
 		return fmt.Errorf("Error creating phone verification: %w", err)
 	}
@@ -134,16 +134,15 @@ func (r *mysqlRepository) GetEmailVerification(ctx context.Context, email string
 }
 
 func (r *mysqlRepository) GetPhoneVerification(ctx context.Context, phone string) (*types.PhoneVerification, error) {
-	var pv *types.PhoneVerification
-	if err := r.db.QueryRowContext(ctx, queries.GET_PHONE_VERIFICATION, &pv); err != nil {
-		return nil, fmt.Errorf("Error getting email verification")
+	pv := &types.PhoneVerification{}
+	if err := r.db.GetContext(ctx, pv, queries.GET_PHONE_VERIFICATION, phone); err != nil {
+		return nil, fmt.Errorf("Error getting phone verification")
 	}
 
 	return pv, nil
 }
 
 func (r *mysqlRepository) DeleteEmailVerification(ctx context.Context, email string) error {
-
 	queryRes, err := r.db.ExecContext(ctx, queries.DELETE_EMAIL_VERIFICATION, email)
 	if err != nil {
 		return fmt.Errorf("Failed to delete email verification with email %s: %w", email, err)
@@ -157,7 +156,6 @@ func (r *mysqlRepository) DeleteEmailVerification(ctx context.Context, email str
 }
 
 func (r *mysqlRepository) DeletePhoneVerification(ctx context.Context, phone string) error {
-
 	queryRes, err := r.db.ExecContext(ctx, queries.DELETE_PHONE_VERIFICATION, phone)
 	if err != nil {
 		return fmt.Errorf("Failed to delete phone verification with phone %s: %w", phone, err)

@@ -160,7 +160,14 @@ func ToDate(pbDate *pb.Date) *string {
 	return &dateStr
 }
 
-func ToTime(pbTime *timestamppb.Timestamp) *string {
+func ToGQTime(pbTime *timestamppb.Timestamp) string {
+	if pbTime == nil || pbTime.AsTime().IsZero() {
+		return time.Now().UTC().String()
+	}
+	timeStr := pbTime.AsTime().Format(time.RFC3339)
+	return timeStr
+}
+func ToGQTimePtr(pbTime *timestamppb.Timestamp) *string {
 	if pbTime == nil || pbTime.AsTime().IsZero() {
 		return nil
 	}
@@ -179,9 +186,9 @@ func ToAuth(a *pb.Auth) *Auth {
 		EmailVerified: &a.EmailVerified,
 		Phone:         a.Phone,
 		Role:          ToAuthRole(a.Role),
-		CreatedAt:     *ToTime(a.CreatedAt),
-		UpdatedAt:     *ToTime(a.UpdatedAt),
-		DeletedAt:     ToTime(a.DeletedAt),
+		CreatedAt:     ToGQTime(a.CreatedAt),
+		UpdatedAt:     ToGQTime(a.UpdatedAt),
+		DeletedAt:     ToGQTimePtr(a.DeletedAt),
 	}
 }
 
@@ -198,7 +205,7 @@ func ToProfile(p *pb.Profile) *Profile {
 		Anniversary: ToDate(p.Anniversary),
 		Gender:      ToGenderPtr(p.Gender),
 		AuthID:      p.AuthId,
-		CreatedAt:   *ToTime(p.CreatedAt),
-		UpdatedAt:   *ToTime(p.UpdatedAt),
+		CreatedAt:   ToGQTime(p.CreatedAt),
+		UpdatedAt:   ToGQTime(p.UpdatedAt),
 	}
 }

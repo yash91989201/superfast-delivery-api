@@ -57,7 +57,11 @@ func (r *mutationResolver) SignInWithPhone(ctx context.Context, in SignInWithPho
 
 	profile, err := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: auth.Id})
 	if err != nil {
-		return nil, err
+		return &SignInOutput{
+			Auth:      ToAuth(auth),
+			Profile:   nil,
+			VerifyOtp: types.ToBoolPtr(false),
+		}, nil
 	}
 
 	return &SignInOutput{

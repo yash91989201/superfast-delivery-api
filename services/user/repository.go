@@ -39,7 +39,7 @@ func (r *mysqlRepository) Close() error {
 }
 
 func (r *mysqlRepository) CreateProfile(ctx context.Context, p *types.Profile) error {
-	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_PROFILE, &p)
+	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_PROFILE, p)
 	if err != nil {
 		return fmt.Errorf("Failed to create profile: %w", err)
 	}
@@ -52,21 +52,21 @@ func (r *mysqlRepository) CreateProfile(ctx context.Context, p *types.Profile) e
 }
 
 func (r *mysqlRepository) GetProfileById(ctx context.Context, id string) (*types.Profile, error) {
-	var profile *types.Profile
-	if err := r.db.GetContext(ctx, profile, queries.GET_PROFILE_BY_ID, id); err != nil {
+	p := &types.Profile{}
+	if err := r.db.GetContext(ctx, p, queries.GET_PROFILE_BY_ID, id); err != nil {
 		return nil, fmt.Errorf("Profile not found: %w", err)
 	}
 
-	return profile, nil
+	return p, nil
 }
 
 func (r *mysqlRepository) GetProfileByAuthId(ctx context.Context, auth_id string) (*types.Profile, error) {
-	var profile *types.Profile
-	if err := r.db.GetContext(ctx, profile, queries.GET_PROFILE_BY_AUTH_ID, auth_id); err != nil {
+	p := &types.Profile{}
+	if err := r.db.GetContext(ctx, p, queries.GET_PROFILE_BY_AUTH_ID, auth_id); err != nil {
 		return nil, fmt.Errorf("Profile not found: %w", err)
 	}
 
-	return profile, nil
+	return p, nil
 }
 
 func (r *mysqlRepository) UpdateProfile(ctx context.Context, p *types.Profile) error {
@@ -82,7 +82,7 @@ func (r *mysqlRepository) UpdateProfile(ctx context.Context, p *types.Profile) e
 }
 
 func (r *mysqlRepository) DeleteProfile(ctx context.Context, id string) error {
-	queryRes, err := r.db.NamedExecContext(ctx, queries.DELETE_PROFILE, id)
+	queryRes, err := r.db.ExecContext(ctx, queries.DELETE_PROFILE, id)
 	if err != nil {
 		return fmt.Errorf("Failed to delete profile id %s : %w", id, err)
 	}
