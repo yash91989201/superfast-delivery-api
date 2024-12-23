@@ -83,7 +83,7 @@ func ToPbAuth(a *Auth) *pb.Auth {
 	return &pb.Auth{
 		Id:            a.ID,
 		Email:         a.Email,
-		EmailVerified: *a.EmailVerified,
+		EmailVerified: a.EmailVerified,
 		Phone:         a.Phone,
 		Role:          ToPbAuthRole(a.Role),
 		CreatedAt:     ToPbTime(&a.CreatedAt),
@@ -183,7 +183,7 @@ func ToAuth(a *pb.Auth) *Auth {
 	return &Auth{
 		ID:            a.Id,
 		Email:         a.Email,
-		EmailVerified: &a.EmailVerified,
+		EmailVerified: a.EmailVerified,
 		Phone:         a.Phone,
 		Role:          ToAuthRole(a.Role),
 		CreatedAt:     ToGQTime(a.CreatedAt),

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
-	"github.com/yash91989201/superfast-delivery-api/common/types"
 )
 
 type mutationResolver struct {
@@ -21,7 +20,7 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 		return &SignInOutput{
 			Auth:      nil,
 			Profile:   nil,
-			VerifyOtp: types.ToBoolPtr(true),
+			VerifyOtp: true,
 		}, nil
 	}
 
@@ -30,14 +29,14 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 		return &SignInOutput{
 			Auth:      ToAuth(auth),
 			Profile:   nil,
-			VerifyOtp: types.ToBoolPtr(false),
+			VerifyOtp: false,
 		}, nil
 	}
 
 	return &SignInOutput{
 		Auth:      ToAuth(auth),
 		Profile:   ToProfile(profile),
-		VerifyOtp: types.ToBoolPtr(false),
+		VerifyOtp: false,
 	}, nil
 }
 
@@ -51,7 +50,7 @@ func (r *mutationResolver) SignInWithPhone(ctx context.Context, in SignInWithPho
 		return &SignInOutput{
 			Auth:      nil,
 			Profile:   nil,
-			VerifyOtp: types.ToBoolPtr(true),
+			VerifyOtp: true,
 		}, nil
 	}
 
@@ -60,14 +59,14 @@ func (r *mutationResolver) SignInWithPhone(ctx context.Context, in SignInWithPho
 		return &SignInOutput{
 			Auth:      ToAuth(auth),
 			Profile:   nil,
-			VerifyOtp: types.ToBoolPtr(false),
+			VerifyOtp: false,
 		}, nil
 	}
 
 	return &SignInOutput{
 		Auth:      ToAuth(auth),
 		Profile:   ToProfile(profile),
-		VerifyOtp: types.ToBoolPtr(false),
+		VerifyOtp: false,
 	}, nil
 }
 
@@ -86,6 +85,6 @@ func (r *mutationResolver) SignInWithGoogle(ctx context.Context, in SignInWithGo
 	return &SignInOutput{
 		Auth:      ToAuth(auth),
 		Profile:   ToProfile(profile),
-		VerifyOtp: types.ToBoolPtr(false),
+		VerifyOtp: false,
 	}, nil
 }

@@ -30,7 +30,7 @@ type Profile {
 type Auth {
   id: String!
   email: String
-  email_verified: Boolean
+  email_verified: Boolean!
   phone: String
   role: AuthRole!
   created_at: DateTime!
@@ -55,7 +55,7 @@ input SignInWithGoogleInput {
 type SignInOutput {
   auth: Auth
   profile: Profile
-  verify_otp: Boolean
+  verify_otp: Boolean!
 }
 
 input GetAuthByIdInput {

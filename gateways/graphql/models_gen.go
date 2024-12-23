@@ -11,7 +11,7 @@ import (
 type Auth struct {
 	ID            string   `json:"id"`
 	Email         *string  `json:"email,omitempty"`
-	EmailVerified *bool    `json:"email_verified,omitempty"`
+	EmailVerified bool     `json:"email_verified"`
 	Phone         *string  `json:"phone,omitempty"`
 	Role          AuthRole `json:"role"`
 	CreatedAt     string   `json:"created_at"`
@@ -49,7 +49,7 @@ type Query struct {
 type SignInOutput struct {
 	Auth      *Auth    `json:"auth,omitempty"`
 	Profile   *Profile `json:"profile,omitempty"`
-	VerifyOtp *bool    `json:"verify_otp,omitempty"`
+	VerifyOtp bool     `json:"verify_otp"`
 }
 
 type SignInWithEmailInput struct {

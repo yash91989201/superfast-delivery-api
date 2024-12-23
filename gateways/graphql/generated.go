@@ -743,11 +743,14 @@ func (ec *executionContext) _Auth_email_verified(ctx context.Context, field grap
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Auth_email_verified(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1960,11 +1963,14 @@ func (ec *executionContext) _SignInOutput_verify_otp(ctx context.Context, field 
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SignInOutput_verify_otp(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3937,6 +3943,9 @@ func (ec *executionContext) _Auth(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Auth_email(ctx, field, obj)
 		case "email_verified":
 			out.Values[i] = ec._Auth_email_verified(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "phone":
 			out.Values[i] = ec._Auth_phone(ctx, field, obj)
 		case "role":
@@ -4214,6 +4223,9 @@ func (ec *executionContext) _SignInOutput(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SignInOutput_profile(ctx, field, obj)
 		case "verify_otp":
 			out.Values[i] = ec._SignInOutput_verify_otp(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
