@@ -19,6 +19,15 @@ type Auth struct {
 	DeletedAt     *string  `json:"deleted_at,omitempty"`
 }
 
+type CreateProfileInput struct {
+	Name        string  `json:"name"`
+	ImageURL    *string `json:"image_url,omitempty"`
+	Dob         *string `json:"dob,omitempty"`
+	Anniversary *string `json:"anniversary,omitempty"`
+	Gender      *Gender `json:"gender,omitempty"`
+	AuthID      string  `json:"auth_id"`
+}
+
 type GetAuthByIDInput struct {
 	ID string `json:"id"`
 }
@@ -26,6 +35,10 @@ type GetAuthByIDInput struct {
 type GetAuthInput struct {
 	Email *string `json:"email,omitempty"`
 	Phone *string `json:"phone,omitempty"`
+}
+
+type GetProfileInput struct {
+	AuthID string `json:"auth_id"`
 }
 
 type Mutation struct {
@@ -47,9 +60,10 @@ type Query struct {
 }
 
 type SignInOutput struct {
-	Auth      *Auth    `json:"auth,omitempty"`
-	Profile   *Profile `json:"profile,omitempty"`
-	VerifyOtp bool     `json:"verify_otp"`
+	Auth          *Auth    `json:"auth,omitempty"`
+	Profile       *Profile `json:"profile,omitempty"`
+	CreateProfile bool     `json:"create_profile"`
+	VerifyOtp     bool     `json:"verify_otp"`
 }
 
 type SignInWithEmailInput struct {
@@ -64,6 +78,16 @@ type SignInWithGoogleInput struct {
 type SignInWithPhoneInput struct {
 	Phone string  `json:"phone"`
 	Otp   *string `json:"otp,omitempty"`
+}
+
+type UpdateProfileInput struct {
+	ID          *string `json:"id,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	ImageURL    *string `json:"image_url,omitempty"`
+	Dob         *string `json:"dob,omitempty"`
+	Anniversary *string `json:"anniversary,omitempty"`
+	Gender      *Gender `json:"gender,omitempty"`
+	AuthID      string  `json:"auth_id"`
 }
 
 type AuthRole string

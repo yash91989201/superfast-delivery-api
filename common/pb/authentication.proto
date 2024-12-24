@@ -53,4 +53,5 @@ service AuthenticationService {
   rpc SignInWithGoogle(SignInWithGoogleReq) returns (Auth) {}
   rpc GetAuthById(GetAuthByIdReq) returns(Auth){}
   rpc GetAuth(GetAuthReq) returns(Auth){}
+
 }

@@ -34,9 +34,9 @@ func main() {
 
 	srv := handler.New(s.ToExecutableSchema())
 
-	srv.AddTransport(transport.Options{})
 	srv.AddTransport(transport.GET{})
 	srv.AddTransport(transport.POST{})
+	srv.AddTransport(transport.Options{})
 
 	srv.SetQueryCache(lru.New[*ast.QueryDocument](1000))
 

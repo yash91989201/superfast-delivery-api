@@ -34,6 +34,11 @@ func (c *UserClient) Close() {
 
 func (c *UserClient) CreateProfile(ctx context.Context, req *pb.CreateProfileReq) (*pb.Profile, error) {
 	res, err := c.service.CreateProfile(ctx, req)
+	println("create profile client/user.go")
+	print("res  ")
+	println(res)
+	print("err  ")
+	println(err)
 	if err != nil {
 		return nil, err
 	}
@@ -43,12 +48,16 @@ func (c *UserClient) CreateProfile(ctx context.Context, req *pb.CreateProfileReq
 
 func (c *UserClient) GetProfile(ctx context.Context, req *pb.GetProfileReq) (*pb.Profile, error) {
 	res, err := c.service.GetProfile(ctx, req)
+	println("client/user.go")
+	print("res  ")
+	println(res)
+	print("err  ")
+	println(err)
 	if err != nil {
 		return nil, err
 	}
 
 	return res, nil
-
 }
 
 func (c *UserClient) UpdateProfile(ctx context.Context, req *pb.UpdateProfileReq) (*pb.Profile, error) {

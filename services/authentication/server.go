@@ -48,7 +48,7 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 
 		_ = s.service.DeleteEmailVerification(ctx, ev.Email)
 
-		// TODO: if auth exists then return it
+		// NOTE: if auth exists then return it
 		auth, err := s.service.GetAuth(ctx, &ev.Email, nil)
 		if err == nil {
 			return types.ToPbAuth(auth), nil

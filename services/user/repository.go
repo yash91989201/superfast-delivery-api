@@ -3,11 +3,12 @@ package user
 import (
 	"context"
 	"fmt"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/yash91989201/superfast-delivery-api/common/types"
-	"github.com/yash91989201/superfast-delivery-api/services/authentication/db/queries"
+	"github.com/yash91989201/superfast-delivery-api/services/user/db/queries"
 )
 
 type Repository interface {
@@ -63,6 +64,8 @@ func (r *mysqlRepository) GetProfileById(ctx context.Context, id string) (*types
 func (r *mysqlRepository) GetProfileByAuthId(ctx context.Context, auth_id string) (*types.Profile, error) {
 	p := &types.Profile{}
 	if err := r.db.GetContext(ctx, p, queries.GET_PROFILE_BY_AUTH_ID, auth_id); err != nil {
+		print("err")
+		print(err)
 		return nil, fmt.Errorf("Profile not found: %w", err)
 	}
 

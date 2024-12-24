@@ -58,9 +58,11 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		CreateProfile    func(childComplexity int, input CreateProfileInput) int
 		SignInWithEmail  func(childComplexity int, input SignInWithEmailInput) int
 		SignInWithGoogle func(childComplexity int, input SignInWithGoogleInput) int
 		SignInWithPhone  func(childComplexity int, input SignInWithPhoneInput) int
+		UpdateProfile    func(childComplexity int, input UpdateProfileInput) int
 	}
 
 	Profile struct {
@@ -78,12 +80,14 @@ type ComplexityRoot struct {
 	Query struct {
 		Auth     func(childComplexity int, input GetAuthInput) int
 		AuthByID func(childComplexity int, input GetAuthByIDInput) int
+		Profile  func(childComplexity int, input GetProfileInput) int
 	}
 
 	SignInOutput struct {
-		Auth      func(childComplexity int) int
-		Profile   func(childComplexity int) int
-		VerifyOtp func(childComplexity int) int
+		Auth          func(childComplexity int) int
+		CreateProfile func(childComplexity int) int
+		Profile       func(childComplexity int) int
+		VerifyOtp     func(childComplexity int) int
 	}
 }
 
@@ -91,10 +95,13 @@ type MutationResolver interface {
 	SignInWithEmail(ctx context.Context, input SignInWithEmailInput) (*SignInOutput, error)
 	SignInWithPhone(ctx context.Context, input SignInWithPhoneInput) (*SignInOutput, error)
 	SignInWithGoogle(ctx context.Context, input SignInWithGoogleInput) (*SignInOutput, error)
+	CreateProfile(ctx context.Context, input CreateProfileInput) (*Profile, error)
+	UpdateProfile(ctx context.Context, input UpdateProfileInput) (*Profile, error)
 }
 type QueryResolver interface {
 	AuthByID(ctx context.Context, input GetAuthByIDInput) (*Auth, error)
 	Auth(ctx context.Context, input GetAuthInput) (*Auth, error)
+	Profile(ctx context.Context, input GetProfileInput) (*Profile, error)
 }
 
 type executableSchema struct {
@@ -172,6 +179,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Auth.UpdatedAt(childComplexity), true
 
+	case "Mutation.CreateProfile":
+		if e.complexity.Mutation.CreateProfile == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_CreateProfile_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateProfile(childComplexity, args["input"].(CreateProfileInput)), true
+
 	case "Mutation.SignInWithEmail":
 		if e.complexity.Mutation.SignInWithEmail == nil {
 			break
@@ -207,6 +226,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.SignInWithPhone(childComplexity, args["input"].(SignInWithPhoneInput)), true
+
+	case "Mutation.UpdateProfile":
+		if e.complexity.Mutation.UpdateProfile == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateProfile_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateProfile(childComplexity, args["input"].(UpdateProfileInput)), true
 
 	case "Profile.anniversary":
 		if e.complexity.Profile.Anniversary == nil {
@@ -295,12 +326,31 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AuthByID(childComplexity, args["input"].(GetAuthByIDInput)), true
 
+	case "Query.profile":
+		if e.complexity.Query.Profile == nil {
+			break
+		}
+
+		args, err := ec.field_Query_profile_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Profile(childComplexity, args["input"].(GetProfileInput)), true
+
 	case "SignInOutput.auth":
 		if e.complexity.SignInOutput.Auth == nil {
 			break
 		}
 
 		return e.complexity.SignInOutput.Auth(childComplexity), true
+
+	case "SignInOutput.create_profile":
+		if e.complexity.SignInOutput.CreateProfile == nil {
+			break
+		}
+
+		return e.complexity.SignInOutput.CreateProfile(childComplexity), true
 
 	case "SignInOutput.profile":
 		if e.complexity.SignInOutput.Profile == nil {
@@ -324,11 +374,14 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	opCtx := graphql.GetOperationContext(ctx)
 	ec := executionContext{opCtx, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputCreateProfileInput,
 		ec.unmarshalInputGetAuthByIdInput,
 		ec.unmarshalInputGetAuthInput,
+		ec.unmarshalInputGetProfileInput,
 		ec.unmarshalInputSignInWithEmailInput,
 		ec.unmarshalInputSignInWithGoogleInput,
 		ec.unmarshalInputSignInWithPhoneInput,
+		ec.unmarshalInputUpdateProfileInput,
 	)
 	first := true
 
@@ -445,6 +498,29 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
+func (ec *executionContext) field_Mutation_CreateProfile_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_CreateProfile_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_CreateProfile_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (CreateProfileInput, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreateProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateProfileInput(ctx, tmp)
+	}
+
+	var zeroVal CreateProfileInput
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_SignInWithEmail_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -514,6 +590,29 @@ func (ec *executionContext) field_Mutation_SignInWithPhone_argsInput(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_UpdateProfile_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_UpdateProfile_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_UpdateProfile_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (UpdateProfileInput, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUpdateProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateProfileInput(ctx, tmp)
+	}
+
+	var zeroVal UpdateProfileInput
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -580,6 +679,29 @@ func (ec *executionContext) field_Query_auth_argsInput(
 	}
 
 	var zeroVal GetAuthInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_profile_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_profile_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_profile_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (GetProfileInput, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNGetProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐGetProfileInput(ctx, tmp)
+	}
+
+	var zeroVal GetProfileInput
 	return zeroVal, nil
 }
 
@@ -1023,6 +1145,8 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithEmail(ctx context.Co
 				return ec.fieldContext_SignInOutput_auth(ctx, field)
 			case "profile":
 				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "create_profile":
+				return ec.fieldContext_SignInOutput_create_profile(ctx, field)
 			case "verify_otp":
 				return ec.fieldContext_SignInOutput_verify_otp(ctx, field)
 			}
@@ -1086,6 +1210,8 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithPhone(ctx context.Co
 				return ec.fieldContext_SignInOutput_auth(ctx, field)
 			case "profile":
 				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "create_profile":
+				return ec.fieldContext_SignInOutput_create_profile(ctx, field)
 			case "verify_otp":
 				return ec.fieldContext_SignInOutput_verify_otp(ctx, field)
 			}
@@ -1149,6 +1275,8 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithGoogle(ctx context.C
 				return ec.fieldContext_SignInOutput_auth(ctx, field)
 			case "profile":
 				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "create_profile":
+				return ec.fieldContext_SignInOutput_create_profile(ctx, field)
 			case "verify_otp":
 				return ec.fieldContext_SignInOutput_verify_otp(ctx, field)
 			}
@@ -1163,6 +1291,156 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithGoogle(ctx context.C
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_SignInWithGoogle_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_CreateProfile(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_CreateProfile(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateProfile(rctx, fc.Args["input"].(CreateProfileInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*Profile)
+	fc.Result = res
+	return ec.marshalNProfile2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐProfile(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_CreateProfile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Profile_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Profile_name(ctx, field)
+			case "image_url":
+				return ec.fieldContext_Profile_image_url(ctx, field)
+			case "dob":
+				return ec.fieldContext_Profile_dob(ctx, field)
+			case "anniversary":
+				return ec.fieldContext_Profile_anniversary(ctx, field)
+			case "gender":
+				return ec.fieldContext_Profile_gender(ctx, field)
+			case "auth_id":
+				return ec.fieldContext_Profile_auth_id(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Profile_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_Profile_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_CreateProfile_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_UpdateProfile(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_UpdateProfile(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateProfile(rctx, fc.Args["input"].(UpdateProfileInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*Profile)
+	fc.Result = res
+	return ec.marshalNProfile2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐProfile(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_UpdateProfile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Profile_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Profile_name(ctx, field)
+			case "image_url":
+				return ec.fieldContext_Profile_image_url(ctx, field)
+			case "dob":
+				return ec.fieldContext_Profile_dob(ctx, field)
+			case "anniversary":
+				return ec.fieldContext_Profile_anniversary(ctx, field)
+			case "gender":
+				return ec.fieldContext_Profile_gender(ctx, field)
+			case "auth_id":
+				return ec.fieldContext_Profile_auth_id(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Profile_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_Profile_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_UpdateProfile_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -1693,6 +1971,78 @@ func (ec *executionContext) fieldContext_Query_auth(ctx context.Context, field g
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_profile(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_profile(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Profile(rctx, fc.Args["input"].(GetProfileInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*Profile)
+	fc.Result = res
+	return ec.marshalOProfile2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐProfile(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_profile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Profile_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Profile_name(ctx, field)
+			case "image_url":
+				return ec.fieldContext_Profile_image_url(ctx, field)
+			case "dob":
+				return ec.fieldContext_Profile_dob(ctx, field)
+			case "anniversary":
+				return ec.fieldContext_Profile_anniversary(ctx, field)
+			case "gender":
+				return ec.fieldContext_Profile_gender(ctx, field)
+			case "auth_id":
+				return ec.fieldContext_Profile_auth_id(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Profile_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_Profile_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_profile_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query___type(ctx, field)
 	if err != nil {
@@ -1937,6 +2287,50 @@ func (ec *executionContext) fieldContext_SignInOutput_profile(_ context.Context,
 				return ec.fieldContext_Profile_updated_at(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SignInOutput_create_profile(ctx context.Context, field graphql.CollectedField, obj *SignInOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SignInOutput_create_profile(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreateProfile, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SignInOutput_create_profile(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SignInOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3759,6 +4153,68 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(_ context.Context
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputCreateProfileInput(ctx context.Context, obj any) (CreateProfileInput, error) {
+	var it CreateProfileInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "image_url", "dob", "anniversary", "gender", "auth_id"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "image_url":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image_url"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ImageURL = data
+		case "dob":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dob"))
+			data, err := ec.unmarshalODate2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Dob = data
+		case "anniversary":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("anniversary"))
+			data, err := ec.unmarshalODate2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Anniversary = data
+		case "gender":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("gender"))
+			data, err := ec.unmarshalOGender2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐGender(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Gender = data
+		case "auth_id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_id"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AuthID = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputGetAuthByIdInput(ctx context.Context, obj any) (GetAuthByIDInput, error) {
 	var it GetAuthByIDInput
 	asMap := map[string]any{}
@@ -3814,6 +4270,33 @@ func (ec *executionContext) unmarshalInputGetAuthInput(ctx context.Context, obj 
 				return it, err
 			}
 			it.Phone = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputGetProfileInput(ctx context.Context, obj any) (GetProfileInput, error) {
+	var it GetProfileInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"auth_id"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "auth_id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_id"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AuthID = data
 		}
 	}
 
@@ -3909,6 +4392,75 @@ func (ec *executionContext) unmarshalInputSignInWithPhoneInput(ctx context.Conte
 				return it, err
 			}
 			it.Otp = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateProfileInput(ctx context.Context, obj any) (UpdateProfileInput, error) {
+	var it UpdateProfileInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "name", "image_url", "dob", "anniversary", "gender", "auth_id"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "image_url":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image_url"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ImageURL = data
+		case "dob":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dob"))
+			data, err := ec.unmarshalODate2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Dob = data
+		case "anniversary":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("anniversary"))
+			data, err := ec.unmarshalODate2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Anniversary = data
+		case "gender":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("gender"))
+			data, err := ec.unmarshalOGender2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐGender(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Gender = data
+		case "auth_id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_id"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AuthID = data
 		}
 	}
 
@@ -4024,6 +4576,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "SignInWithGoogle":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_SignInWithGoogle(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "CreateProfile":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_CreateProfile(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "UpdateProfile":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_UpdateProfile(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -4175,6 +4741,25 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "profile":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_profile(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "__type":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___type(ctx, field)
@@ -4221,6 +4806,11 @@ func (ec *executionContext) _SignInOutput(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SignInOutput_auth(ctx, field, obj)
 		case "profile":
 			out.Values[i] = ec._SignInOutput_profile(ctx, field, obj)
+		case "create_profile":
+			out.Values[i] = ec._SignInOutput_create_profile(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "verify_otp":
 			out.Values[i] = ec._SignInOutput_verify_otp(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -4600,6 +5190,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNCreateProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateProfileInput(ctx context.Context, v any) (CreateProfileInput, error) {
+	res, err := ec.unmarshalInputCreateProfileInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNDateTime2string(ctx context.Context, v any) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4623,6 +5218,25 @@ func (ec *executionContext) unmarshalNGetAuthByIdInput2githubᚗcomᚋyash919892
 func (ec *executionContext) unmarshalNGetAuthInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐGetAuthInput(ctx context.Context, v any) (GetAuthInput, error) {
 	res, err := ec.unmarshalInputGetAuthInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNGetProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐGetProfileInput(ctx context.Context, v any) (GetProfileInput, error) {
+	res, err := ec.unmarshalInputGetProfileInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNProfile2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐProfile(ctx context.Context, sel ast.SelectionSet, v Profile) graphql.Marshaler {
+	return ec._Profile(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNProfile2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐProfile(ctx context.Context, sel ast.SelectionSet, v *Profile) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Profile(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSignInOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInOutput(ctx context.Context, sel ast.SelectionSet, v SignInOutput) graphql.Marshaler {
@@ -4667,6 +5281,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateProfileInput(ctx context.Context, v any) (UpdateProfileInput, error) {
+	res, err := ec.unmarshalInputUpdateProfileInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

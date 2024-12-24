@@ -17,6 +17,8 @@ type Repository interface {
 	GetAuthByEmail(ctx context.Context, email string) (*types.Auth, error)
 	GetAuthByPhone(ctx context.Context, phone string) (*types.Auth, error)
 	DeleteAuth(ctx context.Context, id string) error
+	UpdateEmail(ctx context.Context, email string, id string) error
+	UpdatePhone(ctx context.Context, phone string, id string) error
 
 	CreateEmailVerification(ctx context.Context, v *types.EmailVerification) error
 	CreatePhoneVerification(ctx context.Context, v *types.PhoneVerification) error
@@ -93,6 +95,32 @@ func (r *mysqlRepository) DeleteAuth(ctx context.Context, id string) error {
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
 		return fmt.Errorf("Failed to delete auth with id %s, 0 rows affected : %w", id, err)
+	}
+
+	return nil
+}
+
+func (r *mysqlRepository) UpdateEmail(ctx context.Context, email string, id string) error {
+	queryRes, err := r.db.ExecContext(ctx, queries.UPDATE_EMAIL, email, id)
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to update email, 0 rows affected :%w", err)
+	}
+
+	return nil
+}
+
+func (r *mysqlRepository) UpdatePhone(ctx context.Context, phone string, id string) error {
+	queryRes, err := r.db.ExecContext(ctx, queries.UPDATE_PHONE, phone, id)
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to update phone, 0 rows affected :%w", err)
 	}
 
 	return nil

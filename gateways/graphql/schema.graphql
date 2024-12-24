@@ -15,6 +15,17 @@ enum Gender {
   UNDISCLOSED
 }
 
+type Auth {
+  id: String!
+  email: String
+  email_verified: Boolean!
+  phone: String
+  role: AuthRole!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
 type Profile {
   id: String!
   name: String!
@@ -25,17 +36,6 @@ type Profile {
   auth_id: String!
   created_at: DateTime!
   updated_at: DateTime!
-}
-
-type Auth {
-  id: String!
-  email: String
-  email_verified: Boolean!
-  phone: String
-  role: AuthRole!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
 }
 
 input SignInWithEmailInput {
@@ -55,6 +55,7 @@ input SignInWithGoogleInput {
 type SignInOutput {
   auth: Auth
   profile: Profile
+  create_profile: Boolean!
   verify_otp: Boolean!
 }
 
@@ -67,13 +68,40 @@ input GetAuthInput {
   phone: String
 }
 
+input CreateProfileInput {
+  name: String!
+  image_url: String
+  dob: Date
+  anniversary: Date
+  gender: Gender
+  auth_id: String!
+}
+
+input UpdateProfileInput {
+  id: String
+  name: String
+  image_url: String
+  dob: Date
+  anniversary: Date
+  gender: Gender
+  auth_id: String!
+}
+
+input GetProfileInput {
+  auth_id: String!
+}
+
 type Query {
   authById(input: GetAuthByIdInput!): Auth
   auth(input: GetAuthInput!): Auth
+  profile(input: GetProfileInput!): Profile
 }
 
 type Mutation {
   SignInWithEmail(input: SignInWithEmailInput!): SignInOutput!
   SignInWithPhone(input: SignInWithPhoneInput!): SignInOutput!
   SignInWithGoogle(input: SignInWithGoogleInput!): SignInOutput!
+
+  CreateProfile(input: CreateProfileInput!): Profile!
+  UpdateProfile(input: UpdateProfileInput!): Profile!
 }

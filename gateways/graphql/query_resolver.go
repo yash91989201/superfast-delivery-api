@@ -27,3 +27,7 @@ func (r *queryResolver) Auth(ctx context.Context, in GetAuthInput) (*Auth, error
 
 	return ToAuth(auth), nil
 }
+
+func (r *queryResolver) Profile(ctx context.Context, in GetProfileInput) (*Profile, error) {
+	return nil, nil
+}
