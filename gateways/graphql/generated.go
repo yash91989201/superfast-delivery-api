@@ -59,6 +59,8 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		CreateProfile    func(childComplexity int, input CreateProfileInput) int
+		LogOut           func(childComplexity int, sessionID string) int
+		RefreshToken     func(childComplexity int, sessionID string) int
 		SignInWithEmail  func(childComplexity int, input SignInWithEmailInput) int
 		SignInWithGoogle func(childComplexity int, input SignInWithGoogleInput) int
 		SignInWithPhone  func(childComplexity int, input SignInWithPhoneInput) int
@@ -84,10 +86,13 @@ type ComplexityRoot struct {
 	}
 
 	SignInOutput struct {
-		Auth          func(childComplexity int) int
-		CreateProfile func(childComplexity int) int
-		Profile       func(childComplexity int) int
-		VerifyOtp     func(childComplexity int) int
+		AccessToken          func(childComplexity int) int
+		AccessTokenExpiresAt func(childComplexity int) int
+		Auth                 func(childComplexity int) int
+		CreateProfile        func(childComplexity int) int
+		Profile              func(childComplexity int) int
+		SessionID            func(childComplexity int) int
+		VerifyOtp            func(childComplexity int) int
 	}
 }
 
@@ -95,6 +100,8 @@ type MutationResolver interface {
 	SignInWithEmail(ctx context.Context, input SignInWithEmailInput) (*SignInOutput, error)
 	SignInWithPhone(ctx context.Context, input SignInWithPhoneInput) (*SignInOutput, error)
 	SignInWithGoogle(ctx context.Context, input SignInWithGoogleInput) (*SignInOutput, error)
+	RefreshToken(ctx context.Context, sessionID string) (*SignInOutput, error)
+	LogOut(ctx context.Context, sessionID string) (*SignInOutput, error)
 	CreateProfile(ctx context.Context, input CreateProfileInput) (*Profile, error)
 	UpdateProfile(ctx context.Context, input UpdateProfileInput) (*Profile, error)
 }
@@ -190,6 +197,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateProfile(childComplexity, args["input"].(CreateProfileInput)), true
+
+	case "Mutation.LogOut":
+		if e.complexity.Mutation.LogOut == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_LogOut_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.LogOut(childComplexity, args["session_id"].(string)), true
+
+	case "Mutation.RefreshToken":
+		if e.complexity.Mutation.RefreshToken == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_RefreshToken_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RefreshToken(childComplexity, args["session_id"].(string)), true
 
 	case "Mutation.SignInWithEmail":
 		if e.complexity.Mutation.SignInWithEmail == nil {
@@ -338,6 +369,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Profile(childComplexity, args["input"].(GetProfileInput)), true
 
+	case "SignInOutput.access_token":
+		if e.complexity.SignInOutput.AccessToken == nil {
+			break
+		}
+
+		return e.complexity.SignInOutput.AccessToken(childComplexity), true
+
+	case "SignInOutput.access_token_expires_at":
+		if e.complexity.SignInOutput.AccessTokenExpiresAt == nil {
+			break
+		}
+
+		return e.complexity.SignInOutput.AccessTokenExpiresAt(childComplexity), true
+
 	case "SignInOutput.auth":
 		if e.complexity.SignInOutput.Auth == nil {
 			break
@@ -358,6 +403,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SignInOutput.Profile(childComplexity), true
+
+	case "SignInOutput.session_id":
+		if e.complexity.SignInOutput.SessionID == nil {
+			break
+		}
+
+		return e.complexity.SignInOutput.SessionID(childComplexity), true
 
 	case "SignInOutput.verify_otp":
 		if e.complexity.SignInOutput.VerifyOtp == nil {
@@ -518,6 +570,52 @@ func (ec *executionContext) field_Mutation_CreateProfile_argsInput(
 	}
 
 	var zeroVal CreateProfileInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_LogOut_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_LogOut_argsSessionID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["session_id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_LogOut_argsSessionID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("session_id"))
+	if tmp, ok := rawArgs["session_id"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_RefreshToken_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_RefreshToken_argsSessionID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["session_id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_RefreshToken_argsSessionID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("session_id"))
+	if tmp, ok := rawArgs["session_id"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
 	return zeroVal, nil
 }
 
@@ -1145,6 +1243,12 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithEmail(ctx context.Co
 				return ec.fieldContext_SignInOutput_auth(ctx, field)
 			case "profile":
 				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "session_id":
+				return ec.fieldContext_SignInOutput_session_id(ctx, field)
+			case "access_token":
+				return ec.fieldContext_SignInOutput_access_token(ctx, field)
+			case "access_token_expires_at":
+				return ec.fieldContext_SignInOutput_access_token_expires_at(ctx, field)
 			case "create_profile":
 				return ec.fieldContext_SignInOutput_create_profile(ctx, field)
 			case "verify_otp":
@@ -1210,6 +1314,12 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithPhone(ctx context.Co
 				return ec.fieldContext_SignInOutput_auth(ctx, field)
 			case "profile":
 				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "session_id":
+				return ec.fieldContext_SignInOutput_session_id(ctx, field)
+			case "access_token":
+				return ec.fieldContext_SignInOutput_access_token(ctx, field)
+			case "access_token_expires_at":
+				return ec.fieldContext_SignInOutput_access_token_expires_at(ctx, field)
 			case "create_profile":
 				return ec.fieldContext_SignInOutput_create_profile(ctx, field)
 			case "verify_otp":
@@ -1275,6 +1385,12 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithGoogle(ctx context.C
 				return ec.fieldContext_SignInOutput_auth(ctx, field)
 			case "profile":
 				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "session_id":
+				return ec.fieldContext_SignInOutput_session_id(ctx, field)
+			case "access_token":
+				return ec.fieldContext_SignInOutput_access_token(ctx, field)
+			case "access_token_expires_at":
+				return ec.fieldContext_SignInOutput_access_token_expires_at(ctx, field)
 			case "create_profile":
 				return ec.fieldContext_SignInOutput_create_profile(ctx, field)
 			case "verify_otp":
@@ -1291,6 +1407,148 @@ func (ec *executionContext) fieldContext_Mutation_SignInWithGoogle(ctx context.C
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_SignInWithGoogle_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_RefreshToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_RefreshToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RefreshToken(rctx, fc.Args["session_id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*SignInOutput)
+	fc.Result = res
+	return ec.marshalNSignInOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInOutput(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_RefreshToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "auth":
+				return ec.fieldContext_SignInOutput_auth(ctx, field)
+			case "profile":
+				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "session_id":
+				return ec.fieldContext_SignInOutput_session_id(ctx, field)
+			case "access_token":
+				return ec.fieldContext_SignInOutput_access_token(ctx, field)
+			case "access_token_expires_at":
+				return ec.fieldContext_SignInOutput_access_token_expires_at(ctx, field)
+			case "create_profile":
+				return ec.fieldContext_SignInOutput_create_profile(ctx, field)
+			case "verify_otp":
+				return ec.fieldContext_SignInOutput_verify_otp(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SignInOutput", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_RefreshToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_LogOut(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_LogOut(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().LogOut(rctx, fc.Args["session_id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*SignInOutput)
+	fc.Result = res
+	return ec.marshalNSignInOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInOutput(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_LogOut(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "auth":
+				return ec.fieldContext_SignInOutput_auth(ctx, field)
+			case "profile":
+				return ec.fieldContext_SignInOutput_profile(ctx, field)
+			case "session_id":
+				return ec.fieldContext_SignInOutput_session_id(ctx, field)
+			case "access_token":
+				return ec.fieldContext_SignInOutput_access_token(ctx, field)
+			case "access_token_expires_at":
+				return ec.fieldContext_SignInOutput_access_token_expires_at(ctx, field)
+			case "create_profile":
+				return ec.fieldContext_SignInOutput_create_profile(ctx, field)
+			case "verify_otp":
+				return ec.fieldContext_SignInOutput_verify_otp(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SignInOutput", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_LogOut_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -2287,6 +2545,129 @@ func (ec *executionContext) fieldContext_SignInOutput_profile(_ context.Context,
 				return ec.fieldContext_Profile_updated_at(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SignInOutput_session_id(ctx context.Context, field graphql.CollectedField, obj *SignInOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SignInOutput_session_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SessionID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SignInOutput_session_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SignInOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SignInOutput_access_token(ctx context.Context, field graphql.CollectedField, obj *SignInOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SignInOutput_access_token(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccessToken, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SignInOutput_access_token(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SignInOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SignInOutput_access_token_expires_at(ctx context.Context, field graphql.CollectedField, obj *SignInOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SignInOutput_access_token_expires_at(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccessTokenExpiresAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalODateTime2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SignInOutput_access_token_expires_at(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SignInOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
 		},
 	}
 	return fc, nil
@@ -4580,6 +4961,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "RefreshToken":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_RefreshToken(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "LogOut":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_LogOut(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "CreateProfile":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_CreateProfile(ctx, field)
@@ -4806,6 +5201,12 @@ func (ec *executionContext) _SignInOutput(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SignInOutput_auth(ctx, field, obj)
 		case "profile":
 			out.Values[i] = ec._SignInOutput_profile(ctx, field, obj)
+		case "session_id":
+			out.Values[i] = ec._SignInOutput_session_id(ctx, field, obj)
+		case "access_token":
+			out.Values[i] = ec._SignInOutput_access_token(ctx, field, obj)
+		case "access_token_expires_at":
+			out.Values[i] = ec._SignInOutput_access_token_expires_at(ctx, field, obj)
 		case "create_profile":
 			out.Values[i] = ec._SignInOutput_create_profile(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

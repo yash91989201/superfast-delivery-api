@@ -1,3 +1,4 @@
+scalar Time
 scalar Date
 scalar DateTime
 
@@ -55,6 +56,9 @@ input SignInWithGoogleInput {
 type SignInOutput {
   auth: Auth
   profile: Profile
+  session_id: String
+  access_token: String
+  access_token_expires_at: DateTime
   create_profile: Boolean!
   verify_otp: Boolean!
 }
@@ -101,6 +105,8 @@ type Mutation {
   SignInWithEmail(input: SignInWithEmailInput!): SignInOutput!
   SignInWithPhone(input: SignInWithPhoneInput!): SignInOutput!
   SignInWithGoogle(input: SignInWithGoogleInput!): SignInOutput!
+  RefreshToken(session_id: String!): SignInOutput!
+  LogOut(session_id: String!): SignInOutput!
 
   CreateProfile(input: CreateProfileInput!): Profile!
   UpdateProfile(input: UpdateProfileInput!): Profile!

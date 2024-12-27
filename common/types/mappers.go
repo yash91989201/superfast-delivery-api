@@ -11,6 +11,10 @@ func ToBoolPtr(b bool) *bool {
 	return &b
 }
 
+func ToStrPtr(s string) *string {
+	return &s
+}
+
 func ToAuthRole(t pb.AuthRole) AuthRole {
 	switch t {
 	case pb.AuthRole_CUSTOMER:
@@ -85,6 +89,15 @@ func TimeToPbDate(t *time.Time) *pb.Date {
 		Month: int32(t.Month()),
 		Day:   int32(t.Day()),
 	}
+}
+
+func PbTimeStampToStrPtr(t *timestamppb.Timestamp) *string {
+	if t == nil {
+		return nil
+	}
+
+	timeStr := t.String()
+	return &timeStr
 }
 
 func PbDateToTime(d *pb.Date) *time.Time {
@@ -250,5 +263,14 @@ func ToPbAuth(p *Auth) *pb.Auth {
 		CreatedAt:     ToPbTimestamp(p.CreatedAt),
 		UpdatedAt:     ToPbTimestamp(p.UpdatedAt),
 		DeletedAt:     deletedAt,
+	}
+}
+
+func ToPbSignInRes(r *SignInRes) *pb.SignInRes {
+	return &pb.SignInRes{
+		Auth:                 ToPbAuth(r.Auth),
+		SessionId:            *r.SessionId,
+		AccessToken:          *r.AccessToken,
+		AccessTokenExpiresAt: ToPbTimestamp(*r.AccessTokenExpiresAt),
 	}
 }

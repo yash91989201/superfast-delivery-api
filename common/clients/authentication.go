@@ -31,7 +31,7 @@ func (c *AuthenticationClient) Close() {
 	c.conn.Close()
 }
 
-func (c *AuthenticationClient) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmailReq) (*pb.Auth, error) {
+func (c *AuthenticationClient) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmailReq) (*pb.SignInRes, error) {
 	res, err := c.service.SignInWithEmail(ctx, req)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func (c *AuthenticationClient) SignInWithEmail(ctx context.Context, req *pb.Sign
 	return res, nil
 }
 
-func (c *AuthenticationClient) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhoneReq) (*pb.Auth, error) {
+func (c *AuthenticationClient) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhoneReq) (*pb.SignInRes, error) {
 	res, err := c.service.SignInWithPhone(ctx, req)
 	if err != nil {
 		return nil, err
@@ -49,8 +49,26 @@ func (c *AuthenticationClient) SignInWithPhone(ctx context.Context, req *pb.Sign
 	return res, nil
 }
 
-func (c *AuthenticationClient) SignInWithGoogle(ctx context.Context, req *pb.SignInWithGoogleReq) (*pb.Auth, error) {
+func (c *AuthenticationClient) SignInWithGoogle(ctx context.Context, req *pb.SignInWithGoogleReq) (*pb.SignInRes, error) {
 	res, err := c.service.SignInWithGoogle(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (c *AuthenticationClient) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) (*pb.SignInRes, error) {
+	res, err := c.service.RefreshToken(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (c *AuthenticationClient) LogOut(ctx context.Context, req *pb.LogOutReq) (*pb.SignInRes, error) {
+	res, err := c.service.LogOut(ctx, req)
 	if err != nil {
 		return nil, err
 	}

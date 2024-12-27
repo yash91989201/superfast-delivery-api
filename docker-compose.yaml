@@ -47,6 +47,7 @@ services:
     environment:
       DATABASE_URL: ${AUTHENTICATION_DATABASE_URL}
       SERVICE_URL: ${AUTHENTICATION_SERVICE_URL}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     networks:
       - superfast_delivery
     mem_limit: 128m

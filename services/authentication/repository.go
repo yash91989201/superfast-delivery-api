@@ -26,6 +26,11 @@ type Repository interface {
 	GetPhoneVerification(ctx context.Context, phone string) (*types.PhoneVerification, error)
 	DeleteEmailVerification(ctx context.Context, email string) error
 	DeletePhoneVerification(ctx context.Context, phone string) error
+
+	CreateSession(ctx context.Context, s *types.Session) error
+	GetSession(ctx context.Context, id string) (*types.Session, error)
+	RevokeSession(ctx context.Context, auth_id string) error
+	DeleteSession(ctx context.Context, auth_id string) error
 }
 
 type mysqlRepository struct {
@@ -191,6 +196,54 @@ func (r *mysqlRepository) DeletePhoneVerification(ctx context.Context, phone str
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
 		return fmt.Errorf("Failed to delete phone verification with phone %s, 0 rows affected : %w", phone, err)
+	}
+
+	return nil
+}
+
+func (r *mysqlRepository) CreateSession(ctx context.Context, session *types.Session) error {
+	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_SESSION, session)
+	if err != nil {
+		return fmt.Errorf("Failed to create session: %w", err)
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to create session, 0 rows affected: %w", err)
+	}
+
+	return nil
+}
+
+func (r *mysqlRepository) GetSession(ctx context.Context, id string) (*types.Session, error) {
+	s := &types.Session{}
+	if err := r.db.GetContext(ctx, s, queries.GET_SESSION, id); err != nil {
+		return nil, fmt.Errorf("Failed to get session: %w", err)
+	}
+
+	return s, nil
+}
+
+func (r *mysqlRepository) RevokeSession(ctx context.Context, id string) error {
+	queryRes, err := r.db.ExecContext(ctx, queries.REVOKE_SESSION, id)
+	if err != nil {
+		return fmt.Errorf("Failed to create session: %w", err)
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to revoke session, 0 rows affected: %w", err)
+	}
+
+	return nil
+}
+
+func (r *mysqlRepository) DeleteSession(ctx context.Context, id string) error {
+	queryRes, err := r.db.ExecContext(ctx, queries.DELETE_SESSION, id)
+	if err != nil {
+		return fmt.Errorf("Failed to delete session: %w", err)
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to delete session, 0 rows affected: %w", err)
 	}
 
 	return nil

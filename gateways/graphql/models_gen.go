@@ -60,10 +60,13 @@ type Query struct {
 }
 
 type SignInOutput struct {
-	Auth          *Auth    `json:"auth,omitempty"`
-	Profile       *Profile `json:"profile,omitempty"`
-	CreateProfile bool     `json:"create_profile"`
-	VerifyOtp     bool     `json:"verify_otp"`
+	Auth                 *Auth    `json:"auth,omitempty"`
+	Profile              *Profile `json:"profile,omitempty"`
+	SessionID            *string  `json:"session_id,omitempty"`
+	AccessToken          *string  `json:"access_token,omitempty"`
+	AccessTokenExpiresAt *string  `json:"access_token_expires_at,omitempty"`
+	CreateProfile        bool     `json:"create_profile"`
+	VerifyOtp            bool     `json:"verify_otp"`
 }
 
 type SignInWithEmailInput struct {

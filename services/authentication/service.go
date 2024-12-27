@@ -21,6 +21,11 @@ type Service interface {
 	GetPhoneVerification(ctx context.Context, phone string) (*types.PhoneVerification, error)
 	DeleteEmailVerification(ctx context.Context, email string) error
 	DeletePhoneVerification(ctx context.Context, phone string) error
+
+	CreateSession(ctx context.Context, session *types.Session) error
+	GetSession(ctx context.Context, id string) (*types.Session, error)
+	RevokeSession(ctx context.Context, id string) error
+	DeleteSession(ctx context.Context, id string) error
 }
 
 type authenticationService struct {
@@ -103,4 +108,20 @@ func (s *authenticationService) DeleteEmailVerification(ctx context.Context, ema
 
 func (s *authenticationService) DeletePhoneVerification(ctx context.Context, phone string) error {
 	return s.r.DeletePhoneVerification(ctx, phone)
+}
+
+func (s *authenticationService) CreateSession(ctx context.Context, session *types.Session) error {
+	return s.r.CreateSession(ctx, session)
+}
+
+func (s *authenticationService) GetSession(ctx context.Context, id string) (*types.Session, error) {
+	return s.r.GetSession(ctx, id)
+}
+
+func (s *authenticationService) RevokeSession(ctx context.Context, id string) error {
+	return s.r.RevokeSession(ctx, id)
+}
+
+func (s *authenticationService) DeleteSession(ctx context.Context, id string) error {
+	return s.r.DeleteSession(ctx, id)
 }

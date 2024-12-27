@@ -24,17 +24,22 @@ const (
 	AuthenticationService_SignInWithGoogle_FullMethodName = "/pb.AuthenticationService/SignInWithGoogle"
 	AuthenticationService_GetAuthById_FullMethodName      = "/pb.AuthenticationService/GetAuthById"
 	AuthenticationService_GetAuth_FullMethodName          = "/pb.AuthenticationService/GetAuth"
+	AuthenticationService_RefreshToken_FullMethodName     = "/pb.AuthenticationService/RefreshToken"
+	AuthenticationService_LogOut_FullMethodName           = "/pb.AuthenticationService/LogOut"
 )
 
 // AuthenticationServiceClient is the client API for AuthenticationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthenticationServiceClient interface {
-	SignInWithEmail(ctx context.Context, in *SignInWithEmailReq, opts ...grpc.CallOption) (*Auth, error)
-	SignInWithPhone(ctx context.Context, in *SignInWithPhoneReq, opts ...grpc.CallOption) (*Auth, error)
-	SignInWithGoogle(ctx context.Context, in *SignInWithGoogleReq, opts ...grpc.CallOption) (*Auth, error)
+	SignInWithEmail(ctx context.Context, in *SignInWithEmailReq, opts ...grpc.CallOption) (*SignInRes, error)
+	SignInWithPhone(ctx context.Context, in *SignInWithPhoneReq, opts ...grpc.CallOption) (*SignInRes, error)
+	SignInWithGoogle(ctx context.Context, in *SignInWithGoogleReq, opts ...grpc.CallOption) (*SignInRes, error)
 	GetAuthById(ctx context.Context, in *GetAuthByIdReq, opts ...grpc.CallOption) (*Auth, error)
 	GetAuth(ctx context.Context, in *GetAuthReq, opts ...grpc.CallOption) (*Auth, error)
+	// TODO: these rpc's should be protected
+	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*SignInRes, error)
+	LogOut(ctx context.Context, in *LogOutReq, opts ...grpc.CallOption) (*SignInRes, error)
 }
 
 type authenticationServiceClient struct {
@@ -45,9 +50,9 @@ func NewAuthenticationServiceClient(cc grpc.ClientConnInterface) AuthenticationS
 	return &authenticationServiceClient{cc}
 }
 
-func (c *authenticationServiceClient) SignInWithEmail(ctx context.Context, in *SignInWithEmailReq, opts ...grpc.CallOption) (*Auth, error) {
+func (c *authenticationServiceClient) SignInWithEmail(ctx context.Context, in *SignInWithEmailReq, opts ...grpc.CallOption) (*SignInRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Auth)
+	out := new(SignInRes)
 	err := c.cc.Invoke(ctx, AuthenticationService_SignInWithEmail_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -55,9 +60,9 @@ func (c *authenticationServiceClient) SignInWithEmail(ctx context.Context, in *S
 	return out, nil
 }
 
-func (c *authenticationServiceClient) SignInWithPhone(ctx context.Context, in *SignInWithPhoneReq, opts ...grpc.CallOption) (*Auth, error) {
+func (c *authenticationServiceClient) SignInWithPhone(ctx context.Context, in *SignInWithPhoneReq, opts ...grpc.CallOption) (*SignInRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Auth)
+	out := new(SignInRes)
 	err := c.cc.Invoke(ctx, AuthenticationService_SignInWithPhone_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -65,9 +70,9 @@ func (c *authenticationServiceClient) SignInWithPhone(ctx context.Context, in *S
 	return out, nil
 }
 
-func (c *authenticationServiceClient) SignInWithGoogle(ctx context.Context, in *SignInWithGoogleReq, opts ...grpc.CallOption) (*Auth, error) {
+func (c *authenticationServiceClient) SignInWithGoogle(ctx context.Context, in *SignInWithGoogleReq, opts ...grpc.CallOption) (*SignInRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Auth)
+	out := new(SignInRes)
 	err := c.cc.Invoke(ctx, AuthenticationService_SignInWithGoogle_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -95,15 +100,38 @@ func (c *authenticationServiceClient) GetAuth(ctx context.Context, in *GetAuthRe
 	return out, nil
 }
 
+func (c *authenticationServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*SignInRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SignInRes)
+	err := c.cc.Invoke(ctx, AuthenticationService_RefreshToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticationServiceClient) LogOut(ctx context.Context, in *LogOutReq, opts ...grpc.CallOption) (*SignInRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SignInRes)
+	err := c.cc.Invoke(ctx, AuthenticationService_LogOut_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticationServiceServer is the server API for AuthenticationService service.
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility.
 type AuthenticationServiceServer interface {
-	SignInWithEmail(context.Context, *SignInWithEmailReq) (*Auth, error)
-	SignInWithPhone(context.Context, *SignInWithPhoneReq) (*Auth, error)
-	SignInWithGoogle(context.Context, *SignInWithGoogleReq) (*Auth, error)
+	SignInWithEmail(context.Context, *SignInWithEmailReq) (*SignInRes, error)
+	SignInWithPhone(context.Context, *SignInWithPhoneReq) (*SignInRes, error)
+	SignInWithGoogle(context.Context, *SignInWithGoogleReq) (*SignInRes, error)
 	GetAuthById(context.Context, *GetAuthByIdReq) (*Auth, error)
 	GetAuth(context.Context, *GetAuthReq) (*Auth, error)
+	// TODO: these rpc's should be protected
+	RefreshToken(context.Context, *RefreshTokenReq) (*SignInRes, error)
+	LogOut(context.Context, *LogOutReq) (*SignInRes, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -114,13 +142,13 @@ type AuthenticationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthenticationServiceServer struct{}
 
-func (UnimplementedAuthenticationServiceServer) SignInWithEmail(context.Context, *SignInWithEmailReq) (*Auth, error) {
+func (UnimplementedAuthenticationServiceServer) SignInWithEmail(context.Context, *SignInWithEmailReq) (*SignInRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignInWithEmail not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) SignInWithPhone(context.Context, *SignInWithPhoneReq) (*Auth, error) {
+func (UnimplementedAuthenticationServiceServer) SignInWithPhone(context.Context, *SignInWithPhoneReq) (*SignInRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignInWithPhone not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) SignInWithGoogle(context.Context, *SignInWithGoogleReq) (*Auth, error) {
+func (UnimplementedAuthenticationServiceServer) SignInWithGoogle(context.Context, *SignInWithGoogleReq) (*SignInRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignInWithGoogle not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) GetAuthById(context.Context, *GetAuthByIdReq) (*Auth, error) {
@@ -128,6 +156,12 @@ func (UnimplementedAuthenticationServiceServer) GetAuthById(context.Context, *Ge
 }
 func (UnimplementedAuthenticationServiceServer) GetAuth(context.Context, *GetAuthReq) (*Auth, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAuth not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) RefreshToken(context.Context, *RefreshTokenReq) (*SignInRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) LogOut(context.Context, *LogOutReq) (*SignInRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
 func (UnimplementedAuthenticationServiceServer) testEmbeddedByValue()                               {}
@@ -240,6 +274,42 @@ func _AuthenticationService_GetAuth_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticationService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshTokenReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_RefreshToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).RefreshToken(ctx, req.(*RefreshTokenReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthenticationService_LogOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogOutReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).LogOut(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_LogOut_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).LogOut(ctx, req.(*LogOutReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthenticationService_ServiceDesc is the grpc.ServiceDesc for AuthenticationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -266,6 +336,14 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAuth",
 			Handler:    _AuthenticationService_GetAuth_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _AuthenticationService_RefreshToken_Handler,
+		},
+		{
+			MethodName: "LogOut",
+			Handler:    _AuthenticationService_LogOut_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

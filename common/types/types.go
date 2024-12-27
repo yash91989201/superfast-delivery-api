@@ -60,6 +60,15 @@ type CreateAuth struct {
 	Role          AuthRole `json:"role" db:"role"`
 }
 
+type Session struct {
+	Id           string    `json:"id" db:"id"`
+	AuthId       string    `json:"auth_id" db:"auth_id"`
+	RefreshToken string    `json:"refresh_token" db:"refresh_token"`
+	IsRevoked    bool      `json:"is_revoked" db:"is_revoked"`
+	CreatedAt    time.Time `json:"created_at" db:"created_at"`
+	ExpiresAt    time.Time `json:"expires_at" db:"expires_at"`
+}
+
 type EmailVerification struct {
 	Token     string    `json:"token" db:"token"`
 	Email     string    `json:"email" db:"email"`
@@ -70,6 +79,13 @@ type PhoneVerification struct {
 	Token     string    `json:"token" db:"token"`
 	Phone     string    `json:"phone" db:"phone"`
 	ExpiresAt time.Time `json:"expires_at" db:"expires_at"`
+}
+
+type SignInRes struct {
+	Auth                 *Auth      `json:"auth" db:"auth"`
+	SessionId            *string    `json:"session_id" db:"session_id"`
+	AccessToken          *string    `json:"access_token" db:"access_token"`
+	AccessTokenExpiresAt *time.Time `json:"access_token_expires_at" db:"access_token_expires_at"`
 }
 
 type Profile struct {

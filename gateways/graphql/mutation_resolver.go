@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
+	"github.com/yash91989201/superfast-delivery-api/common/types"
 )
 
 type mutationResolver struct {
@@ -11,89 +12,64 @@ type mutationResolver struct {
 }
 
 func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEmailInput) (*SignInOutput, error) {
-	auth, err := r.server.authenticationClient.SignInWithEmail(ctx, &pb.SignInWithEmailReq{Email: in.Email, Otp: in.Otp})
+	signInRes, err := r.server.authenticationClient.SignInWithEmail(ctx, &pb.SignInWithEmailReq{Email: in.Email, Otp: in.Otp})
 	if err != nil {
 		return nil, err
 	}
 
-	if auth.Id == "" {
+	if signInRes.Auth.Id == "" {
 		return &SignInOutput{
-			Auth:          nil,
-			Profile:       nil,
-			CreateProfile: false,
-			VerifyOtp:     true,
+			VerifyOtp: true,
 		}, nil
 	}
 
-	profile, err := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: auth.Id})
-	if err != nil {
-		return &SignInOutput{
-			Auth:          ToAuth(auth),
-			Profile:       nil,
-			CreateProfile: true,
-			VerifyOtp:     false,
-		}, nil
-	}
+	profile, _ := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 
 	return &SignInOutput{
-		Auth:          ToAuth(auth),
-		Profile:       ToProfile(profile),
-		CreateProfile: false,
-		VerifyOtp:     false,
+		Auth:                 ToAuth(signInRes.Auth),
+		SessionID:            &signInRes.SessionId,
+		AccessToken:          &signInRes.AccessToken,
+		AccessTokenExpiresAt: types.PbTimeStampToStrPtr(signInRes.AccessTokenExpiresAt),
+		Profile:              ToProfile(profile),
+		CreateProfile:        profile == nil,
+		VerifyOtp:            false,
 	}, nil
 }
 
 func (r *mutationResolver) SignInWithPhone(ctx context.Context, in SignInWithPhoneInput) (*SignInOutput, error) {
-	auth, err := r.server.authenticationClient.SignInWithPhone(ctx, &pb.SignInWithPhoneReq{Phone: in.Phone, Otp: in.Otp})
-	if err != nil {
-		return nil, err
-	}
-
-	if auth.Id == "" {
-		return &SignInOutput{
-			Auth:          nil,
-			Profile:       nil,
-			CreateProfile: false,
-			VerifyOtp:     true,
-		}, nil
-	}
-
-	profile, err := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: auth.Id})
-	if err != nil {
-		return &SignInOutput{
-			Auth:          ToAuth(auth),
-			Profile:       nil,
-			CreateProfile: true,
-			VerifyOtp:     false,
-		}, nil
-	}
-
-	return &SignInOutput{
-		Auth:          ToAuth(auth),
-		Profile:       ToProfile(profile),
-		CreateProfile: false,
-		VerifyOtp:     false,
-	}, nil
+	return nil, nil
 }
 
 func (r *mutationResolver) SignInWithGoogle(ctx context.Context, in SignInWithGoogleInput) (*SignInOutput, error) {
-	// TODO: different flow required for google because profile will be created in the user service by fetching from google
-	auth, err := r.server.authenticationClient.SignInWithGoogle(ctx, &pb.SignInWithGoogleReq{IdToken: in.IDToken})
+	return nil, nil
+}
+
+func (r *mutationResolver) RefreshToken(ctx context.Context, session_id string) (*SignInOutput, error) {
+	signInRes, err := r.server.authenticationClient.RefreshToken(ctx, &pb.RefreshTokenReq{SessionId: session_id})
 	if err != nil {
 		return nil, err
 	}
 
-	// get profile
-	profile, err := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: auth.Id})
-	if err != nil {
-		return nil, err
-	}
+	profile, _ := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 
 	return &SignInOutput{
-		Auth:      ToAuth(auth),
-		Profile:   ToProfile(profile),
-		VerifyOtp: false,
+		Auth:                 ToAuth(signInRes.Auth),
+		SessionID:            &signInRes.SessionId,
+		AccessToken:          &signInRes.AccessToken,
+		AccessTokenExpiresAt: types.PbTimeStampToStrPtr(signInRes.AccessTokenExpiresAt),
+		Profile:              ToProfile(profile),
+		CreateProfile:        profile == nil,
+		VerifyOtp:            false,
 	}, nil
+}
+
+func (r *mutationResolver) LogOut(ctx context.Context, session_id string) (*SignInOutput, error) {
+	_, err := r.server.authenticationClient.LogOut(ctx, &pb.LogOutReq{SessionId: session_id})
+	if err != nil {
+		return nil, err
+	}
+
+	return &SignInOutput{}, nil
 }
 
 func (r *mutationResolver) CreateProfile(ctx context.Context, in CreateProfileInput) (*Profile, error) {

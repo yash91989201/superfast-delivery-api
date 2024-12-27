@@ -18,7 +18,7 @@ message Auth {
   optional string email = 2;
   bool email_verified = 3;
   optional string phone = 4;
-  AuthRole role= 5;
+  AuthRole role = 5;
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
   optional google.protobuf.Timestamp deleted_at = 8;
@@ -26,7 +26,7 @@ message Auth {
 
 message SignInWithEmailReq {
   string email = 1;
-optional  string otp = 2;
+  optional string otp = 2;
 }
 
 message SignInWithPhoneReq {
@@ -38,20 +38,39 @@ message SignInWithGoogleReq {
   string id_token = 1;
 }
 
-message GetAuthByIdReq{
-string id =1;
+message SignInRes {
+  Auth auth = 1;
+  string session_id = 2;
+  string access_token = 3;
+  google.protobuf.Timestamp access_token_expires_at = 4;
 }
 
-message GetAuthReq{
-optional string email=1;
-optional string phone=2;
+message RefreshTokenReq {
+  string session_id = 1;
+}
+
+message LogOutReq {
+  string session_id = 1;
+}
+
+message GetAuthByIdReq {
+  string id = 1;
+}
+
+message GetAuthReq {
+  optional string email = 1;
+  optional string phone = 2;
 }
 
 service AuthenticationService {
-  rpc SignInWithEmail(SignInWithEmailReq) returns (Auth) {}
-  rpc SignInWithPhone(SignInWithPhoneReq) returns (Auth) {}
-  rpc SignInWithGoogle(SignInWithGoogleReq) returns (Auth) {}
-  rpc GetAuthById(GetAuthByIdReq) returns(Auth){}
-  rpc GetAuth(GetAuthReq) returns(Auth){}
+  rpc SignInWithEmail(SignInWithEmailReq) returns (SignInRes) {}
+  rpc SignInWithPhone(SignInWithPhoneReq) returns (SignInRes) {}
+  rpc SignInWithGoogle(SignInWithGoogleReq) returns (SignInRes) {}
 
+  rpc GetAuthById(GetAuthByIdReq) returns (Auth) {}
+  rpc GetAuth(GetAuthReq) returns (Auth) {}
+
+  // TODO: these rpc's should be protected
+  rpc RefreshToken(RefreshTokenReq) returns (SignInRes) {}
+  rpc LogOut(LogOutReq) returns (SignInRes) {}
 }
