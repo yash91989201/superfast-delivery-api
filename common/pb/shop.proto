@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
+
+enum ShopType {
+  RESTAURANT = 0;
+  GROCERY = 1;
+  PHARMACEUTICAL = 2;
+}
+
+message LatLng {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+enum ShopStatus {
+  OPEN = 0;
+  CLOSED = 1;
+}
+
+enum DayOfWeek {
+  MONDAY = 0;
+  TUESDAY = 1;
+  WEDNESDAY = 2;
+  THURSDAY = 3;
+  FRIDAY = 4;
+  SATURDAY = 5;
+  SUNDAY = 6;
+}
+
+message TimeOfDay {
+  int32 hours = 1;
+  int32 minutes = 2;
+  int32 seconds = 3;
+}
+
+message Shop {
+  string id = 1;
+  string name = 2;
+  ShopType type = 3;
+  ShopStatus status = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  optional google.protobuf.Timestamp deleted_at = 7;
+}
+
+message Contact {
+  string id = 1;
+  string name = 2;
+  string phone_number = 3;
+  string email = 4;
+  string shop_id = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message Address {
+  string id = 1;
+  string address1 = 2;
+  string address2 = 3;
+  LatLng location = 4;
+  string landmark = 5;
+  string city = 6;
+  string state = 7;
+  string pincode = 8;
+  string country = 9;
+  string shop_id = 10;
+  google.protobuf.Timestamp created_at = 11;
+}
+
+message Image {
+  string id = 1;
+  string url = 2;
+  string description = 3;
+  string shop_id = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message Timing {
+  string id = 1;
+  DayOfWeek day = 2;
+  TimeOfDay opens_at = 3;
+  TimeOfDay closes_at = 4;
+  string shop_id = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
