@@ -21,18 +21,18 @@ func NewAuthClaims(
 	emailVerfied bool,
 	phone *string,
 	role types.AuthRole,
-	auth_id string,
+	authId string,
 	duration time.Duration,
 ) *AuthClaims {
-	tokenId := cuid2.Generate()
+	sessionId := cuid2.Generate()
 
 	return &AuthClaims{
 		Email: email,
 		Phone: phone,
 		Role:  role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ID:        tokenId,
-			Subject:   auth_id,
+			ID:        sessionId,
+			Subject:   authId,
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
 		},

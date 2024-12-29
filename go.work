@@ -6,4 +6,9 @@ use (
 	./gateways/rest
 	./services/user
 	./services/authentication
+	./services/shop
+	./services/inventory
+	./services/order
+	./services/delivery
+	./services/product
 )
