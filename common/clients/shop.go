@@ -41,7 +41,7 @@ func (s *ShopClient) CreateShop(ctx context.Context, req *pb.CreateShopReq) (*pb
 	return res, nil
 }
 
-func (s *ShopClient) GetShop(ctx context.Context, req *pb.GetShopReq) (*pb.GetShopRes, error) {
+func (s *ShopClient) GetShop(ctx context.Context, req *pb.GetShopReq) (*pb.Shop, error) {
 	res, err := s.service.GetShop(ctx, req)
 	if err != nil {
 		return nil, err

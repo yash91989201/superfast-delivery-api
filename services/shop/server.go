@@ -42,8 +42,13 @@ func (s *grpcServer) CreateShop(ctx context.Context, req *pb.CreateShopReq) (*pb
 	}, nil
 }
 
-func (s *grpcServer) GetShop(context.Context, *pb.GetShopReq) (*pb.GetShopRes, error) {
-	return nil, nil
+func (s *grpcServer) GetShop(ctx context.Context, req *pb.GetShopReq) (*pb.Shop, error) {
+	res, err := s.service.GetShop(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbShop(res), nil
 }
 
 func (s *grpcServer) ListShops(context.Context, *pb.ListShopsReq) (*pb.ListShopsRes, error) {

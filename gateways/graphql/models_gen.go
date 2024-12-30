@@ -87,14 +87,6 @@ type GetProfileInput struct {
 	AuthID string `json:"auth_id"`
 }
 
-type GetShopOutput struct {
-	Shop    *Shop         `json:"shop"`
-	Address *ShopAddress  `json:"address"`
-	Contact *ShopContact  `json:"contact"`
-	Images  []*ShopImage  `json:"images,omitempty"`
-	Timings []*ShopTiming `json:"timings,omitempty"`
-}
-
 type LatLng struct {
 	Lat float64 `json:"lat"`
 	Lng float64 `json:"lng"`
@@ -136,23 +128,27 @@ type Query struct {
 }
 
 type Shop struct {
-	ID         string     `json:"id"`
-	Name       string     `json:"name"`
-	ShopType   ShopType   `json:"shop_type"`
-	ShopStatus ShopStatus `json:"shop_status"`
-	OwnerID    string     `json:"owner_id"`
-	CreatedAt  string     `json:"created_at"`
-	UpdatedAt  string     `json:"updated_at"`
-	DeletedAt  *string    `json:"deleted_at,omitempty"`
+	ID         string        `json:"id"`
+	Name       string        `json:"name"`
+	ShopType   ShopType      `json:"shop_type"`
+	ShopStatus ShopStatus    `json:"shop_status"`
+	OwnerID    string        `json:"owner_id"`
+	CreatedAt  string        `json:"created_at"`
+	UpdatedAt  string        `json:"updated_at"`
+	DeletedAt  *string       `json:"deleted_at,omitempty"`
+	Contact    *ShopContact  `json:"contact"`
+	Address    *ShopAddress  `json:"address"`
+	Timings    []*ShopTiming `json:"timings,omitempty"`
+	Images     []*ShopImage  `json:"images,omitempty"`
 }
 
 type ShopAddress struct {
 	ID             string  `json:"id"`
 	Address1       string  `json:"address1"`
-	Address2       *string `json:"address2,omitempty"`
+	Address2       string  `json:"address2"`
 	Longitude      float64 `json:"longitude"`
 	Latitude       float64 `json:"latitude"`
-	NearbyLandmark *string `json:"nearby_landmark,omitempty"`
+	NearbyLandmark string  `json:"nearby_landmark"`
 	City           string  `json:"city"`
 	State          string  `json:"state"`
 	Pincode        string  `json:"pincode"`
@@ -171,12 +167,12 @@ type ShopContact struct {
 }
 
 type ShopImage struct {
-	ID          string  `json:"id"`
-	ImageURL    string  `json:"image_url"`
-	Description *string `json:"description,omitempty"`
-	ShopID      string  `json:"shop_id"`
-	CreatedAt   string  `json:"created_at"`
-	UpdatedAt   string  `json:"updated_at"`
+	ID          string `json:"id"`
+	ImageURL    string `json:"image_url"`
+	Description string `json:"description"`
+	ShopID      string `json:"shop_id"`
+	CreatedAt   string `json:"created_at"`
+	UpdatedAt   string `json:"updated_at"`
 }
 
 type ShopTiming struct {

@@ -32,8 +32,13 @@ func (r *queryResolver) Profile(ctx context.Context, in GetProfileInput) (*Profi
 	return nil, nil
 }
 
-func (r *queryResolver) GetShop(ctx context.Context, id string) (*GetShopOutput, error) {
-	return nil, nil
+func (r *queryResolver) GetShop(ctx context.Context, id string) (*Shop, error) {
+	shop, err := r.server.shopClient.GetShop(ctx, &pb.GetShopReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQShop(shop), nil
 }
 
 func (r *queryResolver) ListShops(ctx context.Context, in ListShopsInput) (*ListShopsOutput, error) {

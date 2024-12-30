@@ -36,6 +36,10 @@ message Shop {
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
   optional google.protobuf.Timestamp deleted_at = 8;
+  ShopContact contact = 9;
+  ShopAddress address = 10;
+  repeated ShopTiming timings = 11;
+  repeated ShopImage images = 12;
 }
 
 message ShopContact {
@@ -64,7 +68,7 @@ message ShopAddress {
 
 message ShopImage {
   string id = 1;
-  string url = 2;
+  string image_url = 2;
   string description = 3;
   string shop_id = 4;
   google.protobuf.Timestamp created_at = 5;
@@ -175,14 +179,6 @@ message GetShopReq {
   string id = 1;
 }
 
-message GetShopRes {
-  Shop shop = 1;
-  ShopAddress address = 2;
-  ShopContact contact = 3;
-  repeated ShopImage images = 4;
-  repeated ShopTiming timings = 5;
-}
-
 message ListShopsReq {
   optional ShopType shop_type = 1; // Optional filter by shop type
   optional ShopStatus shop_status = 2; // Optional filter by status
@@ -207,6 +203,12 @@ service ShopService {
   // Create a new shop
   rpc CreateShop(CreateShopReq) returns (CreateShopRes);
 
+  // Get shop details by ID
+  rpc GetShop(GetShopReq) returns (Shop);
+
+  // List all shops with optional filters
+  rpc ListShops(ListShopsReq) returns (ListShopsRes);
+
   // Update shop details
   rpc UpdateShop(UpdateShopReq) returns (UpdateShopRes);
 
@@ -221,12 +223,6 @@ service ShopService {
 
   // Update shop timings
   rpc UpdateShopTimings(UpdateShopTimingsReq) returns (UpdateShopTimingsRes);
-
-  // Get shop details by ID
-  rpc GetShop(GetShopReq) returns (GetShopRes);
-
-  // List all shops with optional filters
-  rpc ListShops(ListShopsReq) returns (ListShopsRes);
 
   // Delete a shop by ID (soft delete)
   rpc DeleteShop(DeleteShopReq) returns (DeleteShopRes);

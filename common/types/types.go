@@ -19,7 +19,7 @@ func (s ShopType) Value() (driver.Value, error) {
 }
 
 func (s *ShopType) Scan(value interface{}) error {
-	*s = ShopType(value.(string))
+	*s = ShopType(value.([]uint8))
 	return nil
 }
 
@@ -28,7 +28,7 @@ func (s ShopStatus) Value() (driver.Value, error) {
 }
 
 func (s *ShopStatus) Scan(value interface{}) error {
-	*s = ShopStatus(value.(string))
+	*s = ShopStatus(value.([]uint8))
 	return nil
 }
 
@@ -37,7 +37,7 @@ func (s DayOfWeek) Value() (driver.Value, error) {
 }
 
 func (s *DayOfWeek) Scan(value interface{}) error {
-	*s = DayOfWeek(value.(string))
+	*s = DayOfWeek(value.([]uint8))
 	return nil
 }
 
@@ -155,55 +155,72 @@ type DeliveryAddress struct {
 }
 
 type Shop struct {
-	ID         string       `json:"id" db:"id"`
-	Name       string       `json:"name" db:"name"`
-	ShopType   ShopType     `json:"shop_type" db:"shop_type"`
-	ShopStatus ShopStatus   `json:"shop_status" db:"shop_status"`
-	OwnerID    string       `json:"owner_id" db:"owner_id"`
-	CreatedAt  string       `json:"created_at" db:"created_at"`
-	UpdatedAt  string       `json:"updated_at" db:"updated_at"`
-	DeletedAt  *string      `json:"deleted_at" db:"deleted_at"`
-	Address    ShopAddress  `json:"shop_address"`
-	Contact    ShopContact  `json:"shop_contact"`
-	Timing     []ShopTiming `json:"shop_timing"`
-	Image      []ShopImage  `json:"shop_image"`
+	ID         string        `json:"id" db:"id"`
+	Name       string        `json:"name" db:"name"`
+	ShopType   ShopType      `json:"shop_type" db:"shop_type"`
+	ShopStatus ShopStatus    `json:"shop_status" db:"shop_status"`
+	OwnerID    string        `json:"owner_id" db:"owner_id"`
+	CreatedAt  time.Time     `json:"created_at" db:"created_at"`
+	UpdatedAt  time.Time     `json:"updated_at" db:"updated_at"`
+	DeletedAt  *time.Time    `json:"deleted_at" db:"deleted_at"`
+	Address    *ShopAddress  `json:"shop_address"`
+	Contact    *ShopContact  `json:"shop_contact"`
+	Timing     []*ShopTiming `json:"shop_timing"`
+	Image      []*ShopImage  `json:"shop_image"`
+}
+
+type ShopInfo struct {
+	ID         string     `json:"id" db:"id"`
+	Name       string     `json:"name" db:"name"`
+	ShopType   ShopType   `json:"shop_type" db:"shop_type"`
+	ShopStatus ShopStatus `json:"shop_status" db:"shop_status"`
+	OwnerID    string     `json:"owner_id" db:"owner_id"`
+	CreatedAt  time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt  time.Time  `json:"updated_at" db:"updated_at"`
+	DeletedAt  *time.Time `json:"deleted_at" db:"deleted_at"`
 }
 
 type ShopAddress struct {
-	ID             string  `json:"id" db:"id"`
-	Address1       string  `json:"address1" db:"address1"`
-	Address2       string  `json:"address2" db:"address2"`
-	Longitude      float64 `json:"longitude" db:"longitude"`
-	Latitude       float64 `json:"latitude" db:"latitude"`
-	NearbyLandmark string  `json:"nearby_landmark" db:"nearby_landmark"`
-	City           string  `json:"city" db:"city"`
-	State          string  `json:"state" db:"state"`
-	Pincode        string  `json:"pincode" db:"pincode"`
-	Country        string  `json:"country" db:"country"`
-	ShopID         string  `json:"shop_id" db:"shop_id"`
+	ID             string    `json:"id" db:"id"`
+	Address1       string    `json:"address1" db:"address1"`
+	Address2       string    `json:"address2" db:"address2"`
+	Longitude      float64   `json:"longitude" db:"longitude"`
+	Latitude       float64   `json:"latitude" db:"latitude"`
+	NearbyLandmark string    `json:"nearby_landmark" db:"nearby_landmark"`
+	City           string    `json:"city" db:"city"`
+	State          string    `json:"state" db:"state"`
+	Pincode        string    `json:"pincode" db:"pincode"`
+	Country        string    `json:"country" db:"country"`
+	ShopID         string    `json:"shop_id" db:"shop_id"`
+	CreatedAt      time.Time `json:"created_at" db:"created_at"`
 }
 
 type ShopContact struct {
-	ID          string `json:"id" db:"id"`
-	Name        string `json:"name" db:"name"`
-	PhoneNumber string `json:"phone_number" db:"phone_number"`
-	Email       string `json:"email" db:"email"`
-	ShopID      string `json:"shop_id" db:"shop_id"`
+	ID          string    `json:"id" db:"id"`
+	Name        string    `json:"name" db:"name"`
+	PhoneNumber string    `json:"phone_number" db:"phone_number"`
+	Email       string    `json:"email" db:"email"`
+	ShopID      string    `json:"shop_id" db:"shop_id"`
+	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 }
 
 type ShopImage struct {
-	ID          string `json:"id" db:"id"`
-	ImageUrl    string `json:"image_url" db:"image_url"`
-	Description string `json:"description" db:"description"`
-	ShopID      string `json:"shop_id" db:"shop_id"`
+	ID          string    `json:"id" db:"id"`
+	ImageUrl    string    `json:"image_url" db:"image_url"`
+	Description string    `json:"description" db:"description"`
+	ShopID      string    `json:"shop_id" db:"shop_id"`
+	CreatedAt   time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
 }
 
 type ShopTiming struct {
-	ID       string    `json:"id" db:"id"`
-	Day      DayOfWeek `json:"day" db:"day"`
-	OpensAt  time.Time `json:"opens_at" db:"opens_at"`
-	ClosesAt time.Time `json:"closes_at" db:"closes_at"`
-	ShopID   string    `json:"shop_id" db:"shop_id"`
+	ID        string    `json:"id" db:"id"`
+	Day       DayOfWeek `json:"day" db:"day"`
+	OpensAt   time.Time `json:"opens_at" db:"opens_at"`
+	ClosesAt  time.Time `json:"closes_at" db:"closes_at"`
+	ShopID    string    `json:"shop_id" db:"shop_id"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
 
 // operation input types

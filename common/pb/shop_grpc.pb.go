@@ -20,13 +20,13 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	ShopService_CreateShop_FullMethodName        = "/pb.ShopService/CreateShop"
+	ShopService_GetShop_FullMethodName           = "/pb.ShopService/GetShop"
+	ShopService_ListShops_FullMethodName         = "/pb.ShopService/ListShops"
 	ShopService_UpdateShop_FullMethodName        = "/pb.ShopService/UpdateShop"
 	ShopService_UpdateShopAddress_FullMethodName = "/pb.ShopService/UpdateShopAddress"
 	ShopService_UpdateShopContact_FullMethodName = "/pb.ShopService/UpdateShopContact"
 	ShopService_UpdateShopImages_FullMethodName  = "/pb.ShopService/UpdateShopImages"
 	ShopService_UpdateShopTimings_FullMethodName = "/pb.ShopService/UpdateShopTimings"
-	ShopService_GetShop_FullMethodName           = "/pb.ShopService/GetShop"
-	ShopService_ListShops_FullMethodName         = "/pb.ShopService/ListShops"
 	ShopService_DeleteShop_FullMethodName        = "/pb.ShopService/DeleteShop"
 )
 
@@ -36,6 +36,10 @@ const (
 type ShopServiceClient interface {
 	// Create a new shop
 	CreateShop(ctx context.Context, in *CreateShopReq, opts ...grpc.CallOption) (*CreateShopRes, error)
+	// Get shop details by ID
+	GetShop(ctx context.Context, in *GetShopReq, opts ...grpc.CallOption) (*Shop, error)
+	// List all shops with optional filters
+	ListShops(ctx context.Context, in *ListShopsReq, opts ...grpc.CallOption) (*ListShopsRes, error)
 	// Update shop details
 	UpdateShop(ctx context.Context, in *UpdateShopReq, opts ...grpc.CallOption) (*UpdateShopRes, error)
 	// Update shop address
@@ -46,10 +50,6 @@ type ShopServiceClient interface {
 	UpdateShopImages(ctx context.Context, in *UpdateShopImagesReq, opts ...grpc.CallOption) (*UpdateShopImagesRes, error)
 	// Update shop timings
 	UpdateShopTimings(ctx context.Context, in *UpdateShopTimingsReq, opts ...grpc.CallOption) (*UpdateShopTimingsRes, error)
-	// Get shop details by ID
-	GetShop(ctx context.Context, in *GetShopReq, opts ...grpc.CallOption) (*GetShopRes, error)
-	// List all shops with optional filters
-	ListShops(ctx context.Context, in *ListShopsReq, opts ...grpc.CallOption) (*ListShopsRes, error)
 	// Delete a shop by ID (soft delete)
 	DeleteShop(ctx context.Context, in *DeleteShopReq, opts ...grpc.CallOption) (*DeleteShopRes, error)
 }
@@ -66,6 +66,26 @@ func (c *shopServiceClient) CreateShop(ctx context.Context, in *CreateShopReq, o
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateShopRes)
 	err := c.cc.Invoke(ctx, ShopService_CreateShop_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopServiceClient) GetShop(ctx context.Context, in *GetShopReq, opts ...grpc.CallOption) (*Shop, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Shop)
+	err := c.cc.Invoke(ctx, ShopService_GetShop_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopServiceClient) ListShops(ctx context.Context, in *ListShopsReq, opts ...grpc.CallOption) (*ListShopsRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListShopsRes)
+	err := c.cc.Invoke(ctx, ShopService_ListShops_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -122,26 +142,6 @@ func (c *shopServiceClient) UpdateShopTimings(ctx context.Context, in *UpdateSho
 	return out, nil
 }
 
-func (c *shopServiceClient) GetShop(ctx context.Context, in *GetShopReq, opts ...grpc.CallOption) (*GetShopRes, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetShopRes)
-	err := c.cc.Invoke(ctx, ShopService_GetShop_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *shopServiceClient) ListShops(ctx context.Context, in *ListShopsReq, opts ...grpc.CallOption) (*ListShopsRes, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListShopsRes)
-	err := c.cc.Invoke(ctx, ShopService_ListShops_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *shopServiceClient) DeleteShop(ctx context.Context, in *DeleteShopReq, opts ...grpc.CallOption) (*DeleteShopRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeleteShopRes)
@@ -158,6 +158,10 @@ func (c *shopServiceClient) DeleteShop(ctx context.Context, in *DeleteShopReq, o
 type ShopServiceServer interface {
 	// Create a new shop
 	CreateShop(context.Context, *CreateShopReq) (*CreateShopRes, error)
+	// Get shop details by ID
+	GetShop(context.Context, *GetShopReq) (*Shop, error)
+	// List all shops with optional filters
+	ListShops(context.Context, *ListShopsReq) (*ListShopsRes, error)
 	// Update shop details
 	UpdateShop(context.Context, *UpdateShopReq) (*UpdateShopRes, error)
 	// Update shop address
@@ -168,10 +172,6 @@ type ShopServiceServer interface {
 	UpdateShopImages(context.Context, *UpdateShopImagesReq) (*UpdateShopImagesRes, error)
 	// Update shop timings
 	UpdateShopTimings(context.Context, *UpdateShopTimingsReq) (*UpdateShopTimingsRes, error)
-	// Get shop details by ID
-	GetShop(context.Context, *GetShopReq) (*GetShopRes, error)
-	// List all shops with optional filters
-	ListShops(context.Context, *ListShopsReq) (*ListShopsRes, error)
 	// Delete a shop by ID (soft delete)
 	DeleteShop(context.Context, *DeleteShopReq) (*DeleteShopRes, error)
 	mustEmbedUnimplementedShopServiceServer()
@@ -187,6 +187,12 @@ type UnimplementedShopServiceServer struct{}
 func (UnimplementedShopServiceServer) CreateShop(context.Context, *CreateShopReq) (*CreateShopRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateShop not implemented")
 }
+func (UnimplementedShopServiceServer) GetShop(context.Context, *GetShopReq) (*Shop, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetShop not implemented")
+}
+func (UnimplementedShopServiceServer) ListShops(context.Context, *ListShopsReq) (*ListShopsRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListShops not implemented")
+}
 func (UnimplementedShopServiceServer) UpdateShop(context.Context, *UpdateShopReq) (*UpdateShopRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateShop not implemented")
 }
@@ -201,12 +207,6 @@ func (UnimplementedShopServiceServer) UpdateShopImages(context.Context, *UpdateS
 }
 func (UnimplementedShopServiceServer) UpdateShopTimings(context.Context, *UpdateShopTimingsReq) (*UpdateShopTimingsRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateShopTimings not implemented")
-}
-func (UnimplementedShopServiceServer) GetShop(context.Context, *GetShopReq) (*GetShopRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetShop not implemented")
-}
-func (UnimplementedShopServiceServer) ListShops(context.Context, *ListShopsReq) (*ListShopsRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListShops not implemented")
 }
 func (UnimplementedShopServiceServer) DeleteShop(context.Context, *DeleteShopReq) (*DeleteShopRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteShop not implemented")
@@ -246,6 +246,42 @@ func _ShopService_CreateShop_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ShopServiceServer).CreateShop(ctx, req.(*CreateShopReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShopService_GetShop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetShopReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServiceServer).GetShop(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShopService_GetShop_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServiceServer).GetShop(ctx, req.(*GetShopReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShopService_ListShops_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListShopsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServiceServer).ListShops(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShopService_ListShops_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServiceServer).ListShops(ctx, req.(*ListShopsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -340,42 +376,6 @@ func _ShopService_UpdateShopTimings_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ShopService_GetShop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetShopReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ShopServiceServer).GetShop(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ShopService_GetShop_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShopServiceServer).GetShop(ctx, req.(*GetShopReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ShopService_ListShops_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListShopsReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ShopServiceServer).ListShops(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ShopService_ListShops_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShopServiceServer).ListShops(ctx, req.(*ListShopsReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ShopService_DeleteShop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteShopReq)
 	if err := dec(in); err != nil {
@@ -406,6 +406,14 @@ var ShopService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ShopService_CreateShop_Handler,
 		},
 		{
+			MethodName: "GetShop",
+			Handler:    _ShopService_GetShop_Handler,
+		},
+		{
+			MethodName: "ListShops",
+			Handler:    _ShopService_ListShops_Handler,
+		},
+		{
 			MethodName: "UpdateShop",
 			Handler:    _ShopService_UpdateShop_Handler,
 		},
@@ -424,14 +432,6 @@ var ShopService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateShopTimings",
 			Handler:    _ShopService_UpdateShopTimings_Handler,
-		},
-		{
-			MethodName: "GetShop",
-			Handler:    _ShopService_GetShop_Handler,
-		},
-		{
-			MethodName: "ListShops",
-			Handler:    _ShopService_ListShops_Handler,
 		},
 		{
 			MethodName: "DeleteShop",

@@ -130,6 +130,10 @@ type Shop {
   created_at: String!
   updated_at: String!
   deleted_at: String
+  contact: ShopContact!
+  address: ShopAddress!
+  timings: [ShopTiming!]
+  images: [ShopImage!]
 }
 
 type ShopContact {
@@ -144,10 +148,10 @@ type ShopContact {
 type ShopAddress {
   id: ID!
   address1: String!
-  address2: String
+  address2: String!
   longitude: Float!
   latitude: Float!
-  nearby_landmark: String
+  nearby_landmark: String!
   city: String!
   state: String!
   pincode: String!
@@ -159,7 +163,7 @@ type ShopAddress {
 type ShopImage {
   id: ID!
   image_url: String!
-  description: String
+  description: String!
   shop_id: ID!
   created_at: String!
   updated_at: String!
@@ -268,14 +272,6 @@ type UpdateShopOutput {
   message: String!
 }
 
-type GetShopOutput {
-  shop: Shop!
-  address: ShopAddress!
-  contact: ShopContact!
-  images: [ShopImage!]
-  timings: [ShopTiming!]
-}
-
 input ListShopsInput {
   shop_type: ShopType
   shop_status: ShopStatus
@@ -294,7 +290,7 @@ type Query {
 
   Profile(input: GetProfileInput!): Profile
 
-  GetShop(id: ID!): GetShopOutput!
+  GetShop(id: ID!): Shop!
   ListShops(input: ListShopsInput!): ListShopsOutput!
 }
 

@@ -115,6 +115,14 @@ func PbDateToTime(d *pb.Date) *time.Time {
 	return &t
 }
 
+func TimePtrToPbTime(t *time.Time) *timestamppb.Timestamp {
+	if t == nil {
+		return nil
+	}
+
+	return timestamppb.New(*t)
+}
+
 func ToGender(g pb.Gender) Gender {
 	switch g {
 	case pb.Gender_MALE:
@@ -173,6 +181,54 @@ func ToPbGenderPtr(g *Gender) *pb.Gender {
 		return pbGenderPtr(pb.Gender_UNDISCLOSED)
 	default:
 		return nil
+	}
+}
+
+func ToPbShopType(t ShopType) pb.ShopType {
+	switch t {
+
+	case Grocery:
+		return pb.ShopType_GROCERY
+	case Pharmaceutical:
+		return pb.ShopType_PHARMACEUTICAL
+	case Restaurant:
+		return pb.ShopType_RESTAURANT
+	default:
+		panic(fmt.Sprintf("unexpected types.ShopType: %#v", t))
+	}
+}
+
+func ToPbShopStatus(s ShopStatus) pb.ShopStatus {
+	switch s {
+
+	case Closed:
+		return pb.ShopStatus_CLOSED
+	case Open:
+		return pb.ShopStatus_OPEN
+	default:
+		panic(fmt.Sprintf("unexpected types.ShopStatus: %#v", s))
+	}
+}
+
+func ToPbDayOfWeek(d DayOfWeek) pb.DayOfWeek {
+	switch d {
+
+	case Friday:
+		return pb.DayOfWeek_FRIDAY
+	case Monday:
+		return pb.DayOfWeek_MONDAY
+	case Saturday:
+		return pb.DayOfWeek_SATURDAY
+	case Sunday:
+		return pb.DayOfWeek_SUNDAY
+	case Thursday:
+		return pb.DayOfWeek_THURSDAY
+	case Tuesday:
+		return pb.DayOfWeek_TUESDAY
+	case Wednesday:
+		return pb.DayOfWeek_WEDNESDAY
+	default:
+		panic(fmt.Sprintf("unexpected types.DayOfWeek: %#v", d))
 	}
 }
 
@@ -396,5 +452,95 @@ func ToCreateShop(req *pb.CreateShopReq) *CreateShop {
 		Contact:    contact,
 		Image:      ToCreateShopImage(req.Images),
 		Timing:     ToCreateShopTiming(req.Timings),
+	}
+}
+
+func ToPbShopContact(c *ShopContact) *pb.ShopContact {
+	if c == nil {
+		return nil
+	}
+
+	return &pb.ShopContact{
+		Id:          c.ID,
+		Name:        c.Name,
+		PhoneNumber: c.PhoneNumber,
+		Email:       c.Email,
+		ShopId:      c.ShopID,
+		CreatedAt:   ToPbTimestamp(c.CreatedAt),
+	}
+}
+
+func ToPbShopAddress(a *ShopAddress) *pb.ShopAddress {
+	if a == nil {
+		return nil
+	}
+
+	return &pb.ShopAddress{
+		Id:             a.ID,
+		Address1:       a.Address1,
+		Address2:       a.Address2,
+		Longitude:      a.Longitude,
+		Latitude:       a.Latitude,
+		NearbyLandmark: a.NearbyLandmark,
+		City:           a.City,
+		State:          a.State,
+		Pincode:        a.Pincode,
+		Country:        a.Country,
+		ShopId:         a.ShopID,
+		CreatedAt:      ToPbTimestamp(a.CreatedAt),
+	}
+}
+
+func ToPbShopTimmings(t []*ShopTiming) []*pb.ShopTiming {
+	timings := make([]*pb.ShopTiming, len(t))
+	for i, time := range t {
+		timings[i] = &pb.ShopTiming{
+			Id:        time.ID,
+			Day:       ToPbDayOfWeek(time.Day),
+			OpensAt:   ToPbTimestamp(time.OpensAt),
+			ClosesAt:  ToPbTimestamp(time.ClosesAt),
+			ShopId:    time.ShopID,
+			CreatedAt: ToPbTimestamp(time.CreatedAt),
+			UpdatedAt: ToPbTimestamp(time.UpdatedAt),
+		}
+	}
+
+	return timings
+}
+
+func ToPbShopImage(t []*ShopImage) []*pb.ShopImage {
+	images := make([]*pb.ShopImage, len(t))
+	for i, image := range t {
+		images[i] = &pb.ShopImage{
+			Id:          image.ID,
+			ImageUrl:    image.ImageUrl,
+			Description: image.Description,
+			ShopId:      image.ShopID,
+			CreatedAt:   ToPbTimestamp(image.CreatedAt),
+			UpdatedAt:   ToPbTimestamp(image.UpdatedAt),
+		}
+	}
+
+	return images
+}
+
+func ToPbShop(shop *Shop) *pb.Shop {
+	if shop == nil {
+		return nil
+	}
+
+	return &pb.Shop{
+		Id:         shop.ID,
+		Name:       shop.Name,
+		ShopType:   ToPbShopType(shop.ShopType),
+		ShopStatus: ToPbShopStatus(shop.ShopStatus),
+		OwnerId:    shop.OwnerID,
+		CreatedAt:  ToPbTimestamp(shop.CreatedAt),
+		UpdatedAt:  ToPbTimestamp(shop.UpdatedAt),
+		DeletedAt:  TimePtrToPbTime(shop.DeletedAt),
+		Contact:    ToPbShopContact(shop.Contact),
+		Address:    ToPbShopAddress(shop.Address),
+		Timings:    ToPbShopTimmings(shop.Timing),
+		Images:     ToPbShopImage(shop.Image),
 	}
 }

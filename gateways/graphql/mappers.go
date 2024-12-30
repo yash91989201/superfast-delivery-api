@@ -146,6 +146,54 @@ func ToGender(pbGender pb.Gender) Gender {
 	}
 }
 
+func ToGQShopType(t pb.ShopType) ShopType {
+	switch t {
+
+	case pb.ShopType_GROCERY:
+		return ShopTypeGrocery
+	case pb.ShopType_PHARMACEUTICAL:
+		return ShopTypePharmaceutical
+	case pb.ShopType_RESTAURANT:
+		return ShopTypeRestaurant
+	default:
+		panic(fmt.Sprintf("unexpected pb.ShopType: %#v", t))
+	}
+}
+
+func ToGQShopStatus(s pb.ShopStatus) ShopStatus {
+	switch s {
+
+	case pb.ShopStatus_CLOSED:
+		return ShopStatusClosed
+	case pb.ShopStatus_OPEN:
+		return ShopStatusOpen
+	default:
+		panic(fmt.Sprintf("unexpected pb.ShopStatus: %#v", s))
+	}
+}
+
+func ToGQDayOfWeek(d pb.DayOfWeek) DayOfWeek {
+	switch d {
+
+	case pb.DayOfWeek_FRIDAY:
+		return DayOfWeekFriday
+	case pb.DayOfWeek_MONDAY:
+		return DayOfWeekMonday
+	case pb.DayOfWeek_SATURDAY:
+		return DayOfWeekSaturday
+	case pb.DayOfWeek_SUNDAY:
+		return DayOfWeekSunday
+	case pb.DayOfWeek_THURSDAY:
+		return DayOfWeekThursday
+	case pb.DayOfWeek_TUESDAY:
+		return DayOfWeekTuesday
+	case pb.DayOfWeek_WEDNESDAY:
+		return DayOfWeekWednesday
+	default:
+		panic(fmt.Sprintf("unexpected pb.DayOfWeek: %#v", d))
+	}
+}
+
 func ToDate(pbDate *pb.Date) *string {
 	if pbDate == nil {
 		return nil
@@ -308,5 +356,92 @@ func ToGQCreateShopOutput(cs *pb.CreateShopRes) *CreateShopOutput {
 	return &CreateShopOutput{
 		ID:      cs.Id,
 		Message: cs.Message,
+	}
+}
+
+func ToGQContact(c *pb.ShopContact) *ShopContact {
+	return &ShopContact{
+		ID:          c.Id,
+		Name:        c.Name,
+		PhoneNumber: c.PhoneNumber,
+		Email:       c.Email,
+		ShopID:      c.ShopId,
+		CreatedAt:   ToGQTime(c.CreatedAt),
+	}
+}
+
+func ToGQAddress(a *pb.ShopAddress) *ShopAddress {
+	return &ShopAddress{
+		ID:             a.Id,
+		Address1:       a.Address1,
+		Address2:       a.Address2,
+		Longitude:      a.Longitude,
+		Latitude:       a.Latitude,
+		NearbyLandmark: a.NearbyLandmark,
+		City:           a.City,
+		State:          a.State,
+		Pincode:        a.Pincode,
+		Country:        a.Country,
+		ShopID:         a.ShopId,
+		CreatedAt:      ToGQTime(a.CreatedAt),
+	}
+}
+
+func ToGQTiming(t *pb.ShopTiming) *ShopTiming {
+	return &ShopTiming{
+		ID:        t.Id,
+		Day:       ToGQDayOfWeek(t.Day),
+		OpensAt:   t.OpensAt.AsTime(),
+		ClosesAt:  t.ClosesAt.AsTime(),
+		ShopID:    t.ShopId,
+		CreatedAt: ToGQTime(t.CreatedAt),
+		UpdatedAt: ToGQTime(t.CreatedAt),
+	}
+}
+
+func ToGQTimings(t []*pb.ShopTiming) []*ShopTiming {
+	timings := make([]*ShopTiming, len(t))
+	for i, timing := range t {
+		timings[i] = ToGQTiming(timing)
+	}
+
+	return timings
+}
+
+func ToGQImage(t *pb.ShopImage) *ShopImage {
+	return &ShopImage{
+		ID:          t.Id,
+		ImageURL:    t.ImageUrl,
+		Description: t.Description,
+		ShopID:      t.ShopId,
+		CreatedAt:   ToGQTime(t.CreatedAt),
+		UpdatedAt:   ToGQTime(t.CreatedAt),
+	}
+}
+
+func ToGQImages(i []*pb.ShopImage) []*ShopImage {
+	images := make([]*ShopImage, len(i))
+	for idx, image := range i {
+		images[idx] = ToGQImage(image)
+	}
+
+	return images
+}
+
+func ToGQShop(s *pb.Shop) *Shop {
+
+	return &Shop{
+		ID:         s.Id,
+		Name:       s.Name,
+		ShopType:   ToGQShopType(s.ShopType),
+		ShopStatus: ToGQShopStatus(s.ShopStatus),
+		OwnerID:    s.OwnerId,
+		CreatedAt:  ToGQTime(s.CreatedAt),
+		UpdatedAt:  ToGQTime(s.UpdatedAt),
+		DeletedAt:  ToGQTimePtr(s.DeletedAt),
+		Contact:    ToGQContact(s.Contact),
+		Address:    ToGQAddress(s.Address),
+		Timings:    ToGQTimings(s.Timings),
+		Images:     ToGQImages(s.Images),
 	}
 }
