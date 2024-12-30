@@ -1,6 +1,7 @@
 package graphql
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
@@ -85,7 +86,7 @@ func ToPbAuth(a *Auth) *pb.Auth {
 		Email:         a.Email,
 		EmailVerified: a.EmailVerified,
 		Phone:         a.Phone,
-		Role:          ToPbAuthRole(a.Role),
+		AuthRole:      ToPbAuthRole(a.AuthRole),
 		CreatedAt:     ToPbTime(&a.CreatedAt),
 		UpdatedAt:     ToPbTime(&a.UpdatedAt),
 		DeletedAt:     ToPbTime(a.DeletedAt),
@@ -185,7 +186,7 @@ func ToAuth(a *pb.Auth) *Auth {
 		Email:         a.Email,
 		EmailVerified: a.EmailVerified,
 		Phone:         a.Phone,
-		Role:          ToAuthRole(a.Role),
+		AuthRole:      ToAuthRole(a.AuthRole),
 		CreatedAt:     ToGQTime(a.CreatedAt),
 		UpdatedAt:     ToGQTime(a.UpdatedAt),
 		DeletedAt:     ToGQTimePtr(a.DeletedAt),
@@ -207,5 +208,105 @@ func ToProfile(p *pb.Profile) *Profile {
 		AuthID:      p.AuthId,
 		CreatedAt:   ToGQTime(p.CreatedAt),
 		UpdatedAt:   ToGQTime(p.UpdatedAt),
+	}
+}
+
+func ToPbShopType(t ShopType) pb.ShopType {
+	switch t {
+
+	case ShopTypeGrocery:
+		return pb.ShopType_GROCERY
+	case ShopTypePharmaceutical:
+		return pb.ShopType_PHARMACEUTICAL
+	case ShopTypeRestaurant:
+		return pb.ShopType_RESTAURANT
+	default:
+		panic(fmt.Sprintf("unexpected graphql.ShopType: %#v", t))
+	}
+}
+
+func ToPbShopStatus(s ShopStatus) pb.ShopStatus {
+	switch s {
+
+	case ShopStatusClosed:
+		return pb.ShopStatus_CLOSED
+	case ShopStatusOpen:
+		return pb.ShopStatus_OPEN
+	default:
+		panic(fmt.Sprintf("unexpected graphql.ShopStatus: %#v", s))
+	}
+}
+
+func ToPbDayOfWeek(d DayOfWeek) pb.DayOfWeek {
+	switch d {
+
+	case DayOfWeekFriday:
+		return pb.DayOfWeek_FRIDAY
+	case DayOfWeekMonday:
+		return pb.DayOfWeek_MONDAY
+	case DayOfWeekSaturday:
+		return pb.DayOfWeek_SATURDAY
+	case DayOfWeekSunday:
+		return pb.DayOfWeek_SUNDAY
+	case DayOfWeekThursday:
+		return pb.DayOfWeek_THURSDAY
+	case DayOfWeekTuesday:
+		return pb.DayOfWeek_TUESDAY
+	case DayOfWeekWednesday:
+		return pb.DayOfWeek_WEDNESDAY
+	default:
+		panic(fmt.Sprintf("unexpected graphql.DayOfWeek: %#v", d))
+	}
+}
+
+func ToPbCreateShopReq(cs CreateShopInput) *pb.CreateShopReq {
+
+	images := make([]*pb.CreateShopImage, len(cs.Images))
+	for i, img := range cs.Images {
+		images[i] = &pb.CreateShopImage{
+			ImageUrl:    img.ImageURL,
+			Description: img.Description,
+		}
+	}
+
+	timings := make([]*pb.CreateShopTiming, len(cs.Timings))
+	for i, t := range cs.Timings {
+		timings[i] = &pb.CreateShopTiming{
+			Day:      ToPbDayOfWeek(t.Day),
+			OpensAt:  timestamppb.New(t.OpensAt),
+			ClosesAt: timestamppb.New(t.ClosesAt),
+		}
+	}
+
+	return &pb.CreateShopReq{
+		Name:       cs.Name,
+		ShopType:   ToPbShopType(cs.ShopType),
+		ShopStatus: ToPbShopStatus(cs.ShopStatus),
+		OwnerId:    cs.OwnerID,
+		Address: &pb.CreateShopAddress{
+			Address1:       cs.Address.Address1,
+			Address2:       *cs.Address.Address2,
+			Longitude:      cs.Address.Longitude,
+			Latitude:       cs.Address.Latitude,
+			NearbyLandmark: cs.Address.NearbyLandmark,
+			City:           cs.Address.City,
+			State:          cs.Address.State,
+			Pincode:        cs.Address.Pincode,
+			Country:        cs.Address.Country,
+		},
+		Contact: &pb.CreateShopContact{
+			Name:        cs.Contact.Name,
+			PhoneNumber: cs.Contact.PhoneNumber,
+			Email:       cs.Contact.Email,
+		},
+		Images:  images,
+		Timings: timings,
+	}
+}
+
+func ToGQCreateShopOutput(cs *pb.CreateShopRes) *CreateShopOutput {
+	return &CreateShopOutput{
+		ID:      cs.Id,
+		Message: cs.Message,
 	}
 }

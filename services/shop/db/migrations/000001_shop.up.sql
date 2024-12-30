@@ -1,8 +1,11 @@
+CREATE TYPE shop_type AS ENUM ('restaurant', 'grocery', 'pharmaceutical');
+CREATE TYPE shop_status AS ENUM ('open', 'closed');
+
 CREATE TABLE IF NOT EXISTS shop (
   id VARCHAR(36) PRIMARY KEY,
   name VARCHAR(128) NOT NULL,
-  type VARCHAR(36) CHECK (type IN ('restaurant', 'grocery', 'pharmaceutical')) NOT NULL,
-  status VARCHAR(8) CHECK (type IN ('open', 'closed')) NOT NULL,
+  shop_type shop_type NOT NULL,
+  shop_status shop_status NOT NULL,
   owner_id VARCHAR(36) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

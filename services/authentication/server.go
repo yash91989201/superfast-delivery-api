@@ -64,7 +64,7 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 					Email:         &ev.Email,
 					EmailVerified: true,
 					Phone:         nil,
-					Role:          types.Customer,
+					AuthRole:      types.Customer,
 				})
 
 			if err != nil {
@@ -72,19 +72,19 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 			}
 		}
 
-		accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.Role, auth.Id, 15*time.Minute)
+		accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 15*time.Minute)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to create token: %w", err)
 		}
 
-		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.Role, auth.Id, 24*time.Hour)
+		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 24*time.Hour)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to create token: %w", err)
 		}
 
 		session := &types.Session{
-			Id:           refreshClaims.RegisteredClaims.ID,
-			AuthId:       refreshClaims.RegisteredClaims.Subject,
+			ID:           refreshClaims.RegisteredClaims.ID,
+			AuthID:       refreshClaims.RegisteredClaims.Subject,
 			RefreshToken: refreshToken,
 			IsRevoked:    false,
 			ExpiresAt:    refreshClaims.ExpiresAt.Time,
@@ -96,7 +96,7 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 
 		signInRes := &types.SignInRes{
 			Auth:                 auth,
-			SessionId:            &session.Id,
+			SessionId:            &session.ID,
 			AccessToken:          &accessToken,
 			AccessTokenExpiresAt: &accessClaims.ExpiresAt.Time,
 		}
@@ -178,7 +178,7 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 					Email:         nil,
 					EmailVerified: true,
 					Phone:         &pv.Phone,
-					Role:          types.Customer,
+					AuthRole:      types.Customer,
 				})
 
 			if err != nil {
@@ -186,19 +186,19 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 			}
 		}
 
-		accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.Role, auth.Id, 15*time.Minute)
+		accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 15*time.Minute)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to create token: %w", err)
 		}
 
-		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.Role, auth.Id, 24*time.Hour)
+		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 24*time.Hour)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to create token: %w", err)
 		}
 
 		session := &types.Session{
-			Id:           refreshClaims.RegisteredClaims.ID,
-			AuthId:       refreshClaims.RegisteredClaims.Subject,
+			ID:           refreshClaims.RegisteredClaims.ID,
+			AuthID:       refreshClaims.RegisteredClaims.Subject,
 			RefreshToken: refreshToken,
 			IsRevoked:    false,
 			ExpiresAt:    refreshClaims.ExpiresAt.Time,
@@ -210,7 +210,7 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 
 		signInRes := &types.SignInRes{
 			Auth:                 auth,
-			SessionId:            &session.Id,
+			SessionId:            &session.ID,
 			AccessToken:          &accessToken,
 			AccessTokenExpiresAt: &accessClaims.ExpiresAt.Time,
 		}
@@ -270,30 +270,30 @@ func (s *grpcServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) 
 		return nil, status.Errorf(codes.NotFound, "Session expired, sign in again")
 	}
 
-	auth, err := s.service.GetAuthById(ctx, session.AuthId)
+	auth, err := s.service.GetAuthById(ctx, session.AuthID)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "Account not found")
 	}
 
 	// delete and create new refresh refresh token
-	err = s.service.DeleteSession(ctx, session.Id)
+	err = s.service.DeleteSession(ctx, session.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.Role, auth.Id, 15*time.Minute)
+	accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 15*time.Minute)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create token: %w", err)
 	}
 
-	refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.Role, auth.Id, 24*time.Hour)
+	refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 24*time.Hour)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create token: %w", err)
 	}
 
 	newSession := &types.Session{
-		Id:           refreshClaims.RegisteredClaims.ID,
-		AuthId:       refreshClaims.RegisteredClaims.Subject,
+		ID:           refreshClaims.RegisteredClaims.ID,
+		AuthID:       refreshClaims.RegisteredClaims.Subject,
 		RefreshToken: refreshToken,
 		IsRevoked:    false,
 		ExpiresAt:    refreshClaims.ExpiresAt.Time,
@@ -305,7 +305,7 @@ func (s *grpcServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) 
 
 	signInRes := &types.SignInRes{
 		Auth:                 auth,
-		SessionId:            &newSession.Id,
+		SessionId:            &newSession.ID,
 		AccessToken:          &accessToken,
 		AccessTokenExpiresAt: &accessClaims.ExpiresAt.Time,
 	}
@@ -321,13 +321,13 @@ func (s *grpcServer) LogOut(ctx context.Context, req *pb.LogOutReq) (*pb.SignInR
 		return nil, status.Errorf(codes.Unauthenticated, "Session expired, sign in again")
 	}
 
-	_, err = s.service.GetAuthById(ctx, session.AuthId)
+	_, err = s.service.GetAuthById(ctx, session.AuthID)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "Account not found")
 	}
 
 	// delete and create new refresh refresh token
-	err = s.service.DeleteSession(ctx, session.Id)
+	err = s.service.DeleteSession(ctx, session.ID)
 	if err != nil {
 		return nil, err
 	}

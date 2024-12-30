@@ -37,7 +37,7 @@ func (s *grpcServer) CreateProfile(ctx context.Context, req *pb.CreateProfileReq
 		Dob:         types.PbDateToTime(req.Dob),
 		Anniversary: types.PbDateToTime(req.Anniversary),
 		Gender:      types.ToGenderPtr(req.Gender),
-		AuthId:      req.AuthId,
+		AuthID:      req.AuthId,
 	})
 
 	if err != nil {

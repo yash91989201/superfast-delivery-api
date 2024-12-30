@@ -25,13 +25,13 @@ func New(r Repository) Service {
 
 func (s *userService) CreateProfile(ctx context.Context, p *types.CreateProfile) (*types.Profile, error) {
 	profile := &types.Profile{
-		Id:          cuid2.Generate(),
+		ID:          cuid2.Generate(),
 		Name:        p.Name,
 		ImageUrl:    p.ImageUrl,
 		Dob:         p.Dob,
 		Anniversary: p.Anniversary,
 		Gender:      p.Gender,
-		AuthId:      p.AuthId,
+		AuthID:      p.AuthID,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}

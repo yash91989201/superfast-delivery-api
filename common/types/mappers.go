@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
@@ -177,11 +178,11 @@ func ToPbGenderPtr(g *Gender) *pb.Gender {
 
 func ToAuth(a *pb.Auth) *Auth {
 	return &Auth{
-		Id:            a.Id,
+		ID:            a.Id,
 		Email:         a.Email,
 		EmailVerified: a.EmailVerified,
 		Phone:         a.Phone,
-		Role:          ToAuthRole(a.Role),
+		AuthRole:      ToAuthRole(a.AuthRole),
 		CreatedAt:     ToTime(a.CreatedAt),
 		UpdatedAt:     ToTime(a.CreatedAt),
 		DeletedAt:     ToTimePtr(a.DeletedAt),
@@ -190,13 +191,13 @@ func ToAuth(a *pb.Auth) *Auth {
 
 func ToProfile(p *pb.Profile) *Profile {
 	return &Profile{
-		Id:          "",
-		Name:        "",
+		ID:          p.Id,
+		Name:        p.Name,
 		ImageUrl:    p.ImageUrl,
 		Dob:         ToDate(p.Dob).ToTime(),
 		Anniversary: ToDate(p.Anniversary).ToTime(),
 		Gender:      ToGenderPtr(p.Gender),
-		AuthId:      p.AuthId,
+		AuthID:      p.AuthId,
 		CreatedAt:   ToTime(p.CreatedAt),
 		UpdatedAt:   ToTime(p.UpdatedAt),
 	}
@@ -204,13 +205,13 @@ func ToProfile(p *pb.Profile) *Profile {
 
 func ToPbProfile(p *Profile) *pb.Profile {
 	return &pb.Profile{
-		Id:          p.Id,
+		Id:          p.ID,
 		Name:        p.Name,
 		ImageUrl:    p.ImageUrl,
 		Dob:         TimeToPbDate(p.Dob),
 		Anniversary: &pb.Date{},
 		Gender:      ToPbGenderPtr(p.Gender),
-		AuthId:      p.AuthId,
+		AuthId:      p.AuthID,
 		CreatedAt:   timestamppb.New(p.CreatedAt),
 		UpdatedAt:   timestamppb.New(p.UpdatedAt),
 	}
@@ -222,7 +223,7 @@ func PbUpdateProfileReqToProfile(p *pb.UpdateProfileReq) *Profile {
 	}
 
 	profile := &Profile{
-		AuthId: p.AuthId,
+		AuthID: p.AuthId,
 	}
 
 	if p.Name != nil {
@@ -255,11 +256,11 @@ func ToPbAuth(p *Auth) *pb.Auth {
 	}
 
 	return &pb.Auth{
-		Id:            p.Id,
+		Id:            p.ID,
 		Email:         p.Email,
 		EmailVerified: p.EmailVerified,
 		Phone:         p.Phone,
-		Role:          ToPbAuthRole(p.Role),
+		AuthRole:      ToPbAuthRole(p.AuthRole),
 		CreatedAt:     ToPbTimestamp(p.CreatedAt),
 		UpdatedAt:     ToPbTimestamp(p.UpdatedAt),
 		DeletedAt:     deletedAt,
@@ -272,5 +273,128 @@ func ToPbSignInRes(r *SignInRes) *pb.SignInRes {
 		SessionId:            *r.SessionId,
 		AccessToken:          *r.AccessToken,
 		AccessTokenExpiresAt: ToPbTimestamp(*r.AccessTokenExpiresAt),
+	}
+}
+
+func ToDayOfWeek(d pb.DayOfWeek) DayOfWeek {
+	switch d {
+
+	case pb.DayOfWeek_MONDAY:
+		return Monday
+	case pb.DayOfWeek_TUESDAY:
+		return Tuesday
+	case pb.DayOfWeek_WEDNESDAY:
+		return Wednesday
+	case pb.DayOfWeek_THURSDAY:
+		return Thursday
+	case pb.DayOfWeek_FRIDAY:
+		return Friday
+	case pb.DayOfWeek_SATURDAY:
+		return Saturday
+	case pb.DayOfWeek_SUNDAY:
+		return Sunday
+	default:
+		panic(fmt.Sprintf("unexpected pb.DayOfWeek: %#v", d))
+	}
+}
+
+func ToShopType(t pb.ShopType) ShopType {
+	switch t {
+
+	case pb.ShopType_RESTAURANT:
+		return Restaurant
+	case pb.ShopType_GROCERY:
+		return Grocery
+	case pb.ShopType_PHARMACEUTICAL:
+		return Pharmaceutical
+	default:
+		panic(fmt.Sprintf("unexpected pb.ShopType: %#v", t))
+	}
+}
+
+func ToShopStatus(s pb.ShopStatus) ShopStatus {
+	switch s {
+
+	case pb.ShopStatus_OPEN:
+		return Open
+	case pb.ShopStatus_CLOSED:
+		return Closed
+	default:
+		panic(fmt.Sprintf("unexpected pb.ShopStatus: %#v", s))
+	}
+}
+
+func ToCreateShopImage(images []*pb.CreateShopImage) []CreateShopImage {
+	if images == nil {
+		return make([]CreateShopImage, 0)
+	}
+
+	imgs := make([]CreateShopImage, len(images))
+	for i, img := range images {
+		imgs[i] = CreateShopImage{
+			ImageUrl:    img.ImageUrl,
+			Description: img.Description,
+		}
+	}
+
+	return imgs
+}
+
+func ToCreateShopTiming(t []*pb.CreateShopTiming) []CreateShopTiming {
+	if t == nil {
+		return make([]CreateShopTiming, 0)
+	}
+
+	timings := make([]CreateShopTiming, len(t))
+	for i, time := range t {
+		timings[i] = CreateShopTiming{
+			Day:      ToDayOfWeek(time.Day),
+			OpensAt:  time.OpensAt.AsTime(),
+			ClosesAt: time.ClosesAt.AsTime(),
+		}
+	}
+
+	return timings
+}
+
+func ToCreateShop(req *pb.CreateShopReq) *CreateShop {
+	if req == nil {
+		return nil
+	}
+
+	var address CreateShopAddress
+	if req.Address != nil {
+		address = CreateShopAddress{
+			Address1:       req.Address.Address1,
+			Address2:       req.Address.Address2,
+			Longitude:      address.Longitude,
+			Latitude:       address.Latitude,
+			NearbyLandmark: req.Address.NearbyLandmark,
+			City:           req.Address.City,
+			State:          req.Address.State,
+			Pincode:        req.Address.Pincode,
+			Country:        req.Address.Country,
+		}
+	}
+
+	// Convert CreateShopContact
+	var contact CreateShopContact
+	if req.Contact != nil {
+		contact = CreateShopContact{
+			Name:        req.Contact.Name,
+			PhoneNumber: req.Contact.PhoneNumber,
+			Email:       req.Contact.Email,
+		}
+	}
+
+	return &CreateShop{
+		Name:       req.Name,
+		ShopType:   ToShopType(req.ShopType),
+		ShopStatus: ToShopStatus(req.ShopStatus),
+		OwnerId:    req.OwnerId,
+		Address:    address,
+		Contact:    contact,
+		Image:      ToCreateShopImage(req.Images),
+		Timing:     ToCreateShopTiming(req.Timings),
 	}
 }

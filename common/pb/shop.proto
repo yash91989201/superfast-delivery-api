@@ -12,11 +12,6 @@ enum ShopType {
   PHARMACEUTICAL = 2;
 }
 
-message LatLng {
-  double latitude = 1;
-  double longitude = 2;
-}
-
 enum ShopStatus {
   OPEN = 0;
   CLOSED = 1;
@@ -32,23 +27,18 @@ enum DayOfWeek {
   SUNDAY = 6;
 }
 
-message TimeOfDay {
-  int32 hours = 1;
-  int32 minutes = 2;
-  int32 seconds = 3;
-}
-
 message Shop {
   string id = 1;
   string name = 2;
-  ShopType type = 3;
-  ShopStatus status = 4;
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
-  optional google.protobuf.Timestamp deleted_at = 7;
+  ShopType shop_type = 3;
+  ShopStatus shop_status = 4;
+  string owner_id = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  optional google.protobuf.Timestamp deleted_at = 8;
 }
 
-message Contact {
+message ShopContact {
   string id = 1;
   string name = 2;
   string phone_number = 3;
@@ -57,21 +47,22 @@ message Contact {
   google.protobuf.Timestamp created_at = 6;
 }
 
-message Address {
+message ShopAddress {
   string id = 1;
   string address1 = 2;
   string address2 = 3;
-  LatLng location = 4;
-  string landmark = 5;
-  string city = 6;
-  string state = 7;
-  string pincode = 8;
-  string country = 9;
-  string shop_id = 10;
-  google.protobuf.Timestamp created_at = 11;
+  double longitude = 4;
+  double latitude = 5;
+  string nearby_landmark = 6;
+  string city = 7;
+  string state = 8;
+  string pincode = 9;
+  string country = 10;
+  string shop_id = 11;
+  google.protobuf.Timestamp created_at = 12;
 }
 
-message Image {
+message ShopImage {
   string id = 1;
   string url = 2;
   string description = 3;
@@ -80,12 +71,163 @@ message Image {
   google.protobuf.Timestamp updated_at = 6;
 }
 
-message Timing {
+message ShopTiming {
   string id = 1;
   DayOfWeek day = 2;
-  TimeOfDay opens_at = 3;
-  TimeOfDay closes_at = 4;
+  google.protobuf.Timestamp opens_at = 3;
+  google.protobuf.Timestamp closes_at = 4;
   string shop_id = 5;
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
+}
+
+message CreateShopAddress {
+  string address1 = 1;
+  string address2 = 2;
+  double longitude = 3;
+  double latitude = 4;
+  string nearby_landmark = 5;
+  string city = 6;
+  string state = 7;
+  string pincode = 8;
+  string country = 9;
+}
+
+message CreateShopContact {
+  string name = 1;
+  string phone_number = 2;
+  string email = 3;
+}
+
+message CreateShopImage {
+  string image_url = 1;
+  string description = 2;
+}
+
+message CreateShopTiming {
+  DayOfWeek day = 1;
+  google.protobuf.Timestamp opens_at = 2;
+  google.protobuf.Timestamp closes_at = 3;
+}
+
+// Req and Res Messages
+message CreateShopReq {
+  string name = 1;
+  ShopType shop_type = 2;
+  ShopStatus shop_status = 3;
+  string owner_id = 4;
+  CreateShopAddress address = 5;
+  CreateShopContact contact = 6;
+  repeated CreateShopImage images = 7;
+  repeated CreateShopTiming timings = 8;
+}
+
+message CreateShopRes {
+  string id = 1;
+  string message = 2;
+}
+
+message UpdateShopReq {
+  Shop shop = 1;
+  ShopAddress address = 2;
+  ShopContact contact = 3;
+  repeated ShopImage images = 4;
+  repeated ShopTiming timings = 5;
+}
+
+message UpdateShopRes {
+  string message = 1;
+}
+
+message UpdateShopAddressReq {
+  ShopAddress address = 1;
+}
+
+message UpdateShopAddressRes {
+  string message = 1;
+}
+
+message UpdateShopContactReq {
+  ShopContact contact = 1;
+}
+
+message UpdateShopContactRes {
+  string message = 1;
+}
+
+message UpdateShopImagesReq {
+  repeated ShopImage images = 1;
+}
+
+message UpdateShopImagesRes {
+  string message = 1;
+}
+
+message UpdateShopTimingsReq {
+  repeated ShopTiming timings = 1;
+}
+
+message UpdateShopTimingsRes {
+  string message = 1;
+}
+
+message GetShopReq {
+  string id = 1;
+}
+
+message GetShopRes {
+  Shop shop = 1;
+  ShopAddress address = 2;
+  ShopContact contact = 3;
+  repeated ShopImage images = 4;
+  repeated ShopTiming timings = 5;
+}
+
+message ListShopsReq {
+  optional ShopType shop_type = 1; // Optional filter by shop type
+  optional ShopStatus shop_status = 2; // Optional filter by status
+  optional int32 page = 3; // Pagination
+  optional int32 page_size = 4;
+}
+
+message ListShopsRes {
+  repeated Shop shops = 1;
+  int32 total = 2;
+}
+
+message DeleteShopReq {
+  string id = 1;
+}
+
+message DeleteShopRes {
+  string message = 1;
+}
+
+service ShopService {
+  // Create a new shop
+  rpc CreateShop(CreateShopReq) returns (CreateShopRes);
+
+  // Update shop details
+  rpc UpdateShop(UpdateShopReq) returns (UpdateShopRes);
+
+  // Update shop address
+  rpc UpdateShopAddress(UpdateShopAddressReq) returns (UpdateShopAddressRes);
+
+  // Update shop contact
+  rpc UpdateShopContact(UpdateShopContactReq) returns (UpdateShopContactRes);
+
+  // Update shop images
+  rpc UpdateShopImages(UpdateShopImagesReq) returns (UpdateShopImagesRes);
+
+  // Update shop timings
+  rpc UpdateShopTimings(UpdateShopTimingsReq) returns (UpdateShopTimingsRes);
+
+  // Get shop details by ID
+  rpc GetShop(GetShopReq) returns (GetShopRes);
+
+  // List all shops with optional filters
+  rpc ListShops(ListShopsReq) returns (ListShopsRes);
+
+  // Delete a shop by ID (soft delete)
+  rpc DeleteShop(DeleteShopReq) returns (DeleteShopRes);
 }

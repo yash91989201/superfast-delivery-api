@@ -8,9 +8,14 @@ import (
 type Server struct {
 	authenticationClient *clients.AuthenticationClient
 	userClient           *clients.UserClient
+	shopClient           *clients.ShopClient
 }
 
-func NewGraphQLServer(authenticationServiceUrl string, userServiceUrl string) (*Server, error) {
+func NewGraphQLServer(
+	authenticationServiceUrl string,
+	userServiceUrl string,
+	shopServiceUrl string,
+) (*Server, error) {
 	authenticationClient, err := clients.NewAuthenticationClient(authenticationServiceUrl)
 	if err != nil {
 		return nil, err
@@ -21,9 +26,15 @@ func NewGraphQLServer(authenticationServiceUrl string, userServiceUrl string) (*
 		return nil, err
 	}
 
+	shopClient, err := clients.NewShopClient(shopServiceUrl)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Server{
 		authenticationClient: authenticationClient,
 		userClient:           userClient,
+		shopClient:           shopClient,
 	}, nil
 }
 

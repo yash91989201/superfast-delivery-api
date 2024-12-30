@@ -2,8 +2,8 @@ package queries
 
 const (
 	CREATE_AUTH = "INSERT INTO auth" +
-		"(id, email, email_verified, phone, role)" +
-		"VALUES (:id, :email, :email_verified, :phone, :role)"
+		"(id, email, email_verified, phone, auth_role)" +
+		"VALUES (:id, :email, :email_verified, :phone, :auth_role)"
 	GET_AUTH_BY_ID            = "SELECT id, email, email_verified, phone, role FROM auth WHERE id = ?"
 	GET_AUTH_BY_EMAIL         = "SELECT * FROM auth WHERE email = ?"
 	GET_AUTH_BY_PHONE         = "SELECT * FROM auth WHERE phone = ?"

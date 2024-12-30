@@ -18,7 +18,7 @@ message Auth {
   optional string email = 2;
   bool email_verified = 3;
   optional string phone = 4;
-  AuthRole role = 5;
+  AuthRole auth_role = 5;
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
   optional google.protobuf.Timestamp deleted_at = 8;

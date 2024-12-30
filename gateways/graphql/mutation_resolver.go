@@ -105,3 +105,36 @@ func (r *mutationResolver) UpdateProfile(ctx context.Context, in UpdateProfileIn
 
 	return ToProfile(res), nil
 }
+
+func (r *mutationResolver) CreateShop(ctx context.Context, in CreateShopInput) (*CreateShopOutput, error) {
+	res, err := r.server.shopClient.CreateShop(ctx, ToPbCreateShopReq(in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQCreateShopOutput(res), nil
+}
+
+func (r *mutationResolver) UpdateShop(ctx context.Context, in UpdateShopInput) (*UpdateShopOutput, error) {
+	return nil, nil
+}
+
+func (r *mutationResolver) UpdateShopAddress(ctx context.Context, in UpdateShopAddressInput) (*UpdateShopOutput, error) {
+	return nil, nil
+}
+
+func (r *mutationResolver) UpdateShopContact(ctx context.Context, in UpdateShopContactInput) (*UpdateShopOutput, error) {
+	return nil, nil
+}
+
+func (r *mutationResolver) UpdateShopImages(ctx context.Context, in []*UpdateShopImageInput) (*UpdateShopOutput, error) {
+	return nil, nil
+}
+
+func (r *mutationResolver) UpdateShopTimings(ctx context.Context, in []*UpdateShopTimingInput) (*UpdateShopOutput, error) {
+	return nil, nil
+}
+
+func (r *mutationResolver) DeleteShop(ctx context.Context, in string) (*UpdateShopOutput, error) {
+	return nil, nil
+}

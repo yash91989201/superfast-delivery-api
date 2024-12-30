@@ -28,6 +28,7 @@ services:
       PORT: ${GRAPHQL_PORT}
       AUTHENTICATION_SERVICE_URL: ${AUTHENTICATION_SERVICE_URL}
       USER_SERVICE_URL: ${USER_SERVICE_URL}
+      SHOP_SERVICE_URL: ${SHOP_SERVICE_URL}
     ports:
       - "${GRAPHQL_PORT}:${GRAPHQL_PORT}"
     networks:
@@ -159,6 +160,68 @@ services:
     container_name: user_db_migrator
     depends_on:
       user_db:
+        condition: service_healthy
+    restart: on-failure
+    mem_limit: 64m
+    cpus: 0.25
+    networks:
+      - superfast_delivery
+
+  shop_service:
+    build:
+      context: .
+      dockerfile: ./services/shop/Dockerfile
+    container_name: shop_service
+    environment:
+      DATABASE_URL: ${SHOP_DATABASE_URL}
+      SERVICE_URL: ${SHOP_SERVICE_URL}
+    networks:
+      - superfast_delivery
+    mem_limit: 128m
+    cpus: 1
+    depends_on:
+      - shop_db
+    restart: on-failure:8
+
+  shop_db:
+    image: postgis/postgis:17-3.5
+    container_name: shop_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${SHOP_DB_USER}
+      POSTGRES_DB: ${SHOP_DB_NAME}
+      POSTGRES_PASSWORD: ${SHOP_DB_PASSWORD}
+    mem_limit: 1024m
+    cpus: 1
+    networks:
+      - superfast_delivery
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${SHOP_DB_USER} -d ${SHOP_DB_NAME} -h localhost -p 5432",
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  shop_db_migrator:
+    image: migrate/migrate
+    volumes:
+      - ./services/shop/db/migrations:/migrations
+    working_dir: /migrations
+    command:
+      [
+        "-database",
+        "postgres://${SHOP_DB_USER}:${SHOP_DB_PASSWORD}@${SHOP_DB_HOST}:${SHOP_DB_PORT}/${SHOP_DB_NAME}?sslmode=${SHOP_DB_SSL_MODE}",
+        "-path",
+        "/migrations",
+        "up",
+      ]
+    container_name: shop_db_migrator
+    depends_on:
+      shop_db:
         condition: service_healthy
     restart: on-failure
     mem_limit: 64m

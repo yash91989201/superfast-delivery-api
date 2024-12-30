@@ -74,7 +74,7 @@ func (r *mysqlRepository) GetProfileByAuthId(ctx context.Context, auth_id string
 func (r *mysqlRepository) UpdateProfile(ctx context.Context, p *types.Profile) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.UPDATE_PROFILE, p)
 	if err != nil {
-		return fmt.Errorf("Failed to update profile id %s : %w", p.Id, err)
+		return fmt.Errorf("Failed to update profile id %s : %w", p.ID, err)
 	}
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
 		return fmt.Errorf("Failed to update profile, 0 rows affected: %w", err)

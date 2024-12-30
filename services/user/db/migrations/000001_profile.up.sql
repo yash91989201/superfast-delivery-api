@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `profile`(
   `image_url` VARCHAR(1024) DEFAULT NULL,
   `dob` DATE DEFAULT NULL,
   `anniversary` DATE DEFAULT NULL,
-  `gender` ENUM("male","female","others","undisclosed") DEFAULT NULL,
+  `gender` ENUM("male", "female", "others", "undisclosed") DEFAULT NULL,
   `auth_id` VARCHAR(36) NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL

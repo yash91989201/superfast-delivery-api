@@ -31,3 +31,11 @@ func (r *queryResolver) Auth(ctx context.Context, in GetAuthInput) (*Auth, error
 func (r *queryResolver) Profile(ctx context.Context, in GetProfileInput) (*Profile, error) {
 	return nil, nil
 }
+
+func (r *queryResolver) GetShop(ctx context.Context, id string) (*GetShopOutput, error) {
+	return nil, nil
+}
+
+func (r *queryResolver) ListShops(ctx context.Context, in ListShopsInput) (*ListShopsOutput, error) {
+	return nil, nil
+}

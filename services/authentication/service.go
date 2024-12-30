@@ -42,11 +42,11 @@ func (s *authenticationService) CreateAuth(ctx context.Context, ca *types.Create
 	}
 
 	auth := &types.Auth{
-		Id:            cuid2.Generate(),
+		ID:            cuid2.Generate(),
 		Email:         ca.Email,
 		EmailVerified: ca.EmailVerified,
 		Phone:         ca.Phone,
-		Role:          ca.Role,
+		AuthRole:      ca.AuthRole,
 		CreatedAt:     time.Now(),
 		UpdatedAt:     time.Now(),
 	}
