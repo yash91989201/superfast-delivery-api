@@ -423,8 +423,8 @@ func ToCreateShop(req *pb.CreateShopReq) *CreateShop {
 		address = CreateShopAddress{
 			Address1:       req.Address.Address1,
 			Address2:       req.Address.Address2,
-			Longitude:      address.Longitude,
-			Latitude:       address.Latitude,
+			Latitude:       req.Address.Latitude,
+			Longitude:      req.Address.Longitude,
 			NearbyLandmark: req.Address.NearbyLandmark,
 			City:           req.Address.City,
 			State:          req.Address.State,

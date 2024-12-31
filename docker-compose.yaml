@@ -18,6 +18,7 @@ services:
     depends_on:
       - authentication_service
       - user_service
+      - shop_service
 
   graphql_gateway:
     build:
@@ -38,6 +39,7 @@ services:
     depends_on:
       - authentication_service
       - user_service
+      - shop_service
     restart: on-failure
 
   authentication_service:
