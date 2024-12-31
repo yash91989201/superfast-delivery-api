@@ -8,6 +8,23 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+func ToPbOrderBy(o *OrderBy) *pb.OrderBy {
+	if o == nil {
+		return nil
+	}
+	switch *o {
+
+	case OrderByAsc:
+		orderByAsc := pb.OrderBy_ASC
+		return &orderByAsc
+	case OrderByDesc:
+		orderByDesc := pb.OrderBy_DESC
+		return &orderByDesc
+	default:
+		panic("unexpected graphql.OrderBy")
+	}
+}
+
 func ToPbAuthRole(a AuthRole) pb.AuthRole {
 	switch a {
 	case AuthRoleCustomer:
@@ -474,6 +491,10 @@ func ToPbListShopReq(r *ListShopsInput) *pb.ListShopsReq {
 	if r.ShopStatus != nil {
 		shopStatus := ToPbShopStatus(*r.ShopStatus)
 		req.ShopStatus = &shopStatus
+	}
+
+	if r.OrderBy != nil {
+		req.OrderBy = ToPbOrderBy(r.OrderBy)
 	}
 
 	if r.Limit != nil {

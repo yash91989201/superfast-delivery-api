@@ -101,6 +101,7 @@ type ListShopsInput struct {
 	Name       *string     `json:"name,omitempty"`
 	ShopType   *ShopType   `json:"shop_type,omitempty"`
 	ShopStatus *ShopStatus `json:"shop_status,omitempty"`
+	OrderBy    *OrderBy    `json:"order_by,omitempty"`
 	Limit      *int32      `json:"limit,omitempty"`
 	Offset     *int32      `json:"offset,omitempty"`
 }
@@ -401,6 +402,47 @@ func (e *Gender) UnmarshalGQL(v any) error {
 }
 
 func (e Gender) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type OrderBy string
+
+const (
+	OrderByAsc  OrderBy = "ASC"
+	OrderByDesc OrderBy = "DESC"
+)
+
+var AllOrderBy = []OrderBy{
+	OrderByAsc,
+	OrderByDesc,
+}
+
+func (e OrderBy) IsValid() bool {
+	switch e {
+	case OrderByAsc, OrderByDesc:
+		return true
+	}
+	return false
+}
+
+func (e OrderBy) String() string {
+	return string(e)
+}
+
+func (e *OrderBy) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = OrderBy(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid OrderBy", str)
+	}
+	return nil
+}
+
+func (e OrderBy) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

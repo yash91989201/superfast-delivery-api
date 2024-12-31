@@ -8614,7 +8614,7 @@ func (ec *executionContext) unmarshalInputListShopsInput(ctx context.Context, ob
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "shop_type", "shop_status", "limit", "offset"}
+	fieldsInOrder := [...]string{"name", "shop_type", "shop_status", "order_by", "limit", "offset"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -8642,6 +8642,13 @@ func (ec *executionContext) unmarshalInputListShopsInput(ctx context.Context, ob
 				return it, err
 			}
 			it.ShopStatus = data
+		case "order_by":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("order_by"))
+			data, err := ec.unmarshalOOrderBy2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐOrderBy(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OrderBy = data
 		case "limit":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limit"))
 			data, err := ec.unmarshalOInt2ᚖint32(ctx, v)
@@ -11262,6 +11269,22 @@ func (ec *executionContext) unmarshalOListShopsInput2ᚖgithubᚗcomᚋyash91989
 	}
 	res, err := ec.unmarshalInputListShopsInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOOrderBy2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐOrderBy(ctx context.Context, v any) (*OrderBy, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(OrderBy)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOOrderBy2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐOrderBy(ctx context.Context, sel ast.SelectionSet, v *OrderBy) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOProfile2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐProfile(ctx context.Context, sel ast.SelectionSet, v *Profile) graphql.Marshaler {

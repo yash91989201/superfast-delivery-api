@@ -2,6 +2,11 @@ scalar Time
 scalar Date
 scalar DateTime
 
+enum OrderBy {
+  ASC
+  DESC
+}
+
 enum AuthRole {
   CUSTOMER
   DELIVERY_PARTNER
@@ -276,6 +281,7 @@ input ListShopsInput {
   name: String
   shop_type: ShopType
   shop_status: ShopStatus
+  order_by: OrderBy
   limit: Int
   offset: Int
 }
