@@ -544,3 +544,20 @@ func ToPbShop(shop *Shop) *pb.Shop {
 		Images:     ToPbShopImage(shop.Image),
 	}
 }
+
+func ToPbShops(shopList []*Shop) []*pb.Shop {
+	shops := make([]*pb.Shop, len(shopList))
+	for i, shop := range shopList {
+		shops[i] = ToPbShop(shop)
+	}
+
+	return shops
+}
+
+func ToPbListShopRes(shopList []*Shop) *pb.ListShopsRes {
+
+	return &pb.ListShopsRes{
+		Shops: ToPbShops(shopList),
+		Total: int32(len(shopList)),
+	}
+}

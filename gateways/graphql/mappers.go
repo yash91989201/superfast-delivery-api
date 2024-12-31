@@ -445,3 +445,12 @@ func ToGQShop(s *pb.Shop) *Shop {
 		Images:     ToGQImages(s.Images),
 	}
 }
+
+func ToGQShops(shopList []*pb.Shop) []*Shop {
+	shops := make([]*Shop, len(shopList))
+	for i, shop := range shopList {
+		shops[i] = ToGQShop(shop)
+	}
+
+	return shops
+}

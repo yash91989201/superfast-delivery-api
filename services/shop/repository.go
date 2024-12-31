@@ -18,6 +18,7 @@ type (
 		GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
 		GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
 		GetShop(ctx context.Context, id string) (*types.Shop, error)
+		GetAllShops(ctx context.Context) ([]*types.Shop, error)
 		GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error)
 		GetShopAddress(ctx context.Context, id string) (*types.ShopAddress, error)
 		GetShopAddressByShopId(ctx context.Context, shopId string) (*types.ShopAddress, error)
@@ -81,71 +82,6 @@ func (r *pgRepository) InsertShop(ctx context.Context, shop *types.Shop) error {
 	return err
 }
 
-func insertShop(ctx context.Context, tx *sqlx.Tx, s *types.Shop) error {
-	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP, s)
-	if err != nil {
-		return fmt.Errorf("Failed to insert shop: %w", err)
-	}
-
-	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to insert shop, 0 rows affected: %w", err)
-	}
-
-	return nil
-}
-
-func insertShopAddress(ctx context.Context, tx *sqlx.Tx, a *types.ShopAddress) error {
-	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_ADDRESS, a)
-	if err != nil {
-		return fmt.Errorf("Failed to insert address: %w", err)
-	}
-
-	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to insert addres, 0 rows affected: %w", err)
-	}
-
-	return nil
-}
-
-func insertShopContact(ctx context.Context, tx *sqlx.Tx, c *types.ShopContact) error {
-	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_CONTACT, c)
-	if err != nil {
-		return fmt.Errorf("Failed to insert contact: %w", err)
-	}
-
-	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to insert contact, 0 rows affected: %w", err)
-	}
-
-	return nil
-}
-
-func insertShopImage(ctx context.Context, tx *sqlx.Tx, i *types.ShopImage) error {
-	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_IMAGE, i)
-	if err != nil {
-		return fmt.Errorf("Failed to insert image: %w", err)
-	}
-
-	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to insert image, 0 rows affected: %w", err)
-	}
-
-	return nil
-}
-
-func insertShopTiming(ctx context.Context, tx *sqlx.Tx, t *types.ShopTiming) error {
-	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_TIMING, t)
-	if err != nil {
-		return fmt.Errorf("Failed to insert timing: %w", err)
-	}
-
-	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to insert timing, 0 rows affected: %w", err)
-	}
-
-	return nil
-}
-
 func (r *pgRepository) GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error) {
 	shopInfo := &types.ShopInfo{}
 	if err := r.db.GetContext(ctx, shopInfo, queries.GET_SHOP, id); err != nil {
@@ -166,6 +102,55 @@ func (r *pgRepository) GetShopInfoByOwnerId(ctx context.Context, ownerId string)
 
 func (r *pgRepository) GetShop(ctx context.Context, id string) (*types.Shop, error) {
 	return nil, nil
+}
+
+func (r *pgRepository) GetAllShops(ctx context.Context) ([]*types.Shop, error) {
+	var allShopsInfo []*types.ShopInfo
+	if err := r.db.SelectContext(ctx, &allShopsInfo, queries.GET_PAGINATED_SHOPS); err != nil {
+		return nil, fmt.Errorf("Failed to get all shops: %w", err)
+	}
+
+	allShops := make([]*types.Shop, len(allShopsInfo))
+
+	for i, shopInfo := range allShopsInfo {
+
+		contact, err := r.GetShopContactByShopId(ctx, shopInfo.ID)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to get shop contact: %w", err)
+		}
+
+		address, err := r.GetShopAddressByShopId(ctx, shopInfo.ID)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to get shop address: %w", err)
+		}
+
+		timing, err := r.GetShopTimings(ctx, shopInfo.ID)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to get shop timings: %w", err)
+		}
+
+		image, err := r.GetShopImages(ctx, shopInfo.ID)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to get shop images: %w", err)
+		}
+
+		allShops[i] = &types.Shop{
+			ID:         shopInfo.ID,
+			Name:       shopInfo.Name,
+			ShopType:   shopInfo.ShopType,
+			ShopStatus: shopInfo.ShopStatus,
+			OwnerID:    shopInfo.OwnerID,
+			CreatedAt:  shopInfo.CreatedAt,
+			UpdatedAt:  shopInfo.UpdatedAt,
+			DeletedAt:  shopInfo.DeletedAt,
+			Contact:    contact,
+			Address:    address,
+			Timing:     timing,
+			Image:      image,
+		}
+	}
+
+	return allShops, nil
 }
 
 func (r *pgRepository) GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error) {
@@ -242,6 +227,71 @@ func (r *pgRepository) GetShopImages(ctx context.Context, shopId string) ([]*typ
 	}
 
 	return shopImages, nil
+}
+
+func insertShop(ctx context.Context, tx *sqlx.Tx, s *types.Shop) error {
+	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP, s)
+	if err != nil {
+		return fmt.Errorf("Failed to insert shop: %w", err)
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to insert shop, 0 rows affected: %w", err)
+	}
+
+	return nil
+}
+
+func insertShopAddress(ctx context.Context, tx *sqlx.Tx, a *types.ShopAddress) error {
+	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_ADDRESS, a)
+	if err != nil {
+		return fmt.Errorf("Failed to insert address: %w", err)
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to insert addres, 0 rows affected: %w", err)
+	}
+
+	return nil
+}
+
+func insertShopContact(ctx context.Context, tx *sqlx.Tx, c *types.ShopContact) error {
+	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_CONTACT, c)
+	if err != nil {
+		return fmt.Errorf("Failed to insert contact: %w", err)
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to insert contact, 0 rows affected: %w", err)
+	}
+
+	return nil
+}
+
+func insertShopImage(ctx context.Context, tx *sqlx.Tx, i *types.ShopImage) error {
+	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_IMAGE, i)
+	if err != nil {
+		return fmt.Errorf("Failed to insert image: %w", err)
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to insert image, 0 rows affected: %w", err)
+	}
+
+	return nil
+}
+
+func insertShopTiming(ctx context.Context, tx *sqlx.Tx, t *types.ShopTiming) error {
+	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_TIMING, t)
+	if err != nil {
+		return fmt.Errorf("Failed to insert timing: %w", err)
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
+		return fmt.Errorf("Failed to insert timing, 0 rows affected: %w", err)
+	}
+
+	return nil
 }
 
 func (r *pgRepository) execTx(ctx context.Context, fn func(*sqlx.Tx) error) error {

@@ -1,6 +1,10 @@
 package queries
 
 const (
+	allowedShopAddressColumns = " id, address1, address2, longitude, latitude, nearby_landmark, city, state, pincode, country, shop_id, created_at "
+)
+
+const (
 	CREATE_SHOP = "INSERT INTO shop" +
 		"(id, name, shop_type, shop_status, owner_id)" +
 		"VALUES (:id, :name, :shop_type, :shop_status, :owner_id)"
@@ -25,10 +29,15 @@ const (
 
 	GET_SHOP_BY_OWNER_ID = "SELECT * FROM shop WHERE owner_id = $1"
 
-	GET_SHOP_ADDRESS = "SELECT id, address1, address2, longitude, latitude, nearby_landmark, city, state, pincode, country, shop_id, created_at " +
-		"FROM shop_address WHERE id = $1"
-	GET_SHOP_ADDRESS_BY_SHOP_ID = "SELECT id, address1, address2, longitude, latitude, nearby_landmark, city, state, pincode, country, shop_id, created_at " +
-		"FROM shop_address WHERE shop_id = $1"
+	// TODO: implement paginated queries
+	GET_PAGINATED_SHOPS = `
+  SELECT * 
+  FROM shop
+  WHERE deleted_at IS NULL
+  `
+
+	GET_SHOP_ADDRESS            = "SELECT" + allowedShopAddressColumns + "FROM shop_address WHERE id = $1"
+	GET_SHOP_ADDRESS_BY_SHOP_ID = "SELECT" + allowedShopAddressColumns + "FROM shop_address WHERE shop_id = $1"
 	GET_SHOP_CONTACT            = "SELECT * FROM shop_contact WHERE id = $1"
 	GET_SHOP_CONTACT_BY_SHOP_ID = "SELECT * FROM shop_contact WHERE shop_id = $1"
 	GET_SHOP_TIMINGS            = "SELECT * FROM shop_timing WHERE shop_id = $1"
