@@ -273,10 +273,11 @@ type UpdateShopOutput {
 }
 
 input ListShopsInput {
+  name: String
   shop_type: ShopType
   shop_status: ShopStatus
-  page: Int
-  page_size: Int
+  limit: Int
+  offset: Int
 }
 
 type ListShopsOutput {
@@ -291,7 +292,7 @@ type Query {
   Profile(input: GetProfileInput!): Profile
 
   GetShop(id: ID!): Shop!
-  ListShops(input: ListShopsInput!): ListShopsOutput!
+  ListShops(input: ListShopsInput): ListShopsOutput!
 }
 
 type Mutation {

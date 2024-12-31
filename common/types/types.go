@@ -2,6 +2,7 @@ package types
 
 import (
 	"database/sql/driver"
+	"fmt"
 	"time"
 )
 
@@ -12,6 +13,7 @@ type AddressAlias string
 type ShopType string
 type ShopStatus string
 type DayOfWeek string
+type OrderBy string
 
 // helper methods for sqlx to scan and insert
 func (s ShopType) Value() (driver.Value, error) {
@@ -38,6 +40,15 @@ func (s DayOfWeek) Value() (driver.Value, error) {
 
 func (s *DayOfWeek) Scan(value interface{}) error {
 	*s = DayOfWeek(value.([]uint8))
+	return nil
+}
+
+func (s OrderBy) Value() (driver.Value, error) {
+	return string(s), nil
+}
+
+func (s *OrderBy) Scan(value interface{}) error {
+	*s = OrderBy(value.([]uint8))
 	return nil
 }
 
@@ -81,6 +92,11 @@ const (
 	Friday    DayOfWeek = "friday"
 	Saturday  DayOfWeek = "saturday"
 	Sunday    DayOfWeek = "sunday"
+)
+
+const (
+	Asc  OrderBy = "ASC"
+	Desc OrderBy = "DESC"
 )
 
 type Date struct {
@@ -299,4 +315,64 @@ type CreateShop struct {
 	Contact    CreateShopContact
 	Image      []CreateShopImage
 	Timing     []CreateShopTiming
+}
+
+type ListShopFilters struct {
+	Name       *string     `json:"name"`
+	ShopType   *ShopType   `json:"shop_type"`
+	ShopStatus *ShopStatus `json:"shop_status"`
+	OrderBy    *OrderBy    `json:"order_by"`
+	Limit      *int        `json:"limit"`
+	Offset     *int        `json:"offset"`
+}
+
+func (filters *ListShopFilters) GetQueryAndArgs() (string, []interface{}) {
+	query := "SELECT * FROM shop WHERE 1=1"
+	var args []interface{}
+	argIndex := 1
+
+	if filters.Name != nil {
+		if *filters.Name != "" {
+			query += fmt.Sprintf(" AND name ILIKE $%d", argIndex)
+			args = append(args, "%"+*filters.Name+"%")
+			argIndex++
+		}
+	}
+
+	if filters.ShopType != nil {
+		query += fmt.Sprintf(" AND shop_type = $%d", argIndex)
+		args = append(args, *filters.ShopType)
+		argIndex++
+	}
+
+	if filters.ShopStatus != nil {
+		query += fmt.Sprintf(" AND shop_status = $%d", argIndex)
+		args = append(args, *filters.ShopStatus)
+		argIndex++
+	}
+
+	if filters.OrderBy != nil {
+		direction := *filters.OrderBy
+
+		if direction != "ASC" && direction != "DESC" {
+			direction = "ASC"
+		}
+
+		query += fmt.Sprintf(" ORDER BY created_at %s", direction)
+	} else {
+		query += " ORDER BY created_at DESC"
+	}
+
+	if filters.Limit != nil {
+		query += fmt.Sprintf(" LIMIT $%d", argIndex)
+		args = append(args, *filters.Limit)
+		argIndex++
+	}
+
+	if filters.Offset != nil {
+		query += fmt.Sprintf(" OFFSET $%d", argIndex)
+		args = append(args, *filters.Offset)
+	}
+
+	return query, args
 }

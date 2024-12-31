@@ -15,7 +15,7 @@ type (
 		GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
 		GetShop(ctx context.Context, id string) (*types.Shop, error)
 		GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error)
-		GetAllShops(ctx context.Context) ([]*types.Shop, error)
+		GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error)
 	}
 
 	shopService struct {
@@ -180,6 +180,6 @@ func (s *shopService) GetShopByOwnerId(ctx context.Context, ownerId string) (*ty
 	}, nil
 }
 
-func (s *shopService) GetAllShops(ctx context.Context) ([]*types.Shop, error) {
-	return s.r.GetAllShops(ctx)
+func (s *shopService) GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error) {
+	return s.r.GetAllShops(ctx, filters)
 }

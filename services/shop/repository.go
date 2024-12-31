@@ -18,7 +18,7 @@ type (
 		GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
 		GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
 		GetShop(ctx context.Context, id string) (*types.Shop, error)
-		GetAllShops(ctx context.Context) ([]*types.Shop, error)
+		GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error)
 		GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error)
 		GetShopAddress(ctx context.Context, id string) (*types.ShopAddress, error)
 		GetShopAddressByShopId(ctx context.Context, shopId string) (*types.ShopAddress, error)
@@ -104,9 +104,11 @@ func (r *pgRepository) GetShop(ctx context.Context, id string) (*types.Shop, err
 	return nil, nil
 }
 
-func (r *pgRepository) GetAllShops(ctx context.Context) ([]*types.Shop, error) {
+func (r *pgRepository) GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error) {
 	var allShopsInfo []*types.ShopInfo
-	if err := r.db.SelectContext(ctx, &allShopsInfo, queries.GET_PAGINATED_SHOPS); err != nil {
+
+	query, args := filters.GetQueryAndArgs()
+	if err := r.db.SelectContext(ctx, &allShopsInfo, query, args...); err != nil {
 		return nil, fmt.Errorf("Failed to get all shops: %w", err)
 	}
 

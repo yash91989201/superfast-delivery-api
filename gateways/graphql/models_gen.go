@@ -98,10 +98,11 @@ type LatLngInput struct {
 }
 
 type ListShopsInput struct {
+	Name       *string     `json:"name,omitempty"`
 	ShopType   *ShopType   `json:"shop_type,omitempty"`
 	ShopStatus *ShopStatus `json:"shop_status,omitempty"`
-	Page       *int32      `json:"page,omitempty"`
-	PageSize   *int32      `json:"page_size,omitempty"`
+	Limit      *int32      `json:"limit,omitempty"`
+	Offset     *int32      `json:"offset,omitempty"`
 }
 
 type ListShopsOutput struct {

@@ -106,7 +106,7 @@ type ComplexityRoot struct {
 		Auth      func(childComplexity int, input GetAuthInput) int
 		AuthByID  func(childComplexity int, input GetAuthByIDInput) int
 		GetShop   func(childComplexity int, id string) int
-		ListShops func(childComplexity int, input ListShopsInput) int
+		ListShops func(childComplexity int, input *ListShopsInput) int
 		Profile   func(childComplexity int, input GetProfileInput) int
 	}
 
@@ -204,7 +204,7 @@ type QueryResolver interface {
 	Auth(ctx context.Context, input GetAuthInput) (*Auth, error)
 	Profile(ctx context.Context, input GetProfileInput) (*Profile, error)
 	GetShop(ctx context.Context, id string) (*Shop, error)
-	ListShops(ctx context.Context, input ListShopsInput) (*ListShopsOutput, error)
+	ListShops(ctx context.Context, input *ListShopsInput) (*ListShopsOutput, error)
 }
 
 type executableSchema struct {
@@ -601,7 +601,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.ListShops(childComplexity, args["input"].(ListShopsInput)), true
+		return e.complexity.Query.ListShops(childComplexity, args["input"].(*ListShopsInput)), true
 
 	case "Query.Profile":
 		if e.complexity.Query.Profile == nil {
@@ -1520,13 +1520,13 @@ func (ec *executionContext) field_Query_ListShops_args(ctx context.Context, rawA
 func (ec *executionContext) field_Query_ListShops_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (ListShopsInput, error) {
+) (*ListShopsInput, error) {
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNListShopsInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListShopsInput(ctx, tmp)
+		return ec.unmarshalOListShopsInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListShopsInput(ctx, tmp)
 	}
 
-	var zeroVal ListShopsInput
+	var zeroVal *ListShopsInput
 	return zeroVal, nil
 }
 
@@ -3871,7 +3871,7 @@ func (ec *executionContext) _Query_ListShops(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().ListShops(rctx, fc.Args["input"].(ListShopsInput))
+		return ec.resolvers.Query().ListShops(rctx, fc.Args["input"].(*ListShopsInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8614,13 +8614,20 @@ func (ec *executionContext) unmarshalInputListShopsInput(ctx context.Context, ob
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"shop_type", "shop_status", "page", "page_size"}
+	fieldsInOrder := [...]string{"name", "shop_type", "shop_status", "limit", "offset"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
 		case "shop_type":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shop_type"))
 			data, err := ec.unmarshalOShopType2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐShopType(ctx, v)
@@ -8635,20 +8642,20 @@ func (ec *executionContext) unmarshalInputListShopsInput(ctx context.Context, ob
 				return it, err
 			}
 			it.ShopStatus = data
-		case "page":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
+		case "limit":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limit"))
 			data, err := ec.unmarshalOInt2ᚖint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Page = data
-		case "page_size":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page_size"))
+			it.Limit = data
+		case "offset":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("offset"))
 			data, err := ec.unmarshalOInt2ᚖint32(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.PageSize = data
+			it.Offset = data
 		}
 	}
 
@@ -10596,11 +10603,6 @@ func (ec *executionContext) marshalNInt2int32(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) unmarshalNListShopsInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListShopsInput(ctx context.Context, v any) (ListShopsInput, error) {
-	res, err := ec.unmarshalInputListShopsInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalNListShopsOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListShopsOutput(ctx context.Context, sel ast.SelectionSet, v ListShopsOutput) graphql.Marshaler {
 	return ec._ListShopsOutput(ctx, sel, &v)
 }
@@ -11251,6 +11253,14 @@ func (ec *executionContext) unmarshalOLatLngInput2ᚖgithubᚗcomᚋyash91989201
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputLatLngInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOListShopsInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListShopsInput(ctx context.Context, v any) (*ListShopsInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputListShopsInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

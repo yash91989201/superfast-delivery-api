@@ -16,6 +16,25 @@ func ToStrPtr(s string) *string {
 	return &s
 }
 
+func ToOrderBy(o *pb.OrderBy) *OrderBy {
+	if o == nil {
+		return nil
+	}
+
+	switch *o {
+
+	case pb.OrderBy_ASC:
+		orderByAsc := Asc
+		return &orderByAsc
+	case pb.OrderBy_DESC:
+		orderByDesc := Desc
+		return &orderByDesc
+
+	default:
+		panic("unexpected pb.OrderBy")
+	}
+}
+
 func ToAuthRole(t pb.AuthRole) AuthRole {
 	switch t {
 	case pb.AuthRole_CUSTOMER:
@@ -560,4 +579,41 @@ func ToPbListShopRes(shopList []*Shop) *pb.ListShopsRes {
 		Shops: ToPbShops(shopList),
 		Total: int32(len(shopList)),
 	}
+}
+
+func ToListShopFilters(f *pb.ListShopsReq) *ListShopFilters {
+	if f == nil {
+		return nil
+	}
+
+	filters := &ListShopFilters{}
+	if f.Name != nil {
+		filters.Name = f.Name
+	}
+
+	if f.ShopStatus != nil {
+		status := ToShopStatus(*f.ShopStatus)
+		filters.ShopStatus = &status
+	}
+
+	if f.ShopType != nil {
+		shopType := ToShopType(*f.ShopType)
+		filters.ShopType = &shopType
+	}
+
+	if f.OrderBy != nil {
+		filters.OrderBy = ToOrderBy(f.OrderBy)
+	}
+
+	if f.Limit != nil {
+		limit := int(*f.Limit)
+		filters.Limit = &limit
+	}
+
+	if f.Offset != nil {
+		offset := int(*f.Limit)
+		filters.Offset = &offset
+	}
+
+	return filters
 }

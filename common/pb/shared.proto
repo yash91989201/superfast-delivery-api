@@ -17,3 +17,8 @@ message LatLng {
   double lat = 1;
   double lng = 2;
 }
+
+enum OrderBy {
+  ASC = 0;
+  DESC = 1;
+}

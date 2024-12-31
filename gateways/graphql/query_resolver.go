@@ -41,8 +41,8 @@ func (r *queryResolver) GetShop(ctx context.Context, id string) (*Shop, error) {
 	return ToGQShop(shop), nil
 }
 
-func (r *queryResolver) ListShops(ctx context.Context, in ListShopsInput) (*ListShopsOutput, error) {
-	res, err := r.server.shopClient.ListShops(ctx, &pb.ListShopsReq{})
+func (r *queryResolver) ListShops(ctx context.Context, in *ListShopsInput) (*ListShopsOutput, error) {
+	res, err := r.server.shopClient.ListShops(ctx, ToPbListShopReq(in))
 	if err != nil {
 		return nil, err
 	}

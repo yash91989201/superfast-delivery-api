@@ -454,3 +454,37 @@ func ToGQShops(shopList []*pb.Shop) []*Shop {
 
 	return shops
 }
+
+func ToPbListShopReq(r *ListShopsInput) *pb.ListShopsReq {
+	if r == nil {
+		return nil
+	}
+
+	req := &pb.ListShopsReq{}
+
+	if r.Name != nil {
+		req.Name = r.Name
+	}
+
+	if r.ShopType != nil {
+		shopType := ToPbShopType(*r.ShopType)
+		req.ShopType = &shopType
+	}
+
+	if r.ShopStatus != nil {
+		shopStatus := ToPbShopStatus(*r.ShopStatus)
+		req.ShopStatus = &shopStatus
+	}
+
+	if r.Limit != nil {
+		limit := int32(*r.Limit)
+		req.Limit = &limit
+	}
+
+	if r.Offset != nil {
+		offset := int32(*r.Offset)
+		req.Offset = &offset
+	}
+
+	return req
+}

@@ -52,7 +52,7 @@ func (s *grpcServer) GetShop(ctx context.Context, req *pb.GetShopReq) (*pb.Shop,
 }
 
 func (s *grpcServer) ListShops(ctx context.Context, req *pb.ListShopsReq) (*pb.ListShopsRes, error) {
-	res, err := s.service.GetAllShops(ctx)
+	res, err := s.service.GetAllShops(ctx, types.ToListShopFilters(req))
 	if err != nil {
 		return nil, err
 	}

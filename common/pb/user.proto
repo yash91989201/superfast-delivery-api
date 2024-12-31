@@ -66,6 +66,7 @@ message DeliveryAddress {
   string receiver_phone = 3;
   AddressAlias address_alias = 4;
   optional string other_alias = 5;
+  // TODO: remove latlng and use seperate latitude and longitude fields
   LatLng location = 6;
   string address = 7;
   optional string nearby_landmark = 8;

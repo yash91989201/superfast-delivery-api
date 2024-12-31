@@ -507,11 +507,12 @@ type DeliveryAddress struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id                  string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	ReceiverName        string                 `protobuf:"bytes,2,opt,name=receiver_name,json=receiverName,proto3" json:"receiver_name,omitempty"`
-	ReceiverPhone       string                 `protobuf:"bytes,3,opt,name=receiver_phone,json=receiverPhone,proto3" json:"receiver_phone,omitempty"`
-	AddressAlias        AddressAlias           `protobuf:"varint,4,opt,name=address_alias,json=addressAlias,proto3,enum=pb.AddressAlias" json:"address_alias,omitempty"`
-	OtherAlias          *string                `protobuf:"bytes,5,opt,name=other_alias,json=otherAlias,proto3,oneof" json:"other_alias,omitempty"`
+	Id            string       `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	ReceiverName  string       `protobuf:"bytes,2,opt,name=receiver_name,json=receiverName,proto3" json:"receiver_name,omitempty"`
+	ReceiverPhone string       `protobuf:"bytes,3,opt,name=receiver_phone,json=receiverPhone,proto3" json:"receiver_phone,omitempty"`
+	AddressAlias  AddressAlias `protobuf:"varint,4,opt,name=address_alias,json=addressAlias,proto3,enum=pb.AddressAlias" json:"address_alias,omitempty"`
+	OtherAlias    *string      `protobuf:"bytes,5,opt,name=other_alias,json=otherAlias,proto3,oneof" json:"other_alias,omitempty"`
+	// TODO: remove latlng and use seperate latitude and longitude fields
 	Location            *LatLng                `protobuf:"bytes,6,opt,name=location,proto3" json:"location,omitempty"`
 	Address             string                 `protobuf:"bytes,7,opt,name=address,proto3" json:"address,omitempty"`
 	NearbyLandmark      *string                `protobuf:"bytes,8,opt,name=nearby_landmark,json=nearbyLandmark,proto3,oneof" json:"nearby_landmark,omitempty"`

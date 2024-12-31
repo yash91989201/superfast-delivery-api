@@ -3,6 +3,7 @@ syntax = "proto3";
 package pb;
 
 import "google/protobuf/timestamp.proto";
+import "shared.proto";
 
 option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
 
@@ -180,10 +181,12 @@ message GetShopReq {
 }
 
 message ListShopsReq {
-  optional ShopType shop_type = 1; // Optional filter by shop type
-  optional ShopStatus shop_status = 2; // Optional filter by status
-  optional int32 page = 3; // Pagination
-  optional int32 page_size = 4;
+  optional string name = 1;
+  optional ShopType shop_type = 2;
+  optional ShopStatus shop_status = 3;
+  optional OrderBy order_by = 4;
+  optional int32 limit = 5;
+  optional int32 offset = 6;
 }
 
 message ListShopsRes {
