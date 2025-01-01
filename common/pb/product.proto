@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package pb;
-
-option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
-
-service ProductService {}

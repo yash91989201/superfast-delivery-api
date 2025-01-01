@@ -1,0 +1,151 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
+
+message ItemVariant {
+  string id = 1;
+  string variant_name = 2;
+  double relative_price = 3;
+  bool relative_pricing = 4;
+  double price = 5;
+  string description = 6;
+  string item_id = 7;
+}
+
+message ItemAddon {
+  string id = 1;
+  string addon_name = 2;
+  double addon_price = 3;
+  string description = 4;
+  string item_id = 5;
+}
+
+message RestaurantMenu {
+  string id = 1;
+  string menu_name = 2;
+  string shop_id = 3;
+  repeated MenuItem menu_items = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp deleted_at = 7;
+}
+
+message MenuItem {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  string menu_id = 5;
+  repeated ItemVariant variants = 6;
+  repeated ItemAddon addons = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+  google.protobuf.Timestamp deleted_at = 10;
+}
+
+message RetailCategory {
+  string id = 1;
+  string category_name = 2;
+  string shop_id = 3;
+  repeated RetailItem retail_items = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp deleted_at = 7;
+}
+
+message RetailItem {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  string category_id = 5;
+  repeated ItemVariant variants = 6;
+  repeated ItemAddon addons = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+  google.protobuf.Timestamp deleted_at = 10;
+}
+
+message MedicineCategory {
+  string id = 1;
+  string category_name = 2;
+  string shop_id = 3;
+  repeated MedicineItem medicine_items = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp deleted_at = 7;
+}
+
+message MedicineItem {
+  string id = 1;
+  string name = 2;
+  double price = 3;
+  string description = 4;
+  string category_id = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  google.protobuf.Timestamp deleted_at = 8;
+}
+
+// types for create request
+message CreateItemVariantReq {
+  string variant_name = 1;
+  double relative_price = 2;
+  bool relative_pricing = 3;
+  double price = 4;
+  string description = 5;
+}
+
+message CreateItemAddonReq {
+  string addon_name = 1;
+  double addon_price = 2;
+  string description = 3;
+}
+
+message CreateRestaurantMenuReq {
+  string menu_name = 1;
+  string shop_id = 2;
+  repeated CreateMenuItemReq menu_items = 3;
+}
+
+message CreateMenuItemReq {
+  string name = 1;
+  string description = 2;
+  double price = 3;
+  repeated CreateItemVariantReq variants = 4;
+  repeated CreateItemAddonReq addons = 5;
+}
+
+message CreateRetailCategoryReq {
+  string category_name = 1;
+  string shop_id = 2;
+  repeated CreateRetailItemReq retail_items = 3;
+}
+
+message CreateRetailItemReq {
+  string name = 1;
+  string description = 2;
+  double price = 3;
+  string category_id = 4;
+  repeated CreateItemVariantReq variants = 5;
+  repeated CreateItemAddonReq addons = 6;
+}
+
+message CreateMedicineCategoryReq {
+  string category_name = 1;
+  string shop_id = 2;
+  repeated CreateMedicineItemReq medicine_items = 3;
+}
+
+message CreateMedicineItemReq {
+  string name = 1;
+  double price = 2;
+  string description = 3;
+  string category_id = 4;
+}
+
+service ProductService {}
