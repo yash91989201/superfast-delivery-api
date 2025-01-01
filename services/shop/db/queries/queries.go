@@ -1,5 +1,11 @@
 package queries
 
+import (
+	"fmt"
+
+	"github.com/yash91989201/superfast-delivery-api/common/types"
+)
+
 const (
 	allowedShopAddressColumns = " id, address1, address2, longitude, latitude, nearby_landmark, city, state, pincode, country, shop_id, created_at "
 )
@@ -45,3 +51,54 @@ const (
 	GET_SHOP_TIMING             = "SELECT * FROM shop_timing WHERE id = $1"
 	GET_SHOP_IMAGE              = "SELECT * FROM shop_image WHERE id = $1"
 )
+
+func GetListShopQueryAndArgs(filters *types.ListShopFilters) (string, []interface{}) {
+	query := "SELECT * FROM shop WHERE 1=1"
+	var args []interface{}
+	argIndex := 1
+
+	if filters.Name != nil {
+		if *filters.Name != "" {
+			query += fmt.Sprintf(" AND name ILIKE $%d", argIndex)
+			args = append(args, "%"+*filters.Name+"%")
+			argIndex++
+		}
+	}
+
+	if filters.ShopType != nil {
+		query += fmt.Sprintf(" AND shop_type = $%d", argIndex)
+		args = append(args, *filters.ShopType)
+		argIndex++
+	}
+
+	if filters.ShopStatus != nil {
+		query += fmt.Sprintf(" AND shop_status = $%d", argIndex)
+		args = append(args, *filters.ShopStatus)
+		argIndex++
+	}
+
+	if filters.OrderBy != nil {
+		direction := *filters.OrderBy
+
+		if direction != "ASC" && direction != "DESC" {
+			direction = "ASC"
+		}
+
+		query += fmt.Sprintf(" ORDER BY created_at %s", direction)
+	} else {
+		query += " ORDER BY created_at DESC"
+	}
+
+	if filters.Limit != nil {
+		query += fmt.Sprintf(" LIMIT $%d", argIndex)
+		args = append(args, *filters.Limit)
+		argIndex++
+	}
+
+	if filters.Offset != nil {
+		query += fmt.Sprintf(" OFFSET $%d", argIndex)
+		args = append(args, *filters.Offset)
+	}
+
+	return query, args
+}

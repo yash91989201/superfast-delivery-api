@@ -105,7 +105,7 @@ func (r *pgRepository) GetShop(ctx context.Context, id string) (*types.Shop, err
 func (r *pgRepository) GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error) {
 	var allShopsInfo []*types.ShopInfo
 
-	query, args := filters.GetQueryAndArgs()
+	query, args := queries.GetListShopQueryAndArgs(filters)
 	if err := r.db.SelectContext(ctx, &allShopsInfo, query, args...); err != nil {
 		return nil, fmt.Errorf("Failed to get all shops: %w", err)
 	}
