@@ -1,30 +1,37 @@
 package product
 
 import (
-	"fmt"
+	"context"
 
-	"github.com/jmoiron/sqlx"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
+	"go.mongodb.org/mongo-driver/v2/mongo/readpref"
 )
 
 type Repository interface {
-	Close() error
+	Close(ctx context.Context) error
+	Ping(ctx context.Context) error
 }
 
-type mysqlRepository struct {
-	db *sqlx.DB
+type mongoRepository struct {
+	db *mongo.Client
 }
 
-func NewMysqlRepository(dbUrl string) (Repository, error) {
-	db, err := sqlx.Open("mysql", dbUrl)
+func NewMongoRepository(dbUrl string) (Repository, error) {
+	db, err := mongo.Connect(options.Client().ApplyURI(dbUrl))
 	if err != nil {
-		return nil, fmt.Errorf("Database connection failed: %w", err)
+		return nil, err
 	}
 
-	return &mysqlRepository{
+	return &mongoRepository{
 		db: db,
 	}, nil
 }
 
-func (r *mysqlRepository) Close() error {
-	return r.db.Close()
+func (r *mongoRepository) Close(ctx context.Context) error {
+	return r.db.Disconnect(ctx)
+}
+
+func (r *mongoRepository) Ping(ctx context.Context) error {
+	return r.db.Ping(ctx, readpref.Primary())
 }

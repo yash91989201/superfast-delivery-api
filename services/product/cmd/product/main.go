@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"time"
 
@@ -22,7 +23,7 @@ func main() {
 
 	var r productService.Repository
 	retry.ForeverSleep(5*time.Second, func(_ int) (err error) {
-		r, err = productService.NewMysqlRepository(cfg.DatabaseUrl)
+		r, err = productService.NewMongoRepository(cfg.DatabaseUrl)
 
 		if err != nil {
 			log.Println(err)
@@ -31,7 +32,10 @@ func main() {
 		return
 	})
 
-	defer r.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	defer r.Close(ctx)
 
 	log.Printf("Product service started at %s", cfg.ServiceUrl)
 
