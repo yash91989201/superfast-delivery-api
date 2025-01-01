@@ -241,6 +241,7 @@ services:
     container_name: product_service
     environment:
       DATABASE_URL: ${PRODUCT_DATABASE_URL}
+      DATABASE_NAME: ${PRODUCT_DATABASE_NAME}
       SERVICE_URL: ${PRODUCT_SERVICE_URL}
     networks:
       - superfast_delivery

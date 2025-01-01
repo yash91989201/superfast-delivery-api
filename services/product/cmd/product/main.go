@@ -11,8 +11,9 @@ import (
 )
 
 type Config struct {
-	DatabaseUrl string `envconfig:"DATABASE_URL" required:"true"`
-	ServiceUrl  string `envconfig:"SERVICE_URL" required:"true"`
+	DatabaseUrl  string `envconfig:"DATABASE_URL" required:"true"`
+	DatabaseName string `envconfig:"DATABASE_NAME" required:"true"`
+	ServiceUrl   string `envconfig:"SERVICE_URL" required:"true"`
 }
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 
 	var r productService.Repository
 	retry.ForeverSleep(5*time.Second, func(_ int) (err error) {
-		r, err = productService.NewMongoRepository(cfg.DatabaseUrl)
+		r, err = productService.NewMongoRepository(cfg.DatabaseUrl, cfg.DatabaseName)
 
 		if err != nil {
 			log.Println(err)

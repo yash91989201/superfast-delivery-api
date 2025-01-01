@@ -31,7 +31,6 @@ type RestaurantMenu struct {
 	CreatedAt time.Time     `json:"created_at" bson:"created_at"`
 	UpdatedAt time.Time     `json:"updated_at" bson:"updated_at"`
 	DeletedAt *time.Time    `json:"deleted_at" bson:"deleted_at"`
-	MenuItems []*MenuItem   `json:"menu_items" bson:"menu_items"`
 }
 
 type MenuItem struct {
@@ -42,50 +41,49 @@ type MenuItem struct {
 	CreatedAt   time.Time      `json:"created_at" bson:"created_at"`
 	UpdatedAt   time.Time      `json:"updated_at" bson:"updated_at"`
 	DeletedAt   *time.Time     `json:"deleted_at" bson:"deleted_at"`
+	MenuID      bson.ObjectID  `json:"menu_id" bson:"menu_id"`
 	Variants    []*ItemVariant `json:"variants" bson:"variants"`
 	AddOns      []*ItemAddon   `json:"addons" bson:"addons"`
 }
 
 type RetailCategory struct {
-	ID             bson.ObjectID    `json:"id" bson:"_id"`
-	CategoryName   string           `json:"category_name" bson:"category_name"`
-	ShopID         string           `json:"shop_id" bson:"shop_id"`
-	CreatedAt      time.Time        `json:"created_at" bson:"created_at"`
-	UpdatedAt      time.Time        `json:"updated_at" bson:"updated_at"`
-	DeletedAt      *time.Time       `json:"deleted_at" bson:"deleted_at"`
-	RetailProducts []*RetailProduct `json:"retail_products" bson:"retail_products"`
+	ID           bson.ObjectID `json:"id" bson:"_id"`
+	CategoryName string        `json:"category_name" bson:"category_name"`
+	ShopID       string        `json:"shop_id" bson:"shop_id"`
+	CreatedAt    time.Time     `json:"created_at" bson:"created_at"`
+	UpdatedAt    time.Time     `json:"updated_at" bson:"updated_at"`
+	DeletedAt    *time.Time    `json:"deleted_at" bson:"deleted_at"`
 }
 
-type RetailProduct struct {
+type RetailItem struct {
 	ID          bson.ObjectID  `json:"id" bson:"_id"`
 	Name        string         `json:"name" bson:"name"`
 	Description string         `json:"description" bson:"description"`
 	Price       float32        `json:"price" bson:"price"`
-	CategoryID  bson.ObjectID  `json:"category_id" bson:"category_id"`
 	CreatedAt   time.Time      `json:"created_at" bson:"created_at"`
 	UpdatedAt   time.Time      `json:"updated_at" bson:"updated_at"`
 	DeletedAt   *time.Time     `json:"deleted_at" bson:"deleted_at"`
 	Variants    []*ItemVariant `json:"variants" bson:"variants"`
 	AddOns      []*ItemAddon   `json:"addons" bson:"addons"`
+	CategoryID  bson.ObjectID  `json:"category_id" bson:"category_id"`
 }
 
 type MedicineCategory struct {
-	ID           bson.ObjectID      `json:"id" bson:"_id"`
-	CategoryName string             `json:"category_name" bson:"category_name"`
-	ShopID       string             `json:"shop_id" bson:"shop_id"`
-	CreatedAt    time.Time          `json:"created_at" bson:"created_at"`
-	UpdatedAt    time.Time          `json:"updated_at" bson:"updated_at"`
-	DeletedAt    *time.Time         `json:"deleted_at" bson:"deleted_at"`
-	Medicines    []*MedicineProduct `json:"medicines" bson:"medicines"`
+	ID           bson.ObjectID `json:"id" bson:"_id"`
+	CategoryName string        `json:"category_name" bson:"category_name"`
+	ShopID       string        `json:"shop_id" bson:"shop_id"`
+	CreatedAt    time.Time     `json:"created_at" bson:"created_at"`
+	UpdatedAt    time.Time     `json:"updated_at" bson:"updated_at"`
+	DeletedAt    *time.Time    `json:"deleted_at" bson:"deleted_at"`
 }
 
-type MedicineProduct struct {
+type MedicineItem struct {
 	ID          bson.ObjectID `json:"id" bson:"_id"`
 	Name        string        `json:"name" bson:"name"`
 	Price       float32       `json:"price" bson:"price"`
 	Description *string       `json:"description" bson:"description"`
-	CategoryID  bson.ObjectID `json:"category_id" bson:"category_id"`
 	CreatedAt   time.Time     `json:"created_at" bson:"created_at"`
 	UpdatedAt   time.Time     `json:"updated_at" bson:"updated_at"`
 	DeletedAt   *time.Time    `json:"deleted_at" bson:"deleted_at"`
+	CategoryID  bson.ObjectID `json:"category_id" bson:"category_id"`
 }
