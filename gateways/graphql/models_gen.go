@@ -20,6 +20,41 @@ type Auth struct {
 	DeletedAt     *string  `json:"deleted_at,omitempty"`
 }
 
+type CreateItemAddonReq struct {
+	AddonName   string  `json:"addon_name"`
+	AddonPrice  float64 `json:"addon_price"`
+	Description *string `json:"description,omitempty"`
+}
+
+type CreateItemVariantReq struct {
+	VariantName     string  `json:"variant_name"`
+	RelativePrice   float64 `json:"relative_price"`
+	RelativePricing bool    `json:"relative_pricing"`
+	Price           float64 `json:"price"`
+	Description     *string `json:"description,omitempty"`
+}
+
+type CreateMedicineCategoryReq struct {
+	CategoryName  string                   `json:"category_name"`
+	ShopID        string                   `json:"shop_id"`
+	MedicineItems []*CreateMedicineItemReq `json:"medicine_items"`
+}
+
+type CreateMedicineItemReq struct {
+	Name        string  `json:"name"`
+	Price       float64 `json:"price"`
+	Description *string `json:"description,omitempty"`
+	CategoryID  string  `json:"category_id"`
+}
+
+type CreateMenuItemReq struct {
+	Name        string                  `json:"name"`
+	Description *string                 `json:"description,omitempty"`
+	Price       float64                 `json:"price"`
+	Variants    []*CreateItemVariantReq `json:"variants"`
+	Addons      []*CreateItemAddonReq   `json:"addons"`
+}
+
 type CreateProfileInput struct {
 	Name        string  `json:"name"`
 	ImageURL    *string `json:"image_url,omitempty"`
@@ -27,6 +62,27 @@ type CreateProfileInput struct {
 	Anniversary *string `json:"anniversary,omitempty"`
 	Gender      *Gender `json:"gender,omitempty"`
 	AuthID      string  `json:"auth_id"`
+}
+
+type CreateRestaurantMenuReq struct {
+	MenuName  string               `json:"menu_name"`
+	ShopID    string               `json:"shop_id"`
+	MenuItems []*CreateMenuItemReq `json:"menu_items"`
+}
+
+type CreateRetailCategoryReq struct {
+	CategoryName string                 `json:"category_name"`
+	ShopID       string                 `json:"shop_id"`
+	RetailItems  []*CreateRetailItemReq `json:"retail_items"`
+}
+
+type CreateRetailItemReq struct {
+	Name        string                  `json:"name"`
+	Description *string                 `json:"description,omitempty"`
+	Price       float64                 `json:"price"`
+	CategoryID  string                  `json:"category_id"`
+	Variants    []*CreateItemVariantReq `json:"variants"`
+	Addons      []*CreateItemAddonReq   `json:"addons"`
 }
 
 type CreateShopAddressInput struct {
@@ -87,6 +143,24 @@ type GetProfileInput struct {
 	AuthID string `json:"auth_id"`
 }
 
+type ItemAddon struct {
+	ID          string  `json:"id"`
+	AddonName   string  `json:"addon_name"`
+	AddonPrice  float64 `json:"addon_price"`
+	Description *string `json:"description,omitempty"`
+	ItemID      string  `json:"item_id"`
+}
+
+type ItemVariant struct {
+	ID              string  `json:"id"`
+	VariantName     string  `json:"variant_name"`
+	RelativePrice   float64 `json:"relative_price"`
+	RelativePricing bool    `json:"relative_pricing"`
+	Price           float64 `json:"price"`
+	Description     *string `json:"description,omitempty"`
+	ItemID          string  `json:"item_id"`
+}
+
 type LatLng struct {
 	Lat float64 `json:"lat"`
 	Lng float64 `json:"lng"`
@@ -111,6 +185,40 @@ type ListShopsOutput struct {
 	Total int32   `json:"total"`
 }
 
+type MedicineCategory struct {
+	ID            string          `json:"id"`
+	CategoryName  string          `json:"category_name"`
+	ShopID        string          `json:"shop_id"`
+	MedicineItems []*MedicineItem `json:"medicine_items"`
+	CreatedAt     string          `json:"created_at"`
+	UpdatedAt     string          `json:"updated_at"`
+	DeletedAt     *string         `json:"deleted_at,omitempty"`
+}
+
+type MedicineItem struct {
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Price       float64 `json:"price"`
+	Description *string `json:"description,omitempty"`
+	CategoryID  string  `json:"category_id"`
+	CreatedAt   string  `json:"created_at"`
+	UpdatedAt   string  `json:"updated_at"`
+	DeletedAt   *string `json:"deleted_at,omitempty"`
+}
+
+type MenuItem struct {
+	ID          string         `json:"id"`
+	Name        string         `json:"name"`
+	Description *string        `json:"description,omitempty"`
+	Price       float64        `json:"price"`
+	MenuID      string         `json:"menu_id"`
+	Variants    []*ItemVariant `json:"variants"`
+	Addons      []*ItemAddon   `json:"addons"`
+	CreatedAt   string         `json:"created_at"`
+	UpdatedAt   string         `json:"updated_at"`
+	DeletedAt   *string        `json:"deleted_at,omitempty"`
+}
+
 type Mutation struct {
 }
 
@@ -127,6 +235,39 @@ type Profile struct {
 }
 
 type Query struct {
+}
+
+type RestaurantMenu struct {
+	ID        string      `json:"id"`
+	MenuName  string      `json:"menu_name"`
+	ShopID    string      `json:"shop_id"`
+	MenuItems []*MenuItem `json:"menu_items"`
+	CreatedAt string      `json:"created_at"`
+	UpdatedAt string      `json:"updated_at"`
+	DeletedAt *string     `json:"deleted_at,omitempty"`
+}
+
+type RetailCategory struct {
+	ID           string        `json:"id"`
+	CategoryName string        `json:"category_name"`
+	ShopID       string        `json:"shop_id"`
+	RetailItems  []*RetailItem `json:"retail_items"`
+	CreatedAt    string        `json:"created_at"`
+	UpdatedAt    string        `json:"updated_at"`
+	DeletedAt    *string       `json:"deleted_at,omitempty"`
+}
+
+type RetailItem struct {
+	ID          string         `json:"id"`
+	Name        string         `json:"name"`
+	Description *string        `json:"description,omitempty"`
+	Price       float64        `json:"price"`
+	CategoryID  string         `json:"category_id"`
+	Variants    []*ItemVariant `json:"variants"`
+	Addons      []*ItemAddon   `json:"addons"`
+	CreatedAt   string         `json:"created_at"`
+	UpdatedAt   string         `json:"updated_at"`
+	DeletedAt   *string        `json:"deleted_at,omitempty"`
 }
 
 type Shop struct {

@@ -291,6 +291,151 @@ type ListShopsOutput {
   total: Int!
 }
 
+type ItemVariant {
+  id: ID!
+  variant_name: String!
+  relative_price: Float!
+  relative_pricing: Boolean!
+  price: Float!
+  description: String
+  item_id: String!
+}
+
+type ItemAddon {
+  id: ID!
+  addon_name: String!
+  addon_price: Float!
+  description: String
+  item_id: String!
+}
+
+type MenuItem {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+  menu_id: String!
+  variants: [ItemVariant]!
+  addons: [ItemAddon]!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type RetailItem {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+  category_id: String!
+  variants: [ItemVariant]!
+  addons: [ItemAddon]!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type MedicineItem {
+  id: ID!
+  name: String!
+  price: Float!
+  description: String
+  category_id: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+# Types for Category
+
+type RestaurantMenu {
+  id: ID!
+  menu_name: String!
+  shop_id: String!
+  menu_items: [MenuItem]!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type RetailCategory {
+  id: ID!
+  category_name: String!
+  shop_id: String!
+  retail_items: [RetailItem]!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type MedicineCategory {
+  id: ID!
+  category_name: String!
+  shop_id: String!
+  medicine_items: [MedicineItem]!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+# Input Types for Create Requests
+
+input CreateItemVariantReq {
+  variant_name: String!
+  relative_price: Float!
+  relative_pricing: Boolean!
+  price: Float!
+  description: String
+}
+
+input CreateItemAddonReq {
+  addon_name: String!
+  addon_price: Float!
+  description: String
+}
+
+input CreateMenuItemReq {
+  name: String!
+  description: String
+  price: Float!
+  variants: [CreateItemVariantReq]!
+  addons: [CreateItemAddonReq]!
+}
+
+input CreateRestaurantMenuReq {
+  menu_name: String!
+  shop_id: String!
+  menu_items: [CreateMenuItemReq]!
+}
+
+input CreateRetailItemReq {
+  name: String!
+  description: String
+  price: Float!
+  category_id: String!
+  variants: [CreateItemVariantReq]!
+  addons: [CreateItemAddonReq]!
+}
+
+input CreateRetailCategoryReq {
+  category_name: String!
+  shop_id: String!
+  retail_items: [CreateRetailItemReq]!
+}
+
+input CreateMedicineItemReq {
+  name: String!
+  price: Float!
+  description: String
+  category_id: String!
+}
+
+input CreateMedicineCategoryReq {
+  category_name: String!
+  shop_id: String!
+  medicine_items: [CreateMedicineItemReq]!
+}
+
 type Query {
   AuthById(input: GetAuthByIdInput!): Auth
   Auth(input: GetAuthInput!): Auth
@@ -318,4 +463,8 @@ type Mutation {
   UpdateShopImages(input: [UpdateShopImageInput!]!): UpdateShopOutput!
   UpdateShopTimings(input: [UpdateShopTimingInput!]!): UpdateShopOutput!
   DeleteShop(id: ID!): UpdateShopOutput!
+
+  CreateRestaurantMenu(input: CreateRestaurantMenuReq!): RestaurantMenu!
+  CreateRetailCategory(input: CreateRetailCategoryReq!): RetailCategory!
+  CreateMedicineCategory(input: CreateMedicineCategoryReq!): MedicineCategory!
 }
