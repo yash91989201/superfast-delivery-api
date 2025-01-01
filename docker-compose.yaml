@@ -157,7 +157,7 @@ services:
     command:
       [
         "-database",
-        "mysql://${USER_DB_USER}:${USER_DB_PASSWORD}@tcp(${USER_DB_HOST}:${USER_DB_PORT})/${USER_DB_NAME}",
+        "mysql://root:${USER_DB_ROOT_PASSWORD}@tcp(${USER_DB_HOST}:${USER_DB_PORT})/${USER_DB_NAME}",
         "-path",
         "/migrations",
         "up",
@@ -251,14 +251,15 @@ services:
     restart: on-failure:8
 
   product_db:
-    image: mysql:9.1.0
+    image: mongo:8.0
     container_name: product_db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${PRODUCT_DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${PRODUCT_DB_NAME}
-      MYSQL_USER: ${PRODUCT_DB_USER}
-      MYSQL_PASSWORD: ${PRODUCT_DB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${PRODUCT_DB_NAME}
+      MONGO_INITDB_ROOT_USERNAME: ${PRODUCT_DB_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${PRODUCT_DB_ROOT_PASSWORD}
+      MONGO_INITDB_USER: ${PRODUCT_DB_USER}
+      MONGO_INITDB_PWD: ${PRODUCT_DB_PASSWORD}
     mem_limit: 750m
     cpus: 1
     networks:
@@ -267,35 +268,12 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mysqladmin --user=root --password=${PRODUCT_DB_ROOT_PASSWORD} --host=localhost --port=3306 ping",
+          'mongosh --username ${PRODUCT_DB_ROOT_USER} --password ${PRODUCT_DB_ROOT_PASSWORD} --eval ''db.adminCommand("ping")''',
         ]
       interval: 10s
       retries: 5
       start_period: 30s
       timeout: 10s
-
-  product_db_migrator:
-    image: migrate/migrate
-    volumes:
-      - ./services/product/db/migrations:/migrations
-    working_dir: /migrations
-    command:
-      [
-        "-database",
-        "mysql://${PRODUCT_DB_USER}:${PRODUCT_DB_PASSWORD}@tcp(${PRODUCT_DB_HOST}:${PRODUCT_DB_PORT})/${PRODUCT_DB_NAME}",
-        "-path",
-        "/migrations",
-        "up",
-      ]
-    container_name: product_db_migrator
-    depends_on:
-      product_db:
-        condition: service_healthy
-    restart: on-failure
-    mem_limit: 64m
-    cpus: 0.25
-    networks:
-      - superfast_delivery
 
 networks:
   superfast_delivery:
