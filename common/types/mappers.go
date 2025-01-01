@@ -8,6 +8,17 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+type Date struct {
+	Year  int32
+	Month int32
+	Day   int32
+}
+
+func (d *Date) ToTime() *time.Time {
+	t := time.Date(int(d.Year), time.Month(d.Month), int(d.Day), 0, 0, 0, 0, time.UTC)
+	return &t
+}
+
 func ToBoolPtr(b bool) *bool {
 	return &b
 }

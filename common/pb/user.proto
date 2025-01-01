@@ -66,14 +66,14 @@ message DeliveryAddress {
   string receiver_phone = 3;
   AddressAlias address_alias = 4;
   optional string other_alias = 5;
-  // TODO: remove latlng and use seperate latitude and longitude fields
-  LatLng location = 6;
-  string address = 7;
-  optional string nearby_landmark = 8;
-  optional string delivery_instruction = 9;
-  string auth_id = 10;
-  google.protobuf.Timestamp created_at = 11;
-  google.protobuf.Timestamp updated_at = 12;
+  double latitude = 6;
+  double longitude = 7;
+  string address = 8;
+  optional string nearby_landmark = 9;
+  optional string delivery_instruction = 10;
+  string auth_id = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
 }
 
 message CreateDeliveryAddressReq {
@@ -81,11 +81,12 @@ message CreateDeliveryAddressReq {
   string receiver_phone = 2;
   AddressAlias address_alias = 3;
   optional string other_alias = 4;
-  LatLng location = 5;
-  string address = 6;
-  optional string nearby_landmark = 7;
-  optional string delivery_instruction = 8;
-  string auth_id = 9;
+  double latitude = 5;
+  double longitude = 6;
+  string address = 7;
+  optional string nearby_landmark = 8;
+  optional string delivery_instruction = 9;
+  string auth_id = 10;
 }
 
 message GetDeliveryAddressReq {
