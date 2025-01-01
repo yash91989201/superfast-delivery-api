@@ -19,6 +19,7 @@ services:
       - authentication_service
       - user_service
       - shop_service
+      - product_service
 
   graphql_gateway:
     build:
@@ -30,6 +31,7 @@ services:
       AUTHENTICATION_SERVICE_URL: ${AUTHENTICATION_SERVICE_URL}
       USER_SERVICE_URL: ${USER_SERVICE_URL}
       SHOP_SERVICE_URL: ${SHOP_SERVICE_URL}
+      PRODUCT_SERVICE_URL: ${PRODUCT_SERVICE_URL}
     ports:
       - "${GRAPHQL_PORT}:${GRAPHQL_PORT}"
     networks:
@@ -40,6 +42,7 @@ services:
       - authentication_service
       - user_service
       - shop_service
+      - product_service
     restart: on-failure
 
   authentication_service:
@@ -68,7 +71,7 @@ services:
       MYSQL_DATABASE: ${AUTHENTICATION_DB_NAME}
       MYSQL_USER: ${AUTHENTICATION_DB_USER}
       MYSQL_PASSWORD: ${AUTHENTICATION_DB_PASSWORD}
-    mem_limit: 1024m
+    mem_limit: 750m
     cpus: 1
     networks:
       - superfast_delivery
@@ -131,7 +134,7 @@ services:
       MYSQL_DATABASE: ${USER_DB_NAME}
       MYSQL_USER: ${USER_DB_USER}
       MYSQL_PASSWORD: ${USER_DB_PASSWORD}
-    mem_limit: 1024m
+    mem_limit: 750m
     cpus: 1
     networks:
       - superfast_delivery
@@ -193,7 +196,7 @@ services:
       POSTGRES_USER: ${SHOP_DB_USER}
       POSTGRES_DB: ${SHOP_DB_NAME}
       POSTGRES_PASSWORD: ${SHOP_DB_PASSWORD}
-    mem_limit: 1024m
+    mem_limit: 128m
     cpus: 1
     networks:
       - superfast_delivery
@@ -224,6 +227,69 @@ services:
     container_name: shop_db_migrator
     depends_on:
       shop_db:
+        condition: service_healthy
+    restart: on-failure
+    mem_limit: 64m
+    cpus: 0.25
+    networks:
+      - superfast_delivery
+
+  product_service:
+    build:
+      context: .
+      dockerfile: ./services/product/Dockerfile
+    container_name: product_service
+    environment:
+      DATABASE_URL: ${PRODUCT_DATABASE_URL}
+      SERVICE_URL: ${PRODUCT_SERVICE_URL}
+    networks:
+      - superfast_delivery
+    mem_limit: 128m
+    cpus: 1
+    depends_on:
+      - product_db
+    restart: on-failure:8
+
+  product_db:
+    image: mysql:9.1.0
+    container_name: product_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${PRODUCT_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${PRODUCT_DB_NAME}
+      MYSQL_USER: ${PRODUCT_DB_USER}
+      MYSQL_PASSWORD: ${PRODUCT_DB_PASSWORD}
+    mem_limit: 750m
+    cpus: 1
+    networks:
+      - superfast_delivery
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin --user=root --password=${PRODUCT_DB_ROOT_PASSWORD} --host=localhost --port=3306 ping",
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  product_db_migrator:
+    image: migrate/migrate
+    volumes:
+      - ./services/product/db/migrations:/migrations
+    working_dir: /migrations
+    command:
+      [
+        "-database",
+        "mysql://${PRODUCT_DB_USER}:${PRODUCT_DB_PASSWORD}@tcp(${PRODUCT_DB_HOST}:${PRODUCT_DB_PORT})/${PRODUCT_DB_NAME}",
+        "-path",
+        "/migrations",
+        "up",
+      ]
+    container_name: product_db_migrator
+    depends_on:
+      product_db:
         condition: service_healthy
     restart: on-failure
     mem_limit: 64m

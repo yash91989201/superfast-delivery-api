@@ -10,30 +10,28 @@ import (
 	"github.com/yash91989201/superfast-delivery-api/services/shop/db/queries"
 )
 
-type (
-	Repository interface {
-		Close() error
-		InsertShop(ctx context.Context, shop *types.Shop) error
+type Repository interface {
+	Close() error
+	InsertShop(ctx context.Context, shop *types.Shop) error
 
-		GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
-		GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
-		GetShop(ctx context.Context, id string) (*types.Shop, error)
-		GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error)
-		GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error)
-		GetShopAddress(ctx context.Context, id string) (*types.ShopAddress, error)
-		GetShopAddressByShopId(ctx context.Context, shopId string) (*types.ShopAddress, error)
-		GetShopContact(ctx context.Context, id string) (*types.ShopContact, error)
-		GetShopContactByShopId(ctx context.Context, shopId string) (*types.ShopContact, error)
-		GetShopTiming(ctx context.Context, id string) (*types.ShopTiming, error)
-		GetShopTimings(ctx context.Context, shopId string) ([]*types.ShopTiming, error)
-		GetShopImage(ctx context.Context, id string) (*types.ShopImage, error)
-		GetShopImages(ctx context.Context, shopId string) ([]*types.ShopImage, error)
-	}
+	GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
+	GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
+	GetShop(ctx context.Context, id string) (*types.Shop, error)
+	GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error)
+	GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error)
+	GetShopAddress(ctx context.Context, id string) (*types.ShopAddress, error)
+	GetShopAddressByShopId(ctx context.Context, shopId string) (*types.ShopAddress, error)
+	GetShopContact(ctx context.Context, id string) (*types.ShopContact, error)
+	GetShopContactByShopId(ctx context.Context, shopId string) (*types.ShopContact, error)
+	GetShopTiming(ctx context.Context, id string) (*types.ShopTiming, error)
+	GetShopTimings(ctx context.Context, shopId string) ([]*types.ShopTiming, error)
+	GetShopImage(ctx context.Context, id string) (*types.ShopImage, error)
+	GetShopImages(ctx context.Context, shopId string) ([]*types.ShopImage, error)
+}
 
-	pgRepository struct {
-		db *sqlx.DB
-	}
-)
+type pgRepository struct {
+	db *sqlx.DB
+}
 
 func NewPgRepository(dbUrl string) (Repository, error) {
 	db, err := sqlx.Open("postgres", dbUrl)

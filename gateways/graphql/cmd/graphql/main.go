@@ -20,6 +20,7 @@ type Config struct {
 	AuthenticationServiceUrl string `envconfig:"AUTHENTICATION_SERVICE_URL" required:"true"`
 	UserServiceUrl           string `envconfig:"USER_SERVICE_URL" required:"true"`
 	ShopServiceUrl           string `envconfig:"SHOP_SERVICE_URL" required:"true"`
+	ProductServiceUrl        string `envconfig:"PRODUCT_SERVICE_URL" required:"true"`
 }
 
 func main() {
@@ -28,7 +29,7 @@ func main() {
 		log.Fatal("Failed to get env: %w", err)
 	}
 
-	s, err := graphql.NewGraphQLServer(cfg.AuthenticationServiceUrl, cfg.UserServiceUrl, cfg.ShopServiceUrl)
+	s, err := graphql.NewGraphQLServer(cfg.AuthenticationServiceUrl, cfg.UserServiceUrl, cfg.ShopServiceUrl, cfg.ProductServiceUrl)
 	if err != nil {
 		log.Fatal("Failed to start graphql server: %w", err)
 	}

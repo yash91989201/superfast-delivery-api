@@ -7,21 +7,19 @@ import (
 	"github.com/yash91989201/superfast-delivery-api/common/types"
 )
 
-type (
-	Service interface {
-		InsertShop(context.Context, *types.CreateShop) (*types.Shop, error)
+type Service interface {
+	InsertShop(context.Context, *types.CreateShop) (*types.Shop, error)
 
-		GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
-		GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
-		GetShop(ctx context.Context, id string) (*types.Shop, error)
-		GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error)
-		GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error)
-	}
+	GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
+	GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
+	GetShop(ctx context.Context, id string) (*types.Shop, error)
+	GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error)
+	GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error)
+}
 
-	shopService struct {
-		r Repository
-	}
-)
+type shopService struct {
+	r Repository
+}
 
 func New(r Repository) Service {
 	return &shopService{r: r}
