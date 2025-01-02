@@ -98,14 +98,14 @@ message CreateItemVariantReq {
   bool relative_pricing = 3;
   double price = 4;
   optional string description = 5;
-  string item_id =6;
+  string item_id = 6;
 }
 
 message CreateItemAddonReq {
   string addon_name = 1;
   double addon_price = 2;
   optional string description = 3;
-  string item_id =4;
+  string item_id = 4;
 }
 
 message CreateRestaurantMenuReq {
@@ -117,7 +117,7 @@ message CreateMenuItemReq {
   string name = 1;
   string description = 2;
   double price = 3;
-  string menu_id =4;
+  string menu_id = 4;
 }
 
 message CreateRetailCategoryReq {
@@ -144,16 +144,29 @@ message CreateMedicineItemReq {
   string category_id = 4;
 }
 
+message GetRestaurantMenuReq{
+string id=1;
+}
+
+message ListRestaurantMenuReq{
+string shop_id=1;
+}
+
+message ListRestaurantMenuRes{
+repeated RestaurantMenu restaurant_menu_list =1;
+}
+
+
 service ProductService {
-rpc CreateItemVariant(CreateItemVariantReq) returns(ItemVariant){}
-rpc CreateItemAddon(CreateItemAddonReq) returns(ItemAddon){}
+  rpc CreateItemVariant(CreateItemVariantReq) returns (ItemVariant) {}
+  rpc CreateItemAddon(CreateItemAddonReq) returns (ItemAddon) {}
+  rpc CreateRestaurantMenu(CreateRestaurantMenuReq) returns (RestaurantMenu) {}
+  rpc CreateMenuItem(CreateMenuItemReq) returns (MenuItem) {}
+  rpc CreateRetailCategory(CreateRetailCategoryReq) returns (RetailCategory) {}
+  rpc CreateRetailItem(CreateRetailItemReq) returns (RetailItem) {}
+  rpc CreateMedicineCategory(CreateMedicineCategoryReq) returns (MedicineCategory) {}
+  rpc CreateMedicineItem(CreateMedicineItemReq) returns (MedicineItem) {}
 
-  rpc CreateRestaurantMenu(CreateRestaurantMenuReq) returns(RestaurantMenu){}
-  rpc CreateMenuItem(CreateMenuItemReq) returns (MenuItem){}
-
-  rpc CreateRetailCategory(CreateRetailCategoryReq) returns(RetailCategory){}
-rpc CreateRetailItem(CreateRetailItemReq) returns(RetailItem){}
-
-  rpc CreateMedicineCategory(CreateMedicineCategoryReq) returns(MedicineCategory){}
-  rpc CreateMedicineItem(CreateMedicineItemReq) returns(MedicineItem){}
+  rpc GetRestaurantMenu(GetRestaurantMenuReq) returns(RestaurantMenu){}
+  rpc ListRestaurantMenu(ListRestaurantMenuReq) returns(ListRestaurantMenuRes){}
 }
