@@ -38,29 +38,29 @@ const (
 )
 
 type Shop struct {
-	ID         string        `json:"id" db:"id"`
-	Name       string        `json:"name" db:"name"`
-	ShopType   ShopType      `json:"shop_type" db:"shop_type"`
-	ShopStatus ShopStatus    `json:"shop_status" db:"shop_status"`
-	OwnerID    string        `json:"owner_id" db:"owner_id"`
-	CreatedAt  time.Time     `json:"created_at" db:"created_at"`
-	UpdatedAt  time.Time     `json:"updated_at" db:"updated_at"`
-	DeletedAt  *time.Time    `json:"deleted_at" db:"deleted_at"`
-	Address    *ShopAddress  `json:"shop_address"`
-	Contact    *ShopContact  `json:"shop_contact"`
-	Timing     []*ShopTiming `json:"shop_timing"`
-	Image      []*ShopImage  `json:"shop_image"`
+	ID          string        `json:"id" db:"id"`
+	Name        string        `json:"name" db:"name"`
+	ShopType    ShopType      `json:"shop_type" db:"shop_type"`
+	ShopStatus  ShopStatus    `json:"shop_status" db:"shop_status"`
+	OwnerAuthID string        `json:"owner_auth_id" db:"owner_auth_id"`
+	CreatedAt   time.Time     `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time     `json:"updated_at" db:"updated_at"`
+	DeletedAt   *time.Time    `json:"deleted_at" db:"deleted_at"`
+	Address     *ShopAddress  `json:"shop_address"`
+	Contact     *ShopContact  `json:"shop_contact"`
+	Timing      []*ShopTiming `json:"shop_timing"`
+	Image       []*ShopImage  `json:"shop_image"`
 }
 
 type ShopInfo struct {
-	ID         string     `json:"id" db:"id"`
-	Name       string     `json:"name" db:"name"`
-	ShopType   ShopType   `json:"shop_type" db:"shop_type"`
-	ShopStatus ShopStatus `json:"shop_status" db:"shop_status"`
-	OwnerID    string     `json:"owner_id" db:"owner_id"`
-	CreatedAt  time.Time  `json:"created_at" db:"created_at"`
-	UpdatedAt  time.Time  `json:"updated_at" db:"updated_at"`
-	DeletedAt  *time.Time `json:"deleted_at" db:"deleted_at"`
+	ID          string     `json:"id" db:"id"`
+	Name        string     `json:"name" db:"name"`
+	ShopType    ShopType   `json:"shop_type" db:"shop_type"`
+	ShopStatus  ShopStatus `json:"shop_status" db:"shop_status"`
+	OwnerAuthID string     `json:"owner_auth_id" db:"owner_auth_id"`
+	CreatedAt   time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at" db:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at" db:"deleted_at"`
 }
 
 type ShopAddress struct {
@@ -139,14 +139,14 @@ type CreateShopTiming struct {
 }
 
 type CreateShop struct {
-	Name       string
-	ShopType   ShopType
-	ShopStatus ShopStatus
-	OwnerId    string
-	Address    CreateShopAddress
-	Contact    CreateShopContact
-	Image      []CreateShopImage
-	Timing     []CreateShopTiming
+	Name        string
+	ShopType    ShopType
+	ShopStatus  ShopStatus
+	OwnerAuthId string
+	Address     CreateShopAddress
+	Contact     CreateShopContact
+	Image       []CreateShopImage
+	Timing      []CreateShopTiming
 }
 
 type ListShopFilters struct {

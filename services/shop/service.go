@@ -11,9 +11,9 @@ type Service interface {
 	InsertShop(context.Context, *types.CreateShop) (*types.Shop, error)
 
 	GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
-	GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
+	GetShopInfoByOwnerAuthId(ctx context.Context, ownerAuthId string) (*types.ShopInfo, error)
 	GetShop(ctx context.Context, id string) (*types.Shop, error)
-	GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error)
+	GetShopByOwnerAuthId(ctx context.Context, ownerId string) (*types.Shop, error)
 	GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error)
 }
 
@@ -50,11 +50,11 @@ func (s *shopService) InsertShop(ctx context.Context, shop *types.CreateShop) (*
 	}
 
 	newShop := &types.Shop{
-		ID:         shopId,
-		Name:       shop.Name,
-		ShopType:   shop.ShopType,
-		ShopStatus: shop.ShopStatus,
-		OwnerID:    shop.OwnerId,
+		ID:          shopId,
+		Name:        shop.Name,
+		ShopType:    shop.ShopType,
+		ShopStatus:  shop.ShopStatus,
+		OwnerAuthID: shop.OwnerAuthId,
 		Address: &types.ShopAddress{
 			ID:             cuid2.Generate(),
 			Address1:       shop.Address.Address1,
@@ -90,8 +90,8 @@ func (s *shopService) GetShopInfo(ctx context.Context, id string) (*types.ShopIn
 	return s.r.GetShopInfo(ctx, id)
 }
 
-func (s *shopService) GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error) {
-	return s.r.GetShopInfoByOwnerId(ctx, ownerId)
+func (s *shopService) GetShopInfoByOwnerAuthId(ctx context.Context, ownerId string) (*types.ShopInfo, error) {
+	return s.r.GetShopInfoByOwnerAuthId(ctx, ownerId)
 }
 
 func (s *shopService) GetShop(ctx context.Context, id string) (*types.Shop, error) {
@@ -121,23 +121,23 @@ func (s *shopService) GetShop(ctx context.Context, id string) (*types.Shop, erro
 	}
 
 	return &types.Shop{
-		ID:         shopInfo.ID,
-		Name:       shopInfo.Name,
-		ShopType:   shopInfo.ShopType,
-		ShopStatus: shopInfo.ShopStatus,
-		OwnerID:    shopInfo.OwnerID,
-		CreatedAt:  shopInfo.CreatedAt,
-		UpdatedAt:  shopInfo.UpdatedAt,
-		DeletedAt:  shopInfo.DeletedAt,
-		Address:    shopAddress,
-		Contact:    shopContact,
-		Timing:     shopTimings,
-		Image:      shopImages,
+		ID:          shopInfo.ID,
+		Name:        shopInfo.Name,
+		ShopType:    shopInfo.ShopType,
+		ShopStatus:  shopInfo.ShopStatus,
+		OwnerAuthID: shopInfo.OwnerAuthID,
+		CreatedAt:   shopInfo.CreatedAt,
+		UpdatedAt:   shopInfo.UpdatedAt,
+		DeletedAt:   shopInfo.DeletedAt,
+		Address:     shopAddress,
+		Contact:     shopContact,
+		Timing:      shopTimings,
+		Image:       shopImages,
 	}, nil
 }
 
-func (s *shopService) GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error) {
-	shopInfo, err := s.r.GetShopInfoByOwnerId(ctx, ownerId)
+func (s *shopService) GetShopByOwnerAuthId(ctx context.Context, ownerId string) (*types.Shop, error) {
+	shopInfo, err := s.r.GetShopInfoByOwnerAuthId(ctx, ownerId)
 	if err != nil {
 		return nil, err
 	}
@@ -163,18 +163,18 @@ func (s *shopService) GetShopByOwnerId(ctx context.Context, ownerId string) (*ty
 	}
 
 	return &types.Shop{
-		ID:         shopInfo.ID,
-		Name:       shopInfo.Name,
-		ShopType:   shopInfo.ShopType,
-		ShopStatus: shopInfo.ShopStatus,
-		OwnerID:    shopInfo.OwnerID,
-		CreatedAt:  shopInfo.CreatedAt,
-		UpdatedAt:  shopInfo.UpdatedAt,
-		DeletedAt:  shopInfo.DeletedAt,
-		Address:    shopAddress,
-		Contact:    shopContact,
-		Timing:     shopTimings,
-		Image:      shopImages,
+		ID:          shopInfo.ID,
+		Name:        shopInfo.Name,
+		ShopType:    shopInfo.ShopType,
+		ShopStatus:  shopInfo.ShopStatus,
+		OwnerAuthID: shopInfo.OwnerAuthID,
+		CreatedAt:   shopInfo.CreatedAt,
+		UpdatedAt:   shopInfo.UpdatedAt,
+		DeletedAt:   shopInfo.DeletedAt,
+		Address:     shopAddress,
+		Contact:     shopContact,
+		Timing:      shopTimings,
+		Image:       shopImages,
 	}, nil
 }
 

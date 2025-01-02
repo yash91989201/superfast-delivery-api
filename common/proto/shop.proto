@@ -33,7 +33,7 @@ message Shop {
   string name = 2;
   ShopType shop_type = 3;
   ShopStatus shop_status = 4;
-  string owner_id = 5;
+  string owner_auth_id = 5;
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
   optional google.protobuf.Timestamp deleted_at = 8;
@@ -120,7 +120,7 @@ message CreateShopReq {
   string name = 1;
   ShopType shop_type = 2;
   ShopStatus shop_status = 3;
-  string owner_id = 4;
+  string owner_auth_id = 4;
   CreateShopAddress address = 5;
   CreateShopContact contact = 6;
   repeated CreateShopImage images = 7;

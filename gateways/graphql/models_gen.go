@@ -103,14 +103,14 @@ type CreateShopImageInput struct {
 }
 
 type CreateShopInput struct {
-	Name       string                   `json:"name"`
-	ShopType   ShopType                 `json:"shop_type"`
-	ShopStatus ShopStatus               `json:"shop_status"`
-	OwnerID    string                   `json:"owner_id"`
-	Address    *CreateShopAddressInput  `json:"address"`
-	Contact    *CreateShopContactInput  `json:"contact"`
-	Images     []*CreateShopImageInput  `json:"images,omitempty"`
-	Timings    []*CreateShopTimingInput `json:"timings,omitempty"`
+	Name        string                   `json:"name"`
+	ShopType    ShopType                 `json:"shop_type"`
+	ShopStatus  ShopStatus               `json:"shop_status"`
+	OwnerAuthID string                   `json:"owner_auth_id"`
+	Address     *CreateShopAddressInput  `json:"address"`
+	Contact     *CreateShopContactInput  `json:"contact"`
+	Images      []*CreateShopImageInput  `json:"images,omitempty"`
+	Timings     []*CreateShopTimingInput `json:"timings,omitempty"`
 }
 
 type CreateShopOutput struct {
@@ -290,18 +290,18 @@ type RetailItem struct {
 }
 
 type Shop struct {
-	ID         string        `json:"id"`
-	Name       string        `json:"name"`
-	ShopType   ShopType      `json:"shop_type"`
-	ShopStatus ShopStatus    `json:"shop_status"`
-	OwnerID    string        `json:"owner_id"`
-	CreatedAt  string        `json:"created_at"`
-	UpdatedAt  string        `json:"updated_at"`
-	DeletedAt  *string       `json:"deleted_at,omitempty"`
-	Contact    *ShopContact  `json:"contact"`
-	Address    *ShopAddress  `json:"address"`
-	Timings    []*ShopTiming `json:"timings,omitempty"`
-	Images     []*ShopImage  `json:"images,omitempty"`
+	ID          string        `json:"id"`
+	Name        string        `json:"name"`
+	ShopType    ShopType      `json:"shop_type"`
+	ShopStatus  ShopStatus    `json:"shop_status"`
+	OwnerAuthID string        `json:"owner_auth_id"`
+	CreatedAt   string        `json:"created_at"`
+	UpdatedAt   string        `json:"updated_at"`
+	DeletedAt   *string       `json:"deleted_at,omitempty"`
+	Contact     *ShopContact  `json:"contact"`
+	Address     *ShopAddress  `json:"address"`
+	Timings     []*ShopTiming `json:"timings,omitempty"`
+	Images      []*ShopImage  `json:"images,omitempty"`
 }
 
 type ShopAddress struct {

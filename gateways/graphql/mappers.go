@@ -344,10 +344,10 @@ func ToPbCreateShopReq(cs CreateShopInput) *pb.CreateShopReq {
 	}
 
 	return &pb.CreateShopReq{
-		Name:       cs.Name,
-		ShopType:   ToPbShopType(cs.ShopType),
-		ShopStatus: ToPbShopStatus(cs.ShopStatus),
-		OwnerId:    cs.OwnerID,
+		Name:        cs.Name,
+		ShopType:    ToPbShopType(cs.ShopType),
+		ShopStatus:  ToPbShopStatus(cs.ShopStatus),
+		OwnerAuthId: cs.OwnerAuthID,
 		Address: &pb.CreateShopAddress{
 			Address1:       cs.Address.Address1,
 			Address2:       *cs.Address.Address2,
@@ -448,18 +448,18 @@ func ToGQImages(i []*pb.ShopImage) []*ShopImage {
 func ToGQShop(s *pb.Shop) *Shop {
 
 	return &Shop{
-		ID:         s.Id,
-		Name:       s.Name,
-		ShopType:   ToGQShopType(s.ShopType),
-		ShopStatus: ToGQShopStatus(s.ShopStatus),
-		OwnerID:    s.OwnerId,
-		CreatedAt:  ToGQTime(s.CreatedAt),
-		UpdatedAt:  ToGQTime(s.UpdatedAt),
-		DeletedAt:  ToGQTimePtr(s.DeletedAt),
-		Contact:    ToGQContact(s.Contact),
-		Address:    ToGQAddress(s.Address),
-		Timings:    ToGQTimings(s.Timings),
-		Images:     ToGQImages(s.Images),
+		ID:          s.Id,
+		Name:        s.Name,
+		ShopType:    ToGQShopType(s.ShopType),
+		ShopStatus:  ToGQShopStatus(s.ShopStatus),
+		OwnerAuthID: s.OwnerAuthId,
+		CreatedAt:   ToGQTime(s.CreatedAt),
+		UpdatedAt:   ToGQTime(s.UpdatedAt),
+		DeletedAt:   ToGQTimePtr(s.DeletedAt),
+		Contact:     ToGQContact(s.Contact),
+		Address:     ToGQAddress(s.Address),
+		Timings:     ToGQTimings(s.Timings),
+		Images:      ToGQImages(s.Images),
 	}
 }
 

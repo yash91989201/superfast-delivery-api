@@ -485,14 +485,14 @@ func ToCreateShop(req *pb.CreateShopReq) *CreateShop {
 	}
 
 	return &CreateShop{
-		Name:       req.Name,
-		ShopType:   ToShopType(req.ShopType),
-		ShopStatus: ToShopStatus(req.ShopStatus),
-		OwnerId:    req.OwnerId,
-		Address:    address,
-		Contact:    contact,
-		Image:      ToCreateShopImage(req.Images),
-		Timing:     ToCreateShopTiming(req.Timings),
+		Name:        req.Name,
+		ShopType:    ToShopType(req.ShopType),
+		ShopStatus:  ToShopStatus(req.ShopStatus),
+		OwnerAuthId: req.OwnerAuthId,
+		Address:     address,
+		Contact:     contact,
+		Image:       ToCreateShopImage(req.Images),
+		Timing:      ToCreateShopTiming(req.Timings),
 	}
 }
 
@@ -571,18 +571,18 @@ func ToPbShop(shop *Shop) *pb.Shop {
 	}
 
 	return &pb.Shop{
-		Id:         shop.ID,
-		Name:       shop.Name,
-		ShopType:   ToPbShopType(shop.ShopType),
-		ShopStatus: ToPbShopStatus(shop.ShopStatus),
-		OwnerId:    shop.OwnerID,
-		CreatedAt:  ToPbTimestamp(shop.CreatedAt),
-		UpdatedAt:  ToPbTimestamp(shop.UpdatedAt),
-		DeletedAt:  TimePtrToPbTime(shop.DeletedAt),
-		Contact:    ToPbShopContact(shop.Contact),
-		Address:    ToPbShopAddress(shop.Address),
-		Timings:    ToPbShopTimmings(shop.Timing),
-		Images:     ToPbShopImage(shop.Image),
+		Id:          shop.ID,
+		Name:        shop.Name,
+		ShopType:    ToPbShopType(shop.ShopType),
+		ShopStatus:  ToPbShopStatus(shop.ShopStatus),
+		OwnerAuthId: shop.OwnerAuthID,
+		CreatedAt:   ToPbTimestamp(shop.CreatedAt),
+		UpdatedAt:   ToPbTimestamp(shop.UpdatedAt),
+		DeletedAt:   TimePtrToPbTime(shop.DeletedAt),
+		Contact:     ToPbShopContact(shop.Contact),
+		Address:     ToPbShopAddress(shop.Address),
+		Timings:     ToPbShopTimmings(shop.Timing),
+		Images:      ToPbShopImage(shop.Image),
 	}
 }
 

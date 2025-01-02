@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS shop (
   name VARCHAR(128) NOT NULL,
   shop_type shop_type NOT NULL,
   shop_status shop_status NOT NULL,
-  owner_id VARCHAR(36) NOT NULL,
+  owner_auth_id VARCHAR(36) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   deleted_at TIMESTAMP

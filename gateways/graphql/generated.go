@@ -239,18 +239,18 @@ type ComplexityRoot struct {
 	}
 
 	Shop struct {
-		Address    func(childComplexity int) int
-		Contact    func(childComplexity int) int
-		CreatedAt  func(childComplexity int) int
-		DeletedAt  func(childComplexity int) int
-		ID         func(childComplexity int) int
-		Images     func(childComplexity int) int
-		Name       func(childComplexity int) int
-		OwnerID    func(childComplexity int) int
-		ShopStatus func(childComplexity int) int
-		ShopType   func(childComplexity int) int
-		Timings    func(childComplexity int) int
-		UpdatedAt  func(childComplexity int) int
+		Address     func(childComplexity int) int
+		Contact     func(childComplexity int) int
+		CreatedAt   func(childComplexity int) int
+		DeletedAt   func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Images      func(childComplexity int) int
+		Name        func(childComplexity int) int
+		OwnerAuthID func(childComplexity int) int
+		ShopStatus  func(childComplexity int) int
+		ShopType    func(childComplexity int) int
+		Timings     func(childComplexity int) int
+		UpdatedAt   func(childComplexity int) int
 	}
 
 	ShopAddress struct {
@@ -1523,12 +1523,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Shop.Name(childComplexity), true
 
-	case "Shop.owner_id":
-		if e.complexity.Shop.OwnerID == nil {
+	case "Shop.owner_auth_id":
+		if e.complexity.Shop.OwnerAuthID == nil {
 			break
 		}
 
-		return e.complexity.Shop.OwnerID(childComplexity), true
+		return e.complexity.Shop.OwnerAuthID(childComplexity), true
 
 	case "Shop.shop_status":
 		if e.complexity.Shop.ShopStatus == nil {
@@ -4512,8 +4512,8 @@ func (ec *executionContext) fieldContext_ListShopsOutput_shops(_ context.Context
 				return ec.fieldContext_Shop_shop_type(ctx, field)
 			case "shop_status":
 				return ec.fieldContext_Shop_shop_status(ctx, field)
-			case "owner_id":
-				return ec.fieldContext_Shop_owner_id(ctx, field)
+			case "owner_auth_id":
+				return ec.fieldContext_Shop_owner_auth_id(ctx, field)
 			case "created_at":
 				return ec.fieldContext_Shop_created_at(ctx, field)
 			case "updated_at":
@@ -7854,8 +7854,8 @@ func (ec *executionContext) fieldContext_Query_GetShop(ctx context.Context, fiel
 				return ec.fieldContext_Shop_shop_type(ctx, field)
 			case "shop_status":
 				return ec.fieldContext_Shop_shop_status(ctx, field)
-			case "owner_id":
-				return ec.fieldContext_Shop_owner_id(ctx, field)
+			case "owner_auth_id":
+				return ec.fieldContext_Shop_owner_auth_id(ctx, field)
 			case "created_at":
 				return ec.fieldContext_Shop_created_at(ctx, field)
 			case "updated_at":
@@ -10023,8 +10023,8 @@ func (ec *executionContext) fieldContext_Shop_shop_status(_ context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Shop_owner_id(ctx context.Context, field graphql.CollectedField, obj *Shop) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Shop_owner_id(ctx, field)
+func (ec *executionContext) _Shop_owner_auth_id(ctx context.Context, field graphql.CollectedField, obj *Shop) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Shop_owner_auth_id(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -10037,7 +10037,7 @@ func (ec *executionContext) _Shop_owner_id(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.OwnerID, nil
+		return obj.OwnerAuthID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10054,7 +10054,7 @@ func (ec *executionContext) _Shop_owner_id(ctx context.Context, field graphql.Co
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Shop_owner_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Shop_owner_auth_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Shop",
 		Field:      field,
@@ -14517,7 +14517,7 @@ func (ec *executionContext) unmarshalInputCreateShopInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "shop_type", "shop_status", "owner_id", "address", "contact", "images", "timings"}
+	fieldsInOrder := [...]string{"name", "shop_type", "shop_status", "owner_auth_id", "address", "contact", "images", "timings"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -14545,13 +14545,13 @@ func (ec *executionContext) unmarshalInputCreateShopInput(ctx context.Context, o
 				return it, err
 			}
 			it.ShopStatus = data
-		case "owner_id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("owner_id"))
+		case "owner_auth_id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("owner_auth_id"))
 			data, err := ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.OwnerID = data
+			it.OwnerAuthID = data
 		case "address":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("address"))
 			data, err := ec.unmarshalNCreateShopAddressInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateShopAddressInput(ctx, v)
@@ -16874,8 +16874,8 @@ func (ec *executionContext) _Shop(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "owner_id":
-			out.Values[i] = ec._Shop_owner_id(ctx, field, obj)
+		case "owner_auth_id":
+			out.Values[i] = ec._Shop_owner_auth_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

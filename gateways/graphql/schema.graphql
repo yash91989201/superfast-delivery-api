@@ -131,7 +131,7 @@ type Shop {
   name: String!
   shop_type: ShopType!
   shop_status: ShopStatus!
-  owner_id: ID!
+  owner_auth_id: ID!
   created_at: String!
   updated_at: String!
   deleted_at: String
@@ -222,7 +222,7 @@ input CreateShopInput {
   name: String!
   shop_type: ShopType!
   shop_status: ShopStatus!
-  owner_id: ID!
+  owner_auth_id: ID!
   address: CreateShopAddressInput!
   contact: CreateShopContactInput!
   images: [CreateShopImageInput!]

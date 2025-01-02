@@ -15,10 +15,10 @@ type Repository interface {
 	InsertShop(ctx context.Context, shop *types.Shop) error
 
 	GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
-	GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
+	GetShopInfoByOwnerAuthId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
 	GetShop(ctx context.Context, id string) (*types.Shop, error)
 	GetAllShops(ctx context.Context, filters *types.ListShopFilters) ([]*types.Shop, error)
-	GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error)
+	GetShopByOwnerAuthId(ctx context.Context, ownerId string) (*types.Shop, error)
 	GetShopAddress(ctx context.Context, id string) (*types.ShopAddress, error)
 	GetShopAddressByShopId(ctx context.Context, shopId string) (*types.ShopAddress, error)
 	GetShopContact(ctx context.Context, id string) (*types.ShopContact, error)
@@ -89,7 +89,7 @@ func (r *pgRepository) GetShopInfo(ctx context.Context, id string) (*types.ShopI
 	return shopInfo, nil
 }
 
-func (r *pgRepository) GetShopInfoByOwnerId(ctx context.Context, ownerId string) (*types.ShopInfo, error) {
+func (r *pgRepository) GetShopInfoByOwnerAuthId(ctx context.Context, ownerId string) (*types.ShopInfo, error) {
 	shopInfo := &types.ShopInfo{}
 	if err := r.db.GetContext(ctx, shopInfo, queries.GET_SHOP_BY_OWNER_ID, ownerId); err != nil {
 		return nil, fmt.Errorf("Failed to get shop info by owner_id: %w", err)
@@ -135,25 +135,25 @@ func (r *pgRepository) GetAllShops(ctx context.Context, filters *types.ListShopF
 		}
 
 		allShops[i] = &types.Shop{
-			ID:         shopInfo.ID,
-			Name:       shopInfo.Name,
-			ShopType:   shopInfo.ShopType,
-			ShopStatus: shopInfo.ShopStatus,
-			OwnerID:    shopInfo.OwnerID,
-			CreatedAt:  shopInfo.CreatedAt,
-			UpdatedAt:  shopInfo.UpdatedAt,
-			DeletedAt:  shopInfo.DeletedAt,
-			Contact:    contact,
-			Address:    address,
-			Timing:     timing,
-			Image:      image,
+			ID:          shopInfo.ID,
+			Name:        shopInfo.Name,
+			ShopType:    shopInfo.ShopType,
+			ShopStatus:  shopInfo.ShopStatus,
+			OwnerAuthID: shopInfo.OwnerAuthID,
+			CreatedAt:   shopInfo.CreatedAt,
+			UpdatedAt:   shopInfo.UpdatedAt,
+			DeletedAt:   shopInfo.DeletedAt,
+			Contact:     contact,
+			Address:     address,
+			Timing:      timing,
+			Image:       image,
 		}
 	}
 
 	return allShops, nil
 }
 
-func (r *pgRepository) GetShopByOwnerId(ctx context.Context, ownerId string) (*types.Shop, error) {
+func (r *pgRepository) GetShopByOwnerAuthId(ctx context.Context, ownerId string) (*types.Shop, error) {
 	return nil, nil
 }
 
