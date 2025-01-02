@@ -241,7 +241,7 @@ services:
     container_name: product_service
     environment:
       DATABASE_URL: ${PRODUCT_DATABASE_URL}
-      DATABASE_NAME: ${PRODUCT_DATABASE_NAME}
+      DATABASE_NAME: ${PRODUCT_DB_NAME}
       SERVICE_URL: ${PRODUCT_SERVICE_URL}
     networks:
       - superfast_delivery
@@ -261,6 +261,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${PRODUCT_DB_ROOT_PASSWORD}
       MONGO_INITDB_USER: ${PRODUCT_DB_USER}
       MONGO_INITDB_PWD: ${PRODUCT_DB_PASSWORD}
+    volumes:
+      - ./services/product/db/init-db-user.js:/docker-entrypoint-initdb.d/init-db-user.js
     mem_limit: 750m
     cpus: 1
     networks:
