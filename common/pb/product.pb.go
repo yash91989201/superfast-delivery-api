@@ -1461,6 +1461,546 @@ func (x *ListRestaurantMenuRes) GetRestaurantMenuList() []*RestaurantMenu {
 	return nil
 }
 
+type GetItemVariantReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *GetItemVariantReq) Reset() {
+	*x = GetItemVariantReq{}
+	mi := &file_product_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetItemVariantReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetItemVariantReq) ProtoMessage() {}
+
+func (x *GetItemVariantReq) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetItemVariantReq.ProtoReflect.Descriptor instead.
+func (*GetItemVariantReq) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *GetItemVariantReq) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type GetItemAddonReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *GetItemAddonReq) Reset() {
+	*x = GetItemAddonReq{}
+	mi := &file_product_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetItemAddonReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetItemAddonReq) ProtoMessage() {}
+
+func (x *GetItemAddonReq) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetItemAddonReq.ProtoReflect.Descriptor instead.
+func (*GetItemAddonReq) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *GetItemAddonReq) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type GetItemVariantsReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ItemId string `protobuf:"bytes,1,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
+}
+
+func (x *GetItemVariantsReq) Reset() {
+	*x = GetItemVariantsReq{}
+	mi := &file_product_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetItemVariantsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetItemVariantsReq) ProtoMessage() {}
+
+func (x *GetItemVariantsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetItemVariantsReq.ProtoReflect.Descriptor instead.
+func (*GetItemVariantsReq) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *GetItemVariantsReq) GetItemId() string {
+	if x != nil {
+		return x.ItemId
+	}
+	return ""
+}
+
+type GetItemVariantsRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Variants []*ItemVariant `protobuf:"bytes,1,rep,name=variants,proto3" json:"variants,omitempty"`
+}
+
+func (x *GetItemVariantsRes) Reset() {
+	*x = GetItemVariantsRes{}
+	mi := &file_product_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetItemVariantsRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetItemVariantsRes) ProtoMessage() {}
+
+func (x *GetItemVariantsRes) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetItemVariantsRes.ProtoReflect.Descriptor instead.
+func (*GetItemVariantsRes) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *GetItemVariantsRes) GetVariants() []*ItemVariant {
+	if x != nil {
+		return x.Variants
+	}
+	return nil
+}
+
+type GetItemAddonsReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ItemId string `protobuf:"bytes,1,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
+}
+
+func (x *GetItemAddonsReq) Reset() {
+	*x = GetItemAddonsReq{}
+	mi := &file_product_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetItemAddonsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetItemAddonsReq) ProtoMessage() {}
+
+func (x *GetItemAddonsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetItemAddonsReq.ProtoReflect.Descriptor instead.
+func (*GetItemAddonsReq) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *GetItemAddonsReq) GetItemId() string {
+	if x != nil {
+		return x.ItemId
+	}
+	return ""
+}
+
+type GetItemAddonsRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Addons []*ItemAddon `protobuf:"bytes,1,rep,name=addons,proto3" json:"addons,omitempty"`
+}
+
+func (x *GetItemAddonsRes) Reset() {
+	*x = GetItemAddonsRes{}
+	mi := &file_product_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetItemAddonsRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetItemAddonsRes) ProtoMessage() {}
+
+func (x *GetItemAddonsRes) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetItemAddonsRes.ProtoReflect.Descriptor instead.
+func (*GetItemAddonsRes) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *GetItemAddonsRes) GetAddons() []*ItemAddon {
+	if x != nil {
+		return x.Addons
+	}
+	return nil
+}
+
+type GetRetailCategoryReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *GetRetailCategoryReq) Reset() {
+	*x = GetRetailCategoryReq{}
+	mi := &file_product_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRetailCategoryReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRetailCategoryReq) ProtoMessage() {}
+
+func (x *GetRetailCategoryReq) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRetailCategoryReq.ProtoReflect.Descriptor instead.
+func (*GetRetailCategoryReq) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *GetRetailCategoryReq) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type ListRetailCategoryReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ShopId string `protobuf:"bytes,1,opt,name=shop_id,json=shopId,proto3" json:"shop_id,omitempty"`
+}
+
+func (x *ListRetailCategoryReq) Reset() {
+	*x = ListRetailCategoryReq{}
+	mi := &file_product_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListRetailCategoryReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRetailCategoryReq) ProtoMessage() {}
+
+func (x *ListRetailCategoryReq) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRetailCategoryReq.ProtoReflect.Descriptor instead.
+func (*ListRetailCategoryReq) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *ListRetailCategoryReq) GetShopId() string {
+	if x != nil {
+		return x.ShopId
+	}
+	return ""
+}
+
+type ListRetailCategoryRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	RetailCategoryList []*RetailCategory `protobuf:"bytes,1,rep,name=retail_category_list,json=retailCategoryList,proto3" json:"retail_category_list,omitempty"`
+}
+
+func (x *ListRetailCategoryRes) Reset() {
+	*x = ListRetailCategoryRes{}
+	mi := &file_product_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListRetailCategoryRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRetailCategoryRes) ProtoMessage() {}
+
+func (x *ListRetailCategoryRes) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRetailCategoryRes.ProtoReflect.Descriptor instead.
+func (*ListRetailCategoryRes) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *ListRetailCategoryRes) GetRetailCategoryList() []*RetailCategory {
+	if x != nil {
+		return x.RetailCategoryList
+	}
+	return nil
+}
+
+type GetMedicineCategoryReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *GetMedicineCategoryReq) Reset() {
+	*x = GetMedicineCategoryReq{}
+	mi := &file_product_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMedicineCategoryReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMedicineCategoryReq) ProtoMessage() {}
+
+func (x *GetMedicineCategoryReq) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMedicineCategoryReq.ProtoReflect.Descriptor instead.
+func (*GetMedicineCategoryReq) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *GetMedicineCategoryReq) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type ListMedicineCategoryReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ShopId string `protobuf:"bytes,1,opt,name=shop_id,json=shopId,proto3" json:"shop_id,omitempty"`
+}
+
+func (x *ListMedicineCategoryReq) Reset() {
+	*x = ListMedicineCategoryReq{}
+	mi := &file_product_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListMedicineCategoryReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListMedicineCategoryReq) ProtoMessage() {}
+
+func (x *ListMedicineCategoryReq) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListMedicineCategoryReq.ProtoReflect.Descriptor instead.
+func (*ListMedicineCategoryReq) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *ListMedicineCategoryReq) GetShopId() string {
+	if x != nil {
+		return x.ShopId
+	}
+	return ""
+}
+
+type ListMedicineCategoryRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	MedicineCategoryList []*MedicineCategory `protobuf:"bytes,1,rep,name=medicine_category_list,json=medicineCategoryList,proto3" json:"medicine_category_list,omitempty"`
+}
+
+func (x *ListMedicineCategoryRes) Reset() {
+	*x = ListMedicineCategoryRes{}
+	mi := &file_product_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListMedicineCategoryRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListMedicineCategoryRes) ProtoMessage() {}
+
+func (x *ListMedicineCategoryRes) ProtoReflect() protoreflect.Message {
+	mi := &file_product_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListMedicineCategoryRes.ProtoReflect.Descriptor instead.
+func (*ListMedicineCategoryRes) Descriptor() ([]byte, []int) {
+	return file_product_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *ListMedicineCategoryRes) GetMedicineCategoryList() []*MedicineCategory {
+	if x != nil {
+		return x.MedicineCategoryList
+	}
+	return nil
+}
+
 var File_product_proto protoreflect.FileDescriptor
 
 var file_product_proto_rawDesc = []byte{
@@ -1701,7 +2241,49 @@ var file_product_proto_rawDesc = []byte{
 	0x72, 0x61, 0x6e, 0x74, 0x5f, 0x6d, 0x65, 0x6e, 0x75, 0x5f, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x01,
 	0x20, 0x03, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x52, 0x65, 0x73, 0x74, 0x61, 0x75,
 	0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x12, 0x72, 0x65, 0x73, 0x74, 0x61, 0x75,
-	0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x4c, 0x69, 0x73, 0x74, 0x32, 0xc5, 0x05, 0x0a,
+	0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x4c, 0x69, 0x73, 0x74, 0x22, 0x23, 0x0a, 0x11,
+	0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x56, 0x61, 0x72, 0x69, 0x61, 0x6e, 0x74, 0x52, 0x65,
+	0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69,
+	0x64, 0x22, 0x21, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x41, 0x64, 0x64, 0x6f,
+	0x6e, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x02, 0x69, 0x64, 0x22, 0x2d, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x56,
+	0x61, 0x72, 0x69, 0x61, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x12, 0x17, 0x0a, 0x07, 0x69, 0x74,
+	0x65, 0x6d, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x69, 0x74, 0x65,
+	0x6d, 0x49, 0x64, 0x22, 0x41, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x56, 0x61,
+	0x72, 0x69, 0x61, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x73, 0x12, 0x2b, 0x0a, 0x08, 0x76, 0x61, 0x72,
+	0x69, 0x61, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x70, 0x62,
+	0x2e, 0x49, 0x74, 0x65, 0x6d, 0x56, 0x61, 0x72, 0x69, 0x61, 0x6e, 0x74, 0x52, 0x08, 0x76, 0x61,
+	0x72, 0x69, 0x61, 0x6e, 0x74, 0x73, 0x22, 0x2b, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65,
+	0x6d, 0x41, 0x64, 0x64, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x12, 0x17, 0x0a, 0x07, 0x69, 0x74,
+	0x65, 0x6d, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x69, 0x74, 0x65,
+	0x6d, 0x49, 0x64, 0x22, 0x39, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x41, 0x64,
+	0x64, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x12, 0x25, 0x0a, 0x06, 0x61, 0x64, 0x64, 0x6f, 0x6e,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x70, 0x62, 0x2e, 0x49, 0x74, 0x65,
+	0x6d, 0x41, 0x64, 0x64, 0x6f, 0x6e, 0x52, 0x06, 0x61, 0x64, 0x64, 0x6f, 0x6e, 0x73, 0x22, 0x26,
+	0x0a, 0x14, 0x47, 0x65, 0x74, 0x52, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x43, 0x61, 0x74, 0x65, 0x67,
+	0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x30, 0x0a, 0x15, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65,
+	0x74, 0x61, 0x69, 0x6c, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x12,
+	0x17, 0x0a, 0x07, 0x73, 0x68, 0x6f, 0x70, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x06, 0x73, 0x68, 0x6f, 0x70, 0x49, 0x64, 0x22, 0x5d, 0x0a, 0x15, 0x4c, 0x69, 0x73, 0x74,
+	0x52, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65,
+	0x73, 0x12, 0x44, 0x0a, 0x14, 0x72, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x5f, 0x63, 0x61, 0x74, 0x65,
+	0x67, 0x6f, 0x72, 0x79, 0x5f, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x12, 0x2e, 0x70, 0x62, 0x2e, 0x52, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x43, 0x61, 0x74, 0x65, 0x67,
+	0x6f, 0x72, 0x79, 0x52, 0x12, 0x72, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x43, 0x61, 0x74, 0x65, 0x67,
+	0x6f, 0x72, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x22, 0x28, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x4d, 0x65,
+	0x64, 0x69, 0x63, 0x69, 0x6e, 0x65, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65,
+	0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69,
+	0x64, 0x22, 0x32, 0x0a, 0x17, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x64, 0x69, 0x63, 0x69, 0x6e,
+	0x65, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x12, 0x17, 0x0a, 0x07,
+	0x73, 0x68, 0x6f, 0x70, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73,
+	0x68, 0x6f, 0x70, 0x49, 0x64, 0x22, 0x65, 0x0a, 0x17, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x64,
+	0x69, 0x63, 0x69, 0x6e, 0x65, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73,
+	0x12, 0x4a, 0x0a, 0x16, 0x6d, 0x65, 0x64, 0x69, 0x63, 0x69, 0x6e, 0x65, 0x5f, 0x63, 0x61, 0x74,
+	0x65, 0x67, 0x6f, 0x72, 0x79, 0x5f, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x4d, 0x65, 0x64, 0x69, 0x63, 0x69, 0x6e, 0x65, 0x43, 0x61,
+	0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x14, 0x6d, 0x65, 0x64, 0x69, 0x63, 0x69, 0x6e, 0x65,
+	0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x32, 0xed, 0x09, 0x0a,
 	0x0e, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12,
 	0x40, 0x0a, 0x11, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x56, 0x61, 0x72,
 	0x69, 0x61, 0x6e, 0x74, 0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
@@ -1737,20 +2319,54 @@ var file_product_proto_rawDesc = []byte{
 	0x65, 0x6d, 0x12, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4d, 0x65,
 	0x64, 0x69, 0x63, 0x69, 0x6e, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x71, 0x1a, 0x10, 0x2e,
 	0x70, 0x62, 0x2e, 0x4d, 0x65, 0x64, 0x69, 0x63, 0x69, 0x6e, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x22,
-	0x00, 0x12, 0x43, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x74, 0x61, 0x75, 0x72, 0x61,
-	0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x52,
-	0x65, 0x73, 0x74, 0x61, 0x75, 0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71,
-	0x1a, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x52, 0x65, 0x73, 0x74, 0x61, 0x75, 0x72, 0x61, 0x6e, 0x74,
-	0x4d, 0x65, 0x6e, 0x75, 0x22, 0x00, 0x12, 0x4c, 0x0a, 0x12, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65,
-	0x73, 0x74, 0x61, 0x75, 0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x19, 0x2e, 0x70,
-	0x62, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x74, 0x61, 0x75, 0x72, 0x61, 0x6e, 0x74,
-	0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x69, 0x73,
-	0x74, 0x52, 0x65, 0x73, 0x74, 0x61, 0x75, 0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x52,
-	0x65, 0x73, 0x22, 0x00, 0x42, 0x3a, 0x5a, 0x38, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
-	0x6f, 0x6d, 0x2f, 0x79, 0x61, 0x73, 0x68, 0x39, 0x31, 0x39, 0x38, 0x39, 0x32, 0x30, 0x31, 0x2f,
-	0x73, 0x75, 0x70, 0x65, 0x72, 0x66, 0x61, 0x73, 0x74, 0x2d, 0x64, 0x65, 0x6c, 0x69, 0x76, 0x65,
-	0x72, 0x79, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2f, 0x70, 0x62,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x00, 0x12, 0x3a, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x56, 0x61, 0x72, 0x69,
+	0x61, 0x6e, 0x74, 0x12, 0x15, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d,
+	0x56, 0x61, 0x72, 0x69, 0x61, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x0f, 0x2e, 0x70, 0x62, 0x2e,
+	0x49, 0x74, 0x65, 0x6d, 0x56, 0x61, 0x72, 0x69, 0x61, 0x6e, 0x74, 0x22, 0x00, 0x12, 0x34, 0x0a,
+	0x0c, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x41, 0x64, 0x64, 0x6f, 0x6e, 0x12, 0x13, 0x2e,
+	0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x41, 0x64, 0x64, 0x6f, 0x6e, 0x52,
+	0x65, 0x71, 0x1a, 0x0d, 0x2e, 0x70, 0x62, 0x2e, 0x49, 0x74, 0x65, 0x6d, 0x41, 0x64, 0x64, 0x6f,
+	0x6e, 0x22, 0x00, 0x12, 0x43, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x56, 0x61,
+	0x72, 0x69, 0x61, 0x6e, 0x74, 0x73, 0x12, 0x16, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x49,
+	0x74, 0x65, 0x6d, 0x56, 0x61, 0x72, 0x69, 0x61, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x16,
+	0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x56, 0x61, 0x72, 0x69, 0x61,
+	0x6e, 0x74, 0x73, 0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x3d, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x49,
+	0x74, 0x65, 0x6d, 0x41, 0x64, 0x64, 0x6f, 0x6e, 0x73, 0x12, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x47,
+	0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x41, 0x64, 0x64, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x1a,
+	0x14, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x41, 0x64, 0x64, 0x6f,
+	0x6e, 0x73, 0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x43, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x52, 0x65,
+	0x73, 0x74, 0x61, 0x75, 0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x12, 0x18, 0x2e, 0x70,
+	0x62, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x74, 0x61, 0x75, 0x72, 0x61, 0x6e, 0x74, 0x4d,
+	0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x52, 0x65, 0x73, 0x74,
+	0x61, 0x75, 0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x22, 0x00, 0x12, 0x4c, 0x0a, 0x12,
+	0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x74, 0x61, 0x75, 0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65,
+	0x6e, 0x75, 0x12, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x74,
+	0x61, 0x75, 0x72, 0x61, 0x6e, 0x74, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e,
+	0x70, 0x62, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x74, 0x61, 0x75, 0x72, 0x61, 0x6e,
+	0x74, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x43, 0x0a, 0x11, 0x47, 0x65,
+	0x74, 0x52, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x12,
+	0x18, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x52, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x43, 0x61,
+	0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x52,
+	0x65, 0x74, 0x61, 0x69, 0x6c, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x22, 0x00, 0x12,
+	0x4c, 0x0a, 0x12, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x43, 0x61, 0x74,
+	0x65, 0x67, 0x6f, 0x72, 0x79, 0x12, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52,
+	0x65, 0x74, 0x61, 0x69, 0x6c, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71,
+	0x1a, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x74, 0x61, 0x69, 0x6c,
+	0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x49, 0x0a,
+	0x13, 0x47, 0x65, 0x74, 0x4d, 0x65, 0x64, 0x69, 0x63, 0x69, 0x6e, 0x65, 0x43, 0x61, 0x74, 0x65,
+	0x67, 0x6f, 0x72, 0x79, 0x12, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x4d, 0x65, 0x64,
+	0x69, 0x63, 0x69, 0x6e, 0x65, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71,
+	0x1a, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x4d, 0x65, 0x64, 0x69, 0x63, 0x69, 0x6e, 0x65, 0x43, 0x61,
+	0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x22, 0x00, 0x12, 0x52, 0x0a, 0x14, 0x4c, 0x69, 0x73, 0x74,
+	0x4d, 0x65, 0x64, 0x69, 0x63, 0x69, 0x6e, 0x65, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79,
+	0x12, 0x1b, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x64, 0x69, 0x63, 0x69,
+	0x6e, 0x65, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x1a, 0x1b, 0x2e,
+	0x70, 0x62, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65, 0x64, 0x69, 0x63, 0x69, 0x6e, 0x65, 0x43,
+	0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x22, 0x00, 0x42, 0x3a, 0x5a, 0x38,
+	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x79, 0x61, 0x73, 0x68, 0x39,
+	0x31, 0x39, 0x38, 0x39, 0x32, 0x30, 0x31, 0x2f, 0x73, 0x75, 0x70, 0x65, 0x72, 0x66, 0x61, 0x73,
+	0x74, 0x2d, 0x64, 0x65, 0x6c, 0x69, 0x76, 0x65, 0x72, 0x79, 0x2d, 0x61, 0x70, 0x69, 0x2f, 0x63,
+	0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1765,7 +2381,7 @@ func file_product_proto_rawDescGZIP() []byte {
 	return file_product_proto_rawDescData
 }
 
-var file_product_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_product_proto_msgTypes = make([]protoimpl.MessageInfo, 31)
 var file_product_proto_goTypes = []any{
 	(*ItemVariant)(nil),               // 0: pb.ItemVariant
 	(*ItemAddon)(nil),                 // 1: pb.ItemAddon
@@ -1786,60 +2402,92 @@ var file_product_proto_goTypes = []any{
 	(*GetRestaurantMenuReq)(nil),      // 16: pb.GetRestaurantMenuReq
 	(*ListRestaurantMenuReq)(nil),     // 17: pb.ListRestaurantMenuReq
 	(*ListRestaurantMenuRes)(nil),     // 18: pb.ListRestaurantMenuRes
-	(*timestamppb.Timestamp)(nil),     // 19: google.protobuf.Timestamp
+	(*GetItemVariantReq)(nil),         // 19: pb.GetItemVariantReq
+	(*GetItemAddonReq)(nil),           // 20: pb.GetItemAddonReq
+	(*GetItemVariantsReq)(nil),        // 21: pb.GetItemVariantsReq
+	(*GetItemVariantsRes)(nil),        // 22: pb.GetItemVariantsRes
+	(*GetItemAddonsReq)(nil),          // 23: pb.GetItemAddonsReq
+	(*GetItemAddonsRes)(nil),          // 24: pb.GetItemAddonsRes
+	(*GetRetailCategoryReq)(nil),      // 25: pb.GetRetailCategoryReq
+	(*ListRetailCategoryReq)(nil),     // 26: pb.ListRetailCategoryReq
+	(*ListRetailCategoryRes)(nil),     // 27: pb.ListRetailCategoryRes
+	(*GetMedicineCategoryReq)(nil),    // 28: pb.GetMedicineCategoryReq
+	(*ListMedicineCategoryReq)(nil),   // 29: pb.ListMedicineCategoryReq
+	(*ListMedicineCategoryRes)(nil),   // 30: pb.ListMedicineCategoryRes
+	(*timestamppb.Timestamp)(nil),     // 31: google.protobuf.Timestamp
 }
 var file_product_proto_depIdxs = []int32{
 	3,  // 0: pb.RestaurantMenu.menu_items:type_name -> pb.MenuItem
-	19, // 1: pb.RestaurantMenu.created_at:type_name -> google.protobuf.Timestamp
-	19, // 2: pb.RestaurantMenu.updated_at:type_name -> google.protobuf.Timestamp
-	19, // 3: pb.RestaurantMenu.deleted_at:type_name -> google.protobuf.Timestamp
+	31, // 1: pb.RestaurantMenu.created_at:type_name -> google.protobuf.Timestamp
+	31, // 2: pb.RestaurantMenu.updated_at:type_name -> google.protobuf.Timestamp
+	31, // 3: pb.RestaurantMenu.deleted_at:type_name -> google.protobuf.Timestamp
 	0,  // 4: pb.MenuItem.variants:type_name -> pb.ItemVariant
 	1,  // 5: pb.MenuItem.addons:type_name -> pb.ItemAddon
-	19, // 6: pb.MenuItem.created_at:type_name -> google.protobuf.Timestamp
-	19, // 7: pb.MenuItem.updated_at:type_name -> google.protobuf.Timestamp
-	19, // 8: pb.MenuItem.deleted_at:type_name -> google.protobuf.Timestamp
+	31, // 6: pb.MenuItem.created_at:type_name -> google.protobuf.Timestamp
+	31, // 7: pb.MenuItem.updated_at:type_name -> google.protobuf.Timestamp
+	31, // 8: pb.MenuItem.deleted_at:type_name -> google.protobuf.Timestamp
 	5,  // 9: pb.RetailCategory.retail_items:type_name -> pb.RetailItem
-	19, // 10: pb.RetailCategory.created_at:type_name -> google.protobuf.Timestamp
-	19, // 11: pb.RetailCategory.updated_at:type_name -> google.protobuf.Timestamp
-	19, // 12: pb.RetailCategory.deleted_at:type_name -> google.protobuf.Timestamp
+	31, // 10: pb.RetailCategory.created_at:type_name -> google.protobuf.Timestamp
+	31, // 11: pb.RetailCategory.updated_at:type_name -> google.protobuf.Timestamp
+	31, // 12: pb.RetailCategory.deleted_at:type_name -> google.protobuf.Timestamp
 	0,  // 13: pb.RetailItem.variants:type_name -> pb.ItemVariant
 	1,  // 14: pb.RetailItem.addons:type_name -> pb.ItemAddon
-	19, // 15: pb.RetailItem.created_at:type_name -> google.protobuf.Timestamp
-	19, // 16: pb.RetailItem.updated_at:type_name -> google.protobuf.Timestamp
-	19, // 17: pb.RetailItem.deleted_at:type_name -> google.protobuf.Timestamp
+	31, // 15: pb.RetailItem.created_at:type_name -> google.protobuf.Timestamp
+	31, // 16: pb.RetailItem.updated_at:type_name -> google.protobuf.Timestamp
+	31, // 17: pb.RetailItem.deleted_at:type_name -> google.protobuf.Timestamp
 	7,  // 18: pb.MedicineCategory.medicine_items:type_name -> pb.MedicineItem
-	19, // 19: pb.MedicineCategory.created_at:type_name -> google.protobuf.Timestamp
-	19, // 20: pb.MedicineCategory.updated_at:type_name -> google.protobuf.Timestamp
-	19, // 21: pb.MedicineCategory.deleted_at:type_name -> google.protobuf.Timestamp
-	19, // 22: pb.MedicineItem.created_at:type_name -> google.protobuf.Timestamp
-	19, // 23: pb.MedicineItem.updated_at:type_name -> google.protobuf.Timestamp
-	19, // 24: pb.MedicineItem.deleted_at:type_name -> google.protobuf.Timestamp
+	31, // 19: pb.MedicineCategory.created_at:type_name -> google.protobuf.Timestamp
+	31, // 20: pb.MedicineCategory.updated_at:type_name -> google.protobuf.Timestamp
+	31, // 21: pb.MedicineCategory.deleted_at:type_name -> google.protobuf.Timestamp
+	31, // 22: pb.MedicineItem.created_at:type_name -> google.protobuf.Timestamp
+	31, // 23: pb.MedicineItem.updated_at:type_name -> google.protobuf.Timestamp
+	31, // 24: pb.MedicineItem.deleted_at:type_name -> google.protobuf.Timestamp
 	2,  // 25: pb.ListRestaurantMenuRes.restaurant_menu_list:type_name -> pb.RestaurantMenu
-	8,  // 26: pb.ProductService.CreateItemVariant:input_type -> pb.CreateItemVariantReq
-	9,  // 27: pb.ProductService.CreateItemAddon:input_type -> pb.CreateItemAddonReq
-	10, // 28: pb.ProductService.CreateRestaurantMenu:input_type -> pb.CreateRestaurantMenuReq
-	11, // 29: pb.ProductService.CreateMenuItem:input_type -> pb.CreateMenuItemReq
-	12, // 30: pb.ProductService.CreateRetailCategory:input_type -> pb.CreateRetailCategoryReq
-	13, // 31: pb.ProductService.CreateRetailItem:input_type -> pb.CreateRetailItemReq
-	14, // 32: pb.ProductService.CreateMedicineCategory:input_type -> pb.CreateMedicineCategoryReq
-	15, // 33: pb.ProductService.CreateMedicineItem:input_type -> pb.CreateMedicineItemReq
-	16, // 34: pb.ProductService.GetRestaurantMenu:input_type -> pb.GetRestaurantMenuReq
-	17, // 35: pb.ProductService.ListRestaurantMenu:input_type -> pb.ListRestaurantMenuReq
-	0,  // 36: pb.ProductService.CreateItemVariant:output_type -> pb.ItemVariant
-	1,  // 37: pb.ProductService.CreateItemAddon:output_type -> pb.ItemAddon
-	2,  // 38: pb.ProductService.CreateRestaurantMenu:output_type -> pb.RestaurantMenu
-	3,  // 39: pb.ProductService.CreateMenuItem:output_type -> pb.MenuItem
-	4,  // 40: pb.ProductService.CreateRetailCategory:output_type -> pb.RetailCategory
-	5,  // 41: pb.ProductService.CreateRetailItem:output_type -> pb.RetailItem
-	6,  // 42: pb.ProductService.CreateMedicineCategory:output_type -> pb.MedicineCategory
-	7,  // 43: pb.ProductService.CreateMedicineItem:output_type -> pb.MedicineItem
-	2,  // 44: pb.ProductService.GetRestaurantMenu:output_type -> pb.RestaurantMenu
-	18, // 45: pb.ProductService.ListRestaurantMenu:output_type -> pb.ListRestaurantMenuRes
-	36, // [36:46] is the sub-list for method output_type
-	26, // [26:36] is the sub-list for method input_type
-	26, // [26:26] is the sub-list for extension type_name
-	26, // [26:26] is the sub-list for extension extendee
-	0,  // [0:26] is the sub-list for field type_name
+	0,  // 26: pb.GetItemVariantsRes.variants:type_name -> pb.ItemVariant
+	1,  // 27: pb.GetItemAddonsRes.addons:type_name -> pb.ItemAddon
+	4,  // 28: pb.ListRetailCategoryRes.retail_category_list:type_name -> pb.RetailCategory
+	6,  // 29: pb.ListMedicineCategoryRes.medicine_category_list:type_name -> pb.MedicineCategory
+	8,  // 30: pb.ProductService.CreateItemVariant:input_type -> pb.CreateItemVariantReq
+	9,  // 31: pb.ProductService.CreateItemAddon:input_type -> pb.CreateItemAddonReq
+	10, // 32: pb.ProductService.CreateRestaurantMenu:input_type -> pb.CreateRestaurantMenuReq
+	11, // 33: pb.ProductService.CreateMenuItem:input_type -> pb.CreateMenuItemReq
+	12, // 34: pb.ProductService.CreateRetailCategory:input_type -> pb.CreateRetailCategoryReq
+	13, // 35: pb.ProductService.CreateRetailItem:input_type -> pb.CreateRetailItemReq
+	14, // 36: pb.ProductService.CreateMedicineCategory:input_type -> pb.CreateMedicineCategoryReq
+	15, // 37: pb.ProductService.CreateMedicineItem:input_type -> pb.CreateMedicineItemReq
+	19, // 38: pb.ProductService.GetItemVariant:input_type -> pb.GetItemVariantReq
+	20, // 39: pb.ProductService.GetItemAddon:input_type -> pb.GetItemAddonReq
+	21, // 40: pb.ProductService.GetItemVariants:input_type -> pb.GetItemVariantsReq
+	23, // 41: pb.ProductService.GetItemAddons:input_type -> pb.GetItemAddonsReq
+	16, // 42: pb.ProductService.GetRestaurantMenu:input_type -> pb.GetRestaurantMenuReq
+	17, // 43: pb.ProductService.ListRestaurantMenu:input_type -> pb.ListRestaurantMenuReq
+	25, // 44: pb.ProductService.GetRetailCategory:input_type -> pb.GetRetailCategoryReq
+	26, // 45: pb.ProductService.ListRetailCategory:input_type -> pb.ListRetailCategoryReq
+	28, // 46: pb.ProductService.GetMedicineCategory:input_type -> pb.GetMedicineCategoryReq
+	30, // 47: pb.ProductService.ListMedicineCategory:input_type -> pb.ListMedicineCategoryRes
+	0,  // 48: pb.ProductService.CreateItemVariant:output_type -> pb.ItemVariant
+	1,  // 49: pb.ProductService.CreateItemAddon:output_type -> pb.ItemAddon
+	2,  // 50: pb.ProductService.CreateRestaurantMenu:output_type -> pb.RestaurantMenu
+	3,  // 51: pb.ProductService.CreateMenuItem:output_type -> pb.MenuItem
+	4,  // 52: pb.ProductService.CreateRetailCategory:output_type -> pb.RetailCategory
+	5,  // 53: pb.ProductService.CreateRetailItem:output_type -> pb.RetailItem
+	6,  // 54: pb.ProductService.CreateMedicineCategory:output_type -> pb.MedicineCategory
+	7,  // 55: pb.ProductService.CreateMedicineItem:output_type -> pb.MedicineItem
+	0,  // 56: pb.ProductService.GetItemVariant:output_type -> pb.ItemVariant
+	1,  // 57: pb.ProductService.GetItemAddon:output_type -> pb.ItemAddon
+	22, // 58: pb.ProductService.GetItemVariants:output_type -> pb.GetItemVariantsRes
+	24, // 59: pb.ProductService.GetItemAddons:output_type -> pb.GetItemAddonsRes
+	2,  // 60: pb.ProductService.GetRestaurantMenu:output_type -> pb.RestaurantMenu
+	18, // 61: pb.ProductService.ListRestaurantMenu:output_type -> pb.ListRestaurantMenuRes
+	4,  // 62: pb.ProductService.GetRetailCategory:output_type -> pb.RetailCategory
+	27, // 63: pb.ProductService.ListRetailCategory:output_type -> pb.ListRetailCategoryRes
+	6,  // 64: pb.ProductService.GetMedicineCategory:output_type -> pb.MedicineCategory
+	30, // 65: pb.ProductService.ListMedicineCategory:output_type -> pb.ListMedicineCategoryRes
+	48, // [48:66] is the sub-list for method output_type
+	30, // [30:48] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_product_proto_init() }
@@ -1857,7 +2505,7 @@ func file_product_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_product_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   19,
+			NumMessages:   31,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

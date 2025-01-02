@@ -144,18 +144,63 @@ message CreateMedicineItemReq {
   string category_id = 4;
 }
 
-message GetRestaurantMenuReq{
-string id=1;
+message GetRestaurantMenuReq {
+  string id = 1;
 }
 
-message ListRestaurantMenuReq{
-string shop_id=1;
+message ListRestaurantMenuReq {
+  string shop_id = 1;
 }
 
-message ListRestaurantMenuRes{
-repeated RestaurantMenu restaurant_menu_list =1;
+message ListRestaurantMenuRes {
+  repeated RestaurantMenu restaurant_menu_list = 1;
 }
 
+message GetItemVariantReq {
+  string id = 1;
+}
+
+message GetItemAddonReq {
+  string id = 1;
+}
+
+message GetItemVariantsReq {
+  string item_id = 1;
+}
+
+message GetItemVariantsRes {
+  repeated ItemVariant variants = 1;
+}
+message GetItemAddonsReq {
+  string item_id = 1;
+}
+message GetItemAddonsRes {
+  repeated ItemAddon addons = 1;
+}
+
+message GetRetailCategoryReq {
+  string id = 1;
+}
+
+message ListRetailCategoryReq {
+  string shop_id = 1;
+}
+
+message ListRetailCategoryRes {
+  repeated RetailCategory retail_category_list = 1;
+}
+
+message GetMedicineCategoryReq {
+  string id = 1;
+}
+
+message ListMedicineCategoryReq {
+  string shop_id = 1;
+}
+
+message ListMedicineCategoryRes {
+  repeated MedicineCategory medicine_category_list = 1;
+}
 
 service ProductService {
   rpc CreateItemVariant(CreateItemVariantReq) returns (ItemVariant) {}
@@ -167,6 +212,14 @@ service ProductService {
   rpc CreateMedicineCategory(CreateMedicineCategoryReq) returns (MedicineCategory) {}
   rpc CreateMedicineItem(CreateMedicineItemReq) returns (MedicineItem) {}
 
-  rpc GetRestaurantMenu(GetRestaurantMenuReq) returns(RestaurantMenu){}
-  rpc ListRestaurantMenu(ListRestaurantMenuReq) returns(ListRestaurantMenuRes){}
+  rpc GetItemVariant(GetItemVariantReq) returns (ItemVariant) {}
+  rpc GetItemAddon(GetItemAddonReq) returns (ItemAddon) {}
+  rpc GetItemVariants(GetItemVariantsReq) returns (GetItemVariantsRes) {}
+  rpc GetItemAddons(GetItemAddonsReq) returns (GetItemAddonsRes) {}
+  rpc GetRestaurantMenu(GetRestaurantMenuReq) returns (RestaurantMenu) {}
+  rpc ListRestaurantMenu(ListRestaurantMenuReq) returns (ListRestaurantMenuRes) {}
+  rpc GetRetailCategory(GetRetailCategoryReq) returns (RetailCategory) {}
+  rpc ListRetailCategory(ListRetailCategoryReq) returns (ListRetailCategoryRes) {}
+  rpc GetMedicineCategory(GetMedicineCategoryReq) returns (MedicineCategory) {}
+  rpc ListMedicineCategory(ListMedicineCategoryRes) returns (ListMedicineCategoryRes) {}
 }
