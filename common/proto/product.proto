@@ -9,18 +9,18 @@ option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
 message ItemVariant {
   string id = 1;
   string variant_name = 2;
-  float relative_price = 3;
+  double relative_price = 3;
   bool relative_pricing = 4;
-  float price = 5;
-  string description = 6;
+  double price = 5;
+  optional string description = 6;
   string item_id = 7;
 }
 
 message ItemAddon {
   string id = 1;
   string addon_name = 2;
-  float addon_price = 3;
-  string description = 4;
+  double addon_price = 3;
+  optional string description = 4;
   string item_id = 5;
 }
 
@@ -38,7 +38,7 @@ message MenuItem {
   string id = 1;
   string name = 2;
   string description = 3;
-  float price = 4;
+  double price = 4;
   string menu_id = 5;
   repeated ItemVariant variants = 6;
   repeated ItemAddon addons = 7;
@@ -61,7 +61,7 @@ message RetailItem {
   string id = 1;
   string name = 2;
   string description = 3;
-  float price = 4;
+  double price = 4;
   string category_id = 5;
   repeated ItemVariant variants = 6;
   repeated ItemAddon addons = 7;
@@ -83,7 +83,7 @@ message MedicineCategory {
 message MedicineItem {
   string id = 1;
   string name = 2;
-  float price = 3;
+  double price = 3;
   string description = 4;
   string category_id = 5;
   google.protobuf.Timestamp created_at = 6;
@@ -94,62 +94,66 @@ message MedicineItem {
 // types for create request
 message CreateItemVariantReq {
   string variant_name = 1;
-  float relative_price = 2;
+  double relative_price = 2;
   bool relative_pricing = 3;
-  float price = 4;
-  string description = 5;
+  double price = 4;
+  optional string description = 5;
+  string item_id =6;
 }
 
 message CreateItemAddonReq {
   string addon_name = 1;
-  float addon_price = 2;
-  string description = 3;
+  double addon_price = 2;
+  optional string description = 3;
+  string item_id =4;
 }
 
 message CreateRestaurantMenuReq {
   string menu_name = 1;
   string shop_id = 2;
-  repeated CreateMenuItemReq menu_items = 3;
 }
 
 message CreateMenuItemReq {
   string name = 1;
   string description = 2;
-  float price = 3;
-  repeated CreateItemVariantReq variants = 4;
-  repeated CreateItemAddonReq addons = 5;
+  double price = 3;
+  string menu_id =4;
 }
 
 message CreateRetailCategoryReq {
   string category_name = 1;
   string shop_id = 2;
-  repeated CreateRetailItemReq retail_items = 3;
 }
 
 message CreateRetailItemReq {
   string name = 1;
   string description = 2;
-  float price = 3;
+  double price = 3;
   string category_id = 4;
-  repeated CreateItemVariantReq variants = 5;
-  repeated CreateItemAddonReq addons = 6;
 }
 
 message CreateMedicineCategoryReq {
   string category_name = 1;
   string shop_id = 2;
-  repeated CreateMedicineItemReq medicine_items = 3;
 }
 
 message CreateMedicineItemReq {
   string name = 1;
-  float price = 2;
+  double price = 2;
   string description = 3;
   string category_id = 4;
 }
 
 service ProductService {
+rpc CreateItemVariant(CreateItemVariantReq) returns(ItemVariant){}
+rpc CreateItemAddon(CreateItemAddonReq) returns(ItemAddon){}
+
   rpc CreateRestaurantMenu(CreateRestaurantMenuReq) returns(RestaurantMenu){}
+  rpc CreateMenuItem(CreateMenuItemReq) returns (MenuItem){}
+
   rpc CreateRetailCategory(CreateRetailCategoryReq) returns(RetailCategory){}
+rpc CreateRetailItem(CreateRetailItemReq) returns(RetailItem){}
+
   rpc CreateMedicineCategory(CreateMedicineCategoryReq) returns(MedicineCategory){}
+  rpc CreateMedicineItem(CreateMedicineItemReq) returns(MedicineItem){}
 }

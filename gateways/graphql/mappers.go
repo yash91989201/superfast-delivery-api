@@ -509,3 +509,133 @@ func ToPbListShopReq(r *ListShopsInput) *pb.ListShopsReq {
 
 	return req
 }
+
+func ToPbCreateRestaurantMenuReq(r *CreateRestaurantMenuReq) *pb.CreateRestaurantMenuReq {
+	if r == nil {
+		return nil
+	}
+
+	return &pb.CreateRestaurantMenuReq{
+		MenuName: r.MenuName,
+		ShopId:   r.ShopID,
+	}
+}
+
+func ToPbCreateMenuItemReq(r *CreateMenuItemReq) *pb.CreateMenuItemReq {
+	if r == nil {
+		return nil
+	}
+
+	return &pb.CreateMenuItemReq{
+		Name:        r.Name,
+		Description: r.Description,
+		Price:       r.Price,
+		MenuId:      r.MenuID,
+	}
+}
+
+func ToPbCreateItemVariantReq(r *CreateItemVariantReq) *pb.CreateItemVariantReq {
+	if r == nil {
+		return nil
+	}
+
+	return &pb.CreateItemVariantReq{
+		VariantName:     r.VariantName,
+		RelativePrice:   r.RelativePrice,
+		RelativePricing: r.RelativePricing,
+		Price:           r.Price,
+		Description:     r.Description,
+	}
+}
+
+func ToPbCreateItemAddonReq(r *CreateItemAddonReq) *pb.CreateItemAddonReq {
+	if r == nil {
+		return nil
+	}
+
+	return &pb.CreateItemAddonReq{
+		AddonName:   r.AddonName,
+		AddonPrice:  r.AddonPrice,
+		Description: r.Description,
+	}
+}
+
+func ToGQRestaurantMenu(m *pb.RestaurantMenu) *RestaurantMenu {
+
+	return &RestaurantMenu{
+		ID:        m.Id,
+		MenuName:  m.MenuName,
+		ShopID:    m.ShopId,
+		MenuItems: ToGQMenuItems(m.MenuItems),
+		CreatedAt: ToGQTime(m.CreatedAt),
+		UpdatedAt: ToGQTime(m.UpdatedAt),
+		DeletedAt: ToGQTimePtr(m.DeletedAt),
+	}
+}
+
+func ToGQMenuItems(m []*pb.MenuItem) []*MenuItem {
+	menuItems := make([]*MenuItem, len(m))
+	for i, mi := range m {
+		menuItems[i] = ToGQMenuItem(mi)
+	}
+
+	return menuItems
+}
+
+func ToGQMenuItem(m *pb.MenuItem) *MenuItem {
+
+	return &MenuItem{
+		ID:          m.Id,
+		Name:        m.Name,
+		Description: &m.Description,
+		Price:       float64(m.Price),
+		MenuID:      m.MenuId,
+		Variants:    ToGQItemVariants(m.Variants),
+		Addons:      ToGQItemAddons(m.Addons),
+		CreatedAt:   ToGQTime(m.CreatedAt),
+		UpdatedAt:   ToGQTime(m.UpdatedAt),
+		DeletedAt:   ToGQTimePtr(m.DeletedAt),
+	}
+}
+
+func ToGQItemVariants(v []*pb.ItemVariant) []*ItemVariant {
+	variants := make([]*ItemVariant, len(v))
+	for i, vars := range v {
+		variants[i] = ToGQItemVariant(vars)
+	}
+
+	return variants
+}
+
+func ToGQItemAddons(a []*pb.ItemAddon) []*ItemAddon {
+	addons := make([]*ItemAddon, len(a))
+	for i, addon := range a {
+		addons[i] = ToGQItemAddon(addon)
+	}
+
+	return addons
+}
+
+func ToGQItemVariant(v *pb.ItemVariant) *ItemVariant {
+
+	return &ItemVariant{
+		ID:              v.Id,
+		VariantName:     v.VariantName,
+		RelativePrice:   float64(v.RelativePrice),
+		RelativePricing: v.RelativePricing,
+		Price:           float64(v.Price),
+		Description:     v.Description,
+		ItemID:          v.ItemId,
+	}
+}
+
+func ToGQItemAddon(a *pb.ItemAddon) *ItemAddon {
+
+	return &ItemAddon{
+		ID:          a.Id,
+		AddonName:   a.AddonName,
+		AddonPrice:  float64(a.AddonPrice),
+		Description: a.Description,
+		ItemID:      a.ItemId,
+	}
+}

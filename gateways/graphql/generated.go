@@ -126,10 +126,15 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		CreateItemAddon        func(childComplexity int, input CreateItemAddonReq) int
+		CreateItemVariant      func(childComplexity int, input CreateItemVariantReq) int
 		CreateMedicineCategory func(childComplexity int, input CreateMedicineCategoryReq) int
+		CreateMedicineItem     func(childComplexity int, input CreateMedicineItemReq) int
+		CreateMenuItem         func(childComplexity int, input CreateMenuItemReq) int
 		CreateProfile          func(childComplexity int, input CreateProfileInput) int
 		CreateRestaurantMenu   func(childComplexity int, input CreateRestaurantMenuReq) int
 		CreateRetailCategory   func(childComplexity int, input CreateRetailCategoryReq) int
+		CreateRetailItem       func(childComplexity int, input CreateRetailItemReq) int
 		CreateShop             func(childComplexity int, input CreateShopInput) int
 		DeleteShop             func(childComplexity int, id string) int
 		LogOut                 func(childComplexity int, sessionID string) int
@@ -286,9 +291,14 @@ type MutationResolver interface {
 	UpdateShopImages(ctx context.Context, input []*UpdateShopImageInput) (*UpdateShopOutput, error)
 	UpdateShopTimings(ctx context.Context, input []*UpdateShopTimingInput) (*UpdateShopOutput, error)
 	DeleteShop(ctx context.Context, id string) (*UpdateShopOutput, error)
+	CreateItemVariant(ctx context.Context, input CreateItemVariantReq) (*ItemVariant, error)
+	CreateItemAddon(ctx context.Context, input CreateItemAddonReq) (*ItemAddon, error)
 	CreateRestaurantMenu(ctx context.Context, input CreateRestaurantMenuReq) (*RestaurantMenu, error)
+	CreateMenuItem(ctx context.Context, input CreateMenuItemReq) (*MenuItem, error)
 	CreateRetailCategory(ctx context.Context, input CreateRetailCategoryReq) (*RetailCategory, error)
+	CreateRetailItem(ctx context.Context, input CreateRetailItemReq) (*RetailItem, error)
 	CreateMedicineCategory(ctx context.Context, input CreateMedicineCategoryReq) (*MedicineCategory, error)
+	CreateMedicineItem(ctx context.Context, input CreateMedicineItemReq) (*MedicineItem, error)
 }
 type QueryResolver interface {
 	AuthByID(ctx context.Context, input GetAuthByIDInput) (*Auth, error)
@@ -674,6 +684,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.MenuItem.Variants(childComplexity), true
 
+	case "Mutation.CreateItemAddon":
+		if e.complexity.Mutation.CreateItemAddon == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_CreateItemAddon_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateItemAddon(childComplexity, args["input"].(CreateItemAddonReq)), true
+
+	case "Mutation.CreateItemVariant":
+		if e.complexity.Mutation.CreateItemVariant == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_CreateItemVariant_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateItemVariant(childComplexity, args["input"].(CreateItemVariantReq)), true
+
 	case "Mutation.CreateMedicineCategory":
 		if e.complexity.Mutation.CreateMedicineCategory == nil {
 			break
@@ -685,6 +719,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateMedicineCategory(childComplexity, args["input"].(CreateMedicineCategoryReq)), true
+
+	case "Mutation.CreateMedicineItem":
+		if e.complexity.Mutation.CreateMedicineItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_CreateMedicineItem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateMedicineItem(childComplexity, args["input"].(CreateMedicineItemReq)), true
+
+	case "Mutation.CreateMenuItem":
+		if e.complexity.Mutation.CreateMenuItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_CreateMenuItem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateMenuItem(childComplexity, args["input"].(CreateMenuItemReq)), true
 
 	case "Mutation.CreateProfile":
 		if e.complexity.Mutation.CreateProfile == nil {
@@ -721,6 +779,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateRetailCategory(childComplexity, args["input"].(CreateRetailCategoryReq)), true
+
+	case "Mutation.CreateRetailItem":
+		if e.complexity.Mutation.CreateRetailItem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_CreateRetailItem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateRetailItem(childComplexity, args["input"].(CreateRetailItemReq)), true
 
 	case "Mutation.CreateShop":
 		if e.complexity.Mutation.CreateShop == nil {
@@ -1678,6 +1748,52 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
+func (ec *executionContext) field_Mutation_CreateItemAddon_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_CreateItemAddon_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_CreateItemAddon_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (CreateItemAddonReq, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreateItemAddonReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemAddonReq(ctx, tmp)
+	}
+
+	var zeroVal CreateItemAddonReq
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_CreateItemVariant_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_CreateItemVariant_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_CreateItemVariant_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (CreateItemVariantReq, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreateItemVariantReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemVariantReq(ctx, tmp)
+	}
+
+	var zeroVal CreateItemVariantReq
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_CreateMedicineCategory_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -1698,6 +1814,52 @@ func (ec *executionContext) field_Mutation_CreateMedicineCategory_argsInput(
 	}
 
 	var zeroVal CreateMedicineCategoryReq
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_CreateMedicineItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_CreateMedicineItem_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_CreateMedicineItem_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (CreateMedicineItemReq, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreateMedicineItemReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMedicineItemReq(ctx, tmp)
+	}
+
+	var zeroVal CreateMedicineItemReq
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_CreateMenuItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_CreateMenuItem_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_CreateMenuItem_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (CreateMenuItemReq, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreateMenuItemReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMenuItemReq(ctx, tmp)
+	}
+
+	var zeroVal CreateMenuItemReq
 	return zeroVal, nil
 }
 
@@ -1767,6 +1929,29 @@ func (ec *executionContext) field_Mutation_CreateRetailCategory_argsInput(
 	}
 
 	var zeroVal CreateRetailCategoryReq
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_CreateRetailItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_CreateRetailItem_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_CreateRetailItem_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (CreateRetailItemReq, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNCreateRetailItemReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateRetailItemReq(ctx, tmp)
+	}
+
+	var zeroVal CreateRetailItemReq
 	return zeroVal, nil
 }
 
@@ -5464,6 +5649,144 @@ func (ec *executionContext) fieldContext_Mutation_DeleteShop(ctx context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_CreateItemVariant(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_CreateItemVariant(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateItemVariant(rctx, fc.Args["input"].(CreateItemVariantReq))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ItemVariant)
+	fc.Result = res
+	return ec.marshalNItemVariant2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemVariant(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_CreateItemVariant(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ItemVariant_id(ctx, field)
+			case "variant_name":
+				return ec.fieldContext_ItemVariant_variant_name(ctx, field)
+			case "relative_price":
+				return ec.fieldContext_ItemVariant_relative_price(ctx, field)
+			case "relative_pricing":
+				return ec.fieldContext_ItemVariant_relative_pricing(ctx, field)
+			case "price":
+				return ec.fieldContext_ItemVariant_price(ctx, field)
+			case "description":
+				return ec.fieldContext_ItemVariant_description(ctx, field)
+			case "item_id":
+				return ec.fieldContext_ItemVariant_item_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ItemVariant", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_CreateItemVariant_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_CreateItemAddon(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_CreateItemAddon(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateItemAddon(rctx, fc.Args["input"].(CreateItemAddonReq))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ItemAddon)
+	fc.Result = res
+	return ec.marshalNItemAddon2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemAddon(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_CreateItemAddon(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ItemAddon_id(ctx, field)
+			case "addon_name":
+				return ec.fieldContext_ItemAddon_addon_name(ctx, field)
+			case "addon_price":
+				return ec.fieldContext_ItemAddon_addon_price(ctx, field)
+			case "description":
+				return ec.fieldContext_ItemAddon_description(ctx, field)
+			case "item_id":
+				return ec.fieldContext_ItemAddon_item_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ItemAddon", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_CreateItemAddon_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_CreateRestaurantMenu(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_CreateRestaurantMenu(ctx, field)
 	if err != nil {
@@ -5529,6 +5852,83 @@ func (ec *executionContext) fieldContext_Mutation_CreateRestaurantMenu(ctx conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_CreateRestaurantMenu_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_CreateMenuItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_CreateMenuItem(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateMenuItem(rctx, fc.Args["input"].(CreateMenuItemReq))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*MenuItem)
+	fc.Result = res
+	return ec.marshalNMenuItem2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐMenuItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_CreateMenuItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_MenuItem_id(ctx, field)
+			case "name":
+				return ec.fieldContext_MenuItem_name(ctx, field)
+			case "description":
+				return ec.fieldContext_MenuItem_description(ctx, field)
+			case "price":
+				return ec.fieldContext_MenuItem_price(ctx, field)
+			case "menu_id":
+				return ec.fieldContext_MenuItem_menu_id(ctx, field)
+			case "variants":
+				return ec.fieldContext_MenuItem_variants(ctx, field)
+			case "addons":
+				return ec.fieldContext_MenuItem_addons(ctx, field)
+			case "created_at":
+				return ec.fieldContext_MenuItem_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_MenuItem_updated_at(ctx, field)
+			case "deleted_at":
+				return ec.fieldContext_MenuItem_deleted_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MenuItem", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_CreateMenuItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -5606,6 +6006,83 @@ func (ec *executionContext) fieldContext_Mutation_CreateRetailCategory(ctx conte
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_CreateRetailItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_CreateRetailItem(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateRetailItem(rctx, fc.Args["input"].(CreateRetailItemReq))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*RetailItem)
+	fc.Result = res
+	return ec.marshalNRetailItem2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRetailItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_CreateRetailItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_RetailItem_id(ctx, field)
+			case "name":
+				return ec.fieldContext_RetailItem_name(ctx, field)
+			case "description":
+				return ec.fieldContext_RetailItem_description(ctx, field)
+			case "price":
+				return ec.fieldContext_RetailItem_price(ctx, field)
+			case "category_id":
+				return ec.fieldContext_RetailItem_category_id(ctx, field)
+			case "variants":
+				return ec.fieldContext_RetailItem_variants(ctx, field)
+			case "addons":
+				return ec.fieldContext_RetailItem_addons(ctx, field)
+			case "created_at":
+				return ec.fieldContext_RetailItem_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_RetailItem_updated_at(ctx, field)
+			case "deleted_at":
+				return ec.fieldContext_RetailItem_deleted_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RetailItem", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_CreateRetailItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_CreateMedicineCategory(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_CreateMedicineCategory(ctx, field)
 	if err != nil {
@@ -5671,6 +6148,79 @@ func (ec *executionContext) fieldContext_Mutation_CreateMedicineCategory(ctx con
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_CreateMedicineCategory_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_CreateMedicineItem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_CreateMedicineItem(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateMedicineItem(rctx, fc.Args["input"].(CreateMedicineItemReq))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*MedicineItem)
+	fc.Result = res
+	return ec.marshalNMedicineItem2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐMedicineItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_CreateMedicineItem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_MedicineItem_id(ctx, field)
+			case "name":
+				return ec.fieldContext_MedicineItem_name(ctx, field)
+			case "price":
+				return ec.fieldContext_MedicineItem_price(ctx, field)
+			case "description":
+				return ec.fieldContext_MedicineItem_description(ctx, field)
+			case "category_id":
+				return ec.fieldContext_MedicineItem_category_id(ctx, field)
+			case "created_at":
+				return ec.fieldContext_MedicineItem_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_MedicineItem_updated_at(ctx, field)
+			case "deleted_at":
+				return ec.fieldContext_MedicineItem_deleted_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MedicineItem", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_CreateMedicineItem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -11864,7 +12414,7 @@ func (ec *executionContext) unmarshalInputCreateMedicineCategoryReq(ctx context.
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"category_name", "shop_id", "medicine_items"}
+	fieldsInOrder := [...]string{"category_name", "shop_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -11885,13 +12435,6 @@ func (ec *executionContext) unmarshalInputCreateMedicineCategoryReq(ctx context.
 				return it, err
 			}
 			it.ShopID = data
-		case "medicine_items":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("medicine_items"))
-			data, err := ec.unmarshalNCreateMedicineItemReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMedicineItemReq(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.MedicineItems = data
 		}
 	}
 
@@ -11928,7 +12471,7 @@ func (ec *executionContext) unmarshalInputCreateMedicineItemReq(ctx context.Cont
 			it.Price = data
 		case "description":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11953,7 +12496,7 @@ func (ec *executionContext) unmarshalInputCreateMenuItemReq(ctx context.Context,
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "description", "price", "variants", "addons"}
+	fieldsInOrder := [...]string{"name", "description", "price", "menu_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -11969,7 +12512,7 @@ func (ec *executionContext) unmarshalInputCreateMenuItemReq(ctx context.Context,
 			it.Name = data
 		case "description":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11981,20 +12524,13 @@ func (ec *executionContext) unmarshalInputCreateMenuItemReq(ctx context.Context,
 				return it, err
 			}
 			it.Price = data
-		case "variants":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("variants"))
-			data, err := ec.unmarshalNCreateItemVariantReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemVariantReq(ctx, v)
+		case "menu_id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("menu_id"))
+			data, err := ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Variants = data
-		case "addons":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addons"))
-			data, err := ec.unmarshalNCreateItemAddonReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemAddonReq(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Addons = data
+			it.MenuID = data
 		}
 	}
 
@@ -12070,7 +12606,7 @@ func (ec *executionContext) unmarshalInputCreateRestaurantMenuReq(ctx context.Co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"menu_name", "shop_id", "menu_items"}
+	fieldsInOrder := [...]string{"menu_name", "shop_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -12091,13 +12627,6 @@ func (ec *executionContext) unmarshalInputCreateRestaurantMenuReq(ctx context.Co
 				return it, err
 			}
 			it.ShopID = data
-		case "menu_items":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("menu_items"))
-			data, err := ec.unmarshalNCreateMenuItemReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMenuItemReq(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.MenuItems = data
 		}
 	}
 
@@ -12111,7 +12640,7 @@ func (ec *executionContext) unmarshalInputCreateRetailCategoryReq(ctx context.Co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"category_name", "shop_id", "retail_items"}
+	fieldsInOrder := [...]string{"category_name", "shop_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -12132,13 +12661,6 @@ func (ec *executionContext) unmarshalInputCreateRetailCategoryReq(ctx context.Co
 				return it, err
 			}
 			it.ShopID = data
-		case "retail_items":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("retail_items"))
-			data, err := ec.unmarshalNCreateRetailItemReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateRetailItemReq(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RetailItems = data
 		}
 	}
 
@@ -12152,7 +12674,7 @@ func (ec *executionContext) unmarshalInputCreateRetailItemReq(ctx context.Contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "description", "price", "category_id", "variants", "addons"}
+	fieldsInOrder := [...]string{"name", "description", "price", "category_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -12168,7 +12690,7 @@ func (ec *executionContext) unmarshalInputCreateRetailItemReq(ctx context.Contex
 			it.Name = data
 		case "description":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -12187,20 +12709,6 @@ func (ec *executionContext) unmarshalInputCreateRetailItemReq(ctx context.Contex
 				return it, err
 			}
 			it.CategoryID = data
-		case "variants":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("variants"))
-			data, err := ec.unmarshalNCreateItemVariantReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemVariantReq(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Variants = data
-		case "addons":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addons"))
-			data, err := ec.unmarshalNCreateItemAddonReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemAddonReq(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Addons = data
 		}
 	}
 
@@ -13751,9 +14259,30 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "CreateItemVariant":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_CreateItemVariant(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "CreateItemAddon":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_CreateItemAddon(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "CreateRestaurantMenu":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_CreateRestaurantMenu(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "CreateMenuItem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_CreateMenuItem(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -13765,9 +14294,23 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "CreateRetailItem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_CreateRetailItem(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "CreateMedicineCategory":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_CreateMedicineCategory(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "CreateMedicineItem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_CreateMedicineItem(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -15043,38 +15586,14 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNCreateItemAddonReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemAddonReq(ctx context.Context, v any) ([]*CreateItemAddonReq, error) {
-	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*CreateItemAddonReq, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOCreateItemAddonReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemAddonReq(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
+func (ec *executionContext) unmarshalNCreateItemAddonReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemAddonReq(ctx context.Context, v any) (CreateItemAddonReq, error) {
+	res, err := ec.unmarshalInputCreateItemAddonReq(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateItemVariantReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemVariantReq(ctx context.Context, v any) ([]*CreateItemVariantReq, error) {
-	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*CreateItemVariantReq, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOCreateItemVariantReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemVariantReq(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
+func (ec *executionContext) unmarshalNCreateItemVariantReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemVariantReq(ctx context.Context, v any) (CreateItemVariantReq, error) {
+	res, err := ec.unmarshalInputCreateItemVariantReq(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNCreateMedicineCategoryReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMedicineCategoryReq(ctx context.Context, v any) (CreateMedicineCategoryReq, error) {
@@ -15082,38 +15601,14 @@ func (ec *executionContext) unmarshalNCreateMedicineCategoryReq2githubᚗcomᚋy
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateMedicineItemReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMedicineItemReq(ctx context.Context, v any) ([]*CreateMedicineItemReq, error) {
-	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*CreateMedicineItemReq, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOCreateMedicineItemReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMedicineItemReq(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
+func (ec *executionContext) unmarshalNCreateMedicineItemReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMedicineItemReq(ctx context.Context, v any) (CreateMedicineItemReq, error) {
+	res, err := ec.unmarshalInputCreateMedicineItemReq(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateMenuItemReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMenuItemReq(ctx context.Context, v any) ([]*CreateMenuItemReq, error) {
-	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*CreateMenuItemReq, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOCreateMenuItemReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMenuItemReq(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
+func (ec *executionContext) unmarshalNCreateMenuItemReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMenuItemReq(ctx context.Context, v any) (CreateMenuItemReq, error) {
+	res, err := ec.unmarshalInputCreateMenuItemReq(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNCreateProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateProfileInput(ctx context.Context, v any) (CreateProfileInput, error) {
@@ -15131,21 +15626,9 @@ func (ec *executionContext) unmarshalNCreateRetailCategoryReq2githubᚗcomᚋyas
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateRetailItemReq2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateRetailItemReq(ctx context.Context, v any) ([]*CreateRetailItemReq, error) {
-	var vSlice []any
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*CreateRetailItemReq, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOCreateRetailItemReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateRetailItemReq(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
+func (ec *executionContext) unmarshalNCreateRetailItemReq2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateRetailItemReq(ctx context.Context, v any) (CreateRetailItemReq, error) {
+	res, err := ec.unmarshalInputCreateRetailItemReq(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNCreateShopAddressInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateShopAddressInput(ctx context.Context, v any) (*CreateShopAddressInput, error) {
@@ -15272,6 +15755,10 @@ func (ec *executionContext) marshalNInt2int32(ctx context.Context, sel ast.Selec
 	return res
 }
 
+func (ec *executionContext) marshalNItemAddon2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemAddon(ctx context.Context, sel ast.SelectionSet, v ItemAddon) graphql.Marshaler {
+	return ec._ItemAddon(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNItemAddon2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemAddon(ctx context.Context, sel ast.SelectionSet, v []*ItemAddon) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -15308,6 +15795,20 @@ func (ec *executionContext) marshalNItemAddon2ᚕᚖgithubᚗcomᚋyash91989201�
 	wg.Wait()
 
 	return ret
+}
+
+func (ec *executionContext) marshalNItemAddon2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemAddon(ctx context.Context, sel ast.SelectionSet, v *ItemAddon) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ItemAddon(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNItemVariant2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemVariant(ctx context.Context, sel ast.SelectionSet, v ItemVariant) graphql.Marshaler {
+	return ec._ItemVariant(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNItemVariant2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemVariant(ctx context.Context, sel ast.SelectionSet, v []*ItemVariant) graphql.Marshaler {
@@ -15348,6 +15849,16 @@ func (ec *executionContext) marshalNItemVariant2ᚕᚖgithubᚗcomᚋyash9198920
 	return ret
 }
 
+func (ec *executionContext) marshalNItemVariant2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemVariant(ctx context.Context, sel ast.SelectionSet, v *ItemVariant) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ItemVariant(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNListShopsOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListShopsOutput(ctx context.Context, sel ast.SelectionSet, v ListShopsOutput) graphql.Marshaler {
 	return ec._ListShopsOutput(ctx, sel, &v)
 }
@@ -15374,6 +15885,10 @@ func (ec *executionContext) marshalNMedicineCategory2ᚖgithubᚗcomᚋyash91989
 		return graphql.Null
 	}
 	return ec._MedicineCategory(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNMedicineItem2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐMedicineItem(ctx context.Context, sel ast.SelectionSet, v MedicineItem) graphql.Marshaler {
+	return ec._MedicineItem(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNMedicineItem2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐMedicineItem(ctx context.Context, sel ast.SelectionSet, v []*MedicineItem) graphql.Marshaler {
@@ -15414,6 +15929,20 @@ func (ec *executionContext) marshalNMedicineItem2ᚕᚖgithubᚗcomᚋyash919892
 	return ret
 }
 
+func (ec *executionContext) marshalNMedicineItem2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐMedicineItem(ctx context.Context, sel ast.SelectionSet, v *MedicineItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._MedicineItem(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNMenuItem2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐMenuItem(ctx context.Context, sel ast.SelectionSet, v MenuItem) graphql.Marshaler {
+	return ec._MenuItem(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNMenuItem2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐMenuItem(ctx context.Context, sel ast.SelectionSet, v []*MenuItem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -15450,6 +15979,16 @@ func (ec *executionContext) marshalNMenuItem2ᚕᚖgithubᚗcomᚋyash91989201�
 	wg.Wait()
 
 	return ret
+}
+
+func (ec *executionContext) marshalNMenuItem2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐMenuItem(ctx context.Context, sel ast.SelectionSet, v *MenuItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._MenuItem(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNProfile2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐProfile(ctx context.Context, sel ast.SelectionSet, v Profile) graphql.Marshaler {
@@ -15494,6 +16033,10 @@ func (ec *executionContext) marshalNRetailCategory2ᚖgithubᚗcomᚋyash9198920
 	return ec._RetailCategory(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNRetailItem2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRetailItem(ctx context.Context, sel ast.SelectionSet, v RetailItem) graphql.Marshaler {
+	return ec._RetailItem(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNRetailItem2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRetailItem(ctx context.Context, sel ast.SelectionSet, v []*RetailItem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -15530,6 +16073,16 @@ func (ec *executionContext) marshalNRetailItem2ᚕᚖgithubᚗcomᚋyash91989201
 	wg.Wait()
 
 	return ret
+}
+
+func (ec *executionContext) marshalNRetailItem2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRetailItem(ctx context.Context, sel ast.SelectionSet, v *RetailItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._RetailItem(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNShop2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐShop(ctx context.Context, sel ast.SelectionSet, v Shop) graphql.Marshaler {
@@ -16027,46 +16580,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
-}
-
-func (ec *executionContext) unmarshalOCreateItemAddonReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemAddonReq(ctx context.Context, v any) (*CreateItemAddonReq, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputCreateItemAddonReq(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOCreateItemVariantReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateItemVariantReq(ctx context.Context, v any) (*CreateItemVariantReq, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputCreateItemVariantReq(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOCreateMedicineItemReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMedicineItemReq(ctx context.Context, v any) (*CreateMedicineItemReq, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputCreateMedicineItemReq(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOCreateMenuItemReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateMenuItemReq(ctx context.Context, v any) (*CreateMenuItemReq, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputCreateMenuItemReq(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOCreateRetailItemReq2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateRetailItemReq(ctx context.Context, v any) (*CreateRetailItemReq, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputCreateRetailItemReq(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOCreateShopImageInput2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateShopImageInputᚄ(ctx context.Context, v any) ([]*CreateShopImageInput, error) {

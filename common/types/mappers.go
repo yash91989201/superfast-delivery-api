@@ -2,9 +2,11 @@ package types
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -25,6 +27,15 @@ func ToBoolPtr(b bool) *bool {
 
 func ToStrPtr(s string) *string {
 	return &s
+}
+
+func HexToObjectId(id string) bson.ObjectID {
+	objectID, err := bson.ObjectIDFromHex(id)
+	if err != nil {
+		log.Fatalf("Invalid object id: %v", err)
+	}
+
+	return objectID
 }
 
 func ToOrderBy(o *pb.OrderBy) *OrderBy {
@@ -627,4 +638,97 @@ func ToListShopFilters(f *pb.ListShopsReq) *ListShopFilters {
 	}
 
 	return filters
+}
+
+func ToCreateRestaurantMenu(rm *pb.CreateRestaurantMenuReq) *CreateRestaurantMenu {
+	return &CreateRestaurantMenu{
+		MenuName: rm.MenuName,
+		ShopID:   rm.ShopId,
+	}
+}
+
+func ToCreateMenuItem(mi *pb.CreateMenuItemReq) *CreateMenuItem {
+	return &CreateMenuItem{
+		Name:        mi.Name,
+		Description: mi.Description,
+		Price:       mi.Price,
+		MenuID:      HexToObjectId(mi.MenuId),
+	}
+}
+
+func ToPbRestaurantMenu(rm *RestaurantMenu) *pb.RestaurantMenu {
+	if rm == nil {
+		return nil
+	}
+
+	return &pb.RestaurantMenu{
+		Id:        rm.ID.Hex(),
+		MenuName:  rm.MenuName,
+		ShopId:    rm.ShopID,
+		MenuItems: ToPbMenuItems(rm.MenuItems),
+		CreatedAt: ToPbTimestamp(rm.CreatedAt),
+		UpdatedAt: ToPbTimestamp(rm.CreatedAt),
+		DeletedAt: TimePtrToPbTime(rm.DeletedAt),
+	}
+}
+
+func ToPbMenuItems(mi []*MenuItem) []*pb.MenuItem {
+	menuItems := make([]*pb.MenuItem, len(mi))
+	for i, m := range mi {
+		menuItems[i] = ToPbMenuItem(m)
+	}
+	return menuItems
+}
+
+func ToPbMenuItem(mi *MenuItem) *pb.MenuItem {
+	return &pb.MenuItem{
+		Id:          mi.ID.Hex(),
+		Name:        mi.Name,
+		Description: mi.Description,
+		Price:       mi.Price,
+		MenuId:      mi.MenuID.Hex(),
+		Variants:    ToPbItemVariants(mi.Variants),
+		Addons:      ToPbItemAddons(mi.AddOns),
+		CreatedAt:   ToPbTimestamp(mi.CreatedAt),
+		UpdatedAt:   ToPbTimestamp(mi.CreatedAt),
+		DeletedAt:   TimePtrToPbTime(mi.DeletedAt),
+	}
+}
+
+func ToPbItemVariants(v []*ItemVariant) []*pb.ItemVariant {
+	variants := make([]*pb.ItemVariant, len(v))
+	for i, vrs := range v {
+		variants[i] = ToPbItemVariant(vrs)
+	}
+	return variants
+}
+
+func ToPbItemVariant(v *ItemVariant) *pb.ItemVariant {
+	return &pb.ItemVariant{
+		Id:              v.ID.Hex(),
+		VariantName:     v.VariantName,
+		RelativePrice:   v.RelativePrice,
+		RelativePricing: v.RelativePricing,
+		Price:           v.Price,
+		Description:     v.Description,
+		ItemId:          v.ItemId.Hex(),
+	}
+}
+
+func ToPbItemAddons(a []*ItemAddon) []*pb.ItemAddon {
+	addons := make([]*pb.ItemAddon, len(a))
+	for i, addon := range a {
+		addons[i] = ToPbItemAddon(addon)
+	}
+	return addons
+}
+
+func ToPbItemAddon(a *ItemAddon) *pb.ItemAddon {
+	return &pb.ItemAddon{
+		Id:          a.ID.Hex(),
+		AddonName:   a.AddonName,
+		AddonPrice:  a.AddonPrice,
+		Description: a.Description,
+		ItemId:      a.ItemId.Hex(),
+	}
 }

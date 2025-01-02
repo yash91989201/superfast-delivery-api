@@ -35,24 +35,22 @@ type CreateItemVariantReq struct {
 }
 
 type CreateMedicineCategoryReq struct {
-	CategoryName  string                   `json:"category_name"`
-	ShopID        string                   `json:"shop_id"`
-	MedicineItems []*CreateMedicineItemReq `json:"medicine_items"`
+	CategoryName string `json:"category_name"`
+	ShopID       string `json:"shop_id"`
 }
 
 type CreateMedicineItemReq struct {
 	Name        string  `json:"name"`
 	Price       float64 `json:"price"`
-	Description *string `json:"description,omitempty"`
+	Description string  `json:"description"`
 	CategoryID  string  `json:"category_id"`
 }
 
 type CreateMenuItemReq struct {
-	Name        string                  `json:"name"`
-	Description *string                 `json:"description,omitempty"`
-	Price       float64                 `json:"price"`
-	Variants    []*CreateItemVariantReq `json:"variants"`
-	Addons      []*CreateItemAddonReq   `json:"addons"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	MenuID      string  `json:"menu_id"`
 }
 
 type CreateProfileInput struct {
@@ -65,24 +63,20 @@ type CreateProfileInput struct {
 }
 
 type CreateRestaurantMenuReq struct {
-	MenuName  string               `json:"menu_name"`
-	ShopID    string               `json:"shop_id"`
-	MenuItems []*CreateMenuItemReq `json:"menu_items"`
+	MenuName string `json:"menu_name"`
+	ShopID   string `json:"shop_id"`
 }
 
 type CreateRetailCategoryReq struct {
-	CategoryName string                 `json:"category_name"`
-	ShopID       string                 `json:"shop_id"`
-	RetailItems  []*CreateRetailItemReq `json:"retail_items"`
+	CategoryName string `json:"category_name"`
+	ShopID       string `json:"shop_id"`
 }
 
 type CreateRetailItemReq struct {
-	Name        string                  `json:"name"`
-	Description *string                 `json:"description,omitempty"`
-	Price       float64                 `json:"price"`
-	CategoryID  string                  `json:"category_id"`
-	Variants    []*CreateItemVariantReq `json:"variants"`
-	Addons      []*CreateItemAddonReq   `json:"addons"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	CategoryID  string  `json:"category_id"`
 }
 
 type CreateShopAddressInput struct {

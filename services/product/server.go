@@ -1,9 +1,11 @@
 package product
 
 import (
+	"context"
 	"net"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
+	"github.com/yash91989201/superfast-delivery-api/common/types"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -25,4 +27,22 @@ func StartGRPCServer(s Service, serviceUrl string) error {
 	reflection.Register(server)
 
 	return server.Serve(listener)
+}
+
+func (s *grpcServer) CreateRestaurantMenu(ctx context.Context, req *pb.CreateRestaurantMenuReq) (*pb.RestaurantMenu, error) {
+	res, err := s.service.InsertRestaurantMenu(ctx, types.ToCreateRestaurantMenu(req))
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbRestaurantMenu(res), nil
+}
+
+func (s *grpcServer) CreateMenuItem(ctx context.Context, req *pb.CreateMenuItemReq) (*pb.MenuItem, error) {
+	res, err := s.service.InsertMenuItem(ctx, types.ToCreateMenuItem(req))
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbMenuItem(res), nil
 }

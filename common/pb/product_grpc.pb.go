@@ -19,18 +19,28 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	ProductService_CreateItemVariant_FullMethodName      = "/pb.ProductService/CreateItemVariant"
+	ProductService_CreateItemAddon_FullMethodName        = "/pb.ProductService/CreateItemAddon"
 	ProductService_CreateRestaurantMenu_FullMethodName   = "/pb.ProductService/CreateRestaurantMenu"
+	ProductService_CreateMenuItem_FullMethodName         = "/pb.ProductService/CreateMenuItem"
 	ProductService_CreateRetailCategory_FullMethodName   = "/pb.ProductService/CreateRetailCategory"
+	ProductService_CreateRetailItem_FullMethodName       = "/pb.ProductService/CreateRetailItem"
 	ProductService_CreateMedicineCategory_FullMethodName = "/pb.ProductService/CreateMedicineCategory"
+	ProductService_CreateMedicineItem_FullMethodName     = "/pb.ProductService/CreateMedicineItem"
 )
 
 // ProductServiceClient is the client API for ProductService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProductServiceClient interface {
+	CreateItemVariant(ctx context.Context, in *CreateItemVariantReq, opts ...grpc.CallOption) (*ItemVariant, error)
+	CreateItemAddon(ctx context.Context, in *CreateItemAddonReq, opts ...grpc.CallOption) (*ItemAddon, error)
 	CreateRestaurantMenu(ctx context.Context, in *CreateRestaurantMenuReq, opts ...grpc.CallOption) (*RestaurantMenu, error)
+	CreateMenuItem(ctx context.Context, in *CreateMenuItemReq, opts ...grpc.CallOption) (*MenuItem, error)
 	CreateRetailCategory(ctx context.Context, in *CreateRetailCategoryReq, opts ...grpc.CallOption) (*RetailCategory, error)
+	CreateRetailItem(ctx context.Context, in *CreateRetailItemReq, opts ...grpc.CallOption) (*RetailItem, error)
 	CreateMedicineCategory(ctx context.Context, in *CreateMedicineCategoryReq, opts ...grpc.CallOption) (*MedicineCategory, error)
+	CreateMedicineItem(ctx context.Context, in *CreateMedicineItemReq, opts ...grpc.CallOption) (*MedicineItem, error)
 }
 
 type productServiceClient struct {
@@ -41,10 +51,40 @@ func NewProductServiceClient(cc grpc.ClientConnInterface) ProductServiceClient {
 	return &productServiceClient{cc}
 }
 
+func (c *productServiceClient) CreateItemVariant(ctx context.Context, in *CreateItemVariantReq, opts ...grpc.CallOption) (*ItemVariant, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ItemVariant)
+	err := c.cc.Invoke(ctx, ProductService_CreateItemVariant_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) CreateItemAddon(ctx context.Context, in *CreateItemAddonReq, opts ...grpc.CallOption) (*ItemAddon, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ItemAddon)
+	err := c.cc.Invoke(ctx, ProductService_CreateItemAddon_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *productServiceClient) CreateRestaurantMenu(ctx context.Context, in *CreateRestaurantMenuReq, opts ...grpc.CallOption) (*RestaurantMenu, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RestaurantMenu)
 	err := c.cc.Invoke(ctx, ProductService_CreateRestaurantMenu_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) CreateMenuItem(ctx context.Context, in *CreateMenuItemReq, opts ...grpc.CallOption) (*MenuItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MenuItem)
+	err := c.cc.Invoke(ctx, ProductService_CreateMenuItem_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -61,6 +101,16 @@ func (c *productServiceClient) CreateRetailCategory(ctx context.Context, in *Cre
 	return out, nil
 }
 
+func (c *productServiceClient) CreateRetailItem(ctx context.Context, in *CreateRetailItemReq, opts ...grpc.CallOption) (*RetailItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RetailItem)
+	err := c.cc.Invoke(ctx, ProductService_CreateRetailItem_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *productServiceClient) CreateMedicineCategory(ctx context.Context, in *CreateMedicineCategoryReq, opts ...grpc.CallOption) (*MedicineCategory, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MedicineCategory)
@@ -71,13 +121,28 @@ func (c *productServiceClient) CreateMedicineCategory(ctx context.Context, in *C
 	return out, nil
 }
 
+func (c *productServiceClient) CreateMedicineItem(ctx context.Context, in *CreateMedicineItemReq, opts ...grpc.CallOption) (*MedicineItem, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MedicineItem)
+	err := c.cc.Invoke(ctx, ProductService_CreateMedicineItem_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductServiceServer is the server API for ProductService service.
 // All implementations must embed UnimplementedProductServiceServer
 // for forward compatibility.
 type ProductServiceServer interface {
+	CreateItemVariant(context.Context, *CreateItemVariantReq) (*ItemVariant, error)
+	CreateItemAddon(context.Context, *CreateItemAddonReq) (*ItemAddon, error)
 	CreateRestaurantMenu(context.Context, *CreateRestaurantMenuReq) (*RestaurantMenu, error)
+	CreateMenuItem(context.Context, *CreateMenuItemReq) (*MenuItem, error)
 	CreateRetailCategory(context.Context, *CreateRetailCategoryReq) (*RetailCategory, error)
+	CreateRetailItem(context.Context, *CreateRetailItemReq) (*RetailItem, error)
 	CreateMedicineCategory(context.Context, *CreateMedicineCategoryReq) (*MedicineCategory, error)
+	CreateMedicineItem(context.Context, *CreateMedicineItemReq) (*MedicineItem, error)
 	mustEmbedUnimplementedProductServiceServer()
 }
 
@@ -88,14 +153,29 @@ type ProductServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedProductServiceServer struct{}
 
+func (UnimplementedProductServiceServer) CreateItemVariant(context.Context, *CreateItemVariantReq) (*ItemVariant, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateItemVariant not implemented")
+}
+func (UnimplementedProductServiceServer) CreateItemAddon(context.Context, *CreateItemAddonReq) (*ItemAddon, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateItemAddon not implemented")
+}
 func (UnimplementedProductServiceServer) CreateRestaurantMenu(context.Context, *CreateRestaurantMenuReq) (*RestaurantMenu, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRestaurantMenu not implemented")
+}
+func (UnimplementedProductServiceServer) CreateMenuItem(context.Context, *CreateMenuItemReq) (*MenuItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMenuItem not implemented")
 }
 func (UnimplementedProductServiceServer) CreateRetailCategory(context.Context, *CreateRetailCategoryReq) (*RetailCategory, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRetailCategory not implemented")
 }
+func (UnimplementedProductServiceServer) CreateRetailItem(context.Context, *CreateRetailItemReq) (*RetailItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateRetailItem not implemented")
+}
 func (UnimplementedProductServiceServer) CreateMedicineCategory(context.Context, *CreateMedicineCategoryReq) (*MedicineCategory, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateMedicineCategory not implemented")
+}
+func (UnimplementedProductServiceServer) CreateMedicineItem(context.Context, *CreateMedicineItemReq) (*MedicineItem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateMedicineItem not implemented")
 }
 func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
 func (UnimplementedProductServiceServer) testEmbeddedByValue()                        {}
@@ -118,6 +198,42 @@ func RegisterProductServiceServer(s grpc.ServiceRegistrar, srv ProductServiceSer
 	s.RegisterService(&ProductService_ServiceDesc, srv)
 }
 
+func _ProductService_CreateItemVariant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateItemVariantReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).CreateItemVariant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_CreateItemVariant_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).CreateItemVariant(ctx, req.(*CreateItemVariantReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_CreateItemAddon_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateItemAddonReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).CreateItemAddon(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_CreateItemAddon_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).CreateItemAddon(ctx, req.(*CreateItemAddonReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProductService_CreateRestaurantMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateRestaurantMenuReq)
 	if err := dec(in); err != nil {
@@ -132,6 +248,24 @@ func _ProductService_CreateRestaurantMenu_Handler(srv interface{}, ctx context.C
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProductServiceServer).CreateRestaurantMenu(ctx, req.(*CreateRestaurantMenuReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_CreateMenuItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMenuItemReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).CreateMenuItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_CreateMenuItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).CreateMenuItem(ctx, req.(*CreateMenuItemReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -154,6 +288,24 @@ func _ProductService_CreateRetailCategory_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_CreateRetailItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateRetailItemReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).CreateRetailItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_CreateRetailItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).CreateRetailItem(ctx, req.(*CreateRetailItemReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ProductService_CreateMedicineCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateMedicineCategoryReq)
 	if err := dec(in); err != nil {
@@ -172,6 +324,24 @@ func _ProductService_CreateMedicineCategory_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_CreateMedicineItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateMedicineItemReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).CreateMedicineItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_CreateMedicineItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).CreateMedicineItem(ctx, req.(*CreateMedicineItemReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProductService_ServiceDesc is the grpc.ServiceDesc for ProductService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -180,16 +350,36 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ProductServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "CreateItemVariant",
+			Handler:    _ProductService_CreateItemVariant_Handler,
+		},
+		{
+			MethodName: "CreateItemAddon",
+			Handler:    _ProductService_CreateItemAddon_Handler,
+		},
+		{
 			MethodName: "CreateRestaurantMenu",
 			Handler:    _ProductService_CreateRestaurantMenu_Handler,
+		},
+		{
+			MethodName: "CreateMenuItem",
+			Handler:    _ProductService_CreateMenuItem_Handler,
 		},
 		{
 			MethodName: "CreateRetailCategory",
 			Handler:    _ProductService_CreateRetailCategory_Handler,
 		},
 		{
+			MethodName: "CreateRetailItem",
+			Handler:    _ProductService_CreateRetailItem_Handler,
+		},
+		{
 			MethodName: "CreateMedicineCategory",
 			Handler:    _ProductService_CreateMedicineCategory_Handler,
+		},
+		{
+			MethodName: "CreateMedicineItem",
+			Handler:    _ProductService_CreateMedicineItem_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -396,44 +396,38 @@ input CreateItemAddonReq {
 
 input CreateMenuItemReq {
   name: String!
-  description: String
+  description: String!
   price: Float!
-  variants: [CreateItemVariantReq]!
-  addons: [CreateItemAddonReq]!
+  menu_id: ID!
 }
 
 input CreateRestaurantMenuReq {
   menu_name: String!
   shop_id: String!
-  menu_items: [CreateMenuItemReq]!
 }
 
 input CreateRetailItemReq {
   name: String!
-  description: String
+  description: String!
   price: Float!
   category_id: String!
-  variants: [CreateItemVariantReq]!
-  addons: [CreateItemAddonReq]!
 }
 
 input CreateRetailCategoryReq {
   category_name: String!
   shop_id: String!
-  retail_items: [CreateRetailItemReq]!
 }
 
 input CreateMedicineItemReq {
   name: String!
   price: Float!
-  description: String
+  description: String!
   category_id: String!
 }
 
 input CreateMedicineCategoryReq {
   category_name: String!
   shop_id: String!
-  medicine_items: [CreateMedicineItemReq]!
 }
 
 type Query {
@@ -464,7 +458,12 @@ type Mutation {
   UpdateShopTimings(input: [UpdateShopTimingInput!]!): UpdateShopOutput!
   DeleteShop(id: ID!): UpdateShopOutput!
 
+  CreateItemVariant(input: CreateItemVariantReq!): ItemVariant!
+  CreateItemAddon(input: CreateItemAddonReq!): ItemAddon!
   CreateRestaurantMenu(input: CreateRestaurantMenuReq!): RestaurantMenu!
+  CreateMenuItem(input: CreateMenuItemReq!): MenuItem!
   CreateRetailCategory(input: CreateRetailCategoryReq!): RetailCategory!
+  CreateRetailItem(input: CreateRetailItemReq!): RetailItem!
   CreateMedicineCategory(input: CreateMedicineCategoryReq!): MedicineCategory!
+  CreateMedicineItem(input: CreateMedicineItemReq!): MedicineItem!
 }
