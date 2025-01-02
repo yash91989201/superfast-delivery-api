@@ -64,6 +64,14 @@ func (c *ProductClient) GetItemAddon(ctx context.Context, req *pb.GetItemAddonRe
 	return c.service.GetItemAddon(ctx, req)
 }
 
+func (c *ProductClient) GetItemVariants(ctx context.Context, req *pb.GetItemVariantsReq) (*pb.GetItemVariantsRes, error) {
+	return c.service.GetItemVariants(ctx, req)
+}
+
+func (c *ProductClient) GetItemAddons(ctx context.Context, req *pb.GetItemAddonsReq) (*pb.GetItemAddonsRes, error) {
+	return c.service.GetItemAddons(ctx, req)
+}
+
 func (c *ProductClient) GetRestaurantMenu(ctx context.Context, req *pb.GetRestaurantMenuReq) (*pb.RestaurantMenu, error) {
 	return c.service.GetRestaurantMenu(ctx, req)
 }
