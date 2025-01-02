@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 
@@ -156,19 +157,58 @@ func (r *mongoRepository) InsertRetailItem(ctx context.Context, i *types.RetailI
 }
 
 func (r *mongoRepository) GetItemVariant(ctx context.Context, id string) (*types.ItemVariant, error) {
-	return nil, nil
+	itemVariant := &types.ItemVariant{}
+	err := r.itemVariant.FindOne(ctx, bson.D{{Key: "_id", Value: types.HexToObjectId(id)}}).Decode(&itemVariant)
+	if errors.Is(err, mongo.ErrNoDocuments) || err != nil {
+		return nil, fmt.Errorf("Item variant not found: %v", err)
+	}
+
+	return itemVariant, nil
 }
 
 func (r *mongoRepository) GetItemAddon(ctx context.Context, id string) (*types.ItemAddon, error) {
-	return nil, nil
+	addon := &types.ItemAddon{}
+	err := r.itemAddon.FindOne(ctx, bson.M{"_id": types.HexToObjectId(id)}).Decode(addon)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, fmt.Errorf("item addon not found")
+		}
+		return nil, fmt.Errorf("failed to fetch item addon: %v", err)
+	}
+
+	return addon, nil
 }
 
 func (r *mongoRepository) GetItemVariants(ctx context.Context, itemId string) ([]*types.ItemVariant, error) {
-	return nil, nil
+	cursor, err := r.itemVariant.Find(ctx, bson.M{"item_id": types.HexToObjectId(itemId)})
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch item variants: %v", err)
+	}
+
+	defer cursor.Close(ctx)
+
+	var variants []*types.ItemVariant
+	if err = cursor.All(ctx, &variants); err != nil {
+		return nil, fmt.Errorf("failed to decode item variants: %v", err)
+	}
+
+	return variants, nil
 }
 
 func (r *mongoRepository) GetItemAddons(ctx context.Context, itemId string) ([]*types.ItemAddon, error) {
-	return nil, nil
+	cursor, err := r.itemAddon.Find(ctx, bson.M{"item_id": types.HexToObjectId(itemId)})
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch item addons: %v", err)
+	}
+
+	defer cursor.Close(ctx)
+
+	var addons []*types.ItemAddon
+	if err = cursor.All(ctx, &addons); err != nil {
+		return nil, fmt.Errorf("failed to decode item addons: %v", err)
+	}
+
+	return addons, nil
 }
 
 func (r *mongoRepository) GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error) {
@@ -288,17 +328,235 @@ func (r *mongoRepository) ListRestaurantMenu(ctx context.Context, shopId string)
 }
 
 func (r *mongoRepository) GetRetailCategory(ctx context.Context, id string) (*types.RetailCategory, error) {
-	return nil, nil
+	matchRetailCategory := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: types.HexToObjectId(id)}}}}
+
+	joinRetailItemsByCategoryId := bson.D{{
+		Key: "$lookup",
+		Value: bson.D{
+			{Key: "from", Value: "retail_item"},
+			{Key: "localField", Value: "_id"},
+			{Key: "foreignField", Value: "category_id"},
+			{Key: "as", Value: "retail_items"},
+		},
+	}}
+
+	projectToModel := bson.D{{
+		Key: "$project",
+		Value: bson.D{
+			{Key: "_id", Value: 1},
+			{Key: "category_name", Value: 1},
+			{Key: "shop_id", Value: 1},
+			{Key: "created_at", Value: 1},
+			{Key: "updated_at", Value: 1},
+			{Key: "deleted_at", Value: 1},
+			{Key: "retail_items", Value: 1},
+		},
+	}}
+
+	cursor, err := r.retailCategory.Aggregate(
+		ctx,
+		mongo.Pipeline{
+			matchRetailCategory,
+			joinRetailItemsByCategoryId,
+			projectToModel,
+		},
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute aggregation: %v", err)
+	}
+
+	defer cursor.Close(ctx)
+
+	var retailCategory *types.RetailCategory
+	if cursor.Next(ctx) {
+		if err := cursor.Decode(&retailCategory); err != nil {
+			return nil, fmt.Errorf("failed to decode result: %v", err)
+		}
+	}
+
+	if retailCategory == nil {
+		return nil, fmt.Errorf("retail category not found")
+	}
+
+	return retailCategory, nil
 }
 
 func (r *mongoRepository) ListRetailCategory(ctx context.Context, shopId string) ([]*types.RetailCategory, error) {
-	return nil, nil
+	retailCategoryByShopId := bson.D{{Key: "$match", Value: bson.D{{Key: "shop_id", Value: shopId}}}}
+
+	joinRetailItemsByCategoryId := bson.D{{
+		Key: "$lookup",
+		Value: bson.D{
+			{Key: "from", Value: "retail_item"},
+			{Key: "localField", Value: "_id"},
+			{Key: "foreignField", Value: "category_id"},
+			{Key: "as", Value: "retail_items"},
+		},
+	}}
+
+	projectToModel := bson.D{{
+		Key: "$project",
+		Value: bson.D{
+			{Key: "_id", Value: 1},
+			{Key: "category_name", Value: 1},
+			{Key: "shop_id", Value: 1},
+			{Key: "created_at", Value: 1},
+			{Key: "updated_at", Value: 1},
+			{Key: "deleted_at", Value: 1},
+			{Key: "retail_items", Value: 1},
+		},
+	}}
+
+	cursor, err := r.retailCategory.Aggregate(
+		ctx,
+		mongo.Pipeline{
+			retailCategoryByShopId,
+			joinRetailItemsByCategoryId,
+			projectToModel,
+		},
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute aggregation: %v", err)
+	}
+
+	defer cursor.Close(ctx)
+
+	var retailCategoryList []*types.RetailCategory
+	for cursor.Next(ctx) {
+		var retailCategory types.RetailCategory
+		if err := cursor.Decode(&retailCategory); err != nil {
+			return nil, fmt.Errorf("failed to decode result: %v", err)
+		}
+
+		retailCategoryList = append(retailCategoryList, &retailCategory)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, fmt.Errorf("cursor iteration error: %v", err)
+	}
+
+	if len(retailCategoryList) == 0 {
+		return nil, fmt.Errorf("restaurant menu not found")
+	}
+
+	return retailCategoryList, nil
 }
 
 func (r *mongoRepository) GetMedicineCategory(ctx context.Context, id string) (*types.MedicineCategory, error) {
-	return nil, nil
+	matchMedicineCategory := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: types.HexToObjectId(id)}}}}
+
+	joinMedicineItemsByCategoryId := bson.D{{
+		Key: "$lookup",
+		Value: bson.D{
+			{Key: "from", Value: "medicine_item"},
+			{Key: "localField", Value: "_id"},
+			{Key: "foreignField", Value: "category_id"},
+			{Key: "as", Value: "medicine_items"},
+		},
+	}}
+
+	projectToModel := bson.D{{
+		Key: "$project",
+		Value: bson.D{
+			{Key: "_id", Value: 1},
+			{Key: "category_name", Value: 1},
+			{Key: "shop_id", Value: 1},
+			{Key: "created_at", Value: 1},
+			{Key: "updated_at", Value: 1},
+			{Key: "deleted_at", Value: 1},
+			{Key: "medicine_items", Value: 1},
+		},
+	}}
+
+	cursor, err := r.medicineCategory.Aggregate(
+		ctx,
+		mongo.Pipeline{
+			matchMedicineCategory,
+			joinMedicineItemsByCategoryId,
+			projectToModel,
+		},
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute aggregation: %v", err)
+	}
+
+	defer cursor.Close(ctx)
+
+	var medicineCategory *types.MedicineCategory
+	if cursor.Next(ctx) {
+		if err := cursor.Decode(&medicineCategory); err != nil {
+			return nil, fmt.Errorf("failed to decode result: %v", err)
+		}
+	}
+
+	if medicineCategory == nil {
+		return nil, fmt.Errorf("retail category not found")
+	}
+
+	return medicineCategory, nil
 }
 
 func (r *mongoRepository) ListMedicineCategory(ctx context.Context, shopId string) ([]*types.MedicineCategory, error) {
-	return nil, nil
+	medicineCategoryByShopId := bson.D{{Key: "$match", Value: bson.D{{Key: "shop_id", Value: shopId}}}}
+
+	joinMedicineItemsByCategoryId := bson.D{{
+		Key: "$lookup",
+		Value: bson.D{
+			{Key: "from", Value: "medicine_item"},
+			{Key: "localField", Value: "_id"},
+			{Key: "foreignField", Value: "category_id"},
+			{Key: "as", Value: "medicine_items"},
+		},
+	}}
+
+	projectToModel := bson.D{{
+		Key: "$project",
+		Value: bson.D{
+			{Key: "_id", Value: 1},
+			{Key: "category_name", Value: 1},
+			{Key: "shop_id", Value: 1},
+			{Key: "created_at", Value: 1},
+			{Key: "updated_at", Value: 1},
+			{Key: "deleted_at", Value: 1},
+			{Key: "medicine_items", Value: 1},
+		},
+	}}
+
+	cursor, err := r.medicineCategory.Aggregate(
+		ctx,
+		mongo.Pipeline{
+			medicineCategoryByShopId,
+			joinMedicineItemsByCategoryId,
+			projectToModel,
+		},
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute aggregation: %v", err)
+	}
+
+	defer cursor.Close(ctx)
+
+	var medicineCategoryList []*types.MedicineCategory
+	for cursor.Next(ctx) {
+		var medicineCategory types.MedicineCategory
+		if err := cursor.Decode(&medicineCategory); err != nil {
+			return nil, fmt.Errorf("failed to decode result: %v", err)
+		}
+
+		medicineCategoryList = append(medicineCategoryList, &medicineCategory)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, fmt.Errorf("cursor iteration error: %v", err)
+	}
+
+	if len(medicineCategoryList) == 0 {
+		return nil, fmt.Errorf("restaurant menu not found")
+	}
+
+	return medicineCategoryList, nil
 }
