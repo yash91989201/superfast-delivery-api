@@ -560,8 +560,16 @@ func ToPbCreateItemAddonReq(r *CreateItemAddonReq) *pb.CreateItemAddonReq {
 	}
 }
 
-func ToGQRestaurantMenu(m *pb.RestaurantMenu) *RestaurantMenu {
+func ToGQRestaurantMenuList(m []*pb.RestaurantMenu) []*RestaurantMenu {
+	list := make([]*RestaurantMenu, len(m))
+	for i, rm := range m {
+		list[i] = ToGQRestaurantMenu(rm)
+	}
 
+	return list
+}
+
+func ToGQRestaurantMenu(m *pb.RestaurantMenu) *RestaurantMenu {
 	return &RestaurantMenu{
 		ID:        m.Id,
 		MenuName:  m.MenuName,

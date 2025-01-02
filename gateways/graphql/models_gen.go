@@ -165,6 +165,11 @@ type LatLngInput struct {
 	Lng float64 `json:"lng"`
 }
 
+type ListRestaurantMenuOutput struct {
+	RestaurantMenuList []*RestaurantMenu `json:"restaurant_menu_list"`
+	TotalMenu          int32             `json:"total_menu"`
+}
+
 type ListShopsInput struct {
 	Name       *string     `json:"name,omitempty"`
 	ShopType   *ShopType   `json:"shop_type,omitempty"`

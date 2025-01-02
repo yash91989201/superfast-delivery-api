@@ -188,31 +188,77 @@ func (r *mongoRepository) GetRestaurantMenu(ctx context.Context, id string) (*ty
 
 	defer cursor.Close(ctx)
 
-	var restaurantMenu []*types.RestaurantMenu
+	var restaurantMenu *types.RestaurantMenu
 	if cursor.Next(ctx) {
 		if err := cursor.Decode(&restaurantMenu); err != nil {
 			return nil, fmt.Errorf("failed to decode result: %v", err)
 		}
 	}
 
-	if len(restaurantMenu) == 0 {
+	if restaurantMenu == nil {
 		return nil, fmt.Errorf("restaurant menu not found")
 	}
 
-	return restaurantMenu[0], nil
+	return restaurantMenu, nil
 }
 
 func (r *mongoRepository) ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error) {
-	filter := bson.D{{Key: "shop_id", Value: shopId}}
-	cursor, err := r.restaurantMenu.Find(ctx, filter)
+	restaurantMenuByShopId := bson.D{{Key: "$match", Value: bson.D{{Key: "shop_id", Value: shopId}}}}
+
+	joinMenuItemsByMenuId := bson.D{{
+		Key: "$lookup",
+		Value: bson.D{
+			{Key: "from", Value: "menu_item"},
+			{Key: "localField", Value: "_id"},
+			{Key: "foreignField", Value: "menu_id"},
+			{Key: "as", Value: "menu_items"},
+		},
+	}}
+
+	projectToModel := bson.D{{
+		Key: "$project",
+		Value: bson.D{
+			{Key: "_id", Value: 1},
+			{Key: "menu_name", Value: 1},
+			{Key: "shop_id", Value: 1},
+			{Key: "created_at", Value: 1},
+			{Key: "updated_at", Value: 1},
+			{Key: "deleted_at", Value: 1},
+			{Key: "menu_items", Value: 1},
+		},
+	}}
+
+	cursor, err := r.restaurantMenu.Aggregate(
+		ctx,
+		mongo.Pipeline{
+			restaurantMenuByShopId,
+			joinMenuItemsByMenuId,
+			projectToModel,
+		},
+	)
+
 	if err != nil {
-		return nil, fmt.Errorf("Restaurant menu not found: %w", err)
+		return nil, fmt.Errorf("failed to execute aggregation: %v", err)
 	}
 
-	m := make([]*types.RestaurantMenu, 0)
-	if err := cursor.All(ctx, &m); err != nil {
-		return nil, fmt.Errorf("Restaurant menu not found: %w", err)
+	defer cursor.Close(ctx)
+
+	var restaurantMenuList []*types.RestaurantMenu
+	for cursor.Next(ctx) {
+		var restaurantMenu types.RestaurantMenu
+		if err := cursor.Decode(&restaurantMenu); err != nil {
+			return nil, fmt.Errorf("failed to decode result: %v", err)
+		}
+		restaurantMenuList = append(restaurantMenuList, &restaurantMenu)
 	}
 
-	return m, nil
+	if err := cursor.Err(); err != nil {
+		return nil, fmt.Errorf("cursor iteration error: %v", err)
+	}
+
+	if len(restaurantMenuList) == 0 {
+		return nil, fmt.Errorf("restaurant menu not found")
+	}
+
+	return restaurantMenuList, nil
 }

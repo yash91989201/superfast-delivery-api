@@ -430,6 +430,11 @@ input CreateMedicineCategoryReq {
   shop_id: String!
 }
 
+type ListRestaurantMenuOutput {
+  restaurant_menu_list: [RestaurantMenu!]!
+  total_menu: Int!
+}
+
 type Query {
   AuthById(input: GetAuthByIdInput!): Auth
   Auth(input: GetAuthInput!): Auth
@@ -438,6 +443,9 @@ type Query {
 
   GetShop(id: ID!): Shop!
   ListShops(input: ListShopsInput): ListShopsOutput!
+
+  GetRestaurantMenu(id: ID!): RestaurantMenu!
+  ListRestaurantMenu(shopId: ID!): ListRestaurantMenuOutput!
 }
 
 type Mutation {

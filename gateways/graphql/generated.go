@@ -86,6 +86,11 @@ type ComplexityRoot struct {
 		Lng func(childComplexity int) int
 	}
 
+	ListRestaurantMenuOutput struct {
+		RestaurantMenuList func(childComplexity int) int
+		TotalMenu          func(childComplexity int) int
+	}
+
 	ListShopsOutput struct {
 		Shops func(childComplexity int) int
 		Total func(childComplexity int) int
@@ -163,11 +168,13 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Auth      func(childComplexity int, input GetAuthInput) int
-		AuthByID  func(childComplexity int, input GetAuthByIDInput) int
-		GetShop   func(childComplexity int, id string) int
-		ListShops func(childComplexity int, input *ListShopsInput) int
-		Profile   func(childComplexity int, input GetProfileInput) int
+		Auth               func(childComplexity int, input GetAuthInput) int
+		AuthByID           func(childComplexity int, input GetAuthByIDInput) int
+		GetRestaurantMenu  func(childComplexity int, id string) int
+		GetShop            func(childComplexity int, id string) int
+		ListRestaurantMenu func(childComplexity int, shopID string) int
+		ListShops          func(childComplexity int, input *ListShopsInput) int
+		Profile            func(childComplexity int, input GetProfileInput) int
 	}
 
 	RestaurantMenu struct {
@@ -306,6 +313,8 @@ type QueryResolver interface {
 	Profile(ctx context.Context, input GetProfileInput) (*Profile, error)
 	GetShop(ctx context.Context, id string) (*Shop, error)
 	ListShops(ctx context.Context, input *ListShopsInput) (*ListShopsOutput, error)
+	GetRestaurantMenu(ctx context.Context, id string) (*RestaurantMenu, error)
+	ListRestaurantMenu(ctx context.Context, shopID string) (*ListRestaurantMenuOutput, error)
 }
 
 type executableSchema struct {
@@ -494,6 +503,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.LatLng.Lng(childComplexity), true
+
+	case "ListRestaurantMenuOutput.restaurant_menu_list":
+		if e.complexity.ListRestaurantMenuOutput.RestaurantMenuList == nil {
+			break
+		}
+
+		return e.complexity.ListRestaurantMenuOutput.RestaurantMenuList(childComplexity), true
+
+	case "ListRestaurantMenuOutput.total_menu":
+		if e.complexity.ListRestaurantMenuOutput.TotalMenu == nil {
+			break
+		}
+
+		return e.complexity.ListRestaurantMenuOutput.TotalMenu(childComplexity), true
 
 	case "ListShopsOutput.shops":
 		if e.complexity.ListShopsOutput.Shops == nil {
@@ -1035,6 +1058,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.AuthByID(childComplexity, args["input"].(GetAuthByIDInput)), true
 
+	case "Query.GetRestaurantMenu":
+		if e.complexity.Query.GetRestaurantMenu == nil {
+			break
+		}
+
+		args, err := ec.field_Query_GetRestaurantMenu_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetRestaurantMenu(childComplexity, args["id"].(string)), true
+
 	case "Query.GetShop":
 		if e.complexity.Query.GetShop == nil {
 			break
@@ -1046,6 +1081,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetShop(childComplexity, args["id"].(string)), true
+
+	case "Query.ListRestaurantMenu":
+		if e.complexity.Query.ListRestaurantMenu == nil {
+			break
+		}
+
+		args, err := ec.field_Query_ListRestaurantMenu_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ListRestaurantMenu(childComplexity, args["shopId"].(string)), true
 
 	case "Query.ListShops":
 		if e.complexity.Query.ListShops == nil {
@@ -2300,6 +2347,29 @@ func (ec *executionContext) field_Query_Auth_argsInput(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Query_GetRestaurantMenu_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_GetRestaurantMenu_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_GetRestaurantMenu_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Query_GetShop_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -2316,6 +2386,29 @@ func (ec *executionContext) field_Query_GetShop_argsID(
 ) (string, error) {
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
 	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_ListRestaurantMenu_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_ListRestaurantMenu_argsShopID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["shopId"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_ListRestaurantMenu_argsShopID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("shopId"))
+	if tmp, ok := rawArgs["shopId"]; ok {
 		return ec.unmarshalNID2string(ctx, tmp)
 	}
 
@@ -3482,6 +3575,110 @@ func (ec *executionContext) fieldContext_LatLng_lng(_ context.Context, field gra
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ListRestaurantMenuOutput_restaurant_menu_list(ctx context.Context, field graphql.CollectedField, obj *ListRestaurantMenuOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ListRestaurantMenuOutput_restaurant_menu_list(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RestaurantMenuList, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*RestaurantMenu)
+	fc.Result = res
+	return ec.marshalNRestaurantMenu2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRestaurantMenuᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ListRestaurantMenuOutput_restaurant_menu_list(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ListRestaurantMenuOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_RestaurantMenu_id(ctx, field)
+			case "menu_name":
+				return ec.fieldContext_RestaurantMenu_menu_name(ctx, field)
+			case "shop_id":
+				return ec.fieldContext_RestaurantMenu_shop_id(ctx, field)
+			case "menu_items":
+				return ec.fieldContext_RestaurantMenu_menu_items(ctx, field)
+			case "created_at":
+				return ec.fieldContext_RestaurantMenu_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_RestaurantMenu_updated_at(ctx, field)
+			case "deleted_at":
+				return ec.fieldContext_RestaurantMenu_deleted_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RestaurantMenu", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ListRestaurantMenuOutput_total_menu(ctx context.Context, field graphql.CollectedField, obj *ListRestaurantMenuOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ListRestaurantMenuOutput_total_menu(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalMenu, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int32)
+	fc.Result = res
+	return ec.marshalNInt2int32(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ListRestaurantMenuOutput_total_menu(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ListRestaurantMenuOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -6959,6 +7156,138 @@ func (ec *executionContext) fieldContext_Query_ListShops(ctx context.Context, fi
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_ListShops_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_GetRestaurantMenu(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_GetRestaurantMenu(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetRestaurantMenu(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*RestaurantMenu)
+	fc.Result = res
+	return ec.marshalNRestaurantMenu2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRestaurantMenu(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_GetRestaurantMenu(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_RestaurantMenu_id(ctx, field)
+			case "menu_name":
+				return ec.fieldContext_RestaurantMenu_menu_name(ctx, field)
+			case "shop_id":
+				return ec.fieldContext_RestaurantMenu_shop_id(ctx, field)
+			case "menu_items":
+				return ec.fieldContext_RestaurantMenu_menu_items(ctx, field)
+			case "created_at":
+				return ec.fieldContext_RestaurantMenu_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_RestaurantMenu_updated_at(ctx, field)
+			case "deleted_at":
+				return ec.fieldContext_RestaurantMenu_deleted_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RestaurantMenu", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_GetRestaurantMenu_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_ListRestaurantMenu(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_ListRestaurantMenu(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ListRestaurantMenu(rctx, fc.Args["shopId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ListRestaurantMenuOutput)
+	fc.Result = res
+	return ec.marshalNListRestaurantMenuOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListRestaurantMenuOutput(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_ListRestaurantMenu(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "restaurant_menu_list":
+				return ec.fieldContext_ListRestaurantMenuOutput_restaurant_menu_list(ctx, field)
+			case "total_menu":
+				return ec.fieldContext_ListRestaurantMenuOutput_total_menu(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ListRestaurantMenuOutput", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_ListRestaurantMenu_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -13889,6 +14218,50 @@ func (ec *executionContext) _LatLng(ctx context.Context, sel ast.SelectionSet, o
 	return out
 }
 
+var listRestaurantMenuOutputImplementors = []string{"ListRestaurantMenuOutput"}
+
+func (ec *executionContext) _ListRestaurantMenuOutput(ctx context.Context, sel ast.SelectionSet, obj *ListRestaurantMenuOutput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, listRestaurantMenuOutputImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ListRestaurantMenuOutput")
+		case "restaurant_menu_list":
+			out.Values[i] = ec._ListRestaurantMenuOutput_restaurant_menu_list(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "total_menu":
+			out.Values[i] = ec._ListRestaurantMenuOutput_total_menu(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var listShopsOutputImplementors = []string{"ListShopsOutput"}
 
 func (ec *executionContext) _ListShopsOutput(ctx context.Context, sel ast.SelectionSet, obj *ListShopsOutput) graphql.Marshaler {
@@ -14513,6 +14886,50 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_ListShops(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "GetRestaurantMenu":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_GetRestaurantMenu(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "ListRestaurantMenu":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_ListRestaurantMenu(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -15859,6 +16276,20 @@ func (ec *executionContext) marshalNItemVariant2ᚖgithubᚗcomᚋyash91989201�
 	return ec._ItemVariant(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNListRestaurantMenuOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListRestaurantMenuOutput(ctx context.Context, sel ast.SelectionSet, v ListRestaurantMenuOutput) graphql.Marshaler {
+	return ec._ListRestaurantMenuOutput(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNListRestaurantMenuOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListRestaurantMenuOutput(ctx context.Context, sel ast.SelectionSet, v *ListRestaurantMenuOutput) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ListRestaurantMenuOutput(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNListShopsOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListShopsOutput(ctx context.Context, sel ast.SelectionSet, v ListShopsOutput) graphql.Marshaler {
 	return ec._ListShopsOutput(ctx, sel, &v)
 }
@@ -16007,6 +16438,50 @@ func (ec *executionContext) marshalNProfile2ᚖgithubᚗcomᚋyash91989201ᚋsup
 
 func (ec *executionContext) marshalNRestaurantMenu2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRestaurantMenu(ctx context.Context, sel ast.SelectionSet, v RestaurantMenu) graphql.Marshaler {
 	return ec._RestaurantMenu(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNRestaurantMenu2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRestaurantMenuᚄ(ctx context.Context, sel ast.SelectionSet, v []*RestaurantMenu) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNRestaurantMenu2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRestaurantMenu(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalNRestaurantMenu2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐRestaurantMenu(ctx context.Context, sel ast.SelectionSet, v *RestaurantMenu) graphql.Marshaler {

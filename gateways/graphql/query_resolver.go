@@ -52,3 +52,25 @@ func (r *queryResolver) ListShops(ctx context.Context, in *ListShopsInput) (*Lis
 		Total: int32(len(res.Shops)),
 	}, nil
 }
+
+func (r *queryResolver) GetRestaurantMenu(ctx context.Context, id string) (*RestaurantMenu, error) {
+	res, err := r.server.productClient.GetRestaurantMenu(ctx, &pb.GetRestaurantMenuReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQRestaurantMenu(res), err
+}
+
+func (r *queryResolver) ListRestaurantMenu(ctx context.Context, shopId string) (*ListRestaurantMenuOutput, error) {
+	res, err := r.server.productClient.ListRestaurantMenu(ctx, &pb.ListRestaurantMenuReq{ShopId: shopId})
+	if err != nil {
+		return nil, err
+	}
+
+	restaurantMenuList := ToGQRestaurantMenuList(res.RestaurantMenuList)
+	return &ListRestaurantMenuOutput{
+		RestaurantMenuList: restaurantMenuList,
+		TotalMenu:          int32(len(restaurantMenuList)),
+	}, nil
+}
