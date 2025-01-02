@@ -60,7 +60,7 @@ type ProductServiceClient interface {
 	GetRetailCategory(ctx context.Context, in *GetRetailCategoryReq, opts ...grpc.CallOption) (*RetailCategory, error)
 	ListRetailCategory(ctx context.Context, in *ListRetailCategoryReq, opts ...grpc.CallOption) (*ListRetailCategoryRes, error)
 	GetMedicineCategory(ctx context.Context, in *GetMedicineCategoryReq, opts ...grpc.CallOption) (*MedicineCategory, error)
-	ListMedicineCategory(ctx context.Context, in *ListMedicineCategoryRes, opts ...grpc.CallOption) (*ListMedicineCategoryRes, error)
+	ListMedicineCategory(ctx context.Context, in *ListMedicineCategoryReq, opts ...grpc.CallOption) (*ListMedicineCategoryRes, error)
 }
 
 type productServiceClient struct {
@@ -241,7 +241,7 @@ func (c *productServiceClient) GetMedicineCategory(ctx context.Context, in *GetM
 	return out, nil
 }
 
-func (c *productServiceClient) ListMedicineCategory(ctx context.Context, in *ListMedicineCategoryRes, opts ...grpc.CallOption) (*ListMedicineCategoryRes, error) {
+func (c *productServiceClient) ListMedicineCategory(ctx context.Context, in *ListMedicineCategoryReq, opts ...grpc.CallOption) (*ListMedicineCategoryRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListMedicineCategoryRes)
 	err := c.cc.Invoke(ctx, ProductService_ListMedicineCategory_FullMethodName, in, out, cOpts...)
@@ -272,7 +272,7 @@ type ProductServiceServer interface {
 	GetRetailCategory(context.Context, *GetRetailCategoryReq) (*RetailCategory, error)
 	ListRetailCategory(context.Context, *ListRetailCategoryReq) (*ListRetailCategoryRes, error)
 	GetMedicineCategory(context.Context, *GetMedicineCategoryReq) (*MedicineCategory, error)
-	ListMedicineCategory(context.Context, *ListMedicineCategoryRes) (*ListMedicineCategoryRes, error)
+	ListMedicineCategory(context.Context, *ListMedicineCategoryReq) (*ListMedicineCategoryRes, error)
 	mustEmbedUnimplementedProductServiceServer()
 }
 
@@ -334,7 +334,7 @@ func (UnimplementedProductServiceServer) ListRetailCategory(context.Context, *Li
 func (UnimplementedProductServiceServer) GetMedicineCategory(context.Context, *GetMedicineCategoryReq) (*MedicineCategory, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMedicineCategory not implemented")
 }
-func (UnimplementedProductServiceServer) ListMedicineCategory(context.Context, *ListMedicineCategoryRes) (*ListMedicineCategoryRes, error) {
+func (UnimplementedProductServiceServer) ListMedicineCategory(context.Context, *ListMedicineCategoryReq) (*ListMedicineCategoryRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMedicineCategory not implemented")
 }
 func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
@@ -665,7 +665,7 @@ func _ProductService_GetMedicineCategory_Handler(srv interface{}, ctx context.Co
 }
 
 func _ProductService_ListMedicineCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListMedicineCategoryRes)
+	in := new(ListMedicineCategoryReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -677,7 +677,7 @@ func _ProductService_ListMedicineCategory_Handler(srv interface{}, ctx context.C
 		FullMethod: ProductService_ListMedicineCategory_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductServiceServer).ListMedicineCategory(ctx, req.(*ListMedicineCategoryRes))
+		return srv.(ProductServiceServer).ListMedicineCategory(ctx, req.(*ListMedicineCategoryReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

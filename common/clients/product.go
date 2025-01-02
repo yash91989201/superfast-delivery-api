@@ -56,10 +56,34 @@ func (c *ProductClient) CreateMedicineCategory(ctx context.Context, req *pb.Crea
 	return c.service.CreateMedicineCategory(ctx, req)
 }
 
+func (c *ProductClient) GetItemVariant(ctx context.Context, req *pb.GetItemVariantReq) (*pb.ItemVariant, error) {
+	return c.service.GetItemVariant(ctx, req)
+}
+
+func (c *ProductClient) GetItemAddon(ctx context.Context, req *pb.GetItemAddonReq) (*pb.ItemAddon, error) {
+	return c.service.GetItemAddon(ctx, req)
+}
+
 func (c *ProductClient) GetRestaurantMenu(ctx context.Context, req *pb.GetRestaurantMenuReq) (*pb.RestaurantMenu, error) {
 	return c.service.GetRestaurantMenu(ctx, req)
 }
 
 func (c *ProductClient) ListRestaurantMenu(ctx context.Context, req *pb.ListRestaurantMenuReq) (*pb.ListRestaurantMenuRes, error) {
 	return c.service.ListRestaurantMenu(ctx, req)
+}
+
+func (c *ProductClient) GetRetailCategory(ctx context.Context, req *pb.GetRetailCategoryReq) (*pb.RetailCategory, error) {
+	return c.service.GetRetailCategory(ctx, req)
+}
+
+func (c *ProductClient) ListRetailCategory(ctx context.Context, req *pb.ListRetailCategoryReq) (*pb.ListRetailCategoryRes, error) {
+	return c.service.ListRetailCategory(ctx, req)
+}
+
+func (c *ProductClient) GetMedicineCategory(ctx context.Context, req *pb.GetMedicineCategoryReq) (*pb.MedicineCategory, error) {
+	return c.service.GetMedicineCategory(ctx, req)
+}
+
+func (c *ProductClient) ListMedicineCategory(ctx context.Context, req *pb.ListMedicineCategoryReq) (*pb.ListMedicineCategoryRes, error) {
+	return c.service.ListMedicineCategory(ctx, req)
 }

@@ -25,8 +25,16 @@ type Repository interface {
 	InsertMedicineCategory(ctx context.Context, c *types.MedicineCategory) error
 	InsertMedicineItem(ctx context.Context, i *types.MedicineItem) error
 
+	GetItemVariant(ctx context.Context, id string) (*types.ItemVariant, error)
+	GetItemAddon(ctx context.Context, id string) (*types.ItemAddon, error)
+	GetItemVariants(ctx context.Context, itemId string) ([]*types.ItemVariant, error)
+	GetItemAddons(ctx context.Context, itemId string) ([]*types.ItemAddon, error)
 	GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error)
 	ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error)
+	GetRetailCategory(ctx context.Context, id string) (*types.RetailCategory, error)
+	ListRetailCategory(ctx context.Context, shopId string) ([]*types.RetailCategory, error)
+	GetMedicineCategory(ctx context.Context, id string) (*types.MedicineCategory, error)
+	ListMedicineCategory(ctx context.Context, shopId string) ([]*types.MedicineCategory, error)
 }
 
 type mongoRepository struct {
@@ -147,6 +155,22 @@ func (r *mongoRepository) InsertRetailItem(ctx context.Context, i *types.RetailI
 	return nil
 }
 
+func (r *mongoRepository) GetItemVariant(ctx context.Context, id string) (*types.ItemVariant, error) {
+	return nil, nil
+}
+
+func (r *mongoRepository) GetItemAddon(ctx context.Context, id string) (*types.ItemAddon, error) {
+	return nil, nil
+}
+
+func (r *mongoRepository) GetItemVariants(ctx context.Context, itemId string) ([]*types.ItemVariant, error) {
+	return nil, nil
+}
+
+func (r *mongoRepository) GetItemAddons(ctx context.Context, itemId string) ([]*types.ItemAddon, error) {
+	return nil, nil
+}
+
 func (r *mongoRepository) GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error) {
 	matchRestaurantMenu := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: types.HexToObjectId(id)}}}}
 
@@ -261,4 +285,20 @@ func (r *mongoRepository) ListRestaurantMenu(ctx context.Context, shopId string)
 	}
 
 	return restaurantMenuList, nil
+}
+
+func (r *mongoRepository) GetRetailCategory(ctx context.Context, id string) (*types.RetailCategory, error) {
+	return nil, nil
+}
+
+func (r *mongoRepository) ListRetailCategory(ctx context.Context, shopId string) ([]*types.RetailCategory, error) {
+	return nil, nil
+}
+
+func (r *mongoRepository) GetMedicineCategory(ctx context.Context, id string) (*types.MedicineCategory, error) {
+	return nil, nil
+}
+
+func (r *mongoRepository) ListMedicineCategory(ctx context.Context, shopId string) ([]*types.MedicineCategory, error) {
+	return nil, nil
 }

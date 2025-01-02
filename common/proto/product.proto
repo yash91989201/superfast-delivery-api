@@ -221,5 +221,5 @@ service ProductService {
   rpc GetRetailCategory(GetRetailCategoryReq) returns (RetailCategory) {}
   rpc ListRetailCategory(ListRetailCategoryReq) returns (ListRetailCategoryRes) {}
   rpc GetMedicineCategory(GetMedicineCategoryReq) returns (MedicineCategory) {}
-  rpc ListMedicineCategory(ListMedicineCategoryRes) returns (ListMedicineCategoryRes) {}
+  rpc ListMedicineCategory(ListMedicineCategoryReq) returns (ListMedicineCategoryRes) {}
 }

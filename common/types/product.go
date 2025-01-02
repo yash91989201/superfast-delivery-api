@@ -84,7 +84,7 @@ type MedicineItem struct {
 	ID          bson.ObjectID `json:"id" bson:"_id"`
 	Name        string        `json:"name" bson:"name"`
 	Price       float64       `json:"price" bson:"price"`
-	Description *string       `json:"description" bson:"description"`
+	Description string        `json:"description" bson:"description"`
 	CategoryID  bson.ObjectID `json:"category_id" bson:"category_id"`
 	CreatedAt   time.Time     `json:"created_at" bson:"created_at"`
 	UpdatedAt   time.Time     `json:"updated_at" bson:"updated_at"`

@@ -659,7 +659,9 @@ func ToCreateMenuItem(mi *pb.CreateMenuItemReq) *CreateMenuItem {
 func ToPbRestaurantMenuList(rm []*RestaurantMenu) []*pb.RestaurantMenu {
 	list := make([]*pb.RestaurantMenu, len(rm))
 	for i, l := range rm {
-		list[i] = ToPbRestaurantMenu(l)
+		if l != nil {
+			list[i] = ToPbRestaurantMenu(l)
+		}
 	}
 
 	return list
@@ -684,7 +686,9 @@ func ToPbRestaurantMenu(rm *RestaurantMenu) *pb.RestaurantMenu {
 func ToPbMenuItems(mi []*MenuItem) []*pb.MenuItem {
 	menuItems := make([]*pb.MenuItem, len(mi))
 	for i, m := range mi {
-		menuItems[i] = ToPbMenuItem(m)
+		if m != nil {
+			menuItems[i] = ToPbMenuItem(m)
+		}
 	}
 	return menuItems
 }
@@ -707,7 +711,9 @@ func ToPbMenuItem(mi *MenuItem) *pb.MenuItem {
 func ToPbItemVariants(v []*ItemVariant) []*pb.ItemVariant {
 	variants := make([]*pb.ItemVariant, len(v))
 	for i, vrs := range v {
-		variants[i] = ToPbItemVariant(vrs)
+		if vrs != nil {
+			variants[i] = ToPbItemVariant(vrs)
+		}
 	}
 	return variants
 }
@@ -727,7 +733,9 @@ func ToPbItemVariant(v *ItemVariant) *pb.ItemVariant {
 func ToPbItemAddons(a []*ItemAddon) []*pb.ItemAddon {
 	addons := make([]*pb.ItemAddon, len(a))
 	for i, addon := range a {
-		addons[i] = ToPbItemAddon(addon)
+		if addon != nil {
+			addons[i] = ToPbItemAddon(addon)
+		}
 	}
 	return addons
 }
@@ -740,4 +748,97 @@ func ToPbItemAddon(a *ItemAddon) *pb.ItemAddon {
 		Description: a.Description,
 		ItemId:      a.ItemId.Hex(),
 	}
+}
+
+func ToPbRetailItem(i *RetailItem) *pb.RetailItem {
+	return &pb.RetailItem{
+		Id:          i.ID.Hex(),
+		Name:        i.Name,
+		Description: i.Description,
+		Price:       i.Price,
+		CategoryId:  i.CategoryID.Hex(),
+		Variants:    ToPbItemVariants(i.Variants),
+		Addons:      ToPbItemAddons(i.AddOns),
+		CreatedAt:   ToPbTimestamp(i.CreatedAt),
+		UpdatedAt:   ToPbTimestamp(i.CreatedAt),
+		DeletedAt:   TimePtrToPbTime(i.DeletedAt),
+	}
+}
+
+func ToPbRetailItems(il []*RetailItem) []*pb.RetailItem {
+	list := make([]*pb.RetailItem, len(il))
+	for i, item := range il {
+		if item != nil {
+			list[i] = ToPbRetailItem(item)
+		}
+	}
+
+	return list
+}
+
+func ToPbRetailCategory(c *RetailCategory) *pb.RetailCategory {
+	return &pb.RetailCategory{
+		Id:           c.ID.Hex(),
+		CategoryName: c.CategoryName,
+		ShopId:       c.ShopID,
+		RetailItems:  ToPbRetailItems(c.RetailItems),
+		CreatedAt:    ToPbTimestamp(c.CreatedAt),
+		UpdatedAt:    ToPbTimestamp(c.CreatedAt),
+		DeletedAt:    TimePtrToPbTime(c.DeletedAt),
+	}
+}
+func ToPbRetailCategoryList(cl []*RetailCategory) []*pb.RetailCategory {
+	list := make([]*pb.RetailCategory, len(cl))
+	for i, item := range cl {
+		if item != nil {
+			list[i] = ToPbRetailCategory(item)
+		}
+	}
+
+	return list
+}
+
+func ToPbMedicineItem(mi *MedicineItem) *pb.MedicineItem {
+	return &pb.MedicineItem{
+		Id:          mi.ID.Hex(),
+		Name:        mi.Name,
+		Price:       mi.Price,
+		Description: mi.Description,
+		CategoryId:  mi.CategoryID.Hex(),
+		CreatedAt:   ToPbTimestamp(mi.CreatedAt),
+		UpdatedAt:   ToPbTimestamp(mi.CreatedAt),
+		DeletedAt:   TimePtrToPbTime(mi.DeletedAt),
+	}
+}
+
+func ToPbMedicineItems(mil []*MedicineItem) []*pb.MedicineItem {
+	list := make([]*pb.MedicineItem, len(mil))
+	for i, item := range mil {
+		if item != nil {
+			list[i] = ToPbMedicineItem(item)
+		}
+	}
+
+	return list
+}
+
+func ToPbMedicineCategory(c *MedicineCategory) *pb.MedicineCategory {
+	return &pb.MedicineCategory{
+		Id:            c.ID.Hex(),
+		CategoryName:  c.CategoryName,
+		ShopId:        c.ShopID,
+		MedicineItems: ToPbMedicineItems(c.MedicineItems),
+		CreatedAt:     ToPbTimestamp(c.CreatedAt),
+		UpdatedAt:     ToPbTimestamp(c.CreatedAt),
+		DeletedAt:     TimePtrToPbTime(c.DeletedAt),
+	}
+}
+func ToPbMedicineCategoryList(cl []*MedicineCategory) []*pb.MedicineCategory {
+	list := make([]*pb.MedicineCategory, len(cl))
+	for i, item := range cl {
+		if item != nil {
+			list[i] = ToPbMedicineCategory(item)
+		}
+	}
+	return list
 }

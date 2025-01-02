@@ -12,8 +12,16 @@ type Service interface {
 	InsertRestaurantMenu(ctx context.Context, rm *types.CreateRestaurantMenu) (*types.RestaurantMenu, error)
 	InsertMenuItem(ctx context.Context, rm *types.CreateMenuItem) (*types.MenuItem, error)
 
+	GetItemVariant(ctx context.Context, id string) (*types.ItemVariant, error)
+	GetItemAddon(ctx context.Context, id string) (*types.ItemAddon, error)
+	GetItemVariants(ctx context.Context, itemId string) ([]*types.ItemVariant, error)
+	GetItemAddons(ctx context.Context, itemId string) ([]*types.ItemAddon, error)
 	GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error)
 	ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error)
+	GetRetailCategory(ctx context.Context, id string) (*types.RetailCategory, error)
+	ListRetailCategory(ctx context.Context, shopId string) ([]*types.RetailCategory, error)
+	GetMedicineCategory(ctx context.Context, id string) (*types.MedicineCategory, error)
+	ListMedicineCategory(ctx context.Context, shopId string) ([]*types.MedicineCategory, error)
 }
 
 type productService struct {
@@ -94,10 +102,42 @@ func (s *productService) InsertMenuItem(ctx context.Context, mi *types.CreateMen
 	return newMenuItem, nil
 }
 
+func (s *productService) GetItemVariant(ctx context.Context, id string) (*types.ItemVariant, error) {
+	return s.r.GetItemVariant(ctx, id)
+}
+
+func (s *productService) GetItemAddon(ctx context.Context, id string) (*types.ItemAddon, error) {
+	return s.r.GetItemAddon(ctx, id)
+}
+
+func (s *productService) GetItemVariants(ctx context.Context, itemId string) ([]*types.ItemVariant, error) {
+	return s.r.GetItemVariants(ctx, itemId)
+}
+
+func (s *productService) GetItemAddons(ctx context.Context, itemId string) ([]*types.ItemAddon, error) {
+	return s.r.GetItemAddons(ctx, itemId)
+}
+
 func (s *productService) GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error) {
 	return s.r.GetRestaurantMenu(ctx, id)
 }
 
 func (s *productService) ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error) {
 	return s.r.ListRestaurantMenu(ctx, shopId)
+}
+
+func (s *productService) GetRetailCategory(ctx context.Context, id string) (*types.RetailCategory, error) {
+	return s.r.GetRetailCategory(ctx, id)
+}
+
+func (s *productService) ListRetailCategory(ctx context.Context, shopId string) ([]*types.RetailCategory, error) {
+	return s.r.ListRetailCategory(ctx, shopId)
+}
+
+func (s *productService) GetMedicineCategory(ctx context.Context, id string) (*types.MedicineCategory, error) {
+	return s.r.GetMedicineCategory(ctx, id)
+}
+
+func (s *productService) ListMedicineCategory(ctx context.Context, shopId string) ([]*types.MedicineCategory, error) {
+	return s.r.ListMedicineCategory(ctx, shopId)
 }
