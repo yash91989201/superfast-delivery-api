@@ -139,7 +139,7 @@ func (r *mutationResolver) DeleteShop(ctx context.Context, in string) (*UpdateSh
 	return nil, nil
 }
 
-func (r *mutationResolver) CreateItemVariant(ctx context.Context, in CreateItemVariantReq) (*ItemVariant, error) {
+func (r *mutationResolver) CreateItemVariant(ctx context.Context, in CreateItemVariantInput) (*ItemVariant, error) {
 	res, err := r.server.productClient.CreateItemVariant(ctx, ToPbCreateItemVariantReq(&in))
 	if err != nil {
 		return nil, err
@@ -148,7 +148,7 @@ func (r *mutationResolver) CreateItemVariant(ctx context.Context, in CreateItemV
 	return ToGQItemVariant(res), nil
 }
 
-func (r *mutationResolver) CreateItemAddon(ctx context.Context, in CreateItemAddonReq) (*ItemAddon, error) {
+func (r *mutationResolver) CreateItemAddon(ctx context.Context, in CreateItemAddonInput) (*ItemAddon, error) {
 	res, err := r.server.productClient.CreateItemAddon(ctx, ToPbCreateItemAddonReq(&in))
 	if err != nil {
 		return nil, err
@@ -157,7 +157,7 @@ func (r *mutationResolver) CreateItemAddon(ctx context.Context, in CreateItemAdd
 	return ToGQItemAddon(res), nil
 }
 
-func (r *mutationResolver) CreateRestaurantMenu(ctx context.Context, in CreateRestaurantMenuReq) (*RestaurantMenu, error) {
+func (r *mutationResolver) CreateRestaurantMenu(ctx context.Context, in CreateRestaurantMenuInput) (*RestaurantMenu, error) {
 	res, err := r.server.productClient.CreateRestaurantMenu(ctx, ToPbCreateRestaurantMenuReq(&in))
 	if err != nil {
 		return nil, err
@@ -166,7 +166,7 @@ func (r *mutationResolver) CreateRestaurantMenu(ctx context.Context, in CreateRe
 	return ToGQRestaurantMenu(res), nil
 }
 
-func (r *mutationResolver) CreateMenuItem(ctx context.Context, in CreateMenuItemReq) (*MenuItem, error) {
+func (r *mutationResolver) CreateMenuItem(ctx context.Context, in CreateMenuItemInput) (*MenuItem, error) {
 	res, err := r.server.productClient.CreateMenuItem(ctx, ToPbCreateMenuItemReq(&in))
 	if err != nil {
 		return nil, err
@@ -175,18 +175,18 @@ func (r *mutationResolver) CreateMenuItem(ctx context.Context, in CreateMenuItem
 	return ToGQMenuItem(res), nil
 }
 
-func (r *mutationResolver) CreateRetailCategory(ctx context.Context, in CreateRetailCategoryReq) (*RetailCategory, error) {
+func (r *mutationResolver) CreateRetailCategory(ctx context.Context, in CreateRetailCategoryInput) (*RetailCategory, error) {
 	return nil, nil
 }
 
-func (r *mutationResolver) CreateRetailItem(ctx context.Context, in CreateRetailItemReq) (*RetailItem, error) {
+func (r *mutationResolver) CreateRetailItem(ctx context.Context, in CreateRetailItemInput) (*RetailItem, error) {
 	return nil, nil
 }
 
-func (r *mutationResolver) CreateMedicineCategory(ctx context.Context, in CreateMedicineCategoryReq) (*MedicineCategory, error) {
+func (r *mutationResolver) CreateMedicineCategory(ctx context.Context, in CreateMedicineCategoryInput) (*MedicineCategory, error) {
 	return nil, nil
 }
 
-func (r *mutationResolver) CreateMedicineItem(ctx context.Context, in CreateMedicineItemReq) (*MedicineItem, error) {
+func (r *mutationResolver) CreateMedicineItem(ctx context.Context, in CreateMedicineItemInput) (*MedicineItem, error) {
 	return nil, nil
 }

@@ -510,7 +510,7 @@ func ToPbListShopReq(r *ListShopsInput) *pb.ListShopsReq {
 	return req
 }
 
-func ToPbCreateRestaurantMenuReq(r *CreateRestaurantMenuReq) *pb.CreateRestaurantMenuReq {
+func ToPbCreateRestaurantMenuReq(r *CreateRestaurantMenuInput) *pb.CreateRestaurantMenuReq {
 	if r == nil {
 		return nil
 	}
@@ -521,7 +521,7 @@ func ToPbCreateRestaurantMenuReq(r *CreateRestaurantMenuReq) *pb.CreateRestauran
 	}
 }
 
-func ToPbCreateMenuItemReq(r *CreateMenuItemReq) *pb.CreateMenuItemReq {
+func ToPbCreateMenuItemReq(r *CreateMenuItemInput) *pb.CreateMenuItemReq {
 	if r == nil {
 		return nil
 	}
@@ -534,7 +534,7 @@ func ToPbCreateMenuItemReq(r *CreateMenuItemReq) *pb.CreateMenuItemReq {
 	}
 }
 
-func ToPbCreateItemVariantReq(r *CreateItemVariantReq) *pb.CreateItemVariantReq {
+func ToPbCreateItemVariantReq(r *CreateItemVariantInput) *pb.CreateItemVariantReq {
 	if r == nil {
 		return nil
 	}
@@ -545,10 +545,11 @@ func ToPbCreateItemVariantReq(r *CreateItemVariantReq) *pb.CreateItemVariantReq 
 		RelativePricing: r.RelativePricing,
 		Price:           r.Price,
 		Description:     r.Description,
+		ItemId:          r.ItemID,
 	}
 }
 
-func ToPbCreateItemAddonReq(r *CreateItemAddonReq) *pb.CreateItemAddonReq {
+func ToPbCreateItemAddonReq(r *CreateItemAddonInput) *pb.CreateItemAddonReq {
 	if r == nil {
 		return nil
 	}
@@ -557,6 +558,7 @@ func ToPbCreateItemAddonReq(r *CreateItemAddonReq) *pb.CreateItemAddonReq {
 		AddonName:   r.AddonName,
 		AddonPrice:  r.AddonPrice,
 		Description: r.Description,
+		ItemId:      r.ItemID,
 	}
 }
 

@@ -66,6 +66,24 @@ func (s *grpcServer) GetItemAddons(ctx context.Context, req *pb.GetItemAddonsReq
 	}, nil
 }
 
+func (s *grpcServer) CreateItemVariant(ctx context.Context, req *pb.CreateItemVariantReq) (*pb.ItemVariant, error) {
+	res, err := s.service.InsertItemVariant(ctx, types.ToCreateItemVariant(req))
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbItemVariant(res), err
+}
+
+func (s *grpcServer) CreateItemAddon(ctx context.Context, req *pb.CreateItemAddonReq) (*pb.ItemAddon, error) {
+	res, err := s.service.InsertItemAddon(ctx, types.ToCreateItemAddon(req))
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbItemAddon(res), err
+}
+
 func (s *grpcServer) CreateRestaurantMenu(ctx context.Context, req *pb.CreateRestaurantMenuReq) (*pb.RestaurantMenu, error) {
 	res, err := s.service.InsertRestaurantMenu(ctx, types.ToCreateRestaurantMenu(req))
 	if err != nil {

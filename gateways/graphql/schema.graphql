@@ -378,54 +378,56 @@ type MedicineCategory {
   deleted_at: DateTime
 }
 
-# Input Types for Create Requests
+# Input Types for CreateAction
 
-input CreateItemVariantReq {
+input CreateItemVariantInput {
   variant_name: String!
   relative_price: Float!
   relative_pricing: Boolean!
   price: Float!
   description: String
+  item_id: ID!
 }
 
-input CreateItemAddonReq {
+input CreateItemAddonInput {
   addon_name: String!
   addon_price: Float!
   description: String
+  item_id: ID!
 }
 
-input CreateMenuItemReq {
+input CreateMenuItemInput {
   name: String!
   description: String!
   price: Float!
   menu_id: ID!
 }
 
-input CreateRestaurantMenuReq {
+input CreateRestaurantMenuInput {
   menu_name: String!
   shop_id: String!
 }
 
-input CreateRetailItemReq {
+input CreateRetailItemInput {
   name: String!
   description: String!
   price: Float!
   category_id: String!
 }
 
-input CreateRetailCategoryReq {
+input CreateRetailCategoryInput {
   category_name: String!
   shop_id: String!
 }
 
-input CreateMedicineItemReq {
+input CreateMedicineItemInput {
   name: String!
   price: Float!
   description: String!
   category_id: String!
 }
 
-input CreateMedicineCategoryReq {
+input CreateMedicineCategoryInput {
   category_name: String!
   shop_id: String!
 }
@@ -494,12 +496,12 @@ type Mutation {
   UpdateShopTimings(input: [UpdateShopTimingInput!]!): UpdateShopOutput!
   DeleteShop(id: ID!): UpdateShopOutput!
 
-  CreateItemVariant(input: CreateItemVariantReq!): ItemVariant!
-  CreateItemAddon(input: CreateItemAddonReq!): ItemAddon!
-  CreateRestaurantMenu(input: CreateRestaurantMenuReq!): RestaurantMenu!
-  CreateMenuItem(input: CreateMenuItemReq!): MenuItem!
-  CreateRetailCategory(input: CreateRetailCategoryReq!): RetailCategory!
-  CreateRetailItem(input: CreateRetailItemReq!): RetailItem!
-  CreateMedicineCategory(input: CreateMedicineCategoryReq!): MedicineCategory!
-  CreateMedicineItem(input: CreateMedicineItemReq!): MedicineItem!
+  CreateItemVariant(input: CreateItemVariantInput!): ItemVariant!
+  CreateItemAddon(input: CreateItemAddonInput!): ItemAddon!
+  CreateRestaurantMenu(input: CreateRestaurantMenuInput!): RestaurantMenu!
+  CreateMenuItem(input: CreateMenuItemInput!): MenuItem!
+  CreateRetailCategory(input: CreateRetailCategoryInput!): RetailCategory!
+  CreateRetailItem(input: CreateRetailItemInput!): RetailItem!
+  CreateMedicineCategory(input: CreateMedicineCategoryInput!): MedicineCategory!
+  CreateMedicineItem(input: CreateMedicineItemInput!): MedicineItem!
 }

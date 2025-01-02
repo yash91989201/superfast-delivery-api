@@ -12,8 +12,8 @@ const (
 
 const (
 	CREATE_SHOP = "INSERT INTO shop" +
-		"(id, name, shop_type, shop_status, owner_id)" +
-		"VALUES (:id, :name, :shop_type, :shop_status, :owner_id)"
+		"(id, name, shop_type, shop_status, owner_auth_id)" +
+		"VALUES (:id, :name, :shop_type, :shop_status, :owner_auth_id)"
 
 	CREATE_SHOP_ADDRESS = "INSERT INTO shop_address" +
 		"(id, address1, address2, longitude, latitude, nearby_landmark, city, state, pincode, country, shop_id)" +

@@ -640,6 +640,34 @@ func ToListShopFilters(f *pb.ListShopsReq) *ListShopFilters {
 	return filters
 }
 
+func ToCreateItemVariant(iv *pb.CreateItemVariantReq) *CreateItemVariant {
+	if iv == nil {
+		return nil
+	}
+
+	return &CreateItemVariant{
+		VariantName:     iv.VariantName,
+		RelativePrice:   iv.RelativePrice,
+		RelativePricing: iv.RelativePricing,
+		Price:           iv.Price,
+		Description:     iv.Description,
+		ItemId:          HexToObjectId(iv.ItemId),
+	}
+}
+
+func ToCreateItemAddon(ia *pb.CreateItemAddonReq) *CreateItemAddon {
+	if ia == nil {
+		return nil
+	}
+
+	return &CreateItemAddon{
+		AddonName:   ia.AddonName,
+		AddonPrice:  ia.AddonPrice,
+		Description: ia.Description,
+		ItemId:      HexToObjectId(ia.ItemId),
+	}
+}
+
 func ToCreateRestaurantMenu(rm *pb.CreateRestaurantMenuReq) *CreateRestaurantMenu {
 	return &CreateRestaurantMenu{
 		MenuName: rm.MenuName,

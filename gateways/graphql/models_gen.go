@@ -20,33 +20,35 @@ type Auth struct {
 	DeletedAt     *string  `json:"deleted_at,omitempty"`
 }
 
-type CreateItemAddonReq struct {
+type CreateItemAddonInput struct {
 	AddonName   string  `json:"addon_name"`
 	AddonPrice  float64 `json:"addon_price"`
 	Description *string `json:"description,omitempty"`
+	ItemID      string  `json:"item_id"`
 }
 
-type CreateItemVariantReq struct {
+type CreateItemVariantInput struct {
 	VariantName     string  `json:"variant_name"`
 	RelativePrice   float64 `json:"relative_price"`
 	RelativePricing bool    `json:"relative_pricing"`
 	Price           float64 `json:"price"`
 	Description     *string `json:"description,omitempty"`
+	ItemID          string  `json:"item_id"`
 }
 
-type CreateMedicineCategoryReq struct {
+type CreateMedicineCategoryInput struct {
 	CategoryName string `json:"category_name"`
 	ShopID       string `json:"shop_id"`
 }
 
-type CreateMedicineItemReq struct {
+type CreateMedicineItemInput struct {
 	Name        string  `json:"name"`
 	Price       float64 `json:"price"`
 	Description string  `json:"description"`
 	CategoryID  string  `json:"category_id"`
 }
 
-type CreateMenuItemReq struct {
+type CreateMenuItemInput struct {
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
@@ -62,17 +64,17 @@ type CreateProfileInput struct {
 	AuthID      string  `json:"auth_id"`
 }
 
-type CreateRestaurantMenuReq struct {
+type CreateRestaurantMenuInput struct {
 	MenuName string `json:"menu_name"`
 	ShopID   string `json:"shop_id"`
 }
 
-type CreateRetailCategoryReq struct {
+type CreateRetailCategoryInput struct {
 	CategoryName string `json:"category_name"`
 	ShopID       string `json:"shop_id"`
 }
 
-type CreateRetailItemReq struct {
+type CreateRetailItemInput struct {
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`

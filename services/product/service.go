@@ -9,6 +9,8 @@ import (
 )
 
 type Service interface {
+	InsertItemVariant(ctx context.Context, iv *types.CreateItemVariant) (*types.ItemVariant, error)
+	InsertItemAddon(ctx context.Context, ia *types.CreateItemAddon) (*types.ItemAddon, error)
 	InsertRestaurantMenu(ctx context.Context, rm *types.CreateRestaurantMenu) (*types.RestaurantMenu, error)
 	InsertMenuItem(ctx context.Context, rm *types.CreateMenuItem) (*types.MenuItem, error)
 
