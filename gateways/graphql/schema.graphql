@@ -325,7 +325,7 @@ type MenuItem {
 type RetailItem {
   id: ID!
   name: String!
-  description: String
+  description: String!
   price: Float!
   category_id: String!
   variants: [ItemVariant]!
@@ -339,7 +339,7 @@ type MedicineItem {
   id: ID!
   name: String!
   price: Float!
-  description: String
+  description: String!
   category_id: String!
   created_at: DateTime!
   updated_at: DateTime!
@@ -435,6 +435,26 @@ type ListRestaurantMenuOutput {
   total_menu: Int!
 }
 
+type GetItemVariantsOutput {
+  variants: [ItemVariant!]!
+  total_variants: Int!
+}
+
+type GetItemAddonsOutput {
+  addons: [ItemAddon!]!
+  total_addons: Int!
+}
+
+type ListRetailCategoryOutput {
+  retail_category_list: [RetailCategory!]!
+  total_category: Int!
+}
+
+type ListMedicineCategoryOutput {
+  medicine_category_list: [MedicineCategory!]!
+  total_category: Int!
+}
+
 type Query {
   AuthById(input: GetAuthByIdInput!): Auth
   Auth(input: GetAuthInput!): Auth
@@ -444,8 +464,16 @@ type Query {
   GetShop(id: ID!): Shop!
   ListShops(input: ListShopsInput): ListShopsOutput!
 
+  GetItemVariant(id: ID!): ItemVariant!
+  GetItemAddon(id: ID!): ItemAddon!
+  GetItemVariants(itemId: ID!): GetItemVariantsOutput!
+  GetItemAddons(itemId: ID!): GetItemAddonsOutput!
   GetRestaurantMenu(id: ID!): RestaurantMenu!
   ListRestaurantMenu(shopId: ID!): ListRestaurantMenuOutput!
+  GetRetailCategory(id: ID!): RetailCategory!
+  ListRetailCategory(shopId: ID!): ListRetailCategoryOutput
+  GetMedicineCategory(id: ID!): MedicineCategory!
+  ListMedicineCategory(shopId: ID!): ListMedicineCategoryOutput
 }
 
 type Mutation {

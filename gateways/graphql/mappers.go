@@ -647,3 +647,98 @@ func ToGQItemAddon(a *pb.ItemAddon) *ItemAddon {
 		ItemID:      a.ItemId,
 	}
 }
+
+func ToGQRetailCategory(c *pb.RetailCategory) *RetailCategory {
+	return &RetailCategory{
+		ID:           c.Id,
+		CategoryName: c.CategoryName,
+		ShopID:       c.ShopId,
+		RetailItems:  ToGQRetailItems(c.RetailItems),
+		CreatedAt:    ToGQTime(c.CreatedAt),
+		UpdatedAt:    ToGQTime(c.UpdatedAt),
+		DeletedAt:    ToGQTimePtr(c.DeletedAt),
+	}
+}
+
+func ToGQRetailItem(i *pb.RetailItem) *RetailItem {
+	return &RetailItem{
+		ID:          i.Id,
+		Name:        i.Name,
+		Description: i.Description,
+		Price:       i.Price,
+		CategoryID:  i.CategoryId,
+		Variants:    ToGQItemVariants(i.Variants),
+		Addons:      ToGQItemAddons(i.Addons),
+		CreatedAt:   ToGQTime(i.CreatedAt),
+		UpdatedAt:   ToGQTime(i.UpdatedAt),
+		DeletedAt:   ToGQTimePtr(i.DeletedAt),
+	}
+}
+
+func ToGQRetailItems(il []*pb.RetailItem) []*RetailItem {
+	list := make([]*RetailItem, len(il))
+
+	for i, item := range il {
+		if item != nil {
+			list[i] = ToGQRetailItem(item)
+		}
+	}
+	return list
+}
+
+func ToGQRetailCategoryList(cl []*pb.RetailCategory) []*RetailCategory {
+	list := make([]*RetailCategory, len(cl))
+
+	for i, item := range cl {
+		if item != nil {
+			list[i] = ToGQRetailCategory(item)
+		}
+	}
+	return list
+}
+
+func ToGQMedicineCategory(c *pb.MedicineCategory) *MedicineCategory {
+	return &MedicineCategory{
+		ID:            c.Id,
+		CategoryName:  c.CategoryName,
+		ShopID:        c.ShopId,
+		MedicineItems: ToGQMedicineItems(c.MedicineItems),
+		CreatedAt:     ToGQTime(c.CreatedAt),
+		UpdatedAt:     ToGQTime(c.UpdatedAt),
+		DeletedAt:     ToGQTimePtr(c.DeletedAt),
+	}
+}
+
+func ToGQMedicineItem(i *pb.MedicineItem) *MedicineItem {
+	return &MedicineItem{
+		ID:          i.Id,
+		Name:        i.Name,
+		Price:       i.Price,
+		Description: i.Description,
+		CategoryID:  i.CategoryId,
+		CreatedAt:   ToGQTime(i.CreatedAt),
+		UpdatedAt:   ToGQTime(i.UpdatedAt),
+		DeletedAt:   ToGQTimePtr(i.DeletedAt),
+	}
+}
+
+func ToGQMedicineItems(il []*pb.MedicineItem) []*MedicineItem {
+	list := make([]*MedicineItem, len(il))
+	for i, item := range il {
+		if item != nil {
+			list[i] = ToGQMedicineItem(item)
+		}
+	}
+	return list
+}
+
+func ToGQMedicineCategoryList(cl []*pb.MedicineCategory) []*MedicineCategory {
+	list := make([]*MedicineCategory, len(cl))
+
+	for i, item := range cl {
+		if item != nil {
+			list[i] = ToGQMedicineCategory(item)
+		}
+	}
+	return list
+}

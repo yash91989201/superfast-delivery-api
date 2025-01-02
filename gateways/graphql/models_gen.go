@@ -133,6 +133,16 @@ type GetAuthInput struct {
 	Phone *string `json:"phone,omitempty"`
 }
 
+type GetItemAddonsOutput struct {
+	Addons      []*ItemAddon `json:"addons"`
+	TotalAddons int32        `json:"total_addons"`
+}
+
+type GetItemVariantsOutput struct {
+	Variants      []*ItemVariant `json:"variants"`
+	TotalVariants int32          `json:"total_variants"`
+}
+
 type GetProfileInput struct {
 	AuthID string `json:"auth_id"`
 }
@@ -165,9 +175,19 @@ type LatLngInput struct {
 	Lng float64 `json:"lng"`
 }
 
+type ListMedicineCategoryOutput struct {
+	MedicineCategoryList []*MedicineCategory `json:"medicine_category_list"`
+	TotalCategory        int32               `json:"total_category"`
+}
+
 type ListRestaurantMenuOutput struct {
 	RestaurantMenuList []*RestaurantMenu `json:"restaurant_menu_list"`
 	TotalMenu          int32             `json:"total_menu"`
+}
+
+type ListRetailCategoryOutput struct {
+	RetailCategoryList []*RetailCategory `json:"retail_category_list"`
+	TotalCategory      int32             `json:"total_category"`
 }
 
 type ListShopsInput struct {
@@ -198,7 +218,7 @@ type MedicineItem struct {
 	ID          string  `json:"id"`
 	Name        string  `json:"name"`
 	Price       float64 `json:"price"`
-	Description *string `json:"description,omitempty"`
+	Description string  `json:"description"`
 	CategoryID  string  `json:"category_id"`
 	CreatedAt   string  `json:"created_at"`
 	UpdatedAt   string  `json:"updated_at"`
@@ -259,7 +279,7 @@ type RetailCategory struct {
 type RetailItem struct {
 	ID          string         `json:"id"`
 	Name        string         `json:"name"`
-	Description *string        `json:"description,omitempty"`
+	Description string         `json:"description"`
 	Price       float64        `json:"price"`
 	CategoryID  string         `json:"category_id"`
 	Variants    []*ItemVariant `json:"variants"`

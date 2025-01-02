@@ -53,13 +53,59 @@ func (r *queryResolver) ListShops(ctx context.Context, in *ListShopsInput) (*Lis
 	}, nil
 }
 
+func (r *queryResolver) GetItemVariant(ctx context.Context, id string) (*ItemVariant, error) {
+	res, err := r.server.productClient.GetItemVariant(ctx, &pb.GetItemVariantReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemVariant(res), err
+}
+
+func (r *queryResolver) GetItemAddon(ctx context.Context, id string) (*ItemAddon, error) {
+	res, err := r.server.productClient.GetItemAddon(ctx, &pb.GetItemAddonReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemAddon(res), err
+}
+
+func (r *queryResolver) GetItemVariants(ctx context.Context, itemId string) (*GetItemVariantsOutput, error) {
+	res, err := r.server.productClient.GetItemVariants(ctx, &pb.GetItemVariantsReq{ItemId: itemId})
+	if err != nil {
+		return nil, err
+	}
+
+	variants := ToGQItemVariants(res.Variants)
+
+	return &GetItemVariantsOutput{
+		Variants:      variants,
+		TotalVariants: int32(len(variants)),
+	}, err
+}
+
+func (r *queryResolver) GetItemAddons(ctx context.Context, itemId string) (*GetItemAddonsOutput, error) {
+	res, err := r.server.productClient.GetItemAddons(ctx, &pb.GetItemAddonsReq{ItemId: itemId})
+	if err != nil {
+		return nil, err
+	}
+
+	addons := ToGQItemAddons(res.Addons)
+
+	return &GetItemAddonsOutput{
+		Addons:      addons,
+		TotalAddons: int32(len(addons)),
+	}, err
+}
+
 func (r *queryResolver) GetRestaurantMenu(ctx context.Context, id string) (*RestaurantMenu, error) {
 	res, err := r.server.productClient.GetRestaurantMenu(ctx, &pb.GetRestaurantMenuReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
 
-	return ToGQRestaurantMenu(res), err
+	return ToGQRestaurantMenu(res), nil
 }
 
 func (r *queryResolver) ListRestaurantMenu(ctx context.Context, shopId string) (*ListRestaurantMenuOutput, error) {
@@ -72,5 +118,51 @@ func (r *queryResolver) ListRestaurantMenu(ctx context.Context, shopId string) (
 	return &ListRestaurantMenuOutput{
 		RestaurantMenuList: restaurantMenuList,
 		TotalMenu:          int32(len(restaurantMenuList)),
+	}, nil
+}
+
+func (r *queryResolver) GetRetailCategory(ctx context.Context, id string) (*RetailCategory, error) {
+	res, err := r.server.productClient.GetRetailCategory(ctx, &pb.GetRetailCategoryReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQRetailCategory(res), nil
+}
+
+func (r *queryResolver) ListRetailCategory(ctx context.Context, shopId string) (*ListRetailCategoryOutput, error) {
+	res, err := r.server.productClient.ListRetailCategory(ctx, &pb.ListRetailCategoryReq{ShopId: shopId})
+	if err != nil {
+		return nil, err
+	}
+
+	retailCategoryList := ToGQRetailCategoryList(res.RetailCategoryList)
+
+	return &ListRetailCategoryOutput{
+		RetailCategoryList: retailCategoryList,
+		TotalCategory:      int32(len(retailCategoryList)),
+	}, nil
+}
+
+func (r *queryResolver) GetMedicineCategory(ctx context.Context, id string) (*MedicineCategory, error) {
+	res, err := r.server.productClient.GetMedicineCategory(ctx, &pb.GetMedicineCategoryReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQMedicineCategory(res), nil
+}
+
+func (r *queryResolver) ListMedicineCategory(ctx context.Context, shopId string) (*ListMedicineCategoryOutput, error) {
+	res, err := r.server.productClient.ListMedicineCategory(ctx, &pb.ListMedicineCategoryReq{ShopId: shopId})
+	if err != nil {
+		return nil, err
+	}
+
+	medicineCategoryList := ToGQMedicineCategoryList(res.MedicineCategoryList)
+
+	return &ListMedicineCategoryOutput{
+		MedicineCategoryList: medicineCategoryList,
+		TotalCategory:        int32(len(medicineCategoryList)),
 	}, nil
 }
