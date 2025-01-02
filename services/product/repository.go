@@ -2,7 +2,6 @@ package product
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 
@@ -27,7 +26,7 @@ type Repository interface {
 	InsertMedicineItem(ctx context.Context, i *types.MedicineItem) error
 
 	GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error)
-	GetRestaurantMenuByShopId(ctx context.Context, shop_id string) ([]*types.RestaurantMenu, error)
+	ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error)
 }
 
 type mongoRepository struct {
@@ -50,6 +49,7 @@ func NewMongoRepository(dbUrl string, dbName string) (Repository, error) {
 	}
 
 	mongoDb := mongoClient.Database(dbName)
+
 	return &mongoRepository{
 		client:           mongoClient,
 		db:               mongoDb,
@@ -148,17 +148,62 @@ func (r *mongoRepository) InsertRetailItem(ctx context.Context, i *types.RetailI
 }
 
 func (r *mongoRepository) GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error) {
-	m := &types.RestaurantMenu{}
-	res := r.restaurantMenu.FindOne(ctx, bson.D{{Key: "_id", Value: id}}).Decode(&m)
-	if errors.Is(res, mongo.ErrNoDocuments) {
-		return nil, fmt.Errorf("Restaurant menu not found")
+	matchRestaurantMenu := bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: types.HexToObjectId(id)}}}}
+
+	joinMenuItemsByMenuId := bson.D{{
+		Key: "$lookup",
+		Value: bson.D{
+			{Key: "from", Value: "menu_item"},
+			{Key: "localField", Value: "_id"},
+			{Key: "foreignField", Value: "menu_id"},
+			{Key: "as", Value: "menu_items"},
+		},
+	}}
+
+	projectToModel := bson.D{{
+		Key: "$project",
+		Value: bson.D{
+			{Key: "_id", Value: 1},
+			{Key: "menu_name", Value: 1},
+			{Key: "shop_id", Value: 1},
+			{Key: "created_at", Value: 1},
+			{Key: "updated_at", Value: 1},
+			{Key: "deleted_at", Value: 1},
+			{Key: "menu_items", Value: 1},
+		},
+	}}
+
+	cursor, err := r.restaurantMenu.Aggregate(
+		ctx,
+		mongo.Pipeline{
+			matchRestaurantMenu,
+			joinMenuItemsByMenuId,
+			projectToModel,
+		},
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute aggregation: %v", err)
 	}
 
-	return m, nil
+	defer cursor.Close(ctx)
+
+	var restaurantMenu []*types.RestaurantMenu
+	if cursor.Next(ctx) {
+		if err := cursor.Decode(&restaurantMenu); err != nil {
+			return nil, fmt.Errorf("failed to decode result: %v", err)
+		}
+	}
+
+	if len(restaurantMenu) == 0 {
+		return nil, fmt.Errorf("restaurant menu not found")
+	}
+
+	return restaurantMenu[0], nil
 }
 
-func (r *mongoRepository) GetRestaurantMenuByShopId(ctx context.Context, shop_id string) ([]*types.RestaurantMenu, error) {
-	filter := bson.D{{Key: "shop_id", Value: shop_id}}
+func (r *mongoRepository) ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error) {
+	filter := bson.D{{Key: "shop_id", Value: shopId}}
 	cursor, err := r.restaurantMenu.Find(ctx, filter)
 	if err != nil {
 		return nil, fmt.Errorf("Restaurant menu not found: %w", err)

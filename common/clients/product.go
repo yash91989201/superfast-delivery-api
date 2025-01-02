@@ -33,55 +33,33 @@ func (c *ProductClient) Close() {
 }
 
 func (c *ProductClient) CreateItemVariant(ctx context.Context, req *pb.CreateItemVariantReq) (*pb.ItemVariant, error) {
-	res, err := c.service.CreateItemVariant(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return c.service.CreateItemVariant(ctx, req)
 }
 
 func (c *ProductClient) CreateItemAddon(ctx context.Context, req *pb.CreateItemAddonReq) (*pb.ItemAddon, error) {
-	res, err := c.service.CreateItemAddon(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return c.service.CreateItemAddon(ctx, req)
 }
 
 func (c *ProductClient) CreateRestaurantMenu(ctx context.Context, req *pb.CreateRestaurantMenuReq) (*pb.RestaurantMenu, error) {
-	res, err := c.service.CreateRestaurantMenu(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return c.service.CreateRestaurantMenu(ctx, req)
 }
 
 func (c *ProductClient) CreateMenuItem(ctx context.Context, req *pb.CreateMenuItemReq) (*pb.MenuItem, error) {
-	res, err := c.service.CreateMenuItem(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return c.service.CreateMenuItem(ctx, req)
 }
 
 func (c *ProductClient) CreateRetailCategory(ctx context.Context, req *pb.CreateRetailCategoryReq) (*pb.RetailCategory, error) {
-	res, err := c.service.CreateRetailCategory(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return c.service.CreateRetailCategory(ctx, req)
 }
 
 func (c *ProductClient) CreateMedicineCategory(ctx context.Context, req *pb.CreateMedicineCategoryReq) (*pb.MedicineCategory, error) {
-	res, err := c.service.CreateMedicineCategory(ctx, req)
-	if err != nil {
-		return nil, err
-	}
+	return c.service.CreateMedicineCategory(ctx, req)
+}
 
-	return res, nil
+func (c *ProductClient) GetRestaurantMenu(ctx context.Context, req *pb.GetRestaurantMenuReq) (*pb.RestaurantMenu, error) {
+	return c.service.GetRestaurantMenu(ctx, req)
+}
+
+func (c *ProductClient) ListRestaurantMenu(ctx context.Context, req *pb.ListRestaurantMenuReq) (*pb.ListRestaurantMenuRes, error) {
+	return c.service.ListRestaurantMenu(ctx, req)
 }

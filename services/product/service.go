@@ -11,6 +11,9 @@ import (
 type Service interface {
 	InsertRestaurantMenu(ctx context.Context, rm *types.CreateRestaurantMenu) (*types.RestaurantMenu, error)
 	InsertMenuItem(ctx context.Context, rm *types.CreateMenuItem) (*types.MenuItem, error)
+
+	GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error)
+	ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error)
 }
 
 type productService struct {
@@ -89,4 +92,12 @@ func (s *productService) InsertMenuItem(ctx context.Context, mi *types.CreateMen
 	}
 
 	return newMenuItem, nil
+}
+
+func (s *productService) GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error) {
+	return s.r.GetRestaurantMenu(ctx, id)
+}
+
+func (s *productService) ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error) {
+	return s.r.ListRestaurantMenu(ctx, shopId)
 }

@@ -656,6 +656,15 @@ func ToCreateMenuItem(mi *pb.CreateMenuItemReq) *CreateMenuItem {
 	}
 }
 
+func ToPbRestaurantMenuList(rm []*RestaurantMenu) []*pb.RestaurantMenu {
+	list := make([]*pb.RestaurantMenu, len(rm))
+	for i, l := range rm {
+		list[i] = ToPbRestaurantMenu(l)
+	}
+
+	return list
+}
+
 func ToPbRestaurantMenu(rm *RestaurantMenu) *pb.RestaurantMenu {
 	if rm == nil {
 		return nil

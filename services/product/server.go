@@ -46,3 +46,23 @@ func (s *grpcServer) CreateMenuItem(ctx context.Context, req *pb.CreateMenuItemR
 
 	return types.ToPbMenuItem(res), nil
 }
+
+func (s *grpcServer) GetRestaurantMenu(ctx context.Context, req *pb.GetRestaurantMenuReq) (*pb.RestaurantMenu, error) {
+	res, err := s.service.GetRestaurantMenu(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbRestaurantMenu(res), err
+}
+
+func (s *grpcServer) ListRestaurantMenu(ctx context.Context, req *pb.ListRestaurantMenuReq) (*pb.ListRestaurantMenuRes, error) {
+	res, err := s.service.ListRestaurantMenu(ctx, req.ShopId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.ListRestaurantMenuRes{
+		RestaurantMenuList: types.ToPbRestaurantMenuList(res),
+	}, nil
+}
