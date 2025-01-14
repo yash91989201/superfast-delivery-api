@@ -262,7 +262,7 @@ services:
       MONGO_INITDB_USER: ${PRODUCT_DB_USER}
       MONGO_INITDB_PWD: ${PRODUCT_DB_PASSWORD}
     volumes:
-      - ./services/product/db/init-db-user.js:/docker-entrypoint-initdb.d/init-db-user.js
+      - ./services/product/db/init-db-user.js:/docker-entrypoint-initdb.d/init-db-user.js:RO
     mem_limit: 750m
     cpus: 1
     networks:
@@ -277,6 +277,69 @@ services:
       retries: 5
       start_period: 30s
       timeout: 10s
+
+  inventory_service:
+    build:
+      context: .
+      dockerfile: ./services/inventory/Dockerfile
+    container_name: inventory_service
+    environment:
+      DATABASE_URL: ${INVENTORY_DATABASE_URL}
+      SERVICE_URL: ${INVENTORY_SERVICE_URL}
+    networks:
+      - superfast_delivery
+    mem_limit: 128m
+    cpus: 1
+    depends_on:
+      - inventory_db
+    restart: on-failure:8
+
+  inventory_db:
+    image: mysql:9.1.0
+    container_name: inventory_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${INVENTORY_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${INVENTORY_DB_NAME}
+      MYSQL_USER: ${INVENTORY_DB_USER}
+      MYSQL_PASSWORD: ${INVENTORY_DB_PASSWORD}
+    mem_limit: 750m
+    cpus: 1
+    networks:
+      - superfast_delivery
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin --user=root --password=${INVENTORY_DB_ROOT_PASSWORD} --host=localhost --port=3306 ping",
+        ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  inventory_db_migrator:
+    image: migrate/migrate
+    volumes:
+      - ./services/inventory/db/migrations:/migrations
+    working_dir: /migrations
+    command:
+      [
+        "-database",
+        "mysql://root:${INVENTORY_DB_ROOT_PASSWORD}@tcp(${INVENTORY_DB_HOST}:${INVENTORY_DB_PORT})/${INVENTORY_DB_NAME}",
+        "-path",
+        "/migrations",
+        "up",
+      ]
+    container_name: inventory_db_migrator
+    depends_on:
+      inventory_db:
+        condition: service_healthy
+    restart: on-failure
+    mem_limit: 64m
+    cpus: 0.25
+    networks:
+      - superfast_delivery
 
 networks:
   superfast_delivery:
