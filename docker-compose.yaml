@@ -20,6 +20,7 @@ services:
       - user_service
       - shop_service
       - product_service
+      - inventory_service
 
   graphql_gateway:
     build:
@@ -32,6 +33,7 @@ services:
       USER_SERVICE_URL: ${USER_SERVICE_URL}
       SHOP_SERVICE_URL: ${SHOP_SERVICE_URL}
       PRODUCT_SERVICE_URL: ${PRODUCT_SERVICE_URL}
+      INVENTORY_SERVICE_URL: ${INVENTORY_SERVICE_URL}
     ports:
       - "${GRAPHQL_PORT}:${GRAPHQL_PORT}"
     networks:
