@@ -190,3 +190,30 @@ func (r *mutationResolver) CreateMedicineCategory(ctx context.Context, in Create
 func (r *mutationResolver) CreateMedicineItem(ctx context.Context, in CreateMedicineItemInput) (*MedicineItem, error) {
 	return nil, nil
 }
+
+func (r *mutationResolver) CreateItemStock(ctx context.Context, in CreateItemStockInput) (*ItemStock, error) {
+	res, err := r.server.inventoryClient.CreateItemStock(ctx, ToPbCreateItemStockReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemStock(res), nil
+}
+
+func (r *mutationResolver) CreateVariantStock(ctx context.Context, in CreateVariantStockInput) (*VariantStock, error) {
+	res, err := r.server.inventoryClient.CreateVariantStock(ctx, ToPbCreateVariantStockReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQVariantStock(res), nil
+}
+
+func (r *mutationResolver) CreateAddonStock(ctx context.Context, in CreateAddonStockInput) (*AddonStock, error) {
+	res, err := r.server.inventoryClient.CreateAddonStock(ctx, ToPbCreateAddonStockReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQAddonStock(res), nil
+}

@@ -9,6 +9,14 @@ import (
 	"time"
 )
 
+type AddonStock struct {
+	ID         string `json:"id"`
+	AddonID    string `json:"addon_id"`
+	Quantity   int32  `json:"quantity"`
+	RestockQty int32  `json:"restock_qty"`
+	UpdatedAt  string `json:"updated_at"`
+}
+
 type Auth struct {
 	ID            string   `json:"id"`
 	Email         *string  `json:"email,omitempty"`
@@ -20,11 +28,21 @@ type Auth struct {
 	DeletedAt     *string  `json:"deleted_at,omitempty"`
 }
 
+type CreateAddonStockInput struct {
+	AddonID  string `json:"addon_id"`
+	Quantity int32  `json:"quantity"`
+}
+
 type CreateItemAddonInput struct {
 	AddonName   string  `json:"addon_name"`
 	AddonPrice  float64 `json:"addon_price"`
 	Description *string `json:"description,omitempty"`
 	ItemID      string  `json:"item_id"`
+}
+
+type CreateItemStockInput struct {
+	ItemID   string `json:"item_id"`
+	Quantity int32  `json:"quantity"`
 }
 
 type CreateItemVariantInput struct {
@@ -126,6 +144,11 @@ type CreateShopTimingInput struct {
 	ClosesAt time.Time `json:"closes_at"`
 }
 
+type CreateVariantStockInput struct {
+	VariantID string `json:"variant_id"`
+	Quantity  int32  `json:"quantity"`
+}
+
 type GetAuthByIDInput struct {
 	ID string `json:"id"`
 }
@@ -155,6 +178,14 @@ type ItemAddon struct {
 	AddonPrice  float64 `json:"addon_price"`
 	Description *string `json:"description,omitempty"`
 	ItemID      string  `json:"item_id"`
+}
+
+type ItemStock struct {
+	ID         string `json:"id"`
+	ItemID     string `json:"item_id"`
+	Quantity   int32  `json:"quantity"`
+	RestockQty int32  `json:"restock_qty"`
+	UpdatedAt  string `json:"updated_at"`
 }
 
 type ItemVariant struct {
@@ -424,6 +455,14 @@ type UpdateShopTimingInput struct {
 	Day      *DayOfWeek `json:"day,omitempty"`
 	OpensAt  *time.Time `json:"opens_at,omitempty"`
 	ClosesAt *time.Time `json:"closes_at,omitempty"`
+}
+
+type VariantStock struct {
+	ID         string `json:"id"`
+	VariantID  string `json:"variant_id"`
+	Quantity   int32  `json:"quantity"`
+	RestockQty int32  `json:"restock_qty"`
+	UpdatedAt  string `json:"updated_at"`
 }
 
 type AuthRole string

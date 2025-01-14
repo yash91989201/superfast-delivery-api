@@ -10,6 +10,7 @@ type Server struct {
 	userClient           *clients.UserClient
 	shopClient           *clients.ShopClient
 	productClient        *clients.ProductClient
+	inventoryClient      *clients.InventoryClient
 }
 
 func NewGraphQLServer(
@@ -17,6 +18,7 @@ func NewGraphQLServer(
 	userServiceUrl string,
 	shopServiceUrl string,
 	productServiceUrl string,
+	inventoryServiceUrl string,
 ) (*Server, error) {
 	authenticationClient, err := clients.NewAuthenticationClient(authenticationServiceUrl)
 	if err != nil {
@@ -38,11 +40,17 @@ func NewGraphQLServer(
 		return nil, err
 	}
 
+	inventoryClient, err := clients.NewInventoryClient(inventoryServiceUrl)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Server{
 		authenticationClient: authenticationClient,
 		userClient:           userClient,
 		shopClient:           shopClient,
 		productClient:        productClient,
+		inventoryClient:      inventoryClient,
 	}, nil
 }
 

@@ -744,3 +744,54 @@ func ToGQMedicineCategoryList(cl []*pb.MedicineCategory) []*MedicineCategory {
 	}
 	return list
 }
+
+func ToPbCreateItemStockReq(r *CreateItemStockInput) *pb.CreateItemStockReq {
+	return &pb.CreateItemStockReq{
+		ItemId:   r.ItemID,
+		Quantity: r.Quantity,
+	}
+}
+
+func ToPbCreateVariantStockReq(r *CreateVariantStockInput) *pb.CreateVariantStockReq {
+	return &pb.CreateVariantStockReq{
+		VariantId: r.VariantID,
+		Quantity:  r.Quantity,
+	}
+}
+
+func ToPbCreateAddonStockReq(r *CreateAddonStockInput) *pb.CreateAddonStockReq {
+	return &pb.CreateAddonStockReq{
+		AddonId:  r.AddonID,
+		Quantity: r.Quantity,
+	}
+}
+
+func ToGQItemStock(r *pb.ItemStock) *ItemStock {
+	return &ItemStock{
+		ID:         r.Id,
+		ItemID:     r.ItemId,
+		Quantity:   r.Quantity,
+		RestockQty: r.RestockQty,
+		UpdatedAt:  ToGQTime(r.UpdatedAt),
+	}
+}
+
+func ToGQVariantStock(r *pb.VariantStock) *VariantStock {
+	return &VariantStock{
+		ID:         r.Id,
+		VariantID:  r.VariantId,
+		Quantity:   r.Quantity,
+		RestockQty: r.RestockQty,
+		UpdatedAt:  ToGQTime(r.UpdatedAt),
+	}
+}
+
+func ToGQAddonStock(r *pb.AddonStock) *AddonStock {
+	return &AddonStock{
+		ID:         r.Id,
+		AddonID:    r.AddonId,
+		Quantity:   r.Quantity,
+		RestockQty: r.RestockQty,
+		UpdatedAt:  ToGQTime(r.UpdatedAt),
+	}
+}

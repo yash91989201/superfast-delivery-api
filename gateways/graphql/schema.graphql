@@ -457,6 +457,45 @@ type ListMedicineCategoryOutput {
   total_category: Int!
 }
 
+type ItemStock {
+  id: ID!
+  item_id: ID!
+  quantity: Int!
+  restock_qty: Int!
+  updated_at: DateTime!
+}
+
+type VariantStock {
+  id: ID!
+  variant_id: ID!
+  quantity: Int!
+  restock_qty: Int!
+  updated_at: DateTime!
+}
+
+type AddonStock {
+  id: ID!
+  addon_id: ID!
+  quantity: Int!
+  restock_qty: Int!
+  updated_at: DateTime!
+}
+
+input CreateItemStockInput {
+  item_id: ID!
+  quantity: Int!
+}
+
+input CreateVariantStockInput {
+  variant_id: ID!
+  quantity: Int!
+}
+
+input CreateAddonStockInput {
+  addon_id: ID!
+  quantity: Int!
+}
+
 type Query {
   AuthById(input: GetAuthByIdInput!): Auth
   Auth(input: GetAuthInput!): Auth
@@ -504,4 +543,8 @@ type Mutation {
   CreateRetailItem(input: CreateRetailItemInput!): RetailItem!
   CreateMedicineCategory(input: CreateMedicineCategoryInput!): MedicineCategory!
   CreateMedicineItem(input: CreateMedicineItemInput!): MedicineItem!
+
+  CreateItemStock(input: CreateItemStockInput!): ItemStock!
+  CreateVariantStock(input: CreateVariantStockInput!): VariantStock!
+  CreateAddonStock(input: CreateAddonStockInput!): AddonStock!
 }
