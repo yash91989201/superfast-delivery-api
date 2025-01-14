@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
+
+message ItemStock {
+  string id = 1;
+  string item_id = 2;
+  int32 quantity = 3;
+  int32 restock_qty = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message VariantStock {
+  string id = 1;
+  string variant_id = 2;
+  int32 quantity = 3;
+  int32 restock_qty = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message AddonStock {
+  string id = 1;
+  string addon_id = 2;
+  int32 quantity = 3;
+  int32 restock_qty = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message CreateItemStockReq {
+  string item_id = 1;
+  int32 quantity = 2;
+}
+
+message CreateVariantStockReq {
+  string variant_id = 1;
+  int32 quantity = 2;
+}
+
+message CreateAddonStockReq {
+  string addon_id = 1;
+  int32 quantity = 2;
+}
+
+service InventoryService {
+  rpc CreateItemStock(CreateItemStockReq) returns (ItemStock) {}
+  rpc CreateVariantStock(CreateVariantStockReq) returns (VariantStock) {}
+  rpc CreateAddonStock(CreateAddonStockReq) returns (AddonStock) {}
+}
