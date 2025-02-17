@@ -4,19 +4,19 @@
   become: yes
   roles:
     - prep_nodes
----
+
 - name: Initialize master node
   hosts: master
   become: yes
   roles:
     - init_master
----
+
 - name: Join worker nodes
   hosts: workers
   become: yes
   roles:
     - join_workers
----
+
 - name: Install calico
   hosts: master
   roles:
