@@ -1,0 +1,21 @@
+---
+- name: Set up Calico for Kubernetes
+  hosts: master
+  tasks:
+    - name: Apply tigera-operator.yaml from Calico
+      command: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/tigera-operator.yaml
+      register: calico_operator_result
+      failed_when: calico_operator_result.rc != 0
+      ignore_errors: no
+
+    - name: Download custom-resources.yaml for Calico
+      get_url:
+        url: https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
+        dest: /home/ubuntu/custom-resources.yaml
+        mode: "0644"
+
+    - name: Apply custom-resources.yaml using kubectl
+      command: kubectl apply -f /home/ubuntu/custom-resources.yaml
+      register: apply_custom_resources
+      failed_when: apply_custom_resources.rc != 0
+      ignore_errors: no

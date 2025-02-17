@@ -1,0 +1,14 @@
+- name: Join Kubernetes worker nodes
+  hosts: workers
+  become: yes
+  tasks:
+    - name: Copy join script to worker nodes
+      copy:
+        src: /tmp/k8s_join.sh
+        dest: /home/ubuntu/k8s_join.sh
+        owner: ubuntu
+        group: ubuntu
+        mode: "0755"
+
+    - name: Run Kubernetes join command
+      command: sh /home/ubuntu/k8s_join.sh
