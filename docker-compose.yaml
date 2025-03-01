@@ -7,9 +7,9 @@ services:
       dockerfile: ./gateways/rest/Dockerfile
     container_name: rest_gateway
     environment:
-      PORT: ${PORT}
+      PORT: ${REST_API_PORT}
     ports:
-      - "${PORT}:${PORT}"
+      - "${REST_API_PORT}:${REST_API_PORT}"
     networks:
       - superfast_delivery
     mem_limit: 128m
@@ -28,14 +28,14 @@ services:
       dockerfile: ./gateways/graphql/Dockerfile
     container_name: graphql_gateway
     environment:
-      PORT: ${GRAPHQL_PORT}
+      PORT: ${GRAPHQL_API_PORT}
       AUTHENTICATION_SERVICE_URL: ${AUTHENTICATION_SERVICE_URL}
       USER_SERVICE_URL: ${USER_SERVICE_URL}
       SHOP_SERVICE_URL: ${SHOP_SERVICE_URL}
       PRODUCT_SERVICE_URL: ${PRODUCT_SERVICE_URL}
       INVENTORY_SERVICE_URL: ${INVENTORY_SERVICE_URL}
     ports:
-      - "${GRAPHQL_PORT}:${GRAPHQL_PORT}"
+      - "${GRAPHQL_API_PORT}:${GRAPHQL_API_PORT}"
     networks:
       - superfast_delivery
     mem_limit: 128m
