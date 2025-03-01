@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/yash91989201/superfast-delivery-api/common/types"
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -101,9 +100,6 @@ func (r *mongoRepository) InsertItemAddon(ctx context.Context, a *types.ItemAddo
 
 func (r *mongoRepository) InsertRestaurantMenu(ctx context.Context, m *types.RestaurantMenu) error {
 	res, err := r.restaurantMenu.InsertOne(ctx, m)
-	log.Print("res,err")
-	log.Println(res)
-	log.Println(err)
 	if err != nil || !res.Acknowledged {
 		return err
 	}
