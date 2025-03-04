@@ -74,12 +74,12 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 
 		accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 15*time.Minute)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create token: %w", err)
+			return nil, fmt.Errorf("Failed to create access token: %w", err)
 		}
 
 		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 24*time.Hour)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create token: %w", err)
+			return nil, fmt.Errorf("Failed to create refresh token: %w", err)
 		}
 
 		session := &types.Session{
@@ -326,7 +326,7 @@ func (s *grpcServer) LogOut(ctx context.Context, req *pb.LogOutReq) (*pb.SignInR
 		return nil, status.Errorf(codes.NotFound, "Account not found")
 	}
 
-	// delete and create new refresh refresh token
+	// delete refresh token
 	err = s.service.DeleteSession(ctx, session.ID)
 	if err != nil {
 		return nil, err

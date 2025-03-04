@@ -126,6 +126,10 @@ func ToPbDate(d *Date) *pb.Date {
 }
 
 func TimeToPbDate(t *time.Time) *pb.Date {
+	if t == nil {
+		return nil
+	}
+
 	return &pb.Date{
 		Year:  int32(t.Year()),
 		Month: int32(t.Month()),
@@ -138,7 +142,10 @@ func PbTimeStampToStrPtr(t *timestamppb.Timestamp) *string {
 		return nil
 	}
 
-	timeStr := t.String()
+	tm := t.AsTime()
+
+	// Format as ISO 8601 in UTC
+	timeStr := tm.UTC().Format(time.RFC3339)
 	return &timeStr
 }
 

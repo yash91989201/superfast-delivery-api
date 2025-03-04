@@ -1,5 +1,10 @@
 name: superfast_delivery_api
 
+networks:
+  superfast_delivery:
+    driver: bridge
+    name: superfast_delivery
+
 services:
   rest_gateway:
     build:
@@ -261,10 +266,9 @@ services:
       MONGO_INITDB_DATABASE: ${PRODUCT_DB_NAME}
       MONGO_INITDB_ROOT_USERNAME: ${PRODUCT_DB_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${PRODUCT_DB_ROOT_PASSWORD}
-      MONGO_INITDB_USER: ${PRODUCT_DB_USER}
-      MONGO_INITDB_PWD: ${PRODUCT_DB_PASSWORD}
     volumes:
-      - ./services/product/db/init-db-user.js:/docker-entrypoint-initdb.d/init-db-user.js:RO
+      - ./services/product/db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:RO
+    command: [--auth]
     mem_limit: 750m
     cpus: 1
     networks:
@@ -342,8 +346,3 @@ services:
     cpus: 0.25
     networks:
       - superfast_delivery
-
-networks:
-  superfast_delivery:
-    driver: bridge
-    name: superfast_delivery_network
