@@ -212,7 +212,7 @@ func ToGQDayOfWeek(d pb.DayOfWeek) DayOfWeek {
 }
 
 func ToDate(pbDate *pb.Date) *string {
-	if pbDate == nil {
+	if pbDate == nil || (pbDate.Year == 0 && pbDate.Month == 0 && pbDate.Day == 0) {
 		return nil
 	}
 
