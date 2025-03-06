@@ -119,9 +119,7 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 		}
 
 		// TODO: send otp using email service
-		return &pb.SignInRes{
-			Auth: &pb.Auth{},
-		}, nil
+		return &pb.SignInRes{Auth: nil}, nil
 	}
 
 	if isTokenExpired(ev.ExpiresAt) {
@@ -140,15 +138,11 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 		}
 
 		// TODO: send otp using email service
-		return &pb.SignInRes{
-			Auth: &pb.Auth{},
-		}, nil
+		return &pb.SignInRes{Auth: nil}, nil
 	}
 
 	// TODO: existing token not expired send email again
-	return &pb.SignInRes{
-		Auth: &pb.Auth{},
-	}, nil
+	return &pb.SignInRes{Auth: nil}, nil
 }
 
 func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhoneReq) (*pb.SignInRes, error) {

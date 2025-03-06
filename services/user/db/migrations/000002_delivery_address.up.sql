@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `delivery_address`(
   `other_alias` VARCHAR(36) DEFAULT NULL,
   `longitude` DOUBLE NOT NULL,
   `latitude` DOUBLE NOT NULL,
-   location POINT NOT NULL,
+  `location` POINT NOT NULL,
   `address` VARCHAR(512) NOT NULL,
   `nearby_landmark` VARCHAR(256) DEFAULT NULL,
   `delivery_instruction` VARCHAR(256) DEFAULT NULL,

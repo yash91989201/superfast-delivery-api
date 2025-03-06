@@ -63,8 +63,6 @@ func (r *mysqlRepository) GetProfileById(ctx context.Context, id string) (*types
 func (r *mysqlRepository) GetProfileByAuthId(ctx context.Context, auth_id string) (*types.Profile, error) {
 	p := &types.Profile{}
 	if err := r.db.GetContext(ctx, p, queries.GET_PROFILE_BY_AUTH_ID, auth_id); err != nil {
-		print("err")
-		print(err)
 		return nil, fmt.Errorf("Profile not found: %w", err)
 	}
 

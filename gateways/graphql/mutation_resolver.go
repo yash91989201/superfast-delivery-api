@@ -12,28 +12,36 @@ type mutationResolver struct {
 }
 
 func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEmailInput) (*SignInOutput, error) {
-	signInRes, err := r.server.authenticationClient.SignInWithEmail(ctx, &pb.SignInWithEmailReq{Email: in.Email, Otp: in.Otp})
+	signInRes, err := r.server.authenticationClient.SignInWithEmail(
+		ctx,
+		&pb.SignInWithEmailReq{
+			Email: in.Email, Otp: in.Otp,
+		},
+	)
 	if err != nil {
 		return nil, err
 	}
 
-	if signInRes.Auth.Id == "" {
-		return &SignInOutput{
-			VerifyOtp: true,
-		}, nil
+	if signInRes.Auth == nil {
+		return &SignInOutput{VerifyOtp: true}, nil
 	}
 
-	profile, _ := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
-
-	return &SignInOutput{
+	profile, err := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
+	res := &SignInOutput{
 		Auth:                 ToAuth(signInRes.Auth),
 		SessionID:            &signInRes.SessionId,
 		AccessToken:          &signInRes.AccessToken,
 		AccessTokenExpiresAt: types.PbTimeStampToStrPtr(signInRes.AccessTokenExpiresAt),
-		Profile:              ToProfile(profile),
-		CreateProfile:        profile == nil,
 		VerifyOtp:            false,
-	}, nil
+	}
+
+	if err != nil {
+		res.CreateProfile = true
+		return res, nil
+	}
+
+	res.Profile = ToProfile(profile)
+	return res, nil
 }
 
 func (r *mutationResolver) SignInWithPhone(ctx context.Context, in SignInWithPhoneInput) (*SignInOutput, error) {
