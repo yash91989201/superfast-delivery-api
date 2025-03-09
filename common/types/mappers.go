@@ -321,6 +321,80 @@ func ToPbProfile(p *Profile) *pb.Profile {
 	}
 }
 
+func ToPbAddressAlias(alias AddressAlias) pb.AddressAlias {
+	switch alias {
+	case Home:
+		return pb.AddressAlias_HOME
+	case Work:
+		return pb.AddressAlias_WORK
+	case Hotel:
+		return pb.AddressAlias_HOTEL
+	case Other:
+		return pb.AddressAlias_OTHER
+	default:
+		return pb.AddressAlias_OTHER // Default to OTHER if unknown
+	}
+}
+
+func ToDeliveryAddress(d *pb.DeliveryAddress) *DeliveryAddress {
+	return &DeliveryAddress{
+		ID:                  d.Id,
+		ReceiverName:        d.ReceiverName,
+		ReceiverPhone:       d.ReceiverPhone,
+		AddressAlias:        AddressAlias(d.AddressAlias),
+		OtherAlias:          d.OtherAlias,
+		Latitude:            d.Latitude,
+		Longitude:           d.Longitude,
+		Address:             d.Address,
+		NearbyLandmark:      d.NearbyLandmark,
+		DeliveryInstruction: d.DeliveryInstruction,
+		AuthId:              d.AuthId,
+		CreatedAt:           d.CreatedAt.AsTime(),
+		UpdatedAt:           d.UpdatedAt.AsTime(),
+	}
+}
+
+func ToCreateDeliveryAddress(req *pb.CreateDeliveryAddressReq) *CreateDeliveryAddress {
+	return &CreateDeliveryAddress{
+		ReceiverName:        req.ReceiverName,
+		ReceiverPhone:       req.ReceiverPhone,
+		AddressAlias:        AddressAlias(req.Address),
+		OtherAlias:          req.OtherAlias,
+		Latitude:            req.Latitude,
+		Longitude:           req.Longitude,
+		Address:             req.Address,
+		NearbyLandmark:      req.NearbyLandmark,
+		DeliveryInstruction: req.DeliveryInstruction,
+		AuthId:              req.AuthId,
+	}
+}
+
+func ToPbDeliveryAddress(d *DeliveryAddress) *pb.DeliveryAddress {
+	return &pb.DeliveryAddress{
+		Id:                  d.ID,
+		ReceiverName:        d.ReceiverName,
+		ReceiverPhone:       d.ReceiverPhone,
+		AddressAlias:        ToPbAddressAlias(d.AddressAlias),
+		OtherAlias:          d.OtherAlias,
+		Latitude:            d.Latitude,
+		Longitude:           d.Longitude,
+		Address:             d.Address,
+		NearbyLandmark:      d.NearbyLandmark,
+		DeliveryInstruction: d.DeliveryInstruction,
+		AuthId:              d.AuthId,
+		CreatedAt:           timestamppb.New(d.CreatedAt),
+		UpdatedAt:           timestamppb.New(d.UpdatedAt),
+	}
+}
+
+func ToPbDeliveryAddressList(addresses []*DeliveryAddress) []*pb.DeliveryAddress {
+	pbAddresses := make([]*pb.DeliveryAddress, len(addresses))
+	for i, addr := range addresses {
+		pbAddresses[i] = ToPbDeliveryAddress(addr)
+	}
+	return pbAddresses
+}
+
 func PbUpdateProfileReqToProfile(p *pb.UpdateProfileReq) *Profile {
 	if p == nil {
 		return nil
@@ -371,12 +445,18 @@ func ToPbAuth(p *Auth) *pb.Auth {
 	}
 }
 
+func ToPbSession(s *ClientSession) *pb.Session {
+	return &pb.Session{
+		Id:                   s.ID,
+		AccessToken:          s.AccessToken,
+		AccessTokenExpiresAt: ToPbTimestamp(s.AccessTokenExpiresAt),
+	}
+}
+
 func ToPbSignInRes(r *SignInRes) *pb.SignInRes {
 	return &pb.SignInRes{
-		Auth:                 ToPbAuth(r.Auth),
-		SessionId:            *r.SessionId,
-		AccessToken:          *r.AccessToken,
-		AccessTokenExpiresAt: ToPbTimestamp(*r.AccessTokenExpiresAt),
+		Auth:    ToPbAuth(r.Auth),
+		Session: ToPbSession(r.Session),
 	}
 }
 

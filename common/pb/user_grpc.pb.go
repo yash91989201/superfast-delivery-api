@@ -41,7 +41,7 @@ type UserServiceClient interface {
 	CreateDeliveryAddress(ctx context.Context, in *CreateDeliveryAddressReq, opts ...grpc.CallOption) (*DeliveryAddress, error)
 	GetDeliveryAddress(ctx context.Context, in *GetDeliveryAddressReq, opts ...grpc.CallOption) (*DeliveryAddress, error)
 	ListDeliveryAddress(ctx context.Context, in *ListDeliveryAddressReq, opts ...grpc.CallOption) (*ListDeliveryAddressRes, error)
-	UpdateDeliveryAddress(ctx context.Context, in *UpdateDeliveryAddressReq, opts ...grpc.CallOption) (*DeliveryAddress, error)
+	UpdateDeliveryAddress(ctx context.Context, in *DeliveryAddress, opts ...grpc.CallOption) (*DeliveryAddress, error)
 	DeleteDeliveryAddress(ctx context.Context, in *DeleteDeliveryAddressReq, opts ...grpc.CallOption) (*EmptyRes, error)
 }
 
@@ -123,7 +123,7 @@ func (c *userServiceClient) ListDeliveryAddress(ctx context.Context, in *ListDel
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateDeliveryAddress(ctx context.Context, in *UpdateDeliveryAddressReq, opts ...grpc.CallOption) (*DeliveryAddress, error) {
+func (c *userServiceClient) UpdateDeliveryAddress(ctx context.Context, in *DeliveryAddress, opts ...grpc.CallOption) (*DeliveryAddress, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeliveryAddress)
 	err := c.cc.Invoke(ctx, UserService_UpdateDeliveryAddress_FullMethodName, in, out, cOpts...)
@@ -154,7 +154,7 @@ type UserServiceServer interface {
 	CreateDeliveryAddress(context.Context, *CreateDeliveryAddressReq) (*DeliveryAddress, error)
 	GetDeliveryAddress(context.Context, *GetDeliveryAddressReq) (*DeliveryAddress, error)
 	ListDeliveryAddress(context.Context, *ListDeliveryAddressReq) (*ListDeliveryAddressRes, error)
-	UpdateDeliveryAddress(context.Context, *UpdateDeliveryAddressReq) (*DeliveryAddress, error)
+	UpdateDeliveryAddress(context.Context, *DeliveryAddress) (*DeliveryAddress, error)
 	DeleteDeliveryAddress(context.Context, *DeleteDeliveryAddressReq) (*EmptyRes, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -187,7 +187,7 @@ func (UnimplementedUserServiceServer) GetDeliveryAddress(context.Context, *GetDe
 func (UnimplementedUserServiceServer) ListDeliveryAddress(context.Context, *ListDeliveryAddressReq) (*ListDeliveryAddressRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDeliveryAddress not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateDeliveryAddress(context.Context, *UpdateDeliveryAddressReq) (*DeliveryAddress, error) {
+func (UnimplementedUserServiceServer) UpdateDeliveryAddress(context.Context, *DeliveryAddress) (*DeliveryAddress, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDeliveryAddress not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteDeliveryAddress(context.Context, *DeleteDeliveryAddressReq) (*EmptyRes, error) {
@@ -341,7 +341,7 @@ func _UserService_ListDeliveryAddress_Handler(srv interface{}, ctx context.Conte
 }
 
 func _UserService_UpdateDeliveryAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDeliveryAddressReq)
+	in := new(DeliveryAddress)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -353,7 +353,7 @@ func _UserService_UpdateDeliveryAddress_Handler(srv interface{}, ctx context.Con
 		FullMethod: UserService_UpdateDeliveryAddress_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UpdateDeliveryAddress(ctx, req.(*UpdateDeliveryAddressReq))
+		return srv.(UserServiceServer).UpdateDeliveryAddress(ctx, req.(*DeliveryAddress))
 	}
 	return interceptor(ctx, in, info, handler)
 }

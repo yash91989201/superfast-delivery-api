@@ -67,25 +67,56 @@ func (s *grpcServer) UpdateProfile(ctx context.Context, req *pb.UpdateProfileReq
 }
 
 func (s *grpcServer) DeleteProfile(ctx context.Context, req *pb.DeleteProfileReq) (*pb.EmptyRes, error) {
-	return nil, nil
+	if err := s.service.DeleteProfile(ctx, req.AuthId); err != nil {
+		return nil, err
+	}
+
+	return &pb.EmptyRes{}, nil
 }
 
 func (s *grpcServer) CreateDeliveryAddress(ctx context.Context, req *pb.CreateDeliveryAddressReq) (*pb.DeliveryAddress, error) {
-	return nil, nil
+	res, err := s.service.CreateDeliveryAddress(ctx, types.ToCreateDeliveryAddress(req))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbDeliveryAddress(res), nil
 }
 
 func (s *grpcServer) GetDeliveryAddress(ctx context.Context, req *pb.GetDeliveryAddressReq) (*pb.DeliveryAddress, error) {
-	return nil, nil
+	res, err := s.service.GetDeliveryAddress(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbDeliveryAddress(res), nil
 }
 
 func (s *grpcServer) ListDeliveryAddress(ctx context.Context, req *pb.ListDeliveryAddressReq) (*pb.ListDeliveryAddressRes, error) {
-	return nil, nil
+	res, err := s.service.GetDeliveryAddresses(ctx, req.AuthId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.ListDeliveryAddressRes{
+		DeliveryAddresses: types.ToPbDeliveryAddressList(res),
+	}, nil
 }
 
-func (s *grpcServer) UpdateDeliveryAddress(ctx context.Context, req *pb.UpdateDeliveryAddressReq) (*pb.DeliveryAddress, error) {
-	return nil, nil
+func (s *grpcServer) UpdateDeliveryAddress(ctx context.Context, req *pb.DeliveryAddress) (*pb.DeliveryAddress, error) {
+	updatedDeliveryAddress := types.ToDeliveryAddress(req)
+	if err := s.service.UpdateDeliveryAddress(ctx, updatedDeliveryAddress); err != nil {
+		return nil, err
+	}
+
+	return types.ToPbDeliveryAddress(updatedDeliveryAddress), nil
 }
 
 func (s *grpcServer) DeleteDeliveryAddress(ctx context.Context, req *pb.DeleteDeliveryAddressReq) (*pb.EmptyRes, error) {
-	return nil, nil
+	if err := s.service.DeleteDeliveryAddress(ctx, req.Id); err != nil {
+		return nil, err
+	}
+
+	return &pb.EmptyRes{}, nil
 }

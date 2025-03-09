@@ -13,6 +13,12 @@ type Service interface {
 	GetProfile(ctx context.Context, auth_id string) (*types.Profile, error)
 	UpdateProfile(ctx context.Context, p *types.Profile) error
 	DeleteProfile(ctx context.Context, id string) error
+
+	CreateDeliveryAddress(ctx context.Context, d *types.CreateDeliveryAddress) (*types.DeliveryAddress, error)
+	GetDeliveryAddress(ctx context.Context, id string) (*types.DeliveryAddress, error)
+	GetDeliveryAddresses(ctx context.Context, authID string) ([]*types.DeliveryAddress, error)
+	UpdateDeliveryAddress(ctx context.Context, d *types.DeliveryAddress) error
+	DeleteDeliveryAddress(ctx context.Context, authID string) error
 }
 
 type userService struct {
@@ -48,10 +54,47 @@ func (s *userService) GetProfile(ctx context.Context, auth_id string) (*types.Pr
 }
 
 func (s *userService) UpdateProfile(ctx context.Context, p *types.Profile) error {
-	p.UpdatedAt = time.Now()
 	return s.r.UpdateProfile(ctx, p)
 }
 
 func (s *userService) DeleteProfile(ctx context.Context, id string) error {
 	return s.r.DeleteProfile(ctx, id)
+}
+
+func (s *userService) CreateDeliveryAddress(ctx context.Context, d *types.CreateDeliveryAddress) (*types.DeliveryAddress, error) {
+	deliveryAddress := &types.DeliveryAddress{
+		ID:                  cuid2.Generate(),
+		ReceiverName:        d.ReceiverName,
+		ReceiverPhone:       d.ReceiverPhone,
+		AddressAlias:        d.AddressAlias,
+		OtherAlias:          d.OtherAlias,
+		Latitude:            d.Latitude,
+		Longitude:           d.Longitude,
+		Address:             d.Address,
+		NearbyLandmark:      d.NearbyLandmark,
+		DeliveryInstruction: d.DeliveryInstruction,
+		AuthId:              d.AuthId,
+	}
+
+	if err := s.r.CreateDeliveryAddress(ctx, deliveryAddress); err != nil {
+		return nil, err
+	}
+
+	return deliveryAddress, nil
+}
+
+func (s *userService) GetDeliveryAddress(ctx context.Context, id string) (*types.DeliveryAddress, error) {
+	return s.r.GetDeliveryAddressById(ctx, id)
+}
+
+func (s *userService) GetDeliveryAddresses(ctx context.Context, authID string) ([]*types.DeliveryAddress, error) {
+	return s.r.GetDeliveryAddresses(ctx, authID)
+}
+
+func (s *userService) UpdateDeliveryAddress(ctx context.Context, d *types.DeliveryAddress) error {
+	return s.r.UpdateDeliveryAddress(ctx, d)
+}
+
+func (s *userService) DeleteDeliveryAddress(ctx context.Context, authID string) error {
+	return s.r.DeleteDeliveryAddress(ctx, authID)
 }

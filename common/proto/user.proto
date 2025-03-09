@@ -125,6 +125,6 @@ service UserService {
   rpc CreateDeliveryAddress(CreateDeliveryAddressReq) returns (DeliveryAddress) {}
   rpc GetDeliveryAddress(GetDeliveryAddressReq) returns (DeliveryAddress) {}
   rpc ListDeliveryAddress(ListDeliveryAddressReq) returns (ListDeliveryAddressRes) {}
-  rpc UpdateDeliveryAddress(UpdateDeliveryAddressReq) returns (DeliveryAddress) {}
+  rpc UpdateDeliveryAddress(DeliveryAddress) returns (DeliveryAddress) {}
   rpc DeleteDeliveryAddress(DeleteDeliveryAddressReq) returns (EmptyRes) {}
 }
