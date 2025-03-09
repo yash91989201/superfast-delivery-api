@@ -95,10 +95,12 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 		}
 
 		signInRes := &types.SignInRes{
-			Auth:                 auth,
-			SessionId:            &session.ID,
-			AccessToken:          &accessToken,
-			AccessTokenExpiresAt: &accessClaims.ExpiresAt.Time,
+			Auth: auth,
+			Session: &types.ClientSession{
+				ID:                   session.ID,
+				AccessToken:          accessToken,
+				AccessTokenExpiresAt: accessClaims.ExpiresAt.Time,
+			},
 		}
 
 		return types.ToPbSignInRes(signInRes), nil
@@ -203,10 +205,12 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 		}
 
 		signInRes := &types.SignInRes{
-			Auth:                 auth,
-			SessionId:            &session.ID,
-			AccessToken:          &accessToken,
-			AccessTokenExpiresAt: &accessClaims.ExpiresAt.Time,
+			Auth: auth,
+			Session: &types.ClientSession{
+				ID:                   session.ID,
+				AccessToken:          accessToken,
+				AccessTokenExpiresAt: accessClaims.ExpiresAt.Time,
+			},
 		}
 
 		return types.ToPbSignInRes(signInRes), nil
@@ -298,10 +302,12 @@ func (s *grpcServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) 
 	}
 
 	signInRes := &types.SignInRes{
-		Auth:                 auth,
-		SessionId:            &newSession.ID,
-		AccessToken:          &accessToken,
-		AccessTokenExpiresAt: &accessClaims.ExpiresAt.Time,
+		Auth: auth,
+		Session: &types.ClientSession{
+			ID:                   session.ID,
+			AccessToken:          accessToken,
+			AccessTokenExpiresAt: accessClaims.ExpiresAt.Time,
+		},
 	}
 
 	return types.ToPbSignInRes(signInRes), nil

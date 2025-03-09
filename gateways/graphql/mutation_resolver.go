@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
-	"github.com/yash91989201/superfast-delivery-api/common/types"
 )
 
 type mutationResolver struct {
@@ -28,11 +27,9 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 
 	profile, err := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 	res := &SignInOutput{
-		Auth:                 ToAuth(signInRes.Auth),
-		SessionID:            &signInRes.SessionId,
-		AccessToken:          &signInRes.AccessToken,
-		AccessTokenExpiresAt: types.PbTimeStampToStrPtr(signInRes.AccessTokenExpiresAt),
-		VerifyOtp:            false,
+		Auth:      ToAuth(signInRes.Auth),
+		Session:   ToSession(signInRes.Session),
+		VerifyOtp: false,
 	}
 
 	if err != nil {
@@ -61,13 +58,11 @@ func (r *mutationResolver) RefreshToken(ctx context.Context, session_id string) 
 	profile, _ := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 
 	return &SignInOutput{
-		Auth:                 ToAuth(signInRes.Auth),
-		SessionID:            &signInRes.SessionId,
-		AccessToken:          &signInRes.AccessToken,
-		AccessTokenExpiresAt: types.PbTimeStampToStrPtr(signInRes.AccessTokenExpiresAt),
-		Profile:              ToProfile(profile),
-		CreateProfile:        profile == nil,
-		VerifyOtp:            false,
+		Auth:          ToAuth(signInRes.Auth),
+		Session:       ToSession(signInRes.Session),
+		Profile:       ToProfile(profile),
+		CreateProfile: profile == nil,
+		VerifyOtp:     false,
 	}, nil
 }
 

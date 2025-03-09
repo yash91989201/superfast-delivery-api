@@ -32,6 +32,12 @@ type Auth {
   deleted_at: DateTime
 }
 
+type Session {
+  id: String!
+  access_token: String!
+  access_token_expires_at: DateTime!
+}
+
 type Profile {
   id: String!
   name: String!
@@ -61,9 +67,7 @@ input SignInWithGoogleInput {
 type SignInOutput {
   auth: Auth
   profile: Profile
-  session_id: String
-  access_token: String
-  access_token_expires_at: DateTime
+  session: Session
   create_profile: Boolean!
   verify_otp: Boolean!
 }

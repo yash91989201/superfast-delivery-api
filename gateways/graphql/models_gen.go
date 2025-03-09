@@ -322,6 +322,12 @@ type RetailItem struct {
 	DeletedAt   *string        `json:"deleted_at,omitempty"`
 }
 
+type Session struct {
+	ID                   string `json:"id"`
+	AccessToken          string `json:"access_token"`
+	AccessTokenExpiresAt string `json:"access_token_expires_at"`
+}
+
 type Shop struct {
 	ID          string        `json:"id"`
 	Name        string        `json:"name"`
@@ -381,13 +387,11 @@ type ShopTiming struct {
 }
 
 type SignInOutput struct {
-	Auth                 *Auth    `json:"auth,omitempty"`
-	Profile              *Profile `json:"profile,omitempty"`
-	SessionID            *string  `json:"session_id,omitempty"`
-	AccessToken          *string  `json:"access_token,omitempty"`
-	AccessTokenExpiresAt *string  `json:"access_token_expires_at,omitempty"`
-	CreateProfile        bool     `json:"create_profile"`
-	VerifyOtp            bool     `json:"verify_otp"`
+	Auth          *Auth    `json:"auth,omitempty"`
+	Profile       *Profile `json:"profile,omitempty"`
+	Session       *Session `json:"session,omitempty"`
+	CreateProfile bool     `json:"create_profile"`
+	VerifyOtp     bool     `json:"verify_otp"`
 }
 
 type SignInWithEmailInput struct {

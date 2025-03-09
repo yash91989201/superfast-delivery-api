@@ -258,6 +258,14 @@ func ToAuth(a *pb.Auth) *Auth {
 	}
 }
 
+func ToSession(s *pb.Session) *Session {
+	return &Session{
+		ID:                   s.Id,
+		AccessToken:          s.AccessToken,
+		AccessTokenExpiresAt: *ToGQTimePtr(s.AccessTokenExpiresAt),
+	}
+}
+
 func ToProfile(p *pb.Profile) *Profile {
 	if p == nil {
 		return nil
