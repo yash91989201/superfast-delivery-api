@@ -109,6 +109,29 @@ func (r *mutationResolver) UpdateProfile(ctx context.Context, in UpdateProfileIn
 	return ToProfile(res), nil
 }
 
+func (r *mutationResolver) CreateDeliveryAddress(ctx context.Context, in *CreateDeliveryAddressInput) (*DeliveryAddress, error) {
+	newDeliveryAddress, err := r.server.userClient.CreateDeliveryAddress(ctx, ToPbCreateDeliveryAddress(in))
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = r.server.geolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
+		Latitude:  in.Latitude,
+		Longitude: in.Longitude,
+		AddressId: newDeliveryAddress.Id,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQDeliveryAddress(newDeliveryAddress), nil
+}
+
+func (r *mutationResolver) UpdateDeliveryAddress(ctx context.Context, in *UpdateDeliveryAddressInput) (*DeliveryAddress, error) {
+	return nil, nil
+}
+
 func (r *mutationResolver) CreateShop(ctx context.Context, in CreateShopInput) (*CreateShopOutput, error) {
 	res, err := r.server.shopClient.CreateShop(ctx, ToPbCreateShopReq(in))
 	if err != nil {

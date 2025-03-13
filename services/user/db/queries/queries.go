@@ -44,11 +44,11 @@ const (
 		INSERT INTO delivery_address (
 			id, receiver_name, receiver_phone, address_alias, other_alias, 
 			longitude, latitude, address, nearby_landmark, 
-			delivery_instruction, auth_id, created_at, updated_at
+			delivery_instruction, auth_id
 		) VALUES (
 			:id, :receiver_name, :receiver_phone, :address_alias, :other_alias, 
 			:longitude, :latitude, :address, 
-			:nearby_landmark, :delivery_instruction, :auth_id, :created_at, :updated_at
+			:nearby_landmark, :delivery_instruction, :auth_id
 		)
 	`
 
@@ -60,7 +60,7 @@ const (
 	GET_DELIVERY_ADDRESS_BY_ID = `
 		SELECT 
 			id, receiver_name, receiver_phone, address_alias, other_alias, 
-			longitude, latitude, ST_AsText(location) AS location, address, 
+			longitude, latitude, address, 
 			nearby_landmark, delivery_instruction, auth_id, created_at, updated_at 
 		FROM delivery_address 
 		WHERE id = ?
@@ -69,7 +69,7 @@ const (
 	GET_DELIVERY_ADDRESSES_BY_AUTH_ID = `
 		SELECT 
 			id, receiver_name, receiver_phone, address_alias, other_alias, 
-			longitude, latitude, ST_AsText(location) AS location, address, 
+			longitude, latitude, address, 
 			nearby_landmark, delivery_instruction, auth_id, created_at, updated_at 
 		FROM delivery_address 
 		WHERE auth_id = ?

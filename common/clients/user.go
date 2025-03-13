@@ -100,7 +100,7 @@ func (c *UserClient) ListDeliveryAddress(ctx context.Context, req *pb.ListDelive
 
 }
 
-func (c *UserClient) UpdateDeliveryAddress(ctx context.Context, req *pb.UpdateDeliveryAddressReq) (*pb.DeliveryAddress, error) {
+func (c *UserClient) UpdateDeliveryAddress(ctx context.Context, req *pb.DeliveryAddress) (*pb.DeliveryAddress, error) {
 	res, err := c.service.UpdateDeliveryAddress(ctx, req)
 	if err != nil {
 		return nil, err

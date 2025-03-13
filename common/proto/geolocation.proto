@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package geolocation;
+
+option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
+
+message ReverseGeocodeReq {
+  double latitude = 1;
+  double longitude = 2;
+  string address_id = 3;
+}
+
+message AddressDetail {
+  string id = 1;
+  string route = 2;
+  string town = 3;
+  string postal_code = 4;
+  string district = 5;
+  string state = 6;
+  string country = 7;
+  string plus_code = 8;
+  string place_id = 9;
+  string formatted_address = 10;
+  double latitude = 11;
+  double longitude = 12;
+  string address_id = 13;
+}
+
+service GeolocationService {
+  rpc ReverseGeocode(ReverseGeocodeReq) returns (AddressDetail);
+}

@@ -10,7 +10,7 @@ type queryResolver struct {
 	server *Server
 }
 
-func (r *queryResolver) AuthByID(ctx context.Context, in GetAuthByIDInput) (*Auth, error) {
+func (r *queryResolver) GetAuthByID(ctx context.Context, in GetAuthByIDInput) (*Auth, error) {
 	auth, err := r.server.authenticationClient.GetAuthById(ctx, &pb.GetAuthByIdReq{Id: in.ID})
 	if err != nil {
 		return nil, err
@@ -19,7 +19,7 @@ func (r *queryResolver) AuthByID(ctx context.Context, in GetAuthByIDInput) (*Aut
 	return ToAuth(auth), nil
 }
 
-func (r *queryResolver) Auth(ctx context.Context, in GetAuthInput) (*Auth, error) {
+func (r *queryResolver) GetAuth(ctx context.Context, in GetAuthInput) (*Auth, error) {
 	auth, err := r.server.authenticationClient.GetAuth(ctx, &pb.GetAuthReq{Email: in.Email, Phone: in.Phone})
 	if err != nil {
 		return nil, err
@@ -28,8 +28,54 @@ func (r *queryResolver) Auth(ctx context.Context, in GetAuthInput) (*Auth, error
 	return ToAuth(auth), nil
 }
 
-func (r *queryResolver) Profile(ctx context.Context, in GetProfileInput) (*Profile, error) {
+func (r *queryResolver) GetProfile(ctx context.Context, in GetProfileInput) (*Profile, error) {
 	return nil, nil
+}
+
+func (r *queryResolver) GetDeliveryAddress(ctx context.Context, id string) (*DeliveryAddress, error) {
+	deliveryAddress, err := r.server.userClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{
+		Id: id,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQDeliveryAddress(deliveryAddress), nil
+}
+
+func (r *queryResolver) GetDeliveryAddressDetail(ctx context.Context, addressId string) (*AddressDetail, error) {
+	deliveryAddress, err := r.server.userClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{Id: addressId})
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := r.server.geolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
+		Latitude:  deliveryAddress.Latitude,
+		Longitude: deliveryAddress.Longitude,
+		AddressId: addressId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQAddressDetail(res), nil
+}
+
+func (r *queryResolver) ListDeliveryAddress(ctx context.Context, authId string) (*ListDeliveryAddressOutput, error) {
+
+	res, err := r.server.userClient.ListDeliveryAddress(ctx, &pb.ListDeliveryAddressReq{
+		AuthId: authId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ListDeliveryAddressOutput{
+		DeliveryAddress: ToDeliveryAddressList(res.DeliveryAddresses),
+	}, nil
 }
 
 func (r *queryResolver) GetShop(ctx context.Context, id string) (*Shop, error) {

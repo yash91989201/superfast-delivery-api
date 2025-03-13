@@ -1,6 +1,6 @@
 module github.com/yash91989201/superfast-delivery-api/services/shop
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/jmoiron/sqlx v1.4.0

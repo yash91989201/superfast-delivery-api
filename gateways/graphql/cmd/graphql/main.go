@@ -22,6 +22,7 @@ type Config struct {
 	ShopServiceUrl           string `envconfig:"SHOP_SERVICE_URL" required:"true"`
 	ProductServiceUrl        string `envconfig:"PRODUCT_SERVICE_URL" required:"true"`
 	InventoryServiceUrl      string `envconfig:"INVENTORY_SERVICE_URL" required:"true"`
+	GeolocationServiceUrl    string `envconfig:"GEOLOCATION_SERVICE_URL" required:"true"`
 }
 
 func main() {
@@ -36,6 +37,7 @@ func main() {
 		cfg.ShopServiceUrl,
 		cfg.ProductServiceUrl,
 		cfg.InventoryServiceUrl,
+		cfg.GeolocationServiceUrl,
 	)
 
 	if err != nil {

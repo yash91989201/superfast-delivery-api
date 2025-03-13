@@ -42,6 +42,7 @@ type DeliveryAddress struct {
 	Address             string       `json:"address" db:"address"`
 	NearbyLandmark      *string      `json:"nearby_landmark" db:"nearby_landmark"`
 	DeliveryInstruction *string      `json:"delivery_instruction" db:"delivery_instruction"`
+	IsDefault           bool         `json:"is_default" db:"is_default"`
 	AuthId              string       `json:"auth_id" db:"auth_id"`
 	CreatedAt           time.Time    `json:"created_at" db:"created_at"`
 	UpdatedAt           time.Time    `json:"updated_at" db:"updated_at"`
@@ -67,5 +68,6 @@ type CreateDeliveryAddress struct {
 	Address             string
 	NearbyLandmark      *string
 	DeliveryInstruction *string
+	IsDefault           bool
 	AuthId              string
 }

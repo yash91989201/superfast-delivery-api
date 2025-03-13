@@ -10,16 +10,15 @@ RUN go mod download
 # Download dependencies for rest module
 WORKDIR /
 COPY . .
-WORKDIR /services/product
+WORKDIR /services/geolocation
 RUN go mod download
 
-# Build the final binary for product service
+# Build the final binary for geolocation service
 WORKDIR /
-RUN go build -o product_service ./services/product/cmd/product
+RUN go build -o geolocation_service ./services/geolocation/cmd/geolocation
 
 # Final stage 
 FROM alpine:3.21.0
 WORKDIR /
-COPY --from=builder /product_service ./
-CMD ["./product_service"]
-
+COPY --from=builder /geolocation_service ./
+CMD ["./geolocation_service"]

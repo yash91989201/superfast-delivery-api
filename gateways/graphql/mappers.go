@@ -284,9 +284,130 @@ func ToProfile(p *pb.Profile) *Profile {
 	}
 }
 
+func ToGQAddressAlias(a pb.AddressAlias) AddressAlias {
+	switch a {
+	case pb.AddressAlias_HOME:
+		return AddressAliasHome
+	case pb.AddressAlias_HOTEL:
+		return AddressAliasHotel
+	case pb.AddressAlias_OTHER:
+		return AddressAliasOther
+	case pb.AddressAlias_WORK:
+		return AddressAliasWork
+	default:
+		return AddressAliasOther
+	}
+}
+
+func ToGQDeliveryAddress(d *pb.DeliveryAddress) *DeliveryAddress {
+	return &DeliveryAddress{
+		ID:                  d.Id,
+		ReceiverName:        d.ReceiverName,
+		ReceiverPhone:       d.ReceiverPhone,
+		AddressAlias:        ToGQAddressAlias(d.AddressAlias),
+		OtherAlias:          d.OtherAlias,
+		Latitude:            d.Latitude,
+		Longitude:           d.Longitude,
+		Address:             d.Address,
+		NearbyLandmark:      d.NearbyLandmark,
+		DeliveryInstruction: d.DeliveryInstruction,
+		IsDefault:           d.IsDefault,
+		AuthID:              d.AuthId,
+		CreatedAt:           ToGQTime(d.CreatedAt),
+		UpdatedAt:           ToGQTime(d.UpdatedAt),
+	}
+}
+
+func ToPbAddressAlias(a AddressAlias) pb.AddressAlias {
+	switch a {
+	case AddressAliasHome:
+		return pb.AddressAlias_HOME
+	case AddressAliasHotel:
+		return pb.AddressAlias_HOTEL
+	case AddressAliasWork:
+		return pb.AddressAlias_WORK
+	case AddressAliasOther:
+		return pb.AddressAlias_OTHER
+	default:
+		return pb.AddressAlias_OTHER
+	}
+}
+
+func ToPbDeliveryAddress(d *DeliveryAddress) *pb.DeliveryAddress {
+	if d == nil {
+		return nil
+	}
+
+	return &pb.DeliveryAddress{
+		Id:                  d.ID,
+		ReceiverName:        d.ReceiverName,
+		ReceiverPhone:       d.ReceiverPhone,
+		AddressAlias:        ToPbAddressAlias(d.AddressAlias),
+		OtherAlias:          d.OtherAlias,
+		Latitude:            d.Latitude,
+		Longitude:           d.Longitude,
+		Address:             d.Address,
+		NearbyLandmark:      d.NearbyLandmark,
+		DeliveryInstruction: d.DeliveryInstruction,
+		IsDefault:           d.IsDefault,
+		AuthId:              d.AuthID,
+		CreatedAt:           ToPbTime(&d.CreatedAt),
+		UpdatedAt:           ToPbTime(&d.UpdatedAt),
+	}
+}
+
+func ToPbCreateDeliveryAddress(in *CreateDeliveryAddressInput) *pb.CreateDeliveryAddressReq {
+	if in == nil {
+		return nil
+	}
+
+	return &pb.CreateDeliveryAddressReq{
+		ReceiverName:        in.ReceiverName,
+		ReceiverPhone:       in.ReceiverPhone,
+		AddressAlias:        ToPbAddressAlias(in.AddressAlias),
+		OtherAlias:          in.OtherAlias,
+		Latitude:            in.Latitude,
+		Longitude:           in.Longitude,
+		Address:             in.Address,
+		NearbyLandmark:      in.NearbyLandmark,
+		DeliveryInstruction: in.DeliveryInstruction,
+		IsDefault:           in.IsDefault,
+		AuthId:              in.AuthID,
+	}
+}
+
+func ToDeliveryAddressList(pbAddresses []*pb.DeliveryAddress) []*DeliveryAddress {
+	addresses := make([]*DeliveryAddress, len(pbAddresses))
+	for i, d := range pbAddresses {
+		addresses[i] = ToGQDeliveryAddress(d)
+	}
+	return addresses
+}
+
+func ToGQAddressDetail(d *pb.AddressDetail) *AddressDetail {
+	if d == nil {
+		return nil
+	}
+
+	return &AddressDetail{
+		ID:               d.Id,
+		Route:            d.Route,
+		Town:             d.Town,
+		PostalCode:       d.PostalCode,
+		District:         d.District,
+		State:            d.State,
+		Country:          d.Country,
+		PlusCode:         d.PlusCode,
+		PlaceID:          d.PlaceId,
+		FormattedAddress: d.FormattedAddress,
+		Latitude:         d.Latitude,
+		Longitude:        d.Longitude,
+		AddressID:        d.AddressId,
+	}
+}
+
 func ToPbShopType(t ShopType) pb.ShopType {
 	switch t {
-
 	case ShopTypeGrocery:
 		return pb.ShopType_GROCERY
 	case ShopTypePharmaceutical:

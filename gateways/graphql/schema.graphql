@@ -21,6 +21,13 @@ enum Gender {
   UNDISCLOSED
 }
 
+enum AddressAlias {
+  HOME
+  WORK
+  HOTEL
+  OTHER
+}
+
 type Auth {
   id: String!
   email: String
@@ -48,6 +55,39 @@ type Profile {
   auth_id: String!
   created_at: DateTime!
   updated_at: DateTime!
+}
+
+type DeliveryAddress {
+  id: String!
+  receiver_name: String!
+  receiver_phone: String!
+  address_alias: AddressAlias!
+  other_alias: String
+  latitude: Float!
+  longitude: Float!
+  address: String!
+  nearby_landmark: String
+  delivery_instruction: String
+  is_default: Boolean!
+  auth_id: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type AddressDetail {
+  id: String!
+  route: String!
+  town: String!
+  postal_code: String!
+  district: String!
+  state: String!
+  country: String!
+  plus_code: String!
+  place_id: String!
+  formatted_address: String!
+  latitude: Float!
+  longitude: Float!
+  address_id: String!
 }
 
 input SignInWithEmailInput {
@@ -101,6 +141,33 @@ input UpdateProfileInput {
 }
 
 input GetProfileInput {
+  auth_id: String!
+}
+
+input CreateDeliveryAddressInput {
+  receiver_name: String!
+  receiver_phone: String!
+  address_alias: AddressAlias!
+  other_alias: String
+  latitude: Float!
+  longitude: Float!
+  address: String!
+  nearby_landmark: String
+  delivery_instruction: String
+  is_default: Boolean!
+  auth_id: String!
+}
+
+input UpdateDeliveryAddressInput {
+  receiver_name: String
+  receiver_phone: String
+  address_alias: AddressAlias
+  other_alias: String
+  latitude: Float
+  longitude: Float
+  nearby_landmark: String
+  delivery_instruction: String
+  is_default: Boolean!
   auth_id: String!
 }
 
@@ -500,11 +567,18 @@ input CreateAddonStockInput {
   quantity: Int!
 }
 
-type Query {
-  AuthById(input: GetAuthByIdInput!): Auth
-  Auth(input: GetAuthInput!): Auth
+type ListDeliveryAddressOutput {
+  delivery_address: [DeliveryAddress!]!
+}
 
-  Profile(input: GetProfileInput!): Profile
+type Query {
+  GetAuthById(input: GetAuthByIdInput!): Auth
+  GetAuth(input: GetAuthInput!): Auth
+
+  GetProfile(input: GetProfileInput!): Profile!
+  GetDeliveryAddress(id: ID!): DeliveryAddress!
+  ListDeliveryAddress(authId: ID!): ListDeliveryAddressOutput!
+  GetDeliveryAddressDetail(addressId: ID!): AddressDetail!
 
   GetShop(id: ID!): Shop!
   ListShops(input: ListShopsInput): ListShopsOutput!
@@ -526,10 +600,12 @@ type Mutation {
   SignInWithPhone(input: SignInWithPhoneInput!): SignInOutput!
   SignInWithGoogle(input: SignInWithGoogleInput!): SignInOutput!
   RefreshToken(session_id: String!): SignInOutput!
-  LogOut(session_id: String!): SignInOutput!
+  LogOut(session_id: ID!): SignInOutput!
 
   CreateProfile(input: CreateProfileInput!): Profile!
   UpdateProfile(input: UpdateProfileInput!): Profile!
+  CreateDeliveryAddress(input: CreateDeliveryAddressInput): DeliveryAddress!
+  UpdateDeliveryAddress(input: UpdateDeliveryAddressInput): DeliveryAddress!
 
   CreateShop(input: CreateShopInput!): CreateShopOutput!
   UpdateShop(input: UpdateShopInput!): UpdateShopOutput!

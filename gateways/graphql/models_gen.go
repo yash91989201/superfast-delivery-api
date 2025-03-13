@@ -17,6 +17,22 @@ type AddonStock struct {
 	UpdatedAt  string `json:"updated_at"`
 }
 
+type AddressDetail struct {
+	ID               string  `json:"id"`
+	Route            string  `json:"route"`
+	Town             string  `json:"town"`
+	PostalCode       string  `json:"postal_code"`
+	District         string  `json:"district"`
+	State            string  `json:"state"`
+	Country          string  `json:"country"`
+	PlusCode         string  `json:"plus_code"`
+	PlaceID          string  `json:"place_id"`
+	FormattedAddress string  `json:"formatted_address"`
+	Latitude         float64 `json:"latitude"`
+	Longitude        float64 `json:"longitude"`
+	AddressID        string  `json:"address_id"`
+}
+
 type Auth struct {
 	ID            string   `json:"id"`
 	Email         *string  `json:"email,omitempty"`
@@ -31,6 +47,20 @@ type Auth struct {
 type CreateAddonStockInput struct {
 	AddonID  string `json:"addon_id"`
 	Quantity int32  `json:"quantity"`
+}
+
+type CreateDeliveryAddressInput struct {
+	ReceiverName        string       `json:"receiver_name"`
+	ReceiverPhone       string       `json:"receiver_phone"`
+	AddressAlias        AddressAlias `json:"address_alias"`
+	OtherAlias          *string      `json:"other_alias,omitempty"`
+	Latitude            float64      `json:"latitude"`
+	Longitude           float64      `json:"longitude"`
+	Address             string       `json:"address"`
+	NearbyLandmark      *string      `json:"nearby_landmark,omitempty"`
+	DeliveryInstruction *string      `json:"delivery_instruction,omitempty"`
+	IsDefault           bool         `json:"is_default"`
+	AuthID              string       `json:"auth_id"`
 }
 
 type CreateItemAddonInput struct {
@@ -149,6 +179,23 @@ type CreateVariantStockInput struct {
 	Quantity  int32  `json:"quantity"`
 }
 
+type DeliveryAddress struct {
+	ID                  string       `json:"id"`
+	ReceiverName        string       `json:"receiver_name"`
+	ReceiverPhone       string       `json:"receiver_phone"`
+	AddressAlias        AddressAlias `json:"address_alias"`
+	OtherAlias          *string      `json:"other_alias,omitempty"`
+	Latitude            float64      `json:"latitude"`
+	Longitude           float64      `json:"longitude"`
+	Address             string       `json:"address"`
+	NearbyLandmark      *string      `json:"nearby_landmark,omitempty"`
+	DeliveryInstruction *string      `json:"delivery_instruction,omitempty"`
+	IsDefault           bool         `json:"is_default"`
+	AuthID              string       `json:"auth_id"`
+	CreatedAt           string       `json:"created_at"`
+	UpdatedAt           string       `json:"updated_at"`
+}
+
 type GetAuthByIDInput struct {
 	ID string `json:"id"`
 }
@@ -206,6 +253,10 @@ type LatLng struct {
 type LatLngInput struct {
 	Lat float64 `json:"lat"`
 	Lng float64 `json:"lng"`
+}
+
+type ListDeliveryAddressOutput struct {
+	DeliveryAddress []*DeliveryAddress `json:"delivery_address"`
 }
 
 type ListMedicineCategoryOutput struct {
@@ -408,6 +459,19 @@ type SignInWithPhoneInput struct {
 	Otp   *string `json:"otp,omitempty"`
 }
 
+type UpdateDeliveryAddressInput struct {
+	ReceiverName        *string       `json:"receiver_name,omitempty"`
+	ReceiverPhone       *string       `json:"receiver_phone,omitempty"`
+	AddressAlias        *AddressAlias `json:"address_alias,omitempty"`
+	OtherAlias          *string       `json:"other_alias,omitempty"`
+	Latitude            *float64      `json:"latitude,omitempty"`
+	Longitude           *float64      `json:"longitude,omitempty"`
+	NearbyLandmark      *string       `json:"nearby_landmark,omitempty"`
+	DeliveryInstruction *string       `json:"delivery_instruction,omitempty"`
+	IsDefault           bool          `json:"is_default"`
+	AuthID              string        `json:"auth_id"`
+}
+
 type UpdateProfileInput struct {
 	ID          *string `json:"id,omitempty"`
 	Name        *string `json:"name,omitempty"`
@@ -467,6 +531,51 @@ type VariantStock struct {
 	Quantity   int32  `json:"quantity"`
 	RestockQty int32  `json:"restock_qty"`
 	UpdatedAt  string `json:"updated_at"`
+}
+
+type AddressAlias string
+
+const (
+	AddressAliasHome  AddressAlias = "HOME"
+	AddressAliasWork  AddressAlias = "WORK"
+	AddressAliasHotel AddressAlias = "HOTEL"
+	AddressAliasOther AddressAlias = "OTHER"
+)
+
+var AllAddressAlias = []AddressAlias{
+	AddressAliasHome,
+	AddressAliasWork,
+	AddressAliasHotel,
+	AddressAliasOther,
+}
+
+func (e AddressAlias) IsValid() bool {
+	switch e {
+	case AddressAliasHome, AddressAliasWork, AddressAliasHotel, AddressAliasOther:
+		return true
+	}
+	return false
+}
+
+func (e AddressAlias) String() string {
+	return string(e)
+}
+
+func (e *AddressAlias) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AddressAlias(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AddressAlias", str)
+	}
+	return nil
+}
+
+func (e AddressAlias) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 type AuthRole string

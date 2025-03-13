@@ -321,6 +321,21 @@ func ToPbProfile(p *Profile) *pb.Profile {
 	}
 }
 
+func ToAddressAlias(alias pb.AddressAlias) AddressAlias {
+	switch alias {
+	case pb.AddressAlias_HOME:
+		return Home
+	case pb.AddressAlias_WORK:
+		return Work
+	case pb.AddressAlias_HOTEL:
+		return Hotel
+	case pb.AddressAlias_OTHER:
+		return Other
+	default:
+		return Other
+	}
+}
+
 func ToPbAddressAlias(alias AddressAlias) pb.AddressAlias {
 	switch alias {
 	case Home:
@@ -332,7 +347,7 @@ func ToPbAddressAlias(alias AddressAlias) pb.AddressAlias {
 	case Other:
 		return pb.AddressAlias_OTHER
 	default:
-		return pb.AddressAlias_OTHER // Default to OTHER if unknown
+		return pb.AddressAlias_OTHER
 	}
 }
 
@@ -341,31 +356,17 @@ func ToDeliveryAddress(d *pb.DeliveryAddress) *DeliveryAddress {
 		ID:                  d.Id,
 		ReceiverName:        d.ReceiverName,
 		ReceiverPhone:       d.ReceiverPhone,
-		AddressAlias:        AddressAlias(d.AddressAlias),
+		AddressAlias:        ToAddressAlias(d.AddressAlias),
 		OtherAlias:          d.OtherAlias,
 		Latitude:            d.Latitude,
 		Longitude:           d.Longitude,
 		Address:             d.Address,
 		NearbyLandmark:      d.NearbyLandmark,
 		DeliveryInstruction: d.DeliveryInstruction,
+		IsDefault:           d.IsDefault,
 		AuthId:              d.AuthId,
 		CreatedAt:           d.CreatedAt.AsTime(),
 		UpdatedAt:           d.UpdatedAt.AsTime(),
-	}
-}
-
-func ToCreateDeliveryAddress(req *pb.CreateDeliveryAddressReq) *CreateDeliveryAddress {
-	return &CreateDeliveryAddress{
-		ReceiverName:        req.ReceiverName,
-		ReceiverPhone:       req.ReceiverPhone,
-		AddressAlias:        AddressAlias(req.Address),
-		OtherAlias:          req.OtherAlias,
-		Latitude:            req.Latitude,
-		Longitude:           req.Longitude,
-		Address:             req.Address,
-		NearbyLandmark:      req.NearbyLandmark,
-		DeliveryInstruction: req.DeliveryInstruction,
-		AuthId:              req.AuthId,
 	}
 }
 
@@ -381,9 +382,26 @@ func ToPbDeliveryAddress(d *DeliveryAddress) *pb.DeliveryAddress {
 		Address:             d.Address,
 		NearbyLandmark:      d.NearbyLandmark,
 		DeliveryInstruction: d.DeliveryInstruction,
+		IsDefault:           d.IsDefault,
 		AuthId:              d.AuthId,
 		CreatedAt:           timestamppb.New(d.CreatedAt),
 		UpdatedAt:           timestamppb.New(d.UpdatedAt),
+	}
+}
+
+func ToCreateDeliveryAddress(req *pb.CreateDeliveryAddressReq) *CreateDeliveryAddress {
+	return &CreateDeliveryAddress{
+		ReceiverName:        req.ReceiverName,
+		ReceiverPhone:       req.ReceiverPhone,
+		AddressAlias:        ToAddressAlias(req.AddressAlias),
+		OtherAlias:          req.OtherAlias,
+		Latitude:            req.Latitude,
+		Longitude:           req.Longitude,
+		Address:             req.Address,
+		NearbyLandmark:      req.NearbyLandmark,
+		DeliveryInstruction: req.DeliveryInstruction,
+		IsDefault:           req.IsDefault,
+		AuthId:              req.AuthId,
 	}
 }
 
@@ -393,6 +411,28 @@ func ToPbDeliveryAddressList(addresses []*DeliveryAddress) []*pb.DeliveryAddress
 		pbAddresses[i] = ToPbDeliveryAddress(addr)
 	}
 	return pbAddresses
+}
+
+func ToPbAddressDetail(d *AddressDetail) *pb.AddressDetail {
+	if d == nil {
+		return nil
+	}
+
+	return &pb.AddressDetail{
+		Id:               d.Id,
+		Route:            d.Route,
+		Town:             d.Town,
+		PostalCode:       d.PostalCode,
+		District:         d.District,
+		State:            d.State,
+		Country:          d.Country,
+		PlusCode:         d.PlusCode,
+		PlaceId:          d.PlaceId,
+		FormattedAddress: d.FormattedAddress,
+		Latitude:         d.Latitude,
+		Longitude:        d.Longitude,
+		AddressId:        d.AddressId,
+	}
 }
 
 func PbUpdateProfileReqToProfile(p *pb.UpdateProfileReq) *Profile {

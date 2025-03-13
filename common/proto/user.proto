@@ -71,9 +71,10 @@ message DeliveryAddress {
   string address = 8;
   optional string nearby_landmark = 9;
   optional string delivery_instruction = 10;
-  string auth_id = 11;
-  google.protobuf.Timestamp created_at = 12;
-  google.protobuf.Timestamp updated_at = 13;
+  bool is_default = 11;
+  string auth_id = 12;
+  google.protobuf.Timestamp created_at = 13;
+  google.protobuf.Timestamp updated_at = 14;
 }
 
 message CreateDeliveryAddressReq {
@@ -86,7 +87,8 @@ message CreateDeliveryAddressReq {
   string address = 7;
   optional string nearby_landmark = 8;
   optional string delivery_instruction = 9;
-  string auth_id = 10;
+  bool is_default = 10;
+  string auth_id = 11;
 }
 
 message GetDeliveryAddressReq {

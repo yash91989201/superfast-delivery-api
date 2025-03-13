@@ -1,5 +1,5 @@
 # Builder stage 
-FROM golang:1.23.0-alpine AS builder
+FROM golang:1.24.0-alpine AS builder
 WORKDIR /
 
 # Download dependencies for the common module
