@@ -389,17 +389,17 @@ func (s *grpcServer) ValidateSession(ctx context.Context, req *pb.ValidateSessio
 		return nil, err
 	}
 
-	auth, err := s.service.GetAuthById(ctx, token.RegisteredClaims.Subject)
-	if err != nil {
-		return nil, err
-	}
-
 	session, err := s.service.GetSession(ctx, token.RegisteredClaims.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	if auth.ID != session.AuthID {
+	auth, err := s.service.GetAuthById(ctx, token.RegisteredClaims.Subject)
+	if err != nil {
+		return nil, err
+	}
+
+	if session.AuthID != auth.ID {
 		return nil, fmt.Errorf("invalid auth, please login")
 	}
 
