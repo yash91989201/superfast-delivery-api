@@ -27,8 +27,8 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 
 	profile, err := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 	res := &SignInOutput{
-		Auth:      ToAuth(signInRes.Auth),
-		Session:   ToSession(signInRes.Session),
+		Auth:      ToGQAuth(signInRes.Auth),
+		Session:   ToGQSession(signInRes.Session),
 		VerifyOtp: false,
 	}
 
@@ -37,7 +37,7 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 		return res, nil
 	}
 
-	res.Profile = ToProfile(profile)
+	res.Profile = ToGQProfile(profile)
 	return res, nil
 }
 
@@ -58,9 +58,9 @@ func (r *mutationResolver) RefreshToken(ctx context.Context, session_id string) 
 	profile, _ := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 
 	return &SignInOutput{
-		Auth:          ToAuth(signInRes.Auth),
-		Session:       ToSession(signInRes.Session),
-		Profile:       ToProfile(profile),
+		Auth:          ToGQAuth(signInRes.Auth),
+		Session:       ToGQSession(signInRes.Session),
+		Profile:       ToGQProfile(profile),
 		CreateProfile: profile == nil,
 		VerifyOtp:     false,
 	}, nil
@@ -89,7 +89,7 @@ func (r *mutationResolver) CreateProfile(ctx context.Context, in CreateProfileIn
 		return nil, err
 	}
 
-	return ToProfile(res), nil
+	return ToGQProfile(res), nil
 }
 
 func (r *mutationResolver) UpdateProfile(ctx context.Context, in UpdateProfileInput) (*Profile, error) {
@@ -106,7 +106,7 @@ func (r *mutationResolver) UpdateProfile(ctx context.Context, in UpdateProfileIn
 		return nil, err
 	}
 
-	return ToProfile(res), nil
+	return ToGQProfile(res), nil
 }
 
 func (r *mutationResolver) CreateDeliveryAddress(ctx context.Context, in *CreateDeliveryAddressInput) (*DeliveryAddress, error) {

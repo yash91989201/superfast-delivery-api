@@ -6,6 +6,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/nrednav/cuid2"
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
 	"github.com/yash91989201/superfast-delivery-api/common/types"
 	"github.com/yash91989201/superfast-delivery-api/common/utils/token"
@@ -72,12 +73,22 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 			}
 		}
 
-		accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 15*time.Minute)
+		newAuthClaim := token.NewAuthClaim{
+			Email:         auth.Email,
+			EmailVerified: auth.EmailVerified,
+			Phone:         auth.Phone,
+			Role:          auth.AuthRole,
+			AuthId:        auth.ID,
+			SessionId:     cuid2.Generate(),
+			Duration:      15 * time.Minute,
+		}
+
+		accessToken, accessClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to create access token: %w", err)
 		}
 
-		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 24*time.Hour)
+		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to create refresh token: %w", err)
 		}
@@ -182,14 +193,24 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 			}
 		}
 
-		accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 15*time.Minute)
-		if err != nil {
-			return nil, fmt.Errorf("Failed to create token: %w", err)
+		newAuthClaim := token.NewAuthClaim{
+			Email:         auth.Email,
+			EmailVerified: auth.EmailVerified,
+			Phone:         auth.Phone,
+			Role:          auth.AuthRole,
+			AuthId:        auth.ID,
+			SessionId:     cuid2.Generate(),
+			Duration:      15 * time.Minute,
 		}
 
-		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 24*time.Hour)
+		accessToken, accessClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create token: %w", err)
+			return nil, fmt.Errorf("Failed to create access token: %w", err)
+		}
+
+		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
+		if err != nil {
+			return nil, fmt.Errorf("Failed to create refresh token: %w", err)
 		}
 
 		session := &types.Session{
@@ -261,6 +282,24 @@ func (s *grpcServer) SignInWithGoogle(ctx context.Context, req *pb.SignInWithGoo
 	return nil, nil
 }
 
+func (s *grpcServer) GetAuthById(ctx context.Context, req *pb.GetAuthByIdReq) (*pb.Auth, error) {
+	auth, err := s.service.GetAuthById(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbAuth(auth), nil
+}
+
+func (s *grpcServer) GetAuth(ctx context.Context, req *pb.GetAuthReq) (*pb.Auth, error) {
+	auth, err := s.service.GetAuth(ctx, req.Email, req.Phone)
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbAuth(auth), nil
+}
+
 func (s *grpcServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) (*pb.SignInRes, error) {
 	// get session from db
 	session, err := s.service.GetSession(ctx, req.SessionId)
@@ -279,14 +318,24 @@ func (s *grpcServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) 
 		return nil, err
 	}
 
-	accessToken, accessClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 15*time.Minute)
-	if err != nil {
-		return nil, fmt.Errorf("Failed to create token: %w", err)
+	newAuthClaim := token.NewAuthClaim{
+		Email:         auth.Email,
+		EmailVerified: auth.EmailVerified,
+		Phone:         auth.Phone,
+		Role:          auth.AuthRole,
+		AuthId:        auth.ID,
+		SessionId:     cuid2.Generate(),
+		Duration:      15 * time.Minute,
 	}
 
-	refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(auth.Email, auth.EmailVerified, auth.Phone, auth.AuthRole, auth.ID, 24*time.Hour)
+	accessToken, accessClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to create token: %w", err)
+		return nil, fmt.Errorf("Failed to create access token: %w", err)
+	}
+
+	refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to create refresh token: %w", err)
 	}
 
 	newSession := &types.Session{
@@ -315,7 +364,6 @@ func (s *grpcServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) 
 
 func (s *grpcServer) LogOut(ctx context.Context, req *pb.LogOutReq) (*pb.SignInRes, error) {
 
-	// get session from db
 	session, err := s.service.GetSession(ctx, req.SessionId)
 	if err != nil || session.IsRevoked || session.ExpiresAt.Before(time.Now()) {
 		return nil, status.Errorf(codes.Unauthenticated, "Session expired, sign in again")
@@ -326,7 +374,6 @@ func (s *grpcServer) LogOut(ctx context.Context, req *pb.LogOutReq) (*pb.SignInR
 		return nil, status.Errorf(codes.NotFound, "Account not found")
 	}
 
-	// delete refresh token
 	err = s.service.DeleteSession(ctx, session.ID)
 	if err != nil {
 		return nil, err
@@ -335,10 +382,29 @@ func (s *grpcServer) LogOut(ctx context.Context, req *pb.LogOutReq) (*pb.SignInR
 	return &pb.SignInRes{}, nil
 }
 
-func (s *grpcServer) GetAuthById(ctx context.Context, req *pb.GetAuthByIdReq) (*pb.Auth, error) {
-	return nil, nil
-}
+func (s *grpcServer) ValidateSession(ctx context.Context, req *pb.ValidateSessionReq) (*pb.ValidateSessionRes, error) {
 
-func (s *grpcServer) GetAuth(ctx context.Context, req *pb.GetAuthReq) (*pb.Auth, error) {
-	return nil, nil
+	token, err := s.JwtMaker.VerifyToken(req.AuthToken)
+	if err != nil {
+		return nil, err
+	}
+
+	auth, err := s.service.GetAuthById(ctx, token.RegisteredClaims.Subject)
+	if err != nil {
+		return nil, err
+	}
+
+	session, err := s.service.GetSession(ctx, token.RegisteredClaims.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	if auth.ID != session.AuthID {
+		return nil, fmt.Errorf("invalid auth, please login")
+	}
+
+	return &pb.ValidateSessionRes{
+		Valid: true,
+		Auth:  types.ToPbAuth(auth),
+	}, nil
 }

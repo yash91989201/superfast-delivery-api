@@ -572,8 +572,8 @@ type ListDeliveryAddressOutput {
 }
 
 type Query {
-  GetAuthById(input: GetAuthByIdInput!): Auth
-  GetAuth(input: GetAuthInput!): Auth
+  GetAuth(input: GetAuthInput!): Auth!
+  GetAuthById(input: GetAuthByIdInput!): Auth!
 
   GetProfile(input: GetProfileInput!): Profile!
   GetDeliveryAddress(id: ID!): DeliveryAddress!

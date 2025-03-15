@@ -26,6 +26,7 @@ const (
 	AuthenticationService_GetAuth_FullMethodName          = "/pb.AuthenticationService/GetAuth"
 	AuthenticationService_RefreshToken_FullMethodName     = "/pb.AuthenticationService/RefreshToken"
 	AuthenticationService_LogOut_FullMethodName           = "/pb.AuthenticationService/LogOut"
+	AuthenticationService_ValidateSession_FullMethodName  = "/pb.AuthenticationService/ValidateSession"
 )
 
 // AuthenticationServiceClient is the client API for AuthenticationService service.
@@ -37,9 +38,9 @@ type AuthenticationServiceClient interface {
 	SignInWithGoogle(ctx context.Context, in *SignInWithGoogleReq, opts ...grpc.CallOption) (*SignInRes, error)
 	GetAuthById(ctx context.Context, in *GetAuthByIdReq, opts ...grpc.CallOption) (*Auth, error)
 	GetAuth(ctx context.Context, in *GetAuthReq, opts ...grpc.CallOption) (*Auth, error)
-	// TODO: these rpc's should be protected
 	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*SignInRes, error)
 	LogOut(ctx context.Context, in *LogOutReq, opts ...grpc.CallOption) (*SignInRes, error)
+	ValidateSession(ctx context.Context, in *ValidateSessionReq, opts ...grpc.CallOption) (*ValidateSessionRes, error)
 }
 
 type authenticationServiceClient struct {
@@ -120,6 +121,16 @@ func (c *authenticationServiceClient) LogOut(ctx context.Context, in *LogOutReq,
 	return out, nil
 }
 
+func (c *authenticationServiceClient) ValidateSession(ctx context.Context, in *ValidateSessionReq, opts ...grpc.CallOption) (*ValidateSessionRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ValidateSessionRes)
+	err := c.cc.Invoke(ctx, AuthenticationService_ValidateSession_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthenticationServiceServer is the server API for AuthenticationService service.
 // All implementations must embed UnimplementedAuthenticationServiceServer
 // for forward compatibility.
@@ -129,9 +140,9 @@ type AuthenticationServiceServer interface {
 	SignInWithGoogle(context.Context, *SignInWithGoogleReq) (*SignInRes, error)
 	GetAuthById(context.Context, *GetAuthByIdReq) (*Auth, error)
 	GetAuth(context.Context, *GetAuthReq) (*Auth, error)
-	// TODO: these rpc's should be protected
 	RefreshToken(context.Context, *RefreshTokenReq) (*SignInRes, error)
 	LogOut(context.Context, *LogOutReq) (*SignInRes, error)
+	ValidateSession(context.Context, *ValidateSessionReq) (*ValidateSessionRes, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
 }
 
@@ -162,6 +173,9 @@ func (UnimplementedAuthenticationServiceServer) RefreshToken(context.Context, *R
 }
 func (UnimplementedAuthenticationServiceServer) LogOut(context.Context, *LogOutReq) (*SignInRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
+}
+func (UnimplementedAuthenticationServiceServer) ValidateSession(context.Context, *ValidateSessionReq) (*ValidateSessionRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateSession not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) mustEmbedUnimplementedAuthenticationServiceServer() {}
 func (UnimplementedAuthenticationServiceServer) testEmbeddedByValue()                               {}
@@ -310,6 +324,24 @@ func _AuthenticationService_LogOut_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthenticationService_ValidateSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateSessionReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticationServiceServer).ValidateSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthenticationService_ValidateSession_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticationServiceServer).ValidateSession(ctx, req.(*ValidateSessionReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthenticationService_ServiceDesc is the grpc.ServiceDesc for AuthenticationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -344,6 +376,10 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LogOut",
 			Handler:    _AuthenticationService_LogOut_Handler,
+		},
+		{
+			MethodName: "ValidateSession",
+			Handler:    _AuthenticationService_ValidateSession_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

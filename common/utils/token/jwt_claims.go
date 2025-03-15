@@ -2,10 +2,8 @@ package token
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/yash91989201/superfast-delivery-api/common/types"
 )
 
 type JWTMaker struct {
@@ -16,8 +14,8 @@ func NewJWTMaker(secretKey string) *JWTMaker {
 	return &JWTMaker{secretKey}
 }
 
-func (maker *JWTMaker) CreateToken(email *string, email_verified bool, phone *string, role types.AuthRole, auth_id string, duration time.Duration) (string, *AuthClaims, error) {
-	claims := NewAuthClaims(email, email_verified, phone, role, auth_id, duration)
+func (maker *JWTMaker) CreateToken(newAuthClaim NewAuthClaim) (string, *AuthClaims, error) {
+	claims := NewAuthClaims(newAuthClaim)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenStr, err := token.SignedString([]byte(maker.secretKey))
 
@@ -29,7 +27,7 @@ func (maker *JWTMaker) CreateToken(email *string, email_verified bool, phone *st
 }
 
 func (maker *JWTMaker) VerifyToken(tokenStr string) (*AuthClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenStr, &AuthClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenStr, &AuthClaims{}, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Invalid token signing method")
 		}

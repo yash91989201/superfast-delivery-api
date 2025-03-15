@@ -16,7 +16,7 @@ func (r *queryResolver) GetAuthByID(ctx context.Context, in GetAuthByIDInput) (*
 		return nil, err
 	}
 
-	return ToAuth(auth), nil
+	return ToGQAuth(auth), nil
 }
 
 func (r *queryResolver) GetAuth(ctx context.Context, in GetAuthInput) (*Auth, error) {
@@ -25,7 +25,7 @@ func (r *queryResolver) GetAuth(ctx context.Context, in GetAuthInput) (*Auth, er
 		return nil, err
 	}
 
-	return ToAuth(auth), nil
+	return ToGQAuth(auth), nil
 }
 
 func (r *queryResolver) GetProfile(ctx context.Context, in GetProfileInput) (*Profile, error) {

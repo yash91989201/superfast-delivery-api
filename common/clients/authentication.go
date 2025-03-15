@@ -93,3 +93,12 @@ func (c *AuthenticationClient) GetAuth(ctx context.Context, req *pb.GetAuthReq) 
 
 	return res, nil
 }
+
+func (c *AuthenticationClient) ValidateSession(ctx context.Context, req *pb.ValidateSessionReq) (*pb.ValidateSessionRes, error) {
+	res, err := c.service.ValidateSession(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

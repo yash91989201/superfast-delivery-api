@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/nrednav/cuid2"
 	"github.com/yash91989201/superfast-delivery-api/common/types"
 )
 
@@ -16,25 +15,27 @@ type AuthClaims struct {
 	jwt.RegisteredClaims
 }
 
-func NewAuthClaims(
-	email *string,
-	emailVerfied bool,
-	phone *string,
-	role types.AuthRole,
-	authId string,
-	duration time.Duration,
-) *AuthClaims {
-	sessionId := cuid2.Generate()
+type NewAuthClaim struct {
+	Email         *string
+	EmailVerified bool
+	Phone         *string
+	Role          types.AuthRole
+	AuthId        string
+	SessionId     string
+	Duration      time.Duration
+}
+
+func NewAuthClaims(newAuthClaim NewAuthClaim) *AuthClaims {
 
 	return &AuthClaims{
-		Email: email,
-		Phone: phone,
-		Role:  role,
+		Email: newAuthClaim.Email,
+		Phone: newAuthClaim.Phone,
+		Role:  newAuthClaim.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ID:        sessionId,
-			Subject:   authId,
+			ID:        newAuthClaim.SessionId,
+			Subject:   newAuthClaim.AuthId,
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(newAuthClaim.Duration)),
 		},
 	}
 }

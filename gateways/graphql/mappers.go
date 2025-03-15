@@ -124,7 +124,7 @@ func ToPbProfile(p *Profile) *pb.Profile {
 	}
 }
 
-func ToAuthRole(t pb.AuthRole) AuthRole {
+func ToGQAuthRole(t pb.AuthRole) AuthRole {
 	switch t {
 	case pb.AuthRole_CUSTOMER:
 		return AuthRoleCustomer
@@ -241,7 +241,7 @@ func ToGQTimePtr(pbTime *timestamppb.Timestamp) *string {
 	return &timeStr
 }
 
-func ToAuth(a *pb.Auth) *Auth {
+func ToGQAuth(a *pb.Auth) *Auth {
 	if a == nil {
 		return nil
 	}
@@ -251,14 +251,14 @@ func ToAuth(a *pb.Auth) *Auth {
 		Email:         a.Email,
 		EmailVerified: a.EmailVerified,
 		Phone:         a.Phone,
-		AuthRole:      ToAuthRole(a.AuthRole),
+		AuthRole:      ToGQAuthRole(a.AuthRole),
 		CreatedAt:     ToGQTime(a.CreatedAt),
 		UpdatedAt:     ToGQTime(a.UpdatedAt),
 		DeletedAt:     ToGQTimePtr(a.DeletedAt),
 	}
 }
 
-func ToSession(s *pb.Session) *Session {
+func ToGQSession(s *pb.Session) *Session {
 	return &Session{
 		ID:                   s.Id,
 		AccessToken:          s.AccessToken,
@@ -266,7 +266,7 @@ func ToSession(s *pb.Session) *Session {
 	}
 }
 
-func ToProfile(p *pb.Profile) *Profile {
+func ToGQProfile(p *pb.Profile) *Profile {
 	if p == nil {
 		return nil
 	}

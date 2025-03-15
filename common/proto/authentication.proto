@@ -66,6 +66,15 @@ message GetAuthReq {
   optional string phone = 2;
 }
 
+message ValidateSessionReq {
+  string auth_token = 1;
+}
+
+message ValidateSessionRes {
+  bool valid = 1;
+  Auth auth = 2;
+}
+
 service AuthenticationService {
   rpc SignInWithEmail(SignInWithEmailReq) returns (SignInRes) {}
   rpc SignInWithPhone(SignInWithPhoneReq) returns (SignInRes) {}
@@ -74,7 +83,8 @@ service AuthenticationService {
   rpc GetAuthById(GetAuthByIdReq) returns (Auth) {}
   rpc GetAuth(GetAuthReq) returns (Auth) {}
 
-  // TODO: these rpc's should be protected
   rpc RefreshToken(RefreshTokenReq) returns (SignInRes) {}
   rpc LogOut(LogOutReq) returns (SignInRes) {}
+
+  rpc ValidateSession(ValidateSessionReq) returns (ValidateSessionRes) {}
 }
