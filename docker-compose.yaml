@@ -5,6 +5,14 @@ networks:
     driver: bridge
     name: superfast-delivery
 
+volumes:
+  authentication_db_data:
+  user_db_data:
+  shop_db_data:
+  product_db_data:
+  inventory_db_data:
+  geolocation_db_data:
+
 services:
   rest_gateway:
     image: yash6370/superfast-delivery-api-rest_gateway:latest
@@ -75,7 +83,7 @@ services:
     restart: on-failure:8
 
   authentication_db:
-    image: mysql:9.1.0
+    image: mysql:9.2.0
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${AUTHENTICATION_DB_ROOT_PASSWORD}
@@ -86,6 +94,8 @@ services:
     cpus: 1
     networks:
       - superfast-delivery
+    volumes:
+      - authentication_db_data:/var/lib/mysql
     healthcheck:
       test:
         [
@@ -136,7 +146,7 @@ services:
     restart: on-failure:8
 
   user_db:
-    image: mysql:9.1.0
+    image: mysql:9.2.0
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${USER_DB_ROOT_PASSWORD}
@@ -147,6 +157,8 @@ services:
     cpus: 1
     networks:
       - superfast-delivery
+    volumes:
+      - user_db_data:/var/lib/mysql
     healthcheck:
       test:
         [
@@ -207,6 +219,8 @@ services:
     cpus: 1
     networks:
       - superfast-delivery
+    volumes:
+      - shop_db_data:/var/lib/postgresql/data
     healthcheck:
       test:
         [
@@ -264,13 +278,14 @@ services:
       MONGO_INITDB_DATABASE: ${PRODUCT_DB_NAME}
       MONGO_INITDB_ROOT_USERNAME: ${PRODUCT_DB_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${PRODUCT_DB_ROOT_PASSWORD}
-    volumes:
-      - ./services/product/db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:RO
     command: [--auth]
     mem_limit: 750m
     cpus: 1
     networks:
       - superfast-delivery
+    volumes:
+      - product_db_data:/data/db
+      - ./services/product/db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:RO
     healthcheck:
       test:
         [
@@ -299,7 +314,7 @@ services:
     restart: on-failure:8
 
   inventory_db:
-    image: mysql:9.1.0
+    image: mysql:9.2.0
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${INVENTORY_DB_ROOT_PASSWORD}
@@ -310,6 +325,8 @@ services:
     cpus: 1
     networks:
       - superfast-delivery
+    volumes:
+      - inventory_db_data:/var/lib/mysql
     healthcheck:
       test:
         [
@@ -368,3 +385,5 @@ services:
       - DFLY_requirepass=${GEOLOCATION_DB_PASSWORD}
     networks:
       - superfast-delivery
+    volumes:
+      - geolocation_db_data:/data
