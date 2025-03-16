@@ -44,11 +44,11 @@ const (
 		INSERT INTO delivery_address (
 			id, receiver_name, receiver_phone, address_alias, other_alias, 
 			longitude, latitude, address, nearby_landmark, 
-			delivery_instruction, auth_id
+			delivery_instruction, auth_id, is_default
 		) VALUES (
 			:id, :receiver_name, :receiver_phone, :address_alias, :other_alias, 
 			:longitude, :latitude, :address, 
-			:nearby_landmark, :delivery_instruction, :auth_id
+      :nearby_landmark, :delivery_instruction, :auth_id, :is_default
 		)
 	`
 
@@ -60,17 +60,17 @@ const (
 	GET_DELIVERY_ADDRESS_BY_ID = `
 		SELECT 
 			id, receiver_name, receiver_phone, address_alias, other_alias, 
-			longitude, latitude, address, 
-			nearby_landmark, delivery_instruction, auth_id, created_at, updated_at 
+			longitude, latitude, address, nearby_landmark, delivery_instruction,
+      is_default, auth_id, created_at, updated_at 
 		FROM delivery_address 
 		WHERE id = ?
 	`
 
 	GET_DELIVERY_ADDRESSES_BY_AUTH_ID = `
 		SELECT 
-			id, receiver_name, receiver_phone, address_alias, other_alias, 
-			longitude, latitude, address, 
-			nearby_landmark, delivery_instruction, auth_id, created_at, updated_at 
+    	id, receiver_name, receiver_phone, address_alias, other_alias, 
+			longitude, latitude, address, nearby_landmark, delivery_instruction,
+      is_default, auth_id, created_at, updated_at 
 		FROM delivery_address 
 		WHERE auth_id = ?
 	`
@@ -87,7 +87,7 @@ const (
 			address = :address, 
 			nearby_landmark = :nearby_landmark, 
 			delivery_instruction = :delivery_instruction, 
-			updated_at = CURRENT_TIMESTAMP 
+      is_default = :is_default
 		WHERE id = :id
 	`
 )

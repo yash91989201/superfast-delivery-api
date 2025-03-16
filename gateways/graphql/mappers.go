@@ -376,7 +376,7 @@ func ToPbCreateDeliveryAddress(in *CreateDeliveryAddressInput) *pb.CreateDeliver
 	}
 }
 
-func ToDeliveryAddressList(pbAddresses []*pb.DeliveryAddress) []*DeliveryAddress {
+func ToGQDeliveryAddressList(pbAddresses []*pb.DeliveryAddress) []*DeliveryAddress {
 	addresses := make([]*DeliveryAddress, len(pbAddresses))
 	for i, d := range pbAddresses {
 		addresses[i] = ToGQDeliveryAddress(d)

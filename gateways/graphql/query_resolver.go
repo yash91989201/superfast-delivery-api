@@ -74,7 +74,7 @@ func (r *queryResolver) ListDeliveryAddress(ctx context.Context, authId string) 
 	}
 
 	return &ListDeliveryAddressOutput{
-		DeliveryAddress: ToDeliveryAddressList(res.DeliveryAddresses),
+		DeliveryAddress: ToGQDeliveryAddressList(res.DeliveryAddresses),
 	}, nil
 }
 
