@@ -57,8 +57,6 @@ func main() {
 		Cache: lru.New[string](100),
 	})
 
-	//	srv.AroundOperations(s.AuthenticationMiddleware)
-
 	http.Handle("/graphql", srv)
 	http.Handle("/playground", playground.Handler("GraphQL playground", "/graphql"))
 
