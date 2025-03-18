@@ -41,7 +41,7 @@ services:
     image: yash6370/superfast-delivery-api-graphql_gateway:latest
     build:
       context: .
-      dockerfile: ./gateways/graphql/Dockerfile
+      dockerfile: ./gateways/graphql/.docker/Dockerfile
     environment:
       PORT: ${GRAPHQL_API_PORT}
       AUTHENTICATION_SERVICE_URL: ${AUTHENTICATION_SERVICE_URL}
