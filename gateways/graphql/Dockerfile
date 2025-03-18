@@ -1,25 +1,28 @@
-# Builder stage 
 FROM golang:1.24.0-alpine AS builder
-WORKDIR /
 
-# Download dependencies for the common module
-COPY common ./common
-WORKDIR /common
+WORKDIR /app
+
+# Cache dependencies for common module
+COPY common/go.mod common/go.sum ./common/
+WORKDIR /app/common
 RUN go mod download
 
-# Download dependencies for graphql module
-WORKDIR /
+# Cache dependencies for graphql module
+WORKDIR /app/gateways/graphql
+COPY gateways/graphql/go.mod gateways/graphql/go.sum ./
+RUN go mod download
+
+# Now copy the actual source code
+WORKDIR /app
 COPY . .
-WORKDIR /gateways/graphql
-RUN go mod download
 
-# Build the final binary for graphql gateway
-WORKDIR /
-RUN go build -o graphql-gateway ./gateways/graphql/cmd/graphql
+# Build the GraphQL Gateway
+WORKDIR /app/gateways/graphql
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /app/graphql-gateway ./cmd/graphql
 
-# Final stage 
-FROM alpine:3.21.0
+# Final minimal image
+FROM scratch
 WORKDIR /
-COPY --from=builder /graphql-gateway ./
+COPY --from=builder /app/graphql-gateway ./
 EXPOSE $PORT
 CMD ["./graphql-gateway"]
