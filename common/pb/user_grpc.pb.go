@@ -19,15 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_CreateProfile_FullMethodName         = "/pb.UserService/CreateProfile"
-	UserService_GetProfile_FullMethodName            = "/pb.UserService/GetProfile"
-	UserService_UpdateProfile_FullMethodName         = "/pb.UserService/UpdateProfile"
-	UserService_DeleteProfile_FullMethodName         = "/pb.UserService/DeleteProfile"
-	UserService_CreateDeliveryAddress_FullMethodName = "/pb.UserService/CreateDeliveryAddress"
-	UserService_GetDeliveryAddress_FullMethodName    = "/pb.UserService/GetDeliveryAddress"
-	UserService_ListDeliveryAddress_FullMethodName   = "/pb.UserService/ListDeliveryAddress"
-	UserService_UpdateDeliveryAddress_FullMethodName = "/pb.UserService/UpdateDeliveryAddress"
-	UserService_DeleteDeliveryAddress_FullMethodName = "/pb.UserService/DeleteDeliveryAddress"
+	UserService_CreateProfile_FullMethodName                = "/pb.UserService/CreateProfile"
+	UserService_GetProfile_FullMethodName                   = "/pb.UserService/GetProfile"
+	UserService_UpdateProfile_FullMethodName                = "/pb.UserService/UpdateProfile"
+	UserService_DeleteProfile_FullMethodName                = "/pb.UserService/DeleteProfile"
+	UserService_CreateDeliveryAddress_FullMethodName        = "/pb.UserService/CreateDeliveryAddress"
+	UserService_GetDeliveryAddress_FullMethodName           = "/pb.UserService/GetDeliveryAddress"
+	UserService_ListDeliveryAddress_FullMethodName          = "/pb.UserService/ListDeliveryAddress"
+	UserService_UpdateDeliveryAddress_FullMethodName        = "/pb.UserService/UpdateDeliveryAddress"
+	UserService_UpdateDefaultDeliveryAddress_FullMethodName = "/pb.UserService/UpdateDefaultDeliveryAddress"
+	UserService_DeleteDeliveryAddress_FullMethodName        = "/pb.UserService/DeleteDeliveryAddress"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -42,6 +43,7 @@ type UserServiceClient interface {
 	GetDeliveryAddress(ctx context.Context, in *GetDeliveryAddressReq, opts ...grpc.CallOption) (*DeliveryAddress, error)
 	ListDeliveryAddress(ctx context.Context, in *ListDeliveryAddressReq, opts ...grpc.CallOption) (*ListDeliveryAddressRes, error)
 	UpdateDeliveryAddress(ctx context.Context, in *DeliveryAddress, opts ...grpc.CallOption) (*DeliveryAddress, error)
+	UpdateDefaultDeliveryAddress(ctx context.Context, in *UpdateDefaultDeliveryAddressReq, opts ...grpc.CallOption) (*EmptyRes, error)
 	DeleteDeliveryAddress(ctx context.Context, in *DeleteDeliveryAddressReq, opts ...grpc.CallOption) (*EmptyRes, error)
 }
 
@@ -133,6 +135,16 @@ func (c *userServiceClient) UpdateDeliveryAddress(ctx context.Context, in *Deliv
 	return out, nil
 }
 
+func (c *userServiceClient) UpdateDefaultDeliveryAddress(ctx context.Context, in *UpdateDefaultDeliveryAddressReq, opts ...grpc.CallOption) (*EmptyRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyRes)
+	err := c.cc.Invoke(ctx, UserService_UpdateDefaultDeliveryAddress_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) DeleteDeliveryAddress(ctx context.Context, in *DeleteDeliveryAddressReq, opts ...grpc.CallOption) (*EmptyRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(EmptyRes)
@@ -155,6 +167,7 @@ type UserServiceServer interface {
 	GetDeliveryAddress(context.Context, *GetDeliveryAddressReq) (*DeliveryAddress, error)
 	ListDeliveryAddress(context.Context, *ListDeliveryAddressReq) (*ListDeliveryAddressRes, error)
 	UpdateDeliveryAddress(context.Context, *DeliveryAddress) (*DeliveryAddress, error)
+	UpdateDefaultDeliveryAddress(context.Context, *UpdateDefaultDeliveryAddressReq) (*EmptyRes, error)
 	DeleteDeliveryAddress(context.Context, *DeleteDeliveryAddressReq) (*EmptyRes, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -189,6 +202,9 @@ func (UnimplementedUserServiceServer) ListDeliveryAddress(context.Context, *List
 }
 func (UnimplementedUserServiceServer) UpdateDeliveryAddress(context.Context, *DeliveryAddress) (*DeliveryAddress, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDeliveryAddress not implemented")
+}
+func (UnimplementedUserServiceServer) UpdateDefaultDeliveryAddress(context.Context, *UpdateDefaultDeliveryAddressReq) (*EmptyRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDefaultDeliveryAddress not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteDeliveryAddress(context.Context, *DeleteDeliveryAddressReq) (*EmptyRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDeliveryAddress not implemented")
@@ -358,6 +374,24 @@ func _UserService_UpdateDeliveryAddress_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_UpdateDefaultDeliveryAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDefaultDeliveryAddressReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateDefaultDeliveryAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_UpdateDefaultDeliveryAddress_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateDefaultDeliveryAddress(ctx, req.(*UpdateDefaultDeliveryAddressReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_DeleteDeliveryAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteDeliveryAddressReq)
 	if err := dec(in); err != nil {
@@ -414,6 +448,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateDeliveryAddress",
 			Handler:    _UserService_UpdateDeliveryAddress_Handler,
+		},
+		{
+			MethodName: "UpdateDefaultDeliveryAddress",
+			Handler:    _UserService_UpdateDefaultDeliveryAddress_Handler,
 		},
 		{
 			MethodName: "DeleteDeliveryAddress",

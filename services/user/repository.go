@@ -23,6 +23,7 @@ type Repository interface {
 	GetDeliveryAddressById(ctx context.Context, id string) (*types.DeliveryAddress, error)
 	GetDeliveryAddresses(ctx context.Context, authID string) ([]*types.DeliveryAddress, error)
 	UpdateDeliveryAddress(ctx context.Context, d *types.DeliveryAddress) error
+	UpdateDefaultDeliveryAddress(ctx context.Context, deliveryAddressId string, authId string) error
 	DeleteDeliveryAddress(ctx context.Context, id string) error
 }
 
@@ -154,5 +155,18 @@ func (r *mysqlRepository) UpdateDeliveryAddress(ctx context.Context, d *types.De
 	if err != nil {
 		return fmt.Errorf("Failed to update delivery address: %w", err)
 	}
+	return nil
+}
+
+func (r *mysqlRepository) UpdateDefaultDeliveryAddress(ctx context.Context, deliveryAddressId string, authId string) error {
+	queryRes, err := r.db.ExecContext(ctx, queries.UPDATE_DEFAULT_DELIVERY_ADDRESS, deliveryAddressId, authId)
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected != 1 || err != nil {
+		return err
+	}
+
 	return nil
 }

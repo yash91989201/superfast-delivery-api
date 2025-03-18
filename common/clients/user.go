@@ -107,7 +107,15 @@ func (c *UserClient) UpdateDeliveryAddress(ctx context.Context, req *pb.Delivery
 	}
 
 	return res, nil
+}
 
+func (c *UserClient) UpdateDefaultDeliveryAddress(ctx context.Context, req *pb.UpdateDefaultDeliveryAddressReq) (*pb.EmptyRes, error) {
+	res, err := c.service.UpdateDefaultDeliveryAddress(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }
 
 func (c *UserClient) DeleteDeliveryAddress(ctx context.Context, req *pb.DeleteDeliveryAddressReq) (*pb.EmptyRes, error) {

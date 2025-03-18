@@ -18,7 +18,8 @@ type Service interface {
 	GetDeliveryAddress(ctx context.Context, id string) (*types.DeliveryAddress, error)
 	GetDeliveryAddresses(ctx context.Context, authID string) ([]*types.DeliveryAddress, error)
 	UpdateDeliveryAddress(ctx context.Context, d *types.DeliveryAddress) error
-	DeleteDeliveryAddress(ctx context.Context, authID string) error
+	UpdateDefaultDeliveryAddress(ctx context.Context, deliveryAddressId string, authId string) error
+	DeleteDeliveryAddress(ctx context.Context, deliveryAddressId string) error
 }
 
 type userService struct {
@@ -95,6 +96,10 @@ func (s *userService) UpdateDeliveryAddress(ctx context.Context, d *types.Delive
 	return s.r.UpdateDeliveryAddress(ctx, d)
 }
 
-func (s *userService) DeleteDeliveryAddress(ctx context.Context, authID string) error {
-	return s.r.DeleteDeliveryAddress(ctx, authID)
+func (s *userService) UpdateDefaultDeliveryAddress(ctx context.Context, deliveryAddressId string, authId string) error {
+	return s.r.UpdateDefaultDeliveryAddress(ctx, deliveryAddressId, authId)
+}
+
+func (s *userService) DeleteDeliveryAddress(ctx context.Context, deliveryAddressId string) error {
+	return s.r.DeleteDeliveryAddress(ctx, deliveryAddressId)
 }

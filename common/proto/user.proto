@@ -114,6 +114,11 @@ message UpdateDeliveryAddressReq {
   string auth_id = 8;
 }
 
+message UpdateDefaultDeliveryAddressReq {
+  string delivery_address_id = 1;
+  string auth_id = 2;
+}
+
 message DeleteDeliveryAddressReq {
   string id = 1;
 }
@@ -128,5 +133,6 @@ service UserService {
   rpc GetDeliveryAddress(GetDeliveryAddressReq) returns (DeliveryAddress) {}
   rpc ListDeliveryAddress(ListDeliveryAddressReq) returns (ListDeliveryAddressRes) {}
   rpc UpdateDeliveryAddress(DeliveryAddress) returns (DeliveryAddress) {}
+  rpc UpdateDefaultDeliveryAddress(UpdateDefaultDeliveryAddressReq) returns (EmptyRes) {}
   rpc DeleteDeliveryAddress(DeleteDeliveryAddressReq) returns (EmptyRes) {}
 }

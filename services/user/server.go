@@ -113,6 +113,14 @@ func (s *grpcServer) UpdateDeliveryAddress(ctx context.Context, req *pb.Delivery
 	return types.ToPbDeliveryAddress(updatedDeliveryAddress), nil
 }
 
+func (s *grpcServer) UpdateDefaultDeliveryAddress(ctx context.Context, req *pb.UpdateDefaultDeliveryAddressReq) (*pb.EmptyRes, error) {
+	if err := s.service.UpdateDefaultDeliveryAddress(ctx, req.DeliveryAddressId, req.AuthId); err != nil {
+		return nil, err
+	}
+
+	return &pb.EmptyRes{}, nil
+}
+
 func (s *grpcServer) DeleteDeliveryAddress(ctx context.Context, req *pb.DeleteDeliveryAddressReq) (*pb.EmptyRes, error) {
 	if err := s.service.DeleteDeliveryAddress(ctx, req.Id); err != nil {
 		return nil, err

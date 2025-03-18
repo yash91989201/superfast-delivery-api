@@ -90,4 +90,15 @@ const (
       is_default = :is_default
 		WHERE id = :id
 	`
+
+	UPDATE_DEFAULT_DELIVERY_ADDRESS = `
+  UPDATE delivery_address
+  SET
+    is_default = CASE
+    WHEN id = ? THEN TRUE 
+    ELSE FALSE
+  END
+  WHERE
+    auth_id = ? 
+  `
 )
