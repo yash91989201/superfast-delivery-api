@@ -32,16 +32,19 @@ message Session {
 
 message SignInWithEmailReq {
   string email = 1;
-  optional string otp = 2;
+  AuthRole auth_role = 2;
+  optional string otp = 3;
 }
 
 message SignInWithPhoneReq {
   string phone = 1;
-  optional string otp = 2;
+  AuthRole auth_role = 2;
+  optional string otp = 3;
 }
 
 message SignInWithGoogleReq {
   string id_token = 1;
+  AuthRole auth_role = 2;
 }
 
 message SignInRes {

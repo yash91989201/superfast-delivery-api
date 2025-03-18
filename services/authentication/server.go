@@ -65,7 +65,7 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 					Email:         &ev.Email,
 					EmailVerified: true,
 					Phone:         nil,
-					AuthRole:      types.Customer,
+					AuthRole:      types.ToAuthRole(req.AuthRole),
 				})
 
 			if err != nil {
@@ -185,7 +185,7 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 					Email:         nil,
 					EmailVerified: true,
 					Phone:         &pv.Phone,
-					AuthRole:      types.Customer,
+					AuthRole:      types.ToAuthRole(req.AuthRole),
 				})
 
 			if err != nil {

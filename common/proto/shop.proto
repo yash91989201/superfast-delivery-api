@@ -54,17 +54,13 @@ message ShopContact {
 
 message ShopAddress {
   string id = 1;
-  string address1 = 2;
-  string address2 = 3;
-  double longitude = 4;
-  double latitude = 5;
-  string nearby_landmark = 6;
-  string city = 7;
-  string state = 8;
-  string pincode = 9;
-  string country = 10;
-  string shop_id = 11;
-  google.protobuf.Timestamp created_at = 12;
+  double longitude = 2;
+  double latitude = 3;
+  string address = 4;
+  string nearby_landmark = 5;
+  string shop_id = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
 }
 
 message ShopImage {
@@ -87,15 +83,10 @@ message ShopTiming {
 }
 
 message CreateShopAddress {
-  string address1 = 1;
-  string address2 = 2;
-  double longitude = 3;
-  double latitude = 4;
-  string nearby_landmark = 5;
-  string city = 6;
-  string state = 7;
-  string pincode = 8;
-  string country = 9;
+  string address = 1;
+  double longitude = 2;
+  double latitude = 3;
+  string nearby_landmark = 4;
 }
 
 message CreateShopContact {
@@ -125,11 +116,6 @@ message CreateShopReq {
   CreateShopContact contact = 6;
   repeated CreateShopImage images = 7;
   repeated CreateShopTiming timings = 8;
-}
-
-message CreateShopRes {
-  string id = 1;
-  string message = 2;
 }
 
 message UpdateShopReq {
@@ -203,30 +189,13 @@ message DeleteShopRes {
 }
 
 service ShopService {
-  // Create a new shop
-  rpc CreateShop(CreateShopReq) returns (CreateShopRes);
-
-  // Get shop details by ID
+  rpc CreateShop(CreateShopReq) returns (Shop);
   rpc GetShop(GetShopReq) returns (Shop);
-
-  // List all shops with optional filters
   rpc ListShops(ListShopsReq) returns (ListShopsRes);
-
-  // Update shop details
   rpc UpdateShop(UpdateShopReq) returns (UpdateShopRes);
-
-  // Update shop address
   rpc UpdateShopAddress(UpdateShopAddressReq) returns (UpdateShopAddressRes);
-
-  // Update shop contact
   rpc UpdateShopContact(UpdateShopContactReq) returns (UpdateShopContactRes);
-
-  // Update shop images
   rpc UpdateShopImages(UpdateShopImagesReq) returns (UpdateShopImagesRes);
-
-  // Update shop timings
   rpc UpdateShopTimings(UpdateShopTimingsReq) returns (UpdateShopTimingsRes);
-
-  // Delete a shop by ID (soft delete)
   rpc DeleteShop(DeleteShopReq) returns (DeleteShopRes);
 }

@@ -356,11 +356,7 @@ func ToPbDeliveryAddress(d *DeliveryAddress) *pb.DeliveryAddress {
 	}
 }
 
-func ToPbCreateDeliveryAddress(in *CreateDeliveryAddressInput) *pb.CreateDeliveryAddressReq {
-	if in == nil {
-		return nil
-	}
-
+func ToPbCreateDeliveryAddress(in CreateDeliveryAddressInput) *pb.CreateDeliveryAddressReq {
 	return &pb.CreateDeliveryAddressReq{
 		ReceiverName:        in.ReceiverName,
 		ReceiverPhone:       in.ReceiverPhone,
@@ -478,15 +474,10 @@ func ToPbCreateShopReq(cs CreateShopInput) *pb.CreateShopReq {
 		ShopStatus:  ToPbShopStatus(cs.ShopStatus),
 		OwnerAuthId: cs.OwnerAuthID,
 		Address: &pb.CreateShopAddress{
-			Address1:       cs.Address.Address1,
-			Address2:       *cs.Address.Address2,
 			Longitude:      cs.Address.Longitude,
 			Latitude:       cs.Address.Latitude,
+			Address:        cs.Address.Address,
 			NearbyLandmark: cs.Address.NearbyLandmark,
-			City:           cs.Address.City,
-			State:          cs.Address.State,
-			Pincode:        cs.Address.Pincode,
-			Country:        cs.Address.Country,
 		},
 		Contact: &pb.CreateShopContact{
 			Name:        cs.Contact.Name,
@@ -495,13 +486,6 @@ func ToPbCreateShopReq(cs CreateShopInput) *pb.CreateShopReq {
 		},
 		Images:  images,
 		Timings: timings,
-	}
-}
-
-func ToGQCreateShopOutput(cs *pb.CreateShopRes) *CreateShopOutput {
-	return &CreateShopOutput{
-		ID:      cs.Id,
-		Message: cs.Message,
 	}
 }
 
@@ -519,15 +503,10 @@ func ToGQContact(c *pb.ShopContact) *ShopContact {
 func ToGQAddress(a *pb.ShopAddress) *ShopAddress {
 	return &ShopAddress{
 		ID:             a.Id,
-		Address1:       a.Address1,
-		Address2:       a.Address2,
 		Longitude:      a.Longitude,
 		Latitude:       a.Latitude,
+		Address:        a.Address,
 		NearbyLandmark: a.NearbyLandmark,
-		City:           a.City,
-		State:          a.State,
-		Pincode:        a.Pincode,
-		Country:        a.Country,
 		ShopID:         a.ShopId,
 		CreatedAt:      ToGQTime(a.CreatedAt),
 	}

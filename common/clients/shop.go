@@ -32,83 +32,38 @@ func (c *ShopClient) Close() {
 	c.conn.Close()
 }
 
-func (s *ShopClient) CreateShop(ctx context.Context, req *pb.CreateShopReq) (*pb.CreateShopRes, error) {
-	res, err := s.service.CreateShop(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+func (s *ShopClient) CreateShop(ctx context.Context, req *pb.CreateShopReq) (*pb.Shop, error) {
+	return s.service.CreateShop(ctx, req)
 }
 
 func (s *ShopClient) GetShop(ctx context.Context, req *pb.GetShopReq) (*pb.Shop, error) {
-	res, err := s.service.GetShop(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return s.service.GetShop(ctx, req)
 }
 
 func (s *ShopClient) ListShops(ctx context.Context, req *pb.ListShopsReq) (*pb.ListShopsRes, error) {
-	res, err := s.service.ListShops(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return s.service.ListShops(ctx, req)
 }
 
 func (s *ShopClient) UpdateShopAddress(ctx context.Context, req *pb.UpdateShopAddressReq) (*pb.UpdateShopAddressRes, error) {
-	res, err := s.service.UpdateShopAddress(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return s.service.UpdateShopAddress(ctx, req)
 }
 
 func (s *ShopClient) UpdateShopContact(ctx context.Context, req *pb.UpdateShopContactReq) (*pb.UpdateShopContactRes, error) {
-	res, err := s.service.UpdateShopContact(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return s.service.UpdateShopContact(ctx, req)
 }
 
 func (s *ShopClient) UpdateShopImages(ctx context.Context, req *pb.UpdateShopImagesReq) (*pb.UpdateShopImagesRes, error) {
-	res, err := s.service.UpdateShopImages(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return s.service.UpdateShopImages(ctx, req)
 }
 
 func (s *ShopClient) UpdateShopTimings(ctx context.Context, req *pb.UpdateShopTimingsReq) (*pb.UpdateShopTimingsRes, error) {
-	res, err := s.service.UpdateShopTimings(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return s.service.UpdateShopTimings(ctx, req)
 }
 
 func (s *ShopClient) UpdateShop(ctx context.Context, req *pb.UpdateShopReq) (*pb.UpdateShopRes, error) {
-	res, err := s.service.UpdateShop(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return s.service.UpdateShop(ctx, req)
 }
 
 func (s *ShopClient) DeleteShop(ctx context.Context, req *pb.DeleteShopReq) (*pb.DeleteShopRes, error) {
-	res, err := s.service.DeleteShop(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return s.service.DeleteShop(ctx, req)
 }

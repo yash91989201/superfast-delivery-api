@@ -2,6 +2,7 @@ package graphql
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
 )
@@ -14,7 +15,9 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 	signInRes, err := r.server.authenticationClient.SignInWithEmail(
 		ctx,
 		&pb.SignInWithEmailReq{
-			Email: in.Email, Otp: in.Otp,
+			Email:    in.Email,
+			AuthRole: ToPbAuthRole(in.AuthRole),
+			Otp:      in.Otp,
 		},
 	)
 	if err != nil {
@@ -109,7 +112,7 @@ func (r *mutationResolver) UpdateProfile(ctx context.Context, in UpdateProfileIn
 	return ToGQProfile(res), nil
 }
 
-func (r *mutationResolver) CreateDeliveryAddress(ctx context.Context, in *CreateDeliveryAddressInput) (*DeliveryAddress, error) {
+func (r *mutationResolver) CreateDeliveryAddress(ctx context.Context, in CreateDeliveryAddressInput) (*DeliveryAddress, error) {
 	newDeliveryAddress, err := r.server.userClient.CreateDeliveryAddress(ctx, ToPbCreateDeliveryAddress(in))
 	if err != nil {
 		return nil, err
@@ -128,17 +131,54 @@ func (r *mutationResolver) CreateDeliveryAddress(ctx context.Context, in *Create
 	return ToGQDeliveryAddress(newDeliveryAddress), nil
 }
 
-func (r *mutationResolver) UpdateDeliveryAddress(ctx context.Context, in *UpdateDeliveryAddressInput) (*DeliveryAddress, error) {
+func (r *mutationResolver) UpdateDeliveryAddress(ctx context.Context, in UpdateDeliveryAddressInput) (*DeliveryAddress, error) {
 	return nil, nil
 }
 
-func (r *mutationResolver) CreateShop(ctx context.Context, in CreateShopInput) (*CreateShopOutput, error) {
+func (r *mutationResolver) UpdateDefaultDeliveryAddress(ctx context.Context, in UpdateDefaultDeliveryAddressInput) (*UpdateOutput, error) {
+	_, err := r.server.userClient.UpdateDefaultDeliveryAddress(ctx, &pb.UpdateDefaultDeliveryAddressReq{
+		DeliveryAddressId: in.DeliveryAddressID,
+		AuthId:            in.AuthID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &UpdateOutput{
+		Message: "default delivery address updated",
+	}, nil
+}
+
+func (r *mutationResolver) DeleteDeliveryAddress(ctx context.Context, addressId string) (*DeleteOutput, error) {
+	_, err := r.server.userClient.DeleteDeliveryAddress(ctx, &pb.DeleteDeliveryAddressReq{
+		Id: addressId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeleteOutput{
+		Message: "default delivery address updated",
+	}, nil
+}
+
+func (r *mutationResolver) CreateShop(ctx context.Context, in CreateShopInput) (*Shop, error) {
 	res, err := r.server.shopClient.CreateShop(ctx, ToPbCreateShopReq(in))
 	if err != nil {
 		return nil, err
 	}
 
-	return ToGQCreateShopOutput(res), nil
+	if _, err = r.server.geolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
+		AddressId: res.Address.Id,
+		Latitude:  in.Address.Latitude,
+		Longitude: in.Address.Longitude,
+	}); err != nil {
+		fmt.Printf("failed to store address detail: %+v", err)
+	}
+
+	return ToGQShop(res), nil
 }
 
 func (r *mutationResolver) UpdateShop(ctx context.Context, in UpdateShopInput) (*UpdateShopOutput, error) {

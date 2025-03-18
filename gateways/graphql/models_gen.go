@@ -130,15 +130,10 @@ type CreateRetailItemInput struct {
 }
 
 type CreateShopAddressInput struct {
-	Address1       string  `json:"address1"`
-	Address2       *string `json:"address2,omitempty"`
 	Longitude      float64 `json:"longitude"`
 	Latitude       float64 `json:"latitude"`
+	Address        string  `json:"address"`
 	NearbyLandmark string  `json:"nearby_landmark"`
-	City           string  `json:"city"`
-	State          string  `json:"state"`
-	Pincode        string  `json:"pincode"`
-	Country        string  `json:"country"`
 }
 
 type CreateShopContactInput struct {
@@ -177,6 +172,10 @@ type CreateShopTimingInput struct {
 type CreateVariantStockInput struct {
 	VariantID string `json:"variant_id"`
 	Quantity  int32  `json:"quantity"`
+}
+
+type DeleteOutput struct {
+	Message string `json:"message"`
 }
 
 type DeliveryAddress struct {
@@ -396,17 +395,13 @@ type Shop struct {
 
 type ShopAddress struct {
 	ID             string  `json:"id"`
-	Address1       string  `json:"address1"`
-	Address2       string  `json:"address2"`
 	Longitude      float64 `json:"longitude"`
 	Latitude       float64 `json:"latitude"`
+	Address        string  `json:"address"`
 	NearbyLandmark string  `json:"nearby_landmark"`
-	City           string  `json:"city"`
-	State          string  `json:"state"`
-	Pincode        string  `json:"pincode"`
-	Country        string  `json:"country"`
 	ShopID         string  `json:"shop_id"`
 	CreatedAt      string  `json:"created_at"`
+	UpdatedAt      string  `json:"updated_at"`
 }
 
 type ShopContact struct {
@@ -446,17 +441,25 @@ type SignInOutput struct {
 }
 
 type SignInWithEmailInput struct {
-	Email string  `json:"email"`
-	Otp   *string `json:"otp,omitempty"`
+	Email    string   `json:"email"`
+	AuthRole AuthRole `json:"auth_role"`
+	Otp      *string  `json:"otp,omitempty"`
 }
 
 type SignInWithGoogleInput struct {
-	IDToken string `json:"id_token"`
+	IDToken  string   `json:"id_token"`
+	AuthRole AuthRole `json:"auth_role"`
 }
 
 type SignInWithPhoneInput struct {
-	Phone string  `json:"phone"`
-	Otp   *string `json:"otp,omitempty"`
+	Phone    string   `json:"phone"`
+	AuthRole AuthRole `json:"auth_role"`
+	Otp      *string  `json:"otp,omitempty"`
+}
+
+type UpdateDefaultDeliveryAddressInput struct {
+	DeliveryAddressID string `json:"delivery_address_id"`
+	AuthID            string `json:"auth_id"`
 }
 
 type UpdateDeliveryAddressInput struct {
@@ -470,6 +473,10 @@ type UpdateDeliveryAddressInput struct {
 	DeliveryInstruction *string       `json:"delivery_instruction,omitempty"`
 	IsDefault           bool          `json:"is_default"`
 	AuthID              string        `json:"auth_id"`
+}
+
+type UpdateOutput struct {
+	Message string `json:"message"`
 }
 
 type UpdateProfileInput struct {

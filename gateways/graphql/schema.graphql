@@ -92,16 +92,19 @@ type AddressDetail {
 
 input SignInWithEmailInput {
   email: String!
+  auth_role: AuthRole!
   otp: String
 }
 
 input SignInWithPhoneInput {
   phone: String!
+  auth_role: AuthRole!
   otp: String
 }
 
 input SignInWithGoogleInput {
   id_token: String!
+  auth_role: AuthRole!
 }
 
 type SignInOutput {
@@ -171,6 +174,11 @@ input UpdateDeliveryAddressInput {
   auth_id: String!
 }
 
+input UpdateDefaultDeliveryAddressInput {
+  delivery_address_id: String!
+  auth_id: String!
+}
+
 enum ShopType {
   RESTAURANT
   GROCERY
@@ -223,17 +231,13 @@ type ShopContact {
 
 type ShopAddress {
   id: ID!
-  address1: String!
-  address2: String!
   longitude: Float!
   latitude: Float!
+  address: String!
   nearby_landmark: String!
-  city: String!
-  state: String!
-  pincode: String!
-  country: String!
   shop_id: ID!
   created_at: String!
+  updated_at: String!
 }
 
 type ShopImage {
@@ -262,15 +266,10 @@ input CreateShopContactInput {
 }
 
 input CreateShopAddressInput {
-  address1: String!
-  address2: String
   longitude: Float!
   latitude: Float!
+  address: String!
   nearby_landmark: String!
-  city: String!
-  state: String!
-  pincode: String!
-  country: String!
 }
 
 input LatLngInput {
@@ -571,6 +570,14 @@ type ListDeliveryAddressOutput {
   delivery_address: [DeliveryAddress!]!
 }
 
+type UpdateOutput {
+  message: String!
+}
+
+type DeleteOutput {
+  message: String!
+}
+
 type Query {
   GetAuth(input: GetAuthInput!): Auth!
   GetAuthById(input: GetAuthByIdInput!): Auth!
@@ -599,15 +606,19 @@ type Mutation {
   SignInWithEmail(input: SignInWithEmailInput!): SignInOutput!
   SignInWithPhone(input: SignInWithPhoneInput!): SignInOutput!
   SignInWithGoogle(input: SignInWithGoogleInput!): SignInOutput!
-  RefreshToken(session_id: String!): SignInOutput!
+  RefreshToken(session_id: ID!): SignInOutput!
   LogOut(session_id: ID!): SignInOutput!
 
   CreateProfile(input: CreateProfileInput!): Profile!
   UpdateProfile(input: UpdateProfileInput!): Profile!
-  CreateDeliveryAddress(input: CreateDeliveryAddressInput): DeliveryAddress!
-  UpdateDeliveryAddress(input: UpdateDeliveryAddressInput): DeliveryAddress!
+  CreateDeliveryAddress(input: CreateDeliveryAddressInput!): DeliveryAddress!
+  UpdateDeliveryAddress(input: UpdateDeliveryAddressInput!): DeliveryAddress!
+  UpdateDefaultDeliveryAddress(
+    input: UpdateDefaultDeliveryAddressInput!
+  ): UpdateOutput!
+  DeleteDeliveryAddress(addressId: ID!): DeleteOutput!
 
-  CreateShop(input: CreateShopInput!): CreateShopOutput!
+  CreateShop(input: CreateShopInput!): Shop!
   UpdateShop(input: UpdateShopInput!): UpdateShopOutput!
   UpdateShopAddress(input: UpdateShopAddressInput!): UpdateShopOutput!
   UpdateShopContact(input: UpdateShopContactInput!): UpdateShopOutput!

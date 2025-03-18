@@ -87,6 +87,10 @@ type ComplexityRoot struct {
 		Message func(childComplexity int) int
 	}
 
+	DeleteOutput struct {
+		Message func(childComplexity int) int
+	}
+
 	DeliveryAddress struct {
 		Address             func(childComplexity int) int
 		AddressAlias        func(childComplexity int) int
@@ -204,33 +208,35 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateAddonStock       func(childComplexity int, input CreateAddonStockInput) int
-		CreateDeliveryAddress  func(childComplexity int, input *CreateDeliveryAddressInput) int
-		CreateItemAddon        func(childComplexity int, input CreateItemAddonInput) int
-		CreateItemStock        func(childComplexity int, input CreateItemStockInput) int
-		CreateItemVariant      func(childComplexity int, input CreateItemVariantInput) int
-		CreateMedicineCategory func(childComplexity int, input CreateMedicineCategoryInput) int
-		CreateMedicineItem     func(childComplexity int, input CreateMedicineItemInput) int
-		CreateMenuItem         func(childComplexity int, input CreateMenuItemInput) int
-		CreateProfile          func(childComplexity int, input CreateProfileInput) int
-		CreateRestaurantMenu   func(childComplexity int, input CreateRestaurantMenuInput) int
-		CreateRetailCategory   func(childComplexity int, input CreateRetailCategoryInput) int
-		CreateRetailItem       func(childComplexity int, input CreateRetailItemInput) int
-		CreateShop             func(childComplexity int, input CreateShopInput) int
-		CreateVariantStock     func(childComplexity int, input CreateVariantStockInput) int
-		DeleteShop             func(childComplexity int, id string) int
-		LogOut                 func(childComplexity int, sessionID string) int
-		RefreshToken           func(childComplexity int, sessionID string) int
-		SignInWithEmail        func(childComplexity int, input SignInWithEmailInput) int
-		SignInWithGoogle       func(childComplexity int, input SignInWithGoogleInput) int
-		SignInWithPhone        func(childComplexity int, input SignInWithPhoneInput) int
-		UpdateDeliveryAddress  func(childComplexity int, input *UpdateDeliveryAddressInput) int
-		UpdateProfile          func(childComplexity int, input UpdateProfileInput) int
-		UpdateShop             func(childComplexity int, input UpdateShopInput) int
-		UpdateShopAddress      func(childComplexity int, input UpdateShopAddressInput) int
-		UpdateShopContact      func(childComplexity int, input UpdateShopContactInput) int
-		UpdateShopImages       func(childComplexity int, input []*UpdateShopImageInput) int
-		UpdateShopTimings      func(childComplexity int, input []*UpdateShopTimingInput) int
+		CreateAddonStock             func(childComplexity int, input CreateAddonStockInput) int
+		CreateDeliveryAddress        func(childComplexity int, input CreateDeliveryAddressInput) int
+		CreateItemAddon              func(childComplexity int, input CreateItemAddonInput) int
+		CreateItemStock              func(childComplexity int, input CreateItemStockInput) int
+		CreateItemVariant            func(childComplexity int, input CreateItemVariantInput) int
+		CreateMedicineCategory       func(childComplexity int, input CreateMedicineCategoryInput) int
+		CreateMedicineItem           func(childComplexity int, input CreateMedicineItemInput) int
+		CreateMenuItem               func(childComplexity int, input CreateMenuItemInput) int
+		CreateProfile                func(childComplexity int, input CreateProfileInput) int
+		CreateRestaurantMenu         func(childComplexity int, input CreateRestaurantMenuInput) int
+		CreateRetailCategory         func(childComplexity int, input CreateRetailCategoryInput) int
+		CreateRetailItem             func(childComplexity int, input CreateRetailItemInput) int
+		CreateShop                   func(childComplexity int, input CreateShopInput) int
+		CreateVariantStock           func(childComplexity int, input CreateVariantStockInput) int
+		DeleteDeliveryAddress        func(childComplexity int, addressID string) int
+		DeleteShop                   func(childComplexity int, id string) int
+		LogOut                       func(childComplexity int, sessionID string) int
+		RefreshToken                 func(childComplexity int, sessionID string) int
+		SignInWithEmail              func(childComplexity int, input SignInWithEmailInput) int
+		SignInWithGoogle             func(childComplexity int, input SignInWithGoogleInput) int
+		SignInWithPhone              func(childComplexity int, input SignInWithPhoneInput) int
+		UpdateDefaultDeliveryAddress func(childComplexity int, input UpdateDefaultDeliveryAddressInput) int
+		UpdateDeliveryAddress        func(childComplexity int, input UpdateDeliveryAddressInput) int
+		UpdateProfile                func(childComplexity int, input UpdateProfileInput) int
+		UpdateShop                   func(childComplexity int, input UpdateShopInput) int
+		UpdateShopAddress            func(childComplexity int, input UpdateShopAddressInput) int
+		UpdateShopContact            func(childComplexity int, input UpdateShopContactInput) int
+		UpdateShopImages             func(childComplexity int, input []*UpdateShopImageInput) int
+		UpdateShopTimings            func(childComplexity int, input []*UpdateShopTimingInput) int
 	}
 
 	Profile struct {
@@ -321,18 +327,14 @@ type ComplexityRoot struct {
 	}
 
 	ShopAddress struct {
-		Address1       func(childComplexity int) int
-		Address2       func(childComplexity int) int
-		City           func(childComplexity int) int
-		Country        func(childComplexity int) int
+		Address        func(childComplexity int) int
 		CreatedAt      func(childComplexity int) int
 		ID             func(childComplexity int) int
 		Latitude       func(childComplexity int) int
 		Longitude      func(childComplexity int) int
 		NearbyLandmark func(childComplexity int) int
-		Pincode        func(childComplexity int) int
 		ShopID         func(childComplexity int) int
-		State          func(childComplexity int) int
+		UpdatedAt      func(childComplexity int) int
 	}
 
 	ShopContact struct {
@@ -371,6 +373,10 @@ type ComplexityRoot struct {
 		VerifyOtp     func(childComplexity int) int
 	}
 
+	UpdateOutput struct {
+		Message func(childComplexity int) int
+	}
+
 	UpdateShopOutput struct {
 		Message func(childComplexity int) int
 	}
@@ -392,9 +398,11 @@ type MutationResolver interface {
 	LogOut(ctx context.Context, sessionID string) (*SignInOutput, error)
 	CreateProfile(ctx context.Context, input CreateProfileInput) (*Profile, error)
 	UpdateProfile(ctx context.Context, input UpdateProfileInput) (*Profile, error)
-	CreateDeliveryAddress(ctx context.Context, input *CreateDeliveryAddressInput) (*DeliveryAddress, error)
-	UpdateDeliveryAddress(ctx context.Context, input *UpdateDeliveryAddressInput) (*DeliveryAddress, error)
-	CreateShop(ctx context.Context, input CreateShopInput) (*CreateShopOutput, error)
+	CreateDeliveryAddress(ctx context.Context, input CreateDeliveryAddressInput) (*DeliveryAddress, error)
+	UpdateDeliveryAddress(ctx context.Context, input UpdateDeliveryAddressInput) (*DeliveryAddress, error)
+	UpdateDefaultDeliveryAddress(ctx context.Context, input UpdateDefaultDeliveryAddressInput) (*UpdateOutput, error)
+	DeleteDeliveryAddress(ctx context.Context, addressID string) (*DeleteOutput, error)
+	CreateShop(ctx context.Context, input CreateShopInput) (*Shop, error)
 	UpdateShop(ctx context.Context, input UpdateShopInput) (*UpdateShopOutput, error)
 	UpdateShopAddress(ctx context.Context, input UpdateShopAddressInput) (*UpdateShopOutput, error)
 	UpdateShopContact(ctx context.Context, input UpdateShopContactInput) (*UpdateShopOutput, error)
@@ -414,8 +422,8 @@ type MutationResolver interface {
 	CreateAddonStock(ctx context.Context, input CreateAddonStockInput) (*AddonStock, error)
 }
 type QueryResolver interface {
-	GetAuthByID(ctx context.Context, input GetAuthByIDInput) (*Auth, error)
 	GetAuth(ctx context.Context, input GetAuthInput) (*Auth, error)
+	GetAuthByID(ctx context.Context, input GetAuthByIDInput) (*Auth, error)
 	GetProfile(ctx context.Context, input GetProfileInput) (*Profile, error)
 	GetDeliveryAddress(ctx context.Context, id string) (*DeliveryAddress, error)
 	ListDeliveryAddress(ctx context.Context, authID string) (*ListDeliveryAddressOutput, error)
@@ -648,6 +656,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CreateShopOutput.Message(childComplexity), true
+
+	case "DeleteOutput.message":
+		if e.complexity.DeleteOutput.Message == nil {
+			break
+		}
+
+		return e.complexity.DeleteOutput.Message(childComplexity), true
 
 	case "DeliveryAddress.address":
 		if e.complexity.DeliveryAddress.Address == nil {
@@ -1168,7 +1183,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateDeliveryAddress(childComplexity, args["input"].(*CreateDeliveryAddressInput)), true
+		return e.complexity.Mutation.CreateDeliveryAddress(childComplexity, args["input"].(CreateDeliveryAddressInput)), true
 
 	case "Mutation.CreateItemAddon":
 		if e.complexity.Mutation.CreateItemAddon == nil {
@@ -1314,6 +1329,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateVariantStock(childComplexity, args["input"].(CreateVariantStockInput)), true
 
+	case "Mutation.DeleteDeliveryAddress":
+		if e.complexity.Mutation.DeleteDeliveryAddress == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteDeliveryAddress_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteDeliveryAddress(childComplexity, args["addressId"].(string)), true
+
 	case "Mutation.DeleteShop":
 		if e.complexity.Mutation.DeleteShop == nil {
 			break
@@ -1386,6 +1413,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.SignInWithPhone(childComplexity, args["input"].(SignInWithPhoneInput)), true
 
+	case "Mutation.UpdateDefaultDeliveryAddress":
+		if e.complexity.Mutation.UpdateDefaultDeliveryAddress == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateDefaultDeliveryAddress_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateDefaultDeliveryAddress(childComplexity, args["input"].(UpdateDefaultDeliveryAddressInput)), true
+
 	case "Mutation.UpdateDeliveryAddress":
 		if e.complexity.Mutation.UpdateDeliveryAddress == nil {
 			break
@@ -1396,7 +1435,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateDeliveryAddress(childComplexity, args["input"].(*UpdateDeliveryAddressInput)), true
+		return e.complexity.Mutation.UpdateDeliveryAddress(childComplexity, args["input"].(UpdateDeliveryAddressInput)), true
 
 	case "Mutation.UpdateProfile":
 		if e.complexity.Mutation.UpdateProfile == nil {
@@ -2022,33 +2061,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Shop.UpdatedAt(childComplexity), true
 
-	case "ShopAddress.address1":
-		if e.complexity.ShopAddress.Address1 == nil {
+	case "ShopAddress.address":
+		if e.complexity.ShopAddress.Address == nil {
 			break
 		}
 
-		return e.complexity.ShopAddress.Address1(childComplexity), true
-
-	case "ShopAddress.address2":
-		if e.complexity.ShopAddress.Address2 == nil {
-			break
-		}
-
-		return e.complexity.ShopAddress.Address2(childComplexity), true
-
-	case "ShopAddress.city":
-		if e.complexity.ShopAddress.City == nil {
-			break
-		}
-
-		return e.complexity.ShopAddress.City(childComplexity), true
-
-	case "ShopAddress.country":
-		if e.complexity.ShopAddress.Country == nil {
-			break
-		}
-
-		return e.complexity.ShopAddress.Country(childComplexity), true
+		return e.complexity.ShopAddress.Address(childComplexity), true
 
 	case "ShopAddress.created_at":
 		if e.complexity.ShopAddress.CreatedAt == nil {
@@ -2085,13 +2103,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ShopAddress.NearbyLandmark(childComplexity), true
 
-	case "ShopAddress.pincode":
-		if e.complexity.ShopAddress.Pincode == nil {
-			break
-		}
-
-		return e.complexity.ShopAddress.Pincode(childComplexity), true
-
 	case "ShopAddress.shop_id":
 		if e.complexity.ShopAddress.ShopID == nil {
 			break
@@ -2099,12 +2110,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ShopAddress.ShopID(childComplexity), true
 
-	case "ShopAddress.state":
-		if e.complexity.ShopAddress.State == nil {
+	case "ShopAddress.updated_at":
+		if e.complexity.ShopAddress.UpdatedAt == nil {
 			break
 		}
 
-		return e.complexity.ShopAddress.State(childComplexity), true
+		return e.complexity.ShopAddress.UpdatedAt(childComplexity), true
 
 	case "ShopContact.created_at":
 		if e.complexity.ShopContact.CreatedAt == nil {
@@ -2274,6 +2285,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SignInOutput.VerifyOtp(childComplexity), true
 
+	case "UpdateOutput.message":
+		if e.complexity.UpdateOutput.Message == nil {
+			break
+		}
+
+		return e.complexity.UpdateOutput.Message(childComplexity), true
+
 	case "UpdateShopOutput.message":
 		if e.complexity.UpdateShopOutput.Message == nil {
 			break
@@ -2350,6 +2368,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSignInWithEmailInput,
 		ec.unmarshalInputSignInWithGoogleInput,
 		ec.unmarshalInputSignInWithPhoneInput,
+		ec.unmarshalInputUpdateDefaultDeliveryAddressInput,
 		ec.unmarshalInputUpdateDeliveryAddressInput,
 		ec.unmarshalInputUpdateProfileInput,
 		ec.unmarshalInputUpdateShopAddressInput,
@@ -2509,13 +2528,13 @@ func (ec *executionContext) field_Mutation_CreateDeliveryAddress_args(ctx contex
 func (ec *executionContext) field_Mutation_CreateDeliveryAddress_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (*CreateDeliveryAddressInput, error) {
+) (CreateDeliveryAddressInput, error) {
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalOCreateDeliveryAddressInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateDeliveryAddressInput(ctx, tmp)
+		return ec.unmarshalNCreateDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateDeliveryAddressInput(ctx, tmp)
 	}
 
-	var zeroVal *CreateDeliveryAddressInput
+	var zeroVal CreateDeliveryAddressInput
 	return zeroVal, nil
 }
 
@@ -2795,6 +2814,29 @@ func (ec *executionContext) field_Mutation_CreateVariantStock_argsInput(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_DeleteDeliveryAddress_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_DeleteDeliveryAddress_argsAddressID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["addressId"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_DeleteDeliveryAddress_argsAddressID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("addressId"))
+	if tmp, ok := rawArgs["addressId"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_DeleteShop_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -2857,7 +2899,7 @@ func (ec *executionContext) field_Mutation_RefreshToken_argsSessionID(
 ) (string, error) {
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("session_id"))
 	if tmp, ok := rawArgs["session_id"]; ok {
-		return ec.unmarshalNString2string(ctx, tmp)
+		return ec.unmarshalNID2string(ctx, tmp)
 	}
 
 	var zeroVal string
@@ -2933,6 +2975,29 @@ func (ec *executionContext) field_Mutation_SignInWithPhone_argsInput(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_UpdateDefaultDeliveryAddress_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_UpdateDefaultDeliveryAddress_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_UpdateDefaultDeliveryAddress_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (UpdateDefaultDeliveryAddressInput, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUpdateDefaultDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDefaultDeliveryAddressInput(ctx, tmp)
+	}
+
+	var zeroVal UpdateDefaultDeliveryAddressInput
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_UpdateDeliveryAddress_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -2946,13 +3011,13 @@ func (ec *executionContext) field_Mutation_UpdateDeliveryAddress_args(ctx contex
 func (ec *executionContext) field_Mutation_UpdateDeliveryAddress_argsInput(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (*UpdateDeliveryAddressInput, error) {
+) (UpdateDeliveryAddressInput, error) {
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalOUpdateDeliveryAddressInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDeliveryAddressInput(ctx, tmp)
+		return ec.unmarshalNUpdateDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDeliveryAddressInput(ctx, tmp)
 	}
 
-	var zeroVal *UpdateDeliveryAddressInput
+	var zeroVal UpdateDeliveryAddressInput
 	return zeroVal, nil
 }
 
@@ -4844,6 +4909,50 @@ func (ec *executionContext) _CreateShopOutput_message(ctx context.Context, field
 func (ec *executionContext) fieldContext_CreateShopOutput_message(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CreateShopOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeleteOutput_message(ctx context.Context, field graphql.CollectedField, obj *DeleteOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_DeleteOutput_message(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Message, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_DeleteOutput_message(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeleteOutput",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -8625,7 +8734,7 @@ func (ec *executionContext) _Mutation_CreateDeliveryAddress(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateDeliveryAddress(rctx, fc.Args["input"].(*CreateDeliveryAddressInput))
+		return ec.resolvers.Mutation().CreateDeliveryAddress(rctx, fc.Args["input"].(CreateDeliveryAddressInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8710,7 +8819,7 @@ func (ec *executionContext) _Mutation_UpdateDeliveryAddress(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateDeliveryAddress(rctx, fc.Args["input"].(*UpdateDeliveryAddressInput))
+		return ec.resolvers.Mutation().UpdateDeliveryAddress(rctx, fc.Args["input"].(UpdateDeliveryAddressInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8781,6 +8890,124 @@ func (ec *executionContext) fieldContext_Mutation_UpdateDeliveryAddress(ctx cont
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_UpdateDefaultDeliveryAddress(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_UpdateDefaultDeliveryAddress(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateDefaultDeliveryAddress(rctx, fc.Args["input"].(UpdateDefaultDeliveryAddressInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*UpdateOutput)
+	fc.Result = res
+	return ec.marshalNUpdateOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateOutput(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_UpdateDefaultDeliveryAddress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "message":
+				return ec.fieldContext_UpdateOutput_message(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateOutput", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_UpdateDefaultDeliveryAddress_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_DeleteDeliveryAddress(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_DeleteDeliveryAddress(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteDeliveryAddress(rctx, fc.Args["addressId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*DeleteOutput)
+	fc.Result = res
+	return ec.marshalNDeleteOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDeleteOutput(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_DeleteDeliveryAddress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "message":
+				return ec.fieldContext_DeleteOutput_message(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeleteOutput", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_DeleteDeliveryAddress_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_CreateShop(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_CreateShop(ctx, field)
 	if err != nil {
@@ -8807,9 +9034,9 @@ func (ec *executionContext) _Mutation_CreateShop(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*CreateShopOutput)
+	res := resTmp.(*Shop)
 	fc.Result = res
-	return ec.marshalNCreateShopOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateShopOutput(ctx, field.Selections, res)
+	return ec.marshalNShop2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐShop(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_CreateShop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8821,11 +9048,31 @@ func (ec *executionContext) fieldContext_Mutation_CreateShop(ctx context.Context
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_CreateShopOutput_id(ctx, field)
-			case "message":
-				return ec.fieldContext_CreateShopOutput_message(ctx, field)
+				return ec.fieldContext_Shop_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Shop_name(ctx, field)
+			case "shop_type":
+				return ec.fieldContext_Shop_shop_type(ctx, field)
+			case "shop_status":
+				return ec.fieldContext_Shop_shop_status(ctx, field)
+			case "owner_auth_id":
+				return ec.fieldContext_Shop_owner_auth_id(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Shop_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_Shop_updated_at(ctx, field)
+			case "deleted_at":
+				return ec.fieldContext_Shop_deleted_at(ctx, field)
+			case "contact":
+				return ec.fieldContext_Shop_contact(ctx, field)
+			case "address":
+				return ec.fieldContext_Shop_address(ctx, field)
+			case "timings":
+				return ec.fieldContext_Shop_timings(ctx, field)
+			case "images":
+				return ec.fieldContext_Shop_images(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type CreateShopOutput", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Shop", field.Name)
 		},
 	}
 	defer func() {
@@ -10359,76 +10606,6 @@ func (ec *executionContext) fieldContext_Profile_updated_at(_ context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_GetAuthById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_GetAuthById(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetAuthByID(rctx, fc.Args["input"].(GetAuthByIDInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*Auth)
-	fc.Result = res
-	return ec.marshalOAuth2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuth(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_GetAuthById(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Auth_id(ctx, field)
-			case "email":
-				return ec.fieldContext_Auth_email(ctx, field)
-			case "email_verified":
-				return ec.fieldContext_Auth_email_verified(ctx, field)
-			case "phone":
-				return ec.fieldContext_Auth_phone(ctx, field)
-			case "auth_role":
-				return ec.fieldContext_Auth_auth_role(ctx, field)
-			case "created_at":
-				return ec.fieldContext_Auth_created_at(ctx, field)
-			case "updated_at":
-				return ec.fieldContext_Auth_updated_at(ctx, field)
-			case "deleted_at":
-				return ec.fieldContext_Auth_deleted_at(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Auth", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_GetAuthById_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Query_GetAuth(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_GetAuth(ctx, field)
 	if err != nil {
@@ -10450,11 +10627,14 @@ func (ec *executionContext) _Query_GetAuth(ctx context.Context, field graphql.Co
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*Auth)
 	fc.Result = res
-	return ec.marshalOAuth2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuth(ctx, field.Selections, res)
+	return ec.marshalNAuth2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuth(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_GetAuth(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10493,6 +10673,79 @@ func (ec *executionContext) fieldContext_Query_GetAuth(ctx context.Context, fiel
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_GetAuth_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_GetAuthById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_GetAuthById(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetAuthByID(rctx, fc.Args["input"].(GetAuthByIDInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*Auth)
+	fc.Result = res
+	return ec.marshalNAuth2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuth(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_GetAuthById(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Auth_id(ctx, field)
+			case "email":
+				return ec.fieldContext_Auth_email(ctx, field)
+			case "email_verified":
+				return ec.fieldContext_Auth_email_verified(ctx, field)
+			case "phone":
+				return ec.fieldContext_Auth_phone(ctx, field)
+			case "auth_role":
+				return ec.fieldContext_Auth_auth_role(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Auth_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_Auth_updated_at(ctx, field)
+			case "deleted_at":
+				return ec.fieldContext_Auth_deleted_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Auth", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_GetAuthById_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -13423,28 +13676,20 @@ func (ec *executionContext) fieldContext_Shop_address(_ context.Context, field g
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_ShopAddress_id(ctx, field)
-			case "address1":
-				return ec.fieldContext_ShopAddress_address1(ctx, field)
-			case "address2":
-				return ec.fieldContext_ShopAddress_address2(ctx, field)
 			case "longitude":
 				return ec.fieldContext_ShopAddress_longitude(ctx, field)
 			case "latitude":
 				return ec.fieldContext_ShopAddress_latitude(ctx, field)
+			case "address":
+				return ec.fieldContext_ShopAddress_address(ctx, field)
 			case "nearby_landmark":
 				return ec.fieldContext_ShopAddress_nearby_landmark(ctx, field)
-			case "city":
-				return ec.fieldContext_ShopAddress_city(ctx, field)
-			case "state":
-				return ec.fieldContext_ShopAddress_state(ctx, field)
-			case "pincode":
-				return ec.fieldContext_ShopAddress_pincode(ctx, field)
-			case "country":
-				return ec.fieldContext_ShopAddress_country(ctx, field)
 			case "shop_id":
 				return ec.fieldContext_ShopAddress_shop_id(ctx, field)
 			case "created_at":
 				return ec.fieldContext_ShopAddress_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_ShopAddress_updated_at(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ShopAddress", field.Name)
 		},
@@ -13608,94 +13853,6 @@ func (ec *executionContext) fieldContext_ShopAddress_id(_ context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _ShopAddress_address1(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopAddress_address1(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Address1, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ShopAddress_address1(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ShopAddress",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ShopAddress_address2(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopAddress_address2(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Address2, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ShopAddress_address2(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ShopAddress",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _ShopAddress_longitude(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ShopAddress_longitude(ctx, field)
 	if err != nil {
@@ -13784,6 +13941,50 @@ func (ec *executionContext) fieldContext_ShopAddress_latitude(_ context.Context,
 	return fc, nil
 }
 
+func (ec *executionContext) _ShopAddress_address(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ShopAddress_address(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Address, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ShopAddress_address(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ShopAddress",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _ShopAddress_nearby_landmark(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ShopAddress_nearby_landmark(ctx, field)
 	if err != nil {
@@ -13816,182 +14017,6 @@ func (ec *executionContext) _ShopAddress_nearby_landmark(ctx context.Context, fi
 }
 
 func (ec *executionContext) fieldContext_ShopAddress_nearby_landmark(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ShopAddress",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ShopAddress_city(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopAddress_city(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.City, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ShopAddress_city(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ShopAddress",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ShopAddress_state(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopAddress_state(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.State, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ShopAddress_state(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ShopAddress",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ShopAddress_pincode(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopAddress_pincode(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Pincode, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ShopAddress_pincode(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ShopAddress",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ShopAddress_country(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ShopAddress_country(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Country, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ShopAddress_country(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ShopAddress",
 		Field:      field,
@@ -14080,6 +14105,50 @@ func (ec *executionContext) _ShopAddress_created_at(ctx context.Context, field g
 }
 
 func (ec *executionContext) fieldContext_ShopAddress_created_at(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ShopAddress",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ShopAddress_updated_at(ctx context.Context, field graphql.CollectedField, obj *ShopAddress) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ShopAddress_updated_at(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ShopAddress_updated_at(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ShopAddress",
 		Field:      field,
@@ -15180,6 +15249,50 @@ func (ec *executionContext) fieldContext_SignInOutput_verify_otp(_ context.Conte
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateOutput_message(ctx context.Context, field graphql.CollectedField, obj *UpdateOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateOutput_message(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Message, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateOutput_message(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -17990,27 +18103,13 @@ func (ec *executionContext) unmarshalInputCreateShopAddressInput(ctx context.Con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"address1", "address2", "longitude", "latitude", "nearby_landmark", "city", "state", "pincode", "country"}
+	fieldsInOrder := [...]string{"longitude", "latitude", "address", "nearby_landmark"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "address1":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("address1"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Address1 = data
-		case "address2":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("address2"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Address2 = data
 		case "longitude":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("longitude"))
 			data, err := ec.unmarshalNFloat2float64(ctx, v)
@@ -18025,6 +18124,13 @@ func (ec *executionContext) unmarshalInputCreateShopAddressInput(ctx context.Con
 				return it, err
 			}
 			it.Latitude = data
+		case "address":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("address"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Address = data
 		case "nearby_landmark":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nearby_landmark"))
 			data, err := ec.unmarshalNString2string(ctx, v)
@@ -18032,34 +18138,6 @@ func (ec *executionContext) unmarshalInputCreateShopAddressInput(ctx context.Con
 				return it, err
 			}
 			it.NearbyLandmark = data
-		case "city":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("city"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.City = data
-		case "state":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.State = data
-		case "pincode":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pincode"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Pincode = data
-		case "country":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("country"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Country = data
 		}
 	}
 
@@ -18483,7 +18561,7 @@ func (ec *executionContext) unmarshalInputSignInWithEmailInput(ctx context.Conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"email", "otp"}
+	fieldsInOrder := [...]string{"email", "auth_role", "otp"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -18497,6 +18575,13 @@ func (ec *executionContext) unmarshalInputSignInWithEmailInput(ctx context.Conte
 				return it, err
 			}
 			it.Email = data
+		case "auth_role":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_role"))
+			data, err := ec.unmarshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AuthRole = data
 		case "otp":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otp"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -18517,7 +18602,7 @@ func (ec *executionContext) unmarshalInputSignInWithGoogleInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id_token"}
+	fieldsInOrder := [...]string{"id_token", "auth_role"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -18531,6 +18616,13 @@ func (ec *executionContext) unmarshalInputSignInWithGoogleInput(ctx context.Cont
 				return it, err
 			}
 			it.IDToken = data
+		case "auth_role":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_role"))
+			data, err := ec.unmarshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AuthRole = data
 		}
 	}
 
@@ -18544,7 +18636,7 @@ func (ec *executionContext) unmarshalInputSignInWithPhoneInput(ctx context.Conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"phone", "otp"}
+	fieldsInOrder := [...]string{"phone", "auth_role", "otp"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -18558,6 +18650,13 @@ func (ec *executionContext) unmarshalInputSignInWithPhoneInput(ctx context.Conte
 				return it, err
 			}
 			it.Phone = data
+		case "auth_role":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_role"))
+			data, err := ec.unmarshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AuthRole = data
 		case "otp":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otp"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -18565,6 +18664,40 @@ func (ec *executionContext) unmarshalInputSignInWithPhoneInput(ctx context.Conte
 				return it, err
 			}
 			it.Otp = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateDefaultDeliveryAddressInput(ctx context.Context, obj any) (UpdateDefaultDeliveryAddressInput, error) {
+	var it UpdateDefaultDeliveryAddressInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"delivery_address_id", "auth_id"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "delivery_address_id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("delivery_address_id"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DeliveryAddressID = data
+		case "auth_id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_id"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AuthID = data
 		}
 	}
 
@@ -19247,6 +19380,45 @@ func (ec *executionContext) _CreateShopOutput(ctx context.Context, sel ast.Selec
 			}
 		case "message":
 			out.Values[i] = ec._CreateShopOutput_message(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var deleteOutputImplementors = []string{"DeleteOutput"}
+
+func (ec *executionContext) _DeleteOutput(ctx context.Context, sel ast.SelectionSet, obj *DeleteOutput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deleteOutputImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeleteOutput")
+		case "message":
+			out.Values[i] = ec._DeleteOutput_message(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -20190,6 +20362,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "UpdateDefaultDeliveryAddress":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_UpdateDefaultDeliveryAddress(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "DeleteDeliveryAddress":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_DeleteDeliveryAddress(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "CreateShop":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_CreateShop(ctx, field)
@@ -20425,16 +20611,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "GetAuthById":
+		case "GetAuth":
 			field := field
 
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_GetAuthById(ctx, field)
+				res = ec._Query_GetAuth(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -20444,16 +20633,19 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "GetAuth":
+		case "GetAuthById":
 			field := field
 
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_GetAuth(ctx, field)
+				res = ec._Query_GetAuthById(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -21203,16 +21395,6 @@ func (ec *executionContext) _ShopAddress(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "address1":
-			out.Values[i] = ec._ShopAddress_address1(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "address2":
-			out.Values[i] = ec._ShopAddress_address2(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "longitude":
 			out.Values[i] = ec._ShopAddress_longitude(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -21223,28 +21405,13 @@ func (ec *executionContext) _ShopAddress(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "address":
+			out.Values[i] = ec._ShopAddress_address(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "nearby_landmark":
 			out.Values[i] = ec._ShopAddress_nearby_landmark(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "city":
-			out.Values[i] = ec._ShopAddress_city(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "state":
-			out.Values[i] = ec._ShopAddress_state(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "pincode":
-			out.Values[i] = ec._ShopAddress_pincode(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "country":
-			out.Values[i] = ec._ShopAddress_country(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -21255,6 +21422,11 @@ func (ec *executionContext) _ShopAddress(ctx context.Context, sel ast.SelectionS
 			}
 		case "created_at":
 			out.Values[i] = ec._ShopAddress_created_at(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updated_at":
+			out.Values[i] = ec._ShopAddress_updated_at(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -21502,6 +21674,45 @@ func (ec *executionContext) _SignInOutput(ctx context.Context, sel ast.Selection
 			}
 		case "verify_otp":
 			out.Values[i] = ec._SignInOutput_verify_otp(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var updateOutputImplementors = []string{"UpdateOutput"}
+
+func (ec *executionContext) _UpdateOutput(ctx context.Context, sel ast.SelectionSet, obj *UpdateOutput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateOutputImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateOutput")
+		case "message":
+			out.Values[i] = ec._UpdateOutput_message(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -21999,6 +22210,20 @@ func (ec *executionContext) marshalNAddressDetail2ᚖgithubᚗcomᚋyash91989201
 	return ec._AddressDetail(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNAuth2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuth(ctx context.Context, sel ast.SelectionSet, v Auth) graphql.Marshaler {
+	return ec._Auth(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNAuth2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuth(ctx context.Context, sel ast.SelectionSet, v *Auth) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Auth(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx context.Context, v any) (AuthRole, error) {
 	var res AuthRole
 	err := res.UnmarshalGQL(v)
@@ -22026,6 +22251,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 
 func (ec *executionContext) unmarshalNCreateAddonStockInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateAddonStockInput(ctx context.Context, v any) (CreateAddonStockInput, error) {
 	res, err := ec.unmarshalInputCreateAddonStockInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCreateDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateDeliveryAddressInput(ctx context.Context, v any) (CreateDeliveryAddressInput, error) {
+	res, err := ec.unmarshalInputCreateDeliveryAddressInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -22099,20 +22329,6 @@ func (ec *executionContext) unmarshalNCreateShopInput2githubᚗcomᚋyash9198920
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNCreateShopOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateShopOutput(ctx context.Context, sel ast.SelectionSet, v CreateShopOutput) graphql.Marshaler {
-	return ec._CreateShopOutput(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNCreateShopOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateShopOutput(ctx context.Context, sel ast.SelectionSet, v *CreateShopOutput) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._CreateShopOutput(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNCreateShopTimingInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateShopTimingInput(ctx context.Context, v any) (*CreateShopTimingInput, error) {
 	res, err := ec.unmarshalInputCreateShopTimingInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
@@ -22146,6 +22362,20 @@ func (ec *executionContext) unmarshalNDayOfWeek2githubᚗcomᚋyash91989201ᚋsu
 
 func (ec *executionContext) marshalNDayOfWeek2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDayOfWeek(ctx context.Context, sel ast.SelectionSet, v DayOfWeek) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) marshalNDeleteOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDeleteOutput(ctx context.Context, sel ast.SelectionSet, v DeleteOutput) graphql.Marshaler {
+	return ec._DeleteOutput(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNDeleteOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDeleteOutput(ctx context.Context, sel ast.SelectionSet, v *DeleteOutput) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._DeleteOutput(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNDeliveryAddress2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDeliveryAddress(ctx context.Context, sel ast.SelectionSet, v DeliveryAddress) graphql.Marshaler {
@@ -23019,6 +23249,30 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
+func (ec *executionContext) unmarshalNUpdateDefaultDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDefaultDeliveryAddressInput(ctx context.Context, v any) (UpdateDefaultDeliveryAddressInput, error) {
+	res, err := ec.unmarshalInputUpdateDefaultDeliveryAddressInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDeliveryAddressInput(ctx context.Context, v any) (UpdateDeliveryAddressInput, error) {
+	res, err := ec.unmarshalInputUpdateDeliveryAddressInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNUpdateOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateOutput(ctx context.Context, sel ast.SelectionSet, v UpdateOutput) graphql.Marshaler {
+	return ec._UpdateOutput(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNUpdateOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateOutput(ctx context.Context, sel ast.SelectionSet, v *UpdateOutput) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._UpdateOutput(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNUpdateProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateProfileInput(ctx context.Context, v any) (UpdateProfileInput, error) {
 	res, err := ec.unmarshalInputUpdateProfileInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -23411,14 +23665,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
-}
-
-func (ec *executionContext) unmarshalOCreateDeliveryAddressInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateDeliveryAddressInput(ctx context.Context, v any) (*CreateDeliveryAddressInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputCreateDeliveryAddressInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOCreateShopImageInput2ᚕᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐCreateShopImageInputᚄ(ctx context.Context, v any) ([]*CreateShopImageInput, error) {
@@ -23855,14 +24101,6 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	}
 	res := graphql.MarshalTime(*v)
 	return res
-}
-
-func (ec *executionContext) unmarshalOUpdateDeliveryAddressInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDeliveryAddressInput(ctx context.Context, v any) (*UpdateDeliveryAddressInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputUpdateDeliveryAddressInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

@@ -30,16 +30,13 @@ func StartGRPCServer(s Service, serviceUrl string) error {
 	return server.Serve(listener)
 }
 
-func (s *grpcServer) CreateShop(ctx context.Context, req *pb.CreateShopReq) (*pb.CreateShopRes, error) {
-	newShop, err := s.service.InsertShop(ctx, types.ToCreateShop(req))
+func (s *grpcServer) CreateShop(ctx context.Context, req *pb.CreateShopReq) (*pb.Shop, error) {
+	res, err := s.service.CreateShop(ctx, types.ToCreateShop(req))
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateShopRes{
-		Id:      newShop.ID,
-		Message: "Shop created successfully",
-	}, nil
+	return types.ToPbShop(res), nil
 }
 
 func (s *grpcServer) GetShop(ctx context.Context, req *pb.GetShopReq) (*pb.Shop, error) {

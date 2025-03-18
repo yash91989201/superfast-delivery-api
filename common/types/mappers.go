@@ -589,15 +589,10 @@ func ToCreateShop(req *pb.CreateShopReq) *CreateShop {
 	var address CreateShopAddress
 	if req.Address != nil {
 		address = CreateShopAddress{
-			Address1:       req.Address.Address1,
-			Address2:       req.Address.Address2,
 			Latitude:       req.Address.Latitude,
 			Longitude:      req.Address.Longitude,
+			Address:        req.Address.Address,
 			NearbyLandmark: req.Address.NearbyLandmark,
-			City:           req.Address.City,
-			State:          req.Address.State,
-			Pincode:        req.Address.Pincode,
-			Country:        req.Address.Country,
 		}
 	}
 
@@ -645,15 +640,10 @@ func ToPbShopAddress(a *ShopAddress) *pb.ShopAddress {
 
 	return &pb.ShopAddress{
 		Id:             a.ID,
-		Address1:       a.Address1,
-		Address2:       a.Address2,
 		Longitude:      a.Longitude,
 		Latitude:       a.Latitude,
+		Address:        a.Address,
 		NearbyLandmark: a.NearbyLandmark,
-		City:           a.City,
-		State:          a.State,
-		Pincode:        a.Pincode,
-		Country:        a.Country,
 		ShopId:         a.ShopID,
 		CreatedAt:      ToPbTimestamp(a.CreatedAt),
 	}

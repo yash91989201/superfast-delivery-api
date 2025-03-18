@@ -12,7 +12,7 @@ import (
 
 type Repository interface {
 	Close() error
-	InsertShop(ctx context.Context, shop *types.Shop) error
+	CreateShop(ctx context.Context, shop *types.Shop) error
 
 	GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
 	GetShopInfoByOwnerAuthId(ctx context.Context, ownerId string) (*types.ShopInfo, error)
@@ -48,28 +48,28 @@ func (r *pgRepository) Close() error {
 	return r.db.Close()
 }
 
-func (r *pgRepository) InsertShop(ctx context.Context, shop *types.Shop) error {
+func (r *pgRepository) CreateShop(ctx context.Context, shop *types.Shop) error {
 	err := r.execTx(ctx, func(tx *sqlx.Tx) error {
-		if err := insertShop(ctx, tx, shop); err != nil {
+		if err := createShop(ctx, tx, shop); err != nil {
 			return err
 		}
 
-		if err := insertShopAddress(ctx, tx, shop.Address); err != nil {
+		if err := createShopAddress(ctx, tx, shop.Address); err != nil {
 			return err
 		}
 
-		if err := insertShopContact(ctx, tx, shop.Contact); err != nil {
+		if err := createShopContact(ctx, tx, shop.Contact); err != nil {
 			return err
 		}
 
 		for _, t := range shop.Timing {
-			if err := insertShopTiming(ctx, tx, t); err != nil {
+			if err := createShopTiming(ctx, tx, t); err != nil {
 				return err
 			}
 		}
 
 		for _, i := range shop.Image {
-			if err := insertShopImage(ctx, tx, i); err != nil {
+			if err := createShopImage(ctx, tx, i); err != nil {
 				return err
 			}
 		}
@@ -229,7 +229,7 @@ func (r *pgRepository) GetShopImages(ctx context.Context, shopId string) ([]*typ
 	return shopImages, nil
 }
 
-func insertShop(ctx context.Context, tx *sqlx.Tx, s *types.Shop) error {
+func createShop(ctx context.Context, tx *sqlx.Tx, s *types.Shop) error {
 	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP, s)
 	if err != nil {
 		return fmt.Errorf("Failed to insert shop: %w", err)
@@ -242,7 +242,7 @@ func insertShop(ctx context.Context, tx *sqlx.Tx, s *types.Shop) error {
 	return nil
 }
 
-func insertShopAddress(ctx context.Context, tx *sqlx.Tx, a *types.ShopAddress) error {
+func createShopAddress(ctx context.Context, tx *sqlx.Tx, a *types.ShopAddress) error {
 	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_ADDRESS, a)
 	if err != nil {
 		return fmt.Errorf("Failed to insert address: %w", err)
@@ -255,7 +255,7 @@ func insertShopAddress(ctx context.Context, tx *sqlx.Tx, a *types.ShopAddress) e
 	return nil
 }
 
-func insertShopContact(ctx context.Context, tx *sqlx.Tx, c *types.ShopContact) error {
+func createShopContact(ctx context.Context, tx *sqlx.Tx, c *types.ShopContact) error {
 	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_CONTACT, c)
 	if err != nil {
 		return fmt.Errorf("Failed to insert contact: %w", err)
@@ -268,7 +268,7 @@ func insertShopContact(ctx context.Context, tx *sqlx.Tx, c *types.ShopContact) e
 	return nil
 }
 
-func insertShopImage(ctx context.Context, tx *sqlx.Tx, i *types.ShopImage) error {
+func createShopImage(ctx context.Context, tx *sqlx.Tx, i *types.ShopImage) error {
 	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_IMAGE, i)
 	if err != nil {
 		return fmt.Errorf("Failed to insert image: %w", err)
@@ -281,7 +281,7 @@ func insertShopImage(ctx context.Context, tx *sqlx.Tx, i *types.ShopImage) error
 	return nil
 }
 
-func insertShopTiming(ctx context.Context, tx *sqlx.Tx, t *types.ShopTiming) error {
+func createShopTiming(ctx context.Context, tx *sqlx.Tx, t *types.ShopTiming) error {
 	queryRes, err := tx.NamedExecContext(ctx, queries.CREATE_SHOP_TIMING, t)
 	if err != nil {
 		return fmt.Errorf("Failed to insert timing: %w", err)

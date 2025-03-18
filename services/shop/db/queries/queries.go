@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	allowedShopAddressColumns = " id, address1, address2, longitude, latitude, nearby_landmark, city, state, pincode, country, shop_id, created_at "
+	allowedShopAddressColumns = "id, longitude, latitude, address, nearby_landmark, shop_id, created_at "
 )
 
 const (
@@ -16,8 +16,8 @@ const (
 		"VALUES (:id, :name, :shop_type, :shop_status, :owner_auth_id)"
 
 	CREATE_SHOP_ADDRESS = "INSERT INTO shop_address" +
-		"(id, address1, address2, longitude, latitude, nearby_landmark, city, state, pincode, country, shop_id)" +
-		"VALUES (:id, :address1, :address2, :longitude, :latitude, :nearby_landmark, :city, :state, :pincode, :country, :shop_id)"
+		"(id, longitude, latitude, address, nearby_landmark, shop_id)" +
+		"VALUES (:id, :longitude, :latitude, :address, :nearby_landmark, :shop_id)"
 
 	CREATE_SHOP_CONTACT = "INSERT INTO shop_contact" +
 		"(id, name, phone_number, email, shop_id)" +
@@ -42,8 +42,8 @@ const (
   WHERE deleted_at IS NULL
   `
 
-	GET_SHOP_ADDRESS            = "SELECT" + allowedShopAddressColumns + "FROM shop_address WHERE id = $1"
-	GET_SHOP_ADDRESS_BY_SHOP_ID = "SELECT" + allowedShopAddressColumns + "FROM shop_address WHERE shop_id = $1"
+	GET_SHOP_ADDRESS            = "SELECT " + allowedShopAddressColumns + "FROM shop_address WHERE id = $1"
+	GET_SHOP_ADDRESS_BY_SHOP_ID = "SELECT " + allowedShopAddressColumns + "FROM shop_address WHERE shop_id = $1"
 	GET_SHOP_CONTACT            = "SELECT * FROM shop_contact WHERE id = $1"
 	GET_SHOP_CONTACT_BY_SHOP_ID = "SELECT * FROM shop_contact WHERE shop_id = $1"
 	GET_SHOP_TIMINGS            = "SELECT * FROM shop_timing WHERE shop_id = $1"
@@ -52,9 +52,9 @@ const (
 	GET_SHOP_IMAGE              = "SELECT * FROM shop_image WHERE id = $1"
 )
 
-func GetListShopQueryAndArgs(filters *types.ListShopFilters) (string, []interface{}) {
+func GetListShopQueryAndArgs(filters *types.ListShopFilters) (string, []any) {
 	query := "SELECT * FROM shop WHERE 1=1"
-	var args []interface{}
+	var args []any
 	argIndex := 1
 
 	if filters.Name != nil {

@@ -34,23 +34,14 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ShopServiceClient interface {
-	// Create a new shop
-	CreateShop(ctx context.Context, in *CreateShopReq, opts ...grpc.CallOption) (*CreateShopRes, error)
-	// Get shop details by ID
+	CreateShop(ctx context.Context, in *CreateShopReq, opts ...grpc.CallOption) (*Shop, error)
 	GetShop(ctx context.Context, in *GetShopReq, opts ...grpc.CallOption) (*Shop, error)
-	// List all shops with optional filters
 	ListShops(ctx context.Context, in *ListShopsReq, opts ...grpc.CallOption) (*ListShopsRes, error)
-	// Update shop details
 	UpdateShop(ctx context.Context, in *UpdateShopReq, opts ...grpc.CallOption) (*UpdateShopRes, error)
-	// Update shop address
 	UpdateShopAddress(ctx context.Context, in *UpdateShopAddressReq, opts ...grpc.CallOption) (*UpdateShopAddressRes, error)
-	// Update shop contact
 	UpdateShopContact(ctx context.Context, in *UpdateShopContactReq, opts ...grpc.CallOption) (*UpdateShopContactRes, error)
-	// Update shop images
 	UpdateShopImages(ctx context.Context, in *UpdateShopImagesReq, opts ...grpc.CallOption) (*UpdateShopImagesRes, error)
-	// Update shop timings
 	UpdateShopTimings(ctx context.Context, in *UpdateShopTimingsReq, opts ...grpc.CallOption) (*UpdateShopTimingsRes, error)
-	// Delete a shop by ID (soft delete)
 	DeleteShop(ctx context.Context, in *DeleteShopReq, opts ...grpc.CallOption) (*DeleteShopRes, error)
 }
 
@@ -62,9 +53,9 @@ func NewShopServiceClient(cc grpc.ClientConnInterface) ShopServiceClient {
 	return &shopServiceClient{cc}
 }
 
-func (c *shopServiceClient) CreateShop(ctx context.Context, in *CreateShopReq, opts ...grpc.CallOption) (*CreateShopRes, error) {
+func (c *shopServiceClient) CreateShop(ctx context.Context, in *CreateShopReq, opts ...grpc.CallOption) (*Shop, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateShopRes)
+	out := new(Shop)
 	err := c.cc.Invoke(ctx, ShopService_CreateShop_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -156,23 +147,14 @@ func (c *shopServiceClient) DeleteShop(ctx context.Context, in *DeleteShopReq, o
 // All implementations must embed UnimplementedShopServiceServer
 // for forward compatibility.
 type ShopServiceServer interface {
-	// Create a new shop
-	CreateShop(context.Context, *CreateShopReq) (*CreateShopRes, error)
-	// Get shop details by ID
+	CreateShop(context.Context, *CreateShopReq) (*Shop, error)
 	GetShop(context.Context, *GetShopReq) (*Shop, error)
-	// List all shops with optional filters
 	ListShops(context.Context, *ListShopsReq) (*ListShopsRes, error)
-	// Update shop details
 	UpdateShop(context.Context, *UpdateShopReq) (*UpdateShopRes, error)
-	// Update shop address
 	UpdateShopAddress(context.Context, *UpdateShopAddressReq) (*UpdateShopAddressRes, error)
-	// Update shop contact
 	UpdateShopContact(context.Context, *UpdateShopContactReq) (*UpdateShopContactRes, error)
-	// Update shop images
 	UpdateShopImages(context.Context, *UpdateShopImagesReq) (*UpdateShopImagesRes, error)
-	// Update shop timings
 	UpdateShopTimings(context.Context, *UpdateShopTimingsReq) (*UpdateShopTimingsRes, error)
-	// Delete a shop by ID (soft delete)
 	DeleteShop(context.Context, *DeleteShopReq) (*DeleteShopRes, error)
 	mustEmbedUnimplementedShopServiceServer()
 }
@@ -184,7 +166,7 @@ type ShopServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedShopServiceServer struct{}
 
-func (UnimplementedShopServiceServer) CreateShop(context.Context, *CreateShopReq) (*CreateShopRes, error) {
+func (UnimplementedShopServiceServer) CreateShop(context.Context, *CreateShopReq) (*Shop, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateShop not implemented")
 }
 func (UnimplementedShopServiceServer) GetShop(context.Context, *GetShopReq) (*Shop, error) {

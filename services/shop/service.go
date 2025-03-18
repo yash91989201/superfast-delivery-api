@@ -8,7 +8,7 @@ import (
 )
 
 type Service interface {
-	InsertShop(context.Context, *types.CreateShop) (*types.Shop, error)
+	CreateShop(context.Context, *types.CreateShop) (*types.Shop, error)
 
 	GetShopInfo(ctx context.Context, id string) (*types.ShopInfo, error)
 	GetShopInfoByOwnerAuthId(ctx context.Context, ownerAuthId string) (*types.ShopInfo, error)
@@ -25,7 +25,7 @@ func New(r Repository) Service {
 	return &shopService{r: r}
 }
 
-func (s *shopService) InsertShop(ctx context.Context, shop *types.CreateShop) (*types.Shop, error) {
+func (s *shopService) CreateShop(ctx context.Context, shop *types.CreateShop) (*types.Shop, error) {
 	shopId := cuid2.Generate()
 
 	shopTiming := make([]*types.ShopTiming, len(shop.Timing))
@@ -57,15 +57,10 @@ func (s *shopService) InsertShop(ctx context.Context, shop *types.CreateShop) (*
 		OwnerAuthID: shop.OwnerAuthId,
 		Address: &types.ShopAddress{
 			ID:             cuid2.Generate(),
-			Address1:       shop.Address.Address1,
-			Address2:       shop.Address.Address2,
 			Longitude:      shop.Address.Longitude,
 			Latitude:       shop.Address.Latitude,
+			Address:        shop.Address.Address,
 			NearbyLandmark: shop.Address.NearbyLandmark,
-			City:           shop.Address.City,
-			State:          shop.Address.State,
-			Pincode:        shop.Address.Pincode,
-			Country:        shop.Address.Country,
 			ShopID:         shopId,
 		},
 		Contact: &types.ShopContact{
@@ -79,7 +74,7 @@ func (s *shopService) InsertShop(ctx context.Context, shop *types.CreateShop) (*
 		Image:  shopImage,
 	}
 
-	if err := s.r.InsertShop(ctx, newShop); err != nil {
+	if err := s.r.CreateShop(ctx, newShop); err != nil {
 		return nil, err
 	}
 

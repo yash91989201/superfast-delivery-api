@@ -65,17 +65,13 @@ type ShopInfo struct {
 
 type ShopAddress struct {
 	ID             string    `json:"id" db:"id"`
-	Address1       string    `json:"address1" db:"address1"`
-	Address2       string    `json:"address2" db:"address2"`
 	Longitude      float64   `json:"longitude" db:"longitude"`
 	Latitude       float64   `json:"latitude" db:"latitude"`
+	Address        string    `json:"address" db:"address"`
 	NearbyLandmark string    `json:"nearby_landmark" db:"nearby_landmark"`
-	City           string    `json:"city" db:"city"`
-	State          string    `json:"state" db:"state"`
-	Pincode        string    `json:"pincode" db:"pincode"`
-	Country        string    `json:"country" db:"country"`
 	ShopID         string    `json:"shop_id" db:"shop_id"`
 	CreatedAt      time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at" db:"updated_at"`
 }
 
 type ShopContact struct {
@@ -108,15 +104,10 @@ type ShopTiming struct {
 
 // crud input/output types
 type CreateShopAddress struct {
-	Address1       string
-	Address2       string
 	Longitude      float64
 	Latitude       float64
+	Address        string
 	NearbyLandmark string
-	City           string
-	State          string
-	Pincode        string
-	Country        string
 }
 
 type CreateShopContact struct {
@@ -163,7 +154,7 @@ func (s ShopType) Value() (driver.Value, error) {
 	return string(s), nil
 }
 
-func (s *ShopType) Scan(value interface{}) error {
+func (s *ShopType) Scan(value any) error {
 	*s = ShopType(value.([]uint8))
 	return nil
 }
@@ -172,7 +163,7 @@ func (s ShopStatus) Value() (driver.Value, error) {
 	return string(s), nil
 }
 
-func (s *ShopStatus) Scan(value interface{}) error {
+func (s *ShopStatus) Scan(value any) error {
 	*s = ShopStatus(value.([]uint8))
 	return nil
 }
@@ -181,7 +172,7 @@ func (s DayOfWeek) Value() (driver.Value, error) {
 	return string(s), nil
 }
 
-func (s *DayOfWeek) Scan(value interface{}) error {
+func (s *DayOfWeek) Scan(value any) error {
 	*s = DayOfWeek(value.([]uint8))
 	return nil
 }
@@ -190,7 +181,7 @@ func (s OrderBy) Value() (driver.Value, error) {
 	return string(s), nil
 }
 
-func (s *OrderBy) Scan(value interface{}) error {
+func (s *OrderBy) Scan(value any) error {
 	*s = OrderBy(value.([]uint8))
 	return nil
 }
