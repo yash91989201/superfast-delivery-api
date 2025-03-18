@@ -4,12 +4,12 @@ use (
 	./common
 	./gateways/graphql
 	./gateways/rest
-	./services/user
 	./services/authentication
-	./services/shop
+	./services/delivery
+	./services/geolocation
 	./services/inventory
 	./services/order
-	./services/delivery
 	./services/product
-	./services/geolocation
+	./services/shop
+	./services/user
 )
