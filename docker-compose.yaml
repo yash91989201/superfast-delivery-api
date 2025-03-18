@@ -18,7 +18,7 @@ services:
     image: yash6370/superfast-delivery-api-rest_gateway:latest
     build:
       context: .
-      dockerfile: ./gateways/rest/Dockerfile
+      dockerfile: ./gateways/rest/.docker/Dockerfile
     environment:
       PORT: ${REST_API_PORT}
     ports:
@@ -69,7 +69,7 @@ services:
     image: yash6370/superfast-delivery-api-authentication_service:latest
     build:
       context: .
-      dockerfile: ./services/authentication/Dockerfile
+      dockerfile: ./services/authentication/.docker/Dockerfile
     environment:
       DATABASE_URL: ${AUTHENTICATION_DATABASE_URL}
       SERVICE_URL: ${AUTHENTICATION_SERVICE_URL}
@@ -133,7 +133,7 @@ services:
     image: yash6370/superfast-delivery-api-user_service:latest
     build:
       context: .
-      dockerfile: ./services/user/Dockerfile
+      dockerfile: ./services/user/.docker/Dockerfile
     environment:
       DATABASE_URL: ${USER_DATABASE_URL}
       SERVICE_URL: ${USER_SERVICE_URL}
@@ -196,7 +196,7 @@ services:
     image: yash6370/superfast-delivery-api-shop_service:latest
     build:
       context: .
-      dockerfile: ./services/shop/Dockerfile
+      dockerfile: ./services/shop/.docker/Dockerfile
     environment:
       DATABASE_URL: ${SHOP_DATABASE_URL}
       SERVICE_URL: ${SHOP_SERVICE_URL}
@@ -258,7 +258,7 @@ services:
     image: yash6370/superfast-delivery-api-product_service:latest
     build:
       context: .
-      dockerfile: ./services/product/Dockerfile
+      dockerfile: ./services/product/.docker/Dockerfile
     environment:
       DATABASE_URL: ${PRODUCT_DATABASE_URL}
       DATABASE_NAME: ${PRODUCT_DB_NAME}
@@ -300,7 +300,7 @@ services:
   inventory_service:
     build:
       context: .
-      dockerfile: ./services/inventory/Dockerfile
+      dockerfile: ./services/inventory/.docker/Dockerfile
     image: yash6370/superfast-delivery-api-inventory_service:latest
     environment:
       DATABASE_URL: ${INVENTORY_DATABASE_URL}
@@ -363,7 +363,7 @@ services:
   geolocation_service:
     build:
       context: .
-      dockerfile: ./services/geolocation/Dockerfile
+      dockerfile: ./services/geolocation/.docker/Dockerfile
     image: yash6370/superfast-delivery-api-geolocation_service:latest
     environment:
       REDIS_URL: ${GEOLOCATION_DB_URL}
