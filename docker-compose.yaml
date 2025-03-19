@@ -387,3 +387,4 @@ services:
       - superfast-delivery
     volumes:
       - geolocation_db_data:/data
+    mem_limit: 128m
