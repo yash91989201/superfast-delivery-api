@@ -6,6 +6,7 @@ networks:
     name: superfast-delivery
 
 volumes:
+  minio_data:
   authentication_db_data:
   user_db_data:
   shop_db_data:
@@ -64,6 +65,21 @@ services:
       - inventory_service
       - geolocation_service
     restart: on-failure
+
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - superfast-delivery
+    mem_limit: 128m
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
 
   authentication_service:
     image: yash6370/superfast-delivery-api-authentication_service:latest
