@@ -12,9 +12,9 @@ import (
 
 type Repository interface {
 	Close() error
-	InsertItemStock(ctx context.Context, stock *types.ItemStock) error
-	InsertVariantStock(ctx context.Context, stock *types.VariantStock) error
-	InsertAddonStock(ctx context.Context, stock *types.AddonStock) error
+	CreateItemStock(ctx context.Context, stock *types.ItemStock) error
+	CreateVariantStock(ctx context.Context, stock *types.VariantStock) error
+	CreateAddonStock(ctx context.Context, stock *types.AddonStock) error
 }
 
 type mysqlRepository struct {
@@ -36,7 +36,7 @@ func (r *mysqlRepository) Close() error {
 	return r.db.Close()
 }
 
-func (r *mysqlRepository) InsertItemStock(ctx context.Context, stock *types.ItemStock) error {
+func (r *mysqlRepository) CreateItemStock(ctx context.Context, stock *types.ItemStock) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.INSERT_ITEM_STOCK, stock)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func (r *mysqlRepository) InsertItemStock(ctx context.Context, stock *types.Item
 	return nil
 }
 
-func (r *mysqlRepository) InsertVariantStock(ctx context.Context, stock *types.VariantStock) error {
+func (r *mysqlRepository) CreateVariantStock(ctx context.Context, stock *types.VariantStock) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.INSERT_VARIANT_STOCK, stock)
 	if err != nil {
 		return err
@@ -62,7 +62,7 @@ func (r *mysqlRepository) InsertVariantStock(ctx context.Context, stock *types.V
 	return nil
 }
 
-func (r *mysqlRepository) InsertAddonStock(ctx context.Context, stock *types.AddonStock) error {
+func (r *mysqlRepository) CreateAddonStock(ctx context.Context, stock *types.AddonStock) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.INSERT_ADDON_STOCK, stock)
 	if err != nil {
 		return err

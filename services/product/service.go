@@ -9,10 +9,10 @@ import (
 )
 
 type Service interface {
-	InsertItemVariant(ctx context.Context, iv *types.CreateItemVariant) (*types.ItemVariant, error)
-	InsertItemAddon(ctx context.Context, ia *types.CreateItemAddon) (*types.ItemAddon, error)
-	InsertRestaurantMenu(ctx context.Context, rm *types.CreateRestaurantMenu) (*types.RestaurantMenu, error)
-	InsertMenuItem(ctx context.Context, rm *types.CreateMenuItem) (*types.MenuItem, error)
+	CreateItemVariant(ctx context.Context, iv *types.CreateItemVariant) (*types.ItemVariant, error)
+	CreateItemAddon(ctx context.Context, ia *types.CreateItemAddon) (*types.ItemAddon, error)
+	CreateRestaurantMenu(ctx context.Context, rm *types.CreateRestaurantMenu) (*types.RestaurantMenu, error)
+	CreateMenuItem(ctx context.Context, rm *types.CreateMenuItem) (*types.MenuItem, error)
 
 	GetItemVariant(ctx context.Context, id string) (*types.ItemVariant, error)
 	GetItemAddon(ctx context.Context, id string) (*types.ItemAddon, error)
@@ -34,7 +34,7 @@ func New(r Repository) Service {
 	return &productService{r: r}
 }
 
-func (s *productService) InsertItemVariant(ctx context.Context, v *types.CreateItemVariant) (*types.ItemVariant, error) {
+func (s *productService) CreateItemVariant(ctx context.Context, v *types.CreateItemVariant) (*types.ItemVariant, error) {
 	newVariant := &types.ItemVariant{
 		ID:              bson.NewObjectID(),
 		VariantName:     v.VariantName,
@@ -45,14 +45,14 @@ func (s *productService) InsertItemVariant(ctx context.Context, v *types.CreateI
 		ItemId:          v.ItemId,
 	}
 
-	if err := s.r.InsertItemVariant(ctx, newVariant); err != nil {
+	if err := s.r.CreateItemVariant(ctx, newVariant); err != nil {
 		return nil, err
 	}
 
 	return newVariant, nil
 }
 
-func (s *productService) InsertItemAddon(ctx context.Context, a *types.CreateItemAddon) (*types.ItemAddon, error) {
+func (s *productService) CreateItemAddon(ctx context.Context, a *types.CreateItemAddon) (*types.ItemAddon, error) {
 	newAddon := &types.ItemAddon{
 		ID:          bson.NewObjectID(),
 		AddonName:   a.AddonName,
@@ -61,14 +61,14 @@ func (s *productService) InsertItemAddon(ctx context.Context, a *types.CreateIte
 		ItemId:      a.ItemId,
 	}
 
-	if err := s.r.InsertItemAddon(ctx, newAddon); err != nil {
+	if err := s.r.CreateItemAddon(ctx, newAddon); err != nil {
 		return nil, err
 	}
 
 	return newAddon, nil
 }
 
-func (s *productService) InsertRestaurantMenu(ctx context.Context, rm *types.CreateRestaurantMenu) (*types.RestaurantMenu, error) {
+func (s *productService) CreateRestaurantMenu(ctx context.Context, rm *types.CreateRestaurantMenu) (*types.RestaurantMenu, error) {
 	newRestaurantMenu := &types.RestaurantMenu{
 		ID:        bson.NewObjectID(),
 		MenuName:  rm.MenuName,
@@ -78,14 +78,14 @@ func (s *productService) InsertRestaurantMenu(ctx context.Context, rm *types.Cre
 		DeletedAt: nil,
 	}
 
-	if err := s.r.InsertRestaurantMenu(ctx, newRestaurantMenu); err != nil {
+	if err := s.r.CreateRestaurantMenu(ctx, newRestaurantMenu); err != nil {
 		return nil, err
 	}
 
 	return newRestaurantMenu, nil
 }
 
-func (s *productService) InsertMenuItem(ctx context.Context, mi *types.CreateMenuItem) (*types.MenuItem, error) {
+func (s *productService) CreateMenuItem(ctx context.Context, mi *types.CreateMenuItem) (*types.MenuItem, error) {
 	newMenuItem := &types.MenuItem{
 		ID:          bson.NewObjectID(),
 		Name:        mi.Name,
@@ -97,7 +97,7 @@ func (s *productService) InsertMenuItem(ctx context.Context, mi *types.CreateMen
 		MenuID:      mi.MenuID,
 	}
 
-	if err := s.r.InsertMenuItem(ctx, newMenuItem); err != nil {
+	if err := s.r.CreateMenuItem(ctx, newMenuItem); err != nil {
 		return nil, err
 	}
 

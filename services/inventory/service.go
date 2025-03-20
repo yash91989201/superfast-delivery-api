@@ -8,9 +8,9 @@ import (
 )
 
 type Service interface {
-	InsertItemStock(ctx context.Context, stock *types.CreateItemStock) (*types.ItemStock, error)
-	InsertVariantStock(ctx context.Context, stock *types.CreateVariantStock) (*types.VariantStock, error)
-	InsertAddonStock(ctx context.Context, stock *types.CreateAddonStock) (*types.AddonStock, error)
+	CreateItemStock(ctx context.Context, stock *types.CreateItemStock) (*types.ItemStock, error)
+	CreateVariantStock(ctx context.Context, stock *types.CreateVariantStock) (*types.VariantStock, error)
+	CreateAddonStock(ctx context.Context, stock *types.CreateAddonStock) (*types.AddonStock, error)
 }
 
 type inventoryService struct {
@@ -23,42 +23,42 @@ func New(r Repository) Service {
 	}
 }
 
-func (s *inventoryService) InsertItemStock(ctx context.Context, stock *types.CreateItemStock) (*types.ItemStock, error) {
+func (s *inventoryService) CreateItemStock(ctx context.Context, stock *types.CreateItemStock) (*types.ItemStock, error) {
 	iStock := &types.ItemStock{
 		ID:       cuid2.Generate(),
 		ItemID:   stock.ItemID,
 		Quantity: stock.Quantity,
 	}
 
-	if err := s.r.InsertItemStock(ctx, iStock); err != nil {
+	if err := s.r.CreateItemStock(ctx, iStock); err != nil {
 		return nil, err
 	}
 
 	return iStock, nil
 }
 
-func (s *inventoryService) InsertVariantStock(ctx context.Context, stock *types.CreateVariantStock) (*types.VariantStock, error) {
+func (s *inventoryService) CreateVariantStock(ctx context.Context, stock *types.CreateVariantStock) (*types.VariantStock, error) {
 	vStock := &types.VariantStock{
 		ID:        cuid2.Generate(),
 		VariantID: stock.VariantID,
 		Quantity:  stock.Quantity,
 	}
 
-	if err := s.r.InsertVariantStock(ctx, vStock); err != nil {
+	if err := s.r.CreateVariantStock(ctx, vStock); err != nil {
 		return nil, err
 	}
 
 	return vStock, nil
 }
 
-func (s *inventoryService) InsertAddonStock(ctx context.Context, stock *types.CreateAddonStock) (*types.AddonStock, error) {
+func (s *inventoryService) CreateAddonStock(ctx context.Context, stock *types.CreateAddonStock) (*types.AddonStock, error) {
 	aStock := &types.AddonStock{
 		ID:       cuid2.Generate(),
 		AddonID:  stock.AddonID,
 		Quantity: stock.Quantity,
 	}
 
-	if err := s.r.InsertAddonStock(ctx, aStock); err != nil {
+	if err := s.r.CreateAddonStock(ctx, aStock); err != nil {
 		return nil, err
 	}
 

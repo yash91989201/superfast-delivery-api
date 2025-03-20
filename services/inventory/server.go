@@ -30,7 +30,7 @@ func Start(s Service, serviceUrl string) error {
 }
 
 func (s *grpcServer) CreateItemStock(ctx context.Context, req *pb.CreateItemStockReq) (*pb.ItemStock, error) {
-	res, err := s.service.InsertItemStock(ctx, &types.CreateItemStock{
+	res, err := s.service.CreateItemStock(ctx, &types.CreateItemStock{
 		ItemID:   req.ItemId,
 		Quantity: req.Quantity,
 	})
@@ -43,7 +43,7 @@ func (s *grpcServer) CreateItemStock(ctx context.Context, req *pb.CreateItemStoc
 }
 
 func (s *grpcServer) CreateVariantStock(ctx context.Context, req *pb.CreateVariantStockReq) (*pb.VariantStock, error) {
-	res, err := s.service.InsertVariantStock(ctx, &types.CreateVariantStock{
+	res, err := s.service.CreateVariantStock(ctx, &types.CreateVariantStock{
 		VariantID: req.VariantId,
 		Quantity:  req.Quantity,
 	})
@@ -56,7 +56,7 @@ func (s *grpcServer) CreateVariantStock(ctx context.Context, req *pb.CreateVaria
 }
 
 func (s *grpcServer) CreateAddonStock(ctx context.Context, req *pb.CreateAddonStockReq) (*pb.AddonStock, error) {
-	res, err := s.service.InsertAddonStock(ctx, &types.CreateAddonStock{
+	res, err := s.service.CreateAddonStock(ctx, &types.CreateAddonStock{
 		AddonID:  req.AddonId,
 		Quantity: req.Quantity,
 	})

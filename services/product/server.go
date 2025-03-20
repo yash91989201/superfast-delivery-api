@@ -67,7 +67,7 @@ func (s *grpcServer) GetItemAddons(ctx context.Context, req *pb.GetItemAddonsReq
 }
 
 func (s *grpcServer) CreateItemVariant(ctx context.Context, req *pb.CreateItemVariantReq) (*pb.ItemVariant, error) {
-	res, err := s.service.InsertItemVariant(ctx, types.ToCreateItemVariant(req))
+	res, err := s.service.CreateItemVariant(ctx, types.ToCreateItemVariant(req))
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (s *grpcServer) CreateItemVariant(ctx context.Context, req *pb.CreateItemVa
 }
 
 func (s *grpcServer) CreateItemAddon(ctx context.Context, req *pb.CreateItemAddonReq) (*pb.ItemAddon, error) {
-	res, err := s.service.InsertItemAddon(ctx, types.ToCreateItemAddon(req))
+	res, err := s.service.CreateItemAddon(ctx, types.ToCreateItemAddon(req))
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func (s *grpcServer) CreateItemAddon(ctx context.Context, req *pb.CreateItemAddo
 }
 
 func (s *grpcServer) CreateRestaurantMenu(ctx context.Context, req *pb.CreateRestaurantMenuReq) (*pb.RestaurantMenu, error) {
-	res, err := s.service.InsertRestaurantMenu(ctx, types.ToCreateRestaurantMenu(req))
+	res, err := s.service.CreateRestaurantMenu(ctx, types.ToCreateRestaurantMenu(req))
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (s *grpcServer) CreateRestaurantMenu(ctx context.Context, req *pb.CreateRes
 }
 
 func (s *grpcServer) CreateMenuItem(ctx context.Context, req *pb.CreateMenuItemReq) (*pb.MenuItem, error) {
-	res, err := s.service.InsertMenuItem(ctx, types.ToCreateMenuItem(req))
+	res, err := s.service.CreateMenuItem(ctx, types.ToCreateMenuItem(req))
 	if err != nil {
 		return nil, err
 	}

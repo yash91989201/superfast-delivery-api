@@ -16,14 +16,14 @@ type Repository interface {
 	Close(ctx context.Context) error
 	Ping(ctx context.Context) error
 
-	InsertItemVariant(ctx context.Context, v *types.ItemVariant) error
-	InsertItemAddon(ctx context.Context, a *types.ItemAddon) error
-	InsertRestaurantMenu(ctx context.Context, m *types.RestaurantMenu) error
-	InsertMenuItem(ctx context.Context, i *types.MenuItem) error
-	InsertRetailCategory(ctx context.Context, c *types.RetailCategory) error
-	InsertRetailItem(ctx context.Context, c *types.RetailItem) error
-	InsertMedicineCategory(ctx context.Context, c *types.MedicineCategory) error
-	InsertMedicineItem(ctx context.Context, i *types.MedicineItem) error
+	CreateItemVariant(ctx context.Context, v *types.ItemVariant) error
+	CreateItemAddon(ctx context.Context, a *types.ItemAddon) error
+	CreateRestaurantMenu(ctx context.Context, m *types.RestaurantMenu) error
+	CreateMenuItem(ctx context.Context, i *types.MenuItem) error
+	CreateRetailCategory(ctx context.Context, c *types.RetailCategory) error
+	CreateRetailItem(ctx context.Context, c *types.RetailItem) error
+	CreateMedicineCategory(ctx context.Context, c *types.MedicineCategory) error
+	CreateMedicineItem(ctx context.Context, i *types.MedicineItem) error
 
 	GetItemVariant(ctx context.Context, id string) (*types.ItemVariant, error)
 	GetItemAddon(ctx context.Context, id string) (*types.ItemAddon, error)
@@ -80,7 +80,7 @@ func (r *mongoRepository) Ping(ctx context.Context) error {
 	return r.client.Ping(ctx, readpref.Primary())
 }
 
-func (r *mongoRepository) InsertItemVariant(ctx context.Context, v *types.ItemVariant) error {
+func (r *mongoRepository) CreateItemVariant(ctx context.Context, v *types.ItemVariant) error {
 	res, err := r.itemVariant.InsertOne(ctx, v)
 	if err != nil || !res.Acknowledged {
 		return err
@@ -89,7 +89,7 @@ func (r *mongoRepository) InsertItemVariant(ctx context.Context, v *types.ItemVa
 	return nil
 }
 
-func (r *mongoRepository) InsertItemAddon(ctx context.Context, a *types.ItemAddon) error {
+func (r *mongoRepository) CreateItemAddon(ctx context.Context, a *types.ItemAddon) error {
 	res, err := r.itemAddon.InsertOne(ctx, a)
 	if err != nil || !res.Acknowledged {
 		return err
@@ -98,7 +98,7 @@ func (r *mongoRepository) InsertItemAddon(ctx context.Context, a *types.ItemAddo
 	return nil
 }
 
-func (r *mongoRepository) InsertRestaurantMenu(ctx context.Context, m *types.RestaurantMenu) error {
+func (r *mongoRepository) CreateRestaurantMenu(ctx context.Context, m *types.RestaurantMenu) error {
 	res, err := r.restaurantMenu.InsertOne(ctx, m)
 	if err != nil || !res.Acknowledged {
 		return err
@@ -107,7 +107,7 @@ func (r *mongoRepository) InsertRestaurantMenu(ctx context.Context, m *types.Res
 	return nil
 }
 
-func (r *mongoRepository) InsertMenuItem(ctx context.Context, i *types.MenuItem) error {
+func (r *mongoRepository) CreateMenuItem(ctx context.Context, i *types.MenuItem) error {
 	res, err := r.menuItem.InsertOne(ctx, i)
 	if err != nil || !res.Acknowledged {
 		return err
@@ -116,7 +116,7 @@ func (r *mongoRepository) InsertMenuItem(ctx context.Context, i *types.MenuItem)
 	return nil
 }
 
-func (r *mongoRepository) InsertMedicineCategory(ctx context.Context, c *types.MedicineCategory) error {
+func (r *mongoRepository) CreateMedicineCategory(ctx context.Context, c *types.MedicineCategory) error {
 	res, err := r.medicineCategory.InsertOne(ctx, c)
 	if err != nil || !res.Acknowledged {
 		return err
@@ -125,7 +125,7 @@ func (r *mongoRepository) InsertMedicineCategory(ctx context.Context, c *types.M
 	return nil
 }
 
-func (r *mongoRepository) InsertMedicineItem(ctx context.Context, i *types.MedicineItem) error {
+func (r *mongoRepository) CreateMedicineItem(ctx context.Context, i *types.MedicineItem) error {
 	res, err := r.medicineItem.InsertOne(ctx, i)
 	if err != nil || !res.Acknowledged {
 		return err
@@ -134,7 +134,7 @@ func (r *mongoRepository) InsertMedicineItem(ctx context.Context, i *types.Medic
 	return nil
 }
 
-func (r *mongoRepository) InsertRetailCategory(ctx context.Context, c *types.RetailCategory) error {
+func (r *mongoRepository) CreateRetailCategory(ctx context.Context, c *types.RetailCategory) error {
 	res, err := r.retailCategory.InsertOne(ctx, c)
 	if err != nil || !res.Acknowledged {
 		return err
@@ -143,7 +143,7 @@ func (r *mongoRepository) InsertRetailCategory(ctx context.Context, c *types.Ret
 	return nil
 }
 
-func (r *mongoRepository) InsertRetailItem(ctx context.Context, i *types.RetailItem) error {
+func (r *mongoRepository) CreateRetailItem(ctx context.Context, i *types.RetailItem) error {
 	res, err := r.retailItem.InsertOne(ctx, i)
 	if err != nil || !res.Acknowledged {
 		return err
