@@ -903,3 +903,27 @@ func ToGQAddonStock(r *pb.AddonStock) *AddonStock {
 		UpdatedAt:  ToGQTime(r.UpdatedAt),
 	}
 }
+
+func ToPbUpdateItemStockReq(in *UpdateItemStockInput) *pb.UpdateItemStockReq {
+	return &pb.UpdateItemStockReq{
+		Id:         in.ID,
+		Quantity:   in.Quantity,
+		RestockQty: in.RestockQty,
+	}
+}
+
+func ToPbUpdateVariantStockReq(in *UpdateVariantStockInput) *pb.UpdateVariantStockReq {
+	return &pb.UpdateVariantStockReq{
+		Id:         in.ID,
+		Quantity:   in.Quantity,
+		RestockQty: in.RestockQty,
+	}
+}
+
+func ToPbUpdateAddonStockReq(in *UpdateAddonStockInput) *pb.UpdateAddonStockReq {
+	return &pb.UpdateAddonStockReq{
+		Id:         in.ID,
+		Quantity:   in.Quantity,
+		RestockQty: in.RestockQty,
+	}
+}

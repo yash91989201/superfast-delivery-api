@@ -3,6 +3,7 @@ syntax = "proto3";
 package pb;
 
 import "google/protobuf/timestamp.proto";
+import "shared.proto";
 
 option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
 
@@ -45,8 +46,62 @@ message CreateAddonStockReq {
   int32 quantity = 2;
 }
 
+message GetItemStockReq {
+  string id = 1;
+}
+
+message GetVariantStockReq {
+  string id = 1;
+}
+
+message GetAddonStockReq {
+  string id = 1;
+}
+
+message UpdateItemStockReq {
+  string id = 1;
+  int32 quantity = 2;
+  int32 restock_qty = 3;
+}
+
+message UpdateVariantStockReq {
+  string id = 1;
+  int32 quantity = 2;
+  int32 restock_qty = 3;
+}
+
+message UpdateAddonStockReq {
+  string id = 1;
+  int32 quantity = 2;
+  int32 restock_qty = 3;
+}
+
+message DeleteItemStockReq {
+  string id = 1;
+}
+
+message DeleteVariantStockReq {
+  string id = 1;
+}
+
+message DeleteAddonStockReq {
+  string id = 1;
+}
+
 service InventoryService {
   rpc CreateItemStock(CreateItemStockReq) returns (ItemStock) {}
   rpc CreateVariantStock(CreateVariantStockReq) returns (VariantStock) {}
   rpc CreateAddonStock(CreateAddonStockReq) returns (AddonStock) {}
+
+  rpc GetItemStock(GetItemStockReq) returns (ItemStock) {}
+  rpc GetVariantStock(GetVariantStockReq) returns (VariantStock) {}
+  rpc GetAddonStock(GetAddonStockReq) returns (AddonStock) {}
+
+  rpc UpdateItemStock(UpdateItemStockReq) returns (ItemStock) {}
+  rpc UpdateVariantStock(UpdateVariantStockReq) returns (VariantStock) {}
+  rpc UpdateAddonStock(UpdateAddonStockReq) returns (AddonStock) {}
+
+  rpc DeleteItemStock(DeleteItemStockReq) returns (EmptyRes) {}
+  rpc DeleteVariantStock(DeleteVariantStockReq) returns (EmptyRes) {}
+  rpc DeleteAddonStock(DeleteAddonStockReq) returns (EmptyRes) {}
 }

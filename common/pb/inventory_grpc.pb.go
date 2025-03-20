@@ -22,6 +22,15 @@ const (
 	InventoryService_CreateItemStock_FullMethodName    = "/pb.InventoryService/CreateItemStock"
 	InventoryService_CreateVariantStock_FullMethodName = "/pb.InventoryService/CreateVariantStock"
 	InventoryService_CreateAddonStock_FullMethodName   = "/pb.InventoryService/CreateAddonStock"
+	InventoryService_GetItemStock_FullMethodName       = "/pb.InventoryService/GetItemStock"
+	InventoryService_GetVariantStock_FullMethodName    = "/pb.InventoryService/GetVariantStock"
+	InventoryService_GetAddonStock_FullMethodName      = "/pb.InventoryService/GetAddonStock"
+	InventoryService_UpdateItemStock_FullMethodName    = "/pb.InventoryService/UpdateItemStock"
+	InventoryService_UpdateVariantStock_FullMethodName = "/pb.InventoryService/UpdateVariantStock"
+	InventoryService_UpdateAddonStock_FullMethodName   = "/pb.InventoryService/UpdateAddonStock"
+	InventoryService_DeleteItemStock_FullMethodName    = "/pb.InventoryService/DeleteItemStock"
+	InventoryService_DeleteVariantStock_FullMethodName = "/pb.InventoryService/DeleteVariantStock"
+	InventoryService_DeleteAddonStock_FullMethodName   = "/pb.InventoryService/DeleteAddonStock"
 )
 
 // InventoryServiceClient is the client API for InventoryService service.
@@ -31,6 +40,15 @@ type InventoryServiceClient interface {
 	CreateItemStock(ctx context.Context, in *CreateItemStockReq, opts ...grpc.CallOption) (*ItemStock, error)
 	CreateVariantStock(ctx context.Context, in *CreateVariantStockReq, opts ...grpc.CallOption) (*VariantStock, error)
 	CreateAddonStock(ctx context.Context, in *CreateAddonStockReq, opts ...grpc.CallOption) (*AddonStock, error)
+	GetItemStock(ctx context.Context, in *GetItemStockReq, opts ...grpc.CallOption) (*ItemStock, error)
+	GetVariantStock(ctx context.Context, in *GetVariantStockReq, opts ...grpc.CallOption) (*VariantStock, error)
+	GetAddonStock(ctx context.Context, in *GetAddonStockReq, opts ...grpc.CallOption) (*AddonStock, error)
+	UpdateItemStock(ctx context.Context, in *UpdateItemStockReq, opts ...grpc.CallOption) (*ItemStock, error)
+	UpdateVariantStock(ctx context.Context, in *UpdateVariantStockReq, opts ...grpc.CallOption) (*VariantStock, error)
+	UpdateAddonStock(ctx context.Context, in *UpdateAddonStockReq, opts ...grpc.CallOption) (*AddonStock, error)
+	DeleteItemStock(ctx context.Context, in *DeleteItemStockReq, opts ...grpc.CallOption) (*EmptyRes, error)
+	DeleteVariantStock(ctx context.Context, in *DeleteVariantStockReq, opts ...grpc.CallOption) (*EmptyRes, error)
+	DeleteAddonStock(ctx context.Context, in *DeleteAddonStockReq, opts ...grpc.CallOption) (*EmptyRes, error)
 }
 
 type inventoryServiceClient struct {
@@ -71,6 +89,96 @@ func (c *inventoryServiceClient) CreateAddonStock(ctx context.Context, in *Creat
 	return out, nil
 }
 
+func (c *inventoryServiceClient) GetItemStock(ctx context.Context, in *GetItemStockReq, opts ...grpc.CallOption) (*ItemStock, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ItemStock)
+	err := c.cc.Invoke(ctx, InventoryService_GetItemStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inventoryServiceClient) GetVariantStock(ctx context.Context, in *GetVariantStockReq, opts ...grpc.CallOption) (*VariantStock, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VariantStock)
+	err := c.cc.Invoke(ctx, InventoryService_GetVariantStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inventoryServiceClient) GetAddonStock(ctx context.Context, in *GetAddonStockReq, opts ...grpc.CallOption) (*AddonStock, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddonStock)
+	err := c.cc.Invoke(ctx, InventoryService_GetAddonStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inventoryServiceClient) UpdateItemStock(ctx context.Context, in *UpdateItemStockReq, opts ...grpc.CallOption) (*ItemStock, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ItemStock)
+	err := c.cc.Invoke(ctx, InventoryService_UpdateItemStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inventoryServiceClient) UpdateVariantStock(ctx context.Context, in *UpdateVariantStockReq, opts ...grpc.CallOption) (*VariantStock, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VariantStock)
+	err := c.cc.Invoke(ctx, InventoryService_UpdateVariantStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inventoryServiceClient) UpdateAddonStock(ctx context.Context, in *UpdateAddonStockReq, opts ...grpc.CallOption) (*AddonStock, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddonStock)
+	err := c.cc.Invoke(ctx, InventoryService_UpdateAddonStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inventoryServiceClient) DeleteItemStock(ctx context.Context, in *DeleteItemStockReq, opts ...grpc.CallOption) (*EmptyRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyRes)
+	err := c.cc.Invoke(ctx, InventoryService_DeleteItemStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inventoryServiceClient) DeleteVariantStock(ctx context.Context, in *DeleteVariantStockReq, opts ...grpc.CallOption) (*EmptyRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyRes)
+	err := c.cc.Invoke(ctx, InventoryService_DeleteVariantStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *inventoryServiceClient) DeleteAddonStock(ctx context.Context, in *DeleteAddonStockReq, opts ...grpc.CallOption) (*EmptyRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmptyRes)
+	err := c.cc.Invoke(ctx, InventoryService_DeleteAddonStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InventoryServiceServer is the server API for InventoryService service.
 // All implementations must embed UnimplementedInventoryServiceServer
 // for forward compatibility.
@@ -78,6 +186,15 @@ type InventoryServiceServer interface {
 	CreateItemStock(context.Context, *CreateItemStockReq) (*ItemStock, error)
 	CreateVariantStock(context.Context, *CreateVariantStockReq) (*VariantStock, error)
 	CreateAddonStock(context.Context, *CreateAddonStockReq) (*AddonStock, error)
+	GetItemStock(context.Context, *GetItemStockReq) (*ItemStock, error)
+	GetVariantStock(context.Context, *GetVariantStockReq) (*VariantStock, error)
+	GetAddonStock(context.Context, *GetAddonStockReq) (*AddonStock, error)
+	UpdateItemStock(context.Context, *UpdateItemStockReq) (*ItemStock, error)
+	UpdateVariantStock(context.Context, *UpdateVariantStockReq) (*VariantStock, error)
+	UpdateAddonStock(context.Context, *UpdateAddonStockReq) (*AddonStock, error)
+	DeleteItemStock(context.Context, *DeleteItemStockReq) (*EmptyRes, error)
+	DeleteVariantStock(context.Context, *DeleteVariantStockReq) (*EmptyRes, error)
+	DeleteAddonStock(context.Context, *DeleteAddonStockReq) (*EmptyRes, error)
 	mustEmbedUnimplementedInventoryServiceServer()
 }
 
@@ -96,6 +213,33 @@ func (UnimplementedInventoryServiceServer) CreateVariantStock(context.Context, *
 }
 func (UnimplementedInventoryServiceServer) CreateAddonStock(context.Context, *CreateAddonStockReq) (*AddonStock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAddonStock not implemented")
+}
+func (UnimplementedInventoryServiceServer) GetItemStock(context.Context, *GetItemStockReq) (*ItemStock, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetItemStock not implemented")
+}
+func (UnimplementedInventoryServiceServer) GetVariantStock(context.Context, *GetVariantStockReq) (*VariantStock, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVariantStock not implemented")
+}
+func (UnimplementedInventoryServiceServer) GetAddonStock(context.Context, *GetAddonStockReq) (*AddonStock, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAddonStock not implemented")
+}
+func (UnimplementedInventoryServiceServer) UpdateItemStock(context.Context, *UpdateItemStockReq) (*ItemStock, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateItemStock not implemented")
+}
+func (UnimplementedInventoryServiceServer) UpdateVariantStock(context.Context, *UpdateVariantStockReq) (*VariantStock, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateVariantStock not implemented")
+}
+func (UnimplementedInventoryServiceServer) UpdateAddonStock(context.Context, *UpdateAddonStockReq) (*AddonStock, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAddonStock not implemented")
+}
+func (UnimplementedInventoryServiceServer) DeleteItemStock(context.Context, *DeleteItemStockReq) (*EmptyRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteItemStock not implemented")
+}
+func (UnimplementedInventoryServiceServer) DeleteVariantStock(context.Context, *DeleteVariantStockReq) (*EmptyRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteVariantStock not implemented")
+}
+func (UnimplementedInventoryServiceServer) DeleteAddonStock(context.Context, *DeleteAddonStockReq) (*EmptyRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAddonStock not implemented")
 }
 func (UnimplementedInventoryServiceServer) mustEmbedUnimplementedInventoryServiceServer() {}
 func (UnimplementedInventoryServiceServer) testEmbeddedByValue()                          {}
@@ -172,6 +316,168 @@ func _InventoryService_CreateAddonStock_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _InventoryService_GetItemStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetItemStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).GetItemStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_GetItemStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).GetItemStock(ctx, req.(*GetItemStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InventoryService_GetVariantStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVariantStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).GetVariantStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_GetVariantStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).GetVariantStock(ctx, req.(*GetVariantStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InventoryService_GetAddonStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAddonStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).GetAddonStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_GetAddonStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).GetAddonStock(ctx, req.(*GetAddonStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InventoryService_UpdateItemStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateItemStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).UpdateItemStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_UpdateItemStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).UpdateItemStock(ctx, req.(*UpdateItemStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InventoryService_UpdateVariantStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateVariantStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).UpdateVariantStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_UpdateVariantStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).UpdateVariantStock(ctx, req.(*UpdateVariantStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InventoryService_UpdateAddonStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAddonStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).UpdateAddonStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_UpdateAddonStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).UpdateAddonStock(ctx, req.(*UpdateAddonStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InventoryService_DeleteItemStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteItemStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).DeleteItemStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_DeleteItemStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).DeleteItemStock(ctx, req.(*DeleteItemStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InventoryService_DeleteVariantStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVariantStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).DeleteVariantStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_DeleteVariantStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).DeleteVariantStock(ctx, req.(*DeleteVariantStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InventoryService_DeleteAddonStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAddonStockReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).DeleteAddonStock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_DeleteAddonStock_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).DeleteAddonStock(ctx, req.(*DeleteAddonStockReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // InventoryService_ServiceDesc is the grpc.ServiceDesc for InventoryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +496,42 @@ var InventoryService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateAddonStock",
 			Handler:    _InventoryService_CreateAddonStock_Handler,
+		},
+		{
+			MethodName: "GetItemStock",
+			Handler:    _InventoryService_GetItemStock_Handler,
+		},
+		{
+			MethodName: "GetVariantStock",
+			Handler:    _InventoryService_GetVariantStock_Handler,
+		},
+		{
+			MethodName: "GetAddonStock",
+			Handler:    _InventoryService_GetAddonStock_Handler,
+		},
+		{
+			MethodName: "UpdateItemStock",
+			Handler:    _InventoryService_UpdateItemStock_Handler,
+		},
+		{
+			MethodName: "UpdateVariantStock",
+			Handler:    _InventoryService_UpdateVariantStock_Handler,
+		},
+		{
+			MethodName: "UpdateAddonStock",
+			Handler:    _InventoryService_UpdateAddonStock_Handler,
+		},
+		{
+			MethodName: "DeleteItemStock",
+			Handler:    _InventoryService_DeleteItemStock_Handler,
+		},
+		{
+			MethodName: "DeleteVariantStock",
+			Handler:    _InventoryService_DeleteVariantStock_Handler,
+		},
+		{
+			MethodName: "DeleteAddonStock",
+			Handler:    _InventoryService_DeleteAddonStock_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

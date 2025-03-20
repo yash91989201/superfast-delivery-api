@@ -222,21 +222,27 @@ type ComplexityRoot struct {
 		CreateRetailItem             func(childComplexity int, input CreateRetailItemInput) int
 		CreateShop                   func(childComplexity int, input CreateShopInput) int
 		CreateVariantStock           func(childComplexity int, input CreateVariantStockInput) int
+		DeleteAddonStock             func(childComplexity int, id string) int
 		DeleteDeliveryAddress        func(childComplexity int, addressID string) int
+		DeleteItemStock              func(childComplexity int, id string) int
 		DeleteShop                   func(childComplexity int, id string) int
+		DeleteVariantStock           func(childComplexity int, id string) int
 		LogOut                       func(childComplexity int, sessionID string) int
 		RefreshToken                 func(childComplexity int, sessionID string) int
 		SignInWithEmail              func(childComplexity int, input SignInWithEmailInput) int
 		SignInWithGoogle             func(childComplexity int, input SignInWithGoogleInput) int
 		SignInWithPhone              func(childComplexity int, input SignInWithPhoneInput) int
+		UpdateAddonStock             func(childComplexity int, input UpdateAddonStockInput) int
 		UpdateDefaultDeliveryAddress func(childComplexity int, input UpdateDefaultDeliveryAddressInput) int
 		UpdateDeliveryAddress        func(childComplexity int, input UpdateDeliveryAddressInput) int
+		UpdateItemStock              func(childComplexity int, input UpdateItemStockInput) int
 		UpdateProfile                func(childComplexity int, input UpdateProfileInput) int
 		UpdateShop                   func(childComplexity int, input UpdateShopInput) int
 		UpdateShopAddress            func(childComplexity int, input UpdateShopAddressInput) int
 		UpdateShopContact            func(childComplexity int, input UpdateShopContactInput) int
 		UpdateShopImages             func(childComplexity int, input []*UpdateShopImageInput) int
 		UpdateShopTimings            func(childComplexity int, input []*UpdateShopTimingInput) int
+		UpdateVariantStock           func(childComplexity int, input UpdateVariantStockInput) int
 	}
 
 	Profile struct {
@@ -252,12 +258,14 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		GetAddonStock            func(childComplexity int, id string) int
 		GetAuth                  func(childComplexity int, input GetAuthInput) int
 		GetAuthByID              func(childComplexity int, input GetAuthByIDInput) int
 		GetDeliveryAddress       func(childComplexity int, id string) int
 		GetDeliveryAddressDetail func(childComplexity int, addressID string) int
 		GetItemAddon             func(childComplexity int, id string) int
 		GetItemAddons            func(childComplexity int, itemID string) int
+		GetItemStock             func(childComplexity int, id string) int
 		GetItemVariant           func(childComplexity int, id string) int
 		GetItemVariants          func(childComplexity int, itemID string) int
 		GetMedicineCategory      func(childComplexity int, id string) int
@@ -265,6 +273,7 @@ type ComplexityRoot struct {
 		GetRestaurantMenu        func(childComplexity int, id string) int
 		GetRetailCategory        func(childComplexity int, id string) int
 		GetShop                  func(childComplexity int, id string) int
+		GetVariantStock          func(childComplexity int, id string) int
 		ListDeliveryAddress      func(childComplexity int, authID string) int
 		ListMedicineCategory     func(childComplexity int, shopID string) int
 		ListRestaurantMenu       func(childComplexity int, shopID string) int
@@ -420,6 +429,12 @@ type MutationResolver interface {
 	CreateItemStock(ctx context.Context, input CreateItemStockInput) (*ItemStock, error)
 	CreateVariantStock(ctx context.Context, input CreateVariantStockInput) (*VariantStock, error)
 	CreateAddonStock(ctx context.Context, input CreateAddonStockInput) (*AddonStock, error)
+	UpdateItemStock(ctx context.Context, input UpdateItemStockInput) (*ItemStock, error)
+	UpdateVariantStock(ctx context.Context, input UpdateVariantStockInput) (*VariantStock, error)
+	UpdateAddonStock(ctx context.Context, input UpdateAddonStockInput) (*AddonStock, error)
+	DeleteItemStock(ctx context.Context, id string) (*DeleteOutput, error)
+	DeleteVariantStock(ctx context.Context, id string) (*DeleteOutput, error)
+	DeleteAddonStock(ctx context.Context, id string) (*DeleteOutput, error)
 }
 type QueryResolver interface {
 	GetAuth(ctx context.Context, input GetAuthInput) (*Auth, error)
@@ -440,6 +455,9 @@ type QueryResolver interface {
 	ListRetailCategory(ctx context.Context, shopID string) (*ListRetailCategoryOutput, error)
 	GetMedicineCategory(ctx context.Context, id string) (*MedicineCategory, error)
 	ListMedicineCategory(ctx context.Context, shopID string) (*ListMedicineCategoryOutput, error)
+	GetItemStock(ctx context.Context, id string) (*ItemStock, error)
+	GetVariantStock(ctx context.Context, id string) (*VariantStock, error)
+	GetAddonStock(ctx context.Context, id string) (*AddonStock, error)
 }
 
 type executableSchema struct {
@@ -1329,6 +1347,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateVariantStock(childComplexity, args["input"].(CreateVariantStockInput)), true
 
+	case "Mutation.DeleteAddonStock":
+		if e.complexity.Mutation.DeleteAddonStock == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteAddonStock_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteAddonStock(childComplexity, args["id"].(string)), true
+
 	case "Mutation.DeleteDeliveryAddress":
 		if e.complexity.Mutation.DeleteDeliveryAddress == nil {
 			break
@@ -1341,6 +1371,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteDeliveryAddress(childComplexity, args["addressId"].(string)), true
 
+	case "Mutation.DeleteItemStock":
+		if e.complexity.Mutation.DeleteItemStock == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteItemStock_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteItemStock(childComplexity, args["id"].(string)), true
+
 	case "Mutation.DeleteShop":
 		if e.complexity.Mutation.DeleteShop == nil {
 			break
@@ -1352,6 +1394,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteShop(childComplexity, args["id"].(string)), true
+
+	case "Mutation.DeleteVariantStock":
+		if e.complexity.Mutation.DeleteVariantStock == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteVariantStock_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteVariantStock(childComplexity, args["id"].(string)), true
 
 	case "Mutation.LogOut":
 		if e.complexity.Mutation.LogOut == nil {
@@ -1413,6 +1467,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.SignInWithPhone(childComplexity, args["input"].(SignInWithPhoneInput)), true
 
+	case "Mutation.UpdateAddonStock":
+		if e.complexity.Mutation.UpdateAddonStock == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateAddonStock_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateAddonStock(childComplexity, args["input"].(UpdateAddonStockInput)), true
+
 	case "Mutation.UpdateDefaultDeliveryAddress":
 		if e.complexity.Mutation.UpdateDefaultDeliveryAddress == nil {
 			break
@@ -1436,6 +1502,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateDeliveryAddress(childComplexity, args["input"].(UpdateDeliveryAddressInput)), true
+
+	case "Mutation.UpdateItemStock":
+		if e.complexity.Mutation.UpdateItemStock == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateItemStock_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateItemStock(childComplexity, args["input"].(UpdateItemStockInput)), true
 
 	case "Mutation.UpdateProfile":
 		if e.complexity.Mutation.UpdateProfile == nil {
@@ -1509,6 +1587,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateShopTimings(childComplexity, args["input"].([]*UpdateShopTimingInput)), true
 
+	case "Mutation.UpdateVariantStock":
+		if e.complexity.Mutation.UpdateVariantStock == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_UpdateVariantStock_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateVariantStock(childComplexity, args["input"].(UpdateVariantStockInput)), true
+
 	case "Profile.anniversary":
 		if e.complexity.Profile.Anniversary == nil {
 			break
@@ -1571,6 +1661,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Profile.UpdatedAt(childComplexity), true
+
+	case "Query.GetAddonStock":
+		if e.complexity.Query.GetAddonStock == nil {
+			break
+		}
+
+		args, err := ec.field_Query_GetAddonStock_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetAddonStock(childComplexity, args["id"].(string)), true
 
 	case "Query.GetAuth":
 		if e.complexity.Query.GetAuth == nil {
@@ -1643,6 +1745,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetItemAddons(childComplexity, args["itemId"].(string)), true
+
+	case "Query.GetItemStock":
+		if e.complexity.Query.GetItemStock == nil {
+			break
+		}
+
+		args, err := ec.field_Query_GetItemStock_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetItemStock(childComplexity, args["id"].(string)), true
 
 	case "Query.GetItemVariant":
 		if e.complexity.Query.GetItemVariant == nil {
@@ -1727,6 +1841,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetShop(childComplexity, args["id"].(string)), true
+
+	case "Query.GetVariantStock":
+		if e.complexity.Query.GetVariantStock == nil {
+			break
+		}
+
+		args, err := ec.field_Query_GetVariantStock_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetVariantStock(childComplexity, args["id"].(string)), true
 
 	case "Query.ListDeliveryAddress":
 		if e.complexity.Query.ListDeliveryAddress == nil {
@@ -2368,14 +2494,17 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSignInWithEmailInput,
 		ec.unmarshalInputSignInWithGoogleInput,
 		ec.unmarshalInputSignInWithPhoneInput,
+		ec.unmarshalInputUpdateAddonStockInput,
 		ec.unmarshalInputUpdateDefaultDeliveryAddressInput,
 		ec.unmarshalInputUpdateDeliveryAddressInput,
+		ec.unmarshalInputUpdateItemStockInput,
 		ec.unmarshalInputUpdateProfileInput,
 		ec.unmarshalInputUpdateShopAddressInput,
 		ec.unmarshalInputUpdateShopContactInput,
 		ec.unmarshalInputUpdateShopImageInput,
 		ec.unmarshalInputUpdateShopInput,
 		ec.unmarshalInputUpdateShopTimingInput,
+		ec.unmarshalInputUpdateVariantStockInput,
 	)
 	first := true
 
@@ -2814,6 +2943,29 @@ func (ec *executionContext) field_Mutation_CreateVariantStock_argsInput(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_DeleteAddonStock_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_DeleteAddonStock_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_DeleteAddonStock_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_DeleteDeliveryAddress_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -2837,6 +2989,29 @@ func (ec *executionContext) field_Mutation_DeleteDeliveryAddress_argsAddressID(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_DeleteItemStock_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_DeleteItemStock_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_DeleteItemStock_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_DeleteShop_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -2848,6 +3023,29 @@ func (ec *executionContext) field_Mutation_DeleteShop_args(ctx context.Context, 
 	return args, nil
 }
 func (ec *executionContext) field_Mutation_DeleteShop_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_DeleteVariantStock_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_DeleteVariantStock_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_DeleteVariantStock_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
@@ -2975,6 +3173,29 @@ func (ec *executionContext) field_Mutation_SignInWithPhone_argsInput(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_UpdateAddonStock_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_UpdateAddonStock_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_UpdateAddonStock_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (UpdateAddonStockInput, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUpdateAddonStockInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateAddonStockInput(ctx, tmp)
+	}
+
+	var zeroVal UpdateAddonStockInput
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Mutation_UpdateDefaultDeliveryAddress_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -3018,6 +3239,29 @@ func (ec *executionContext) field_Mutation_UpdateDeliveryAddress_argsInput(
 	}
 
 	var zeroVal UpdateDeliveryAddressInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Mutation_UpdateItemStock_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_UpdateItemStock_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_UpdateItemStock_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (UpdateItemStockInput, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUpdateItemStockInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateItemStockInput(ctx, tmp)
+	}
+
+	var zeroVal UpdateItemStockInput
 	return zeroVal, nil
 }
 
@@ -3159,6 +3403,52 @@ func (ec *executionContext) field_Mutation_UpdateShop_argsInput(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Mutation_UpdateVariantStock_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Mutation_UpdateVariantStock_argsInput(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["input"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Mutation_UpdateVariantStock_argsInput(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (UpdateVariantStockInput, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+	if tmp, ok := rawArgs["input"]; ok {
+		return ec.unmarshalNUpdateVariantStockInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateVariantStockInput(ctx, tmp)
+	}
+
+	var zeroVal UpdateVariantStockInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_GetAddonStock_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_GetAddonStock_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_GetAddonStock_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Query_GetAuthById_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -3290,6 +3580,29 @@ func (ec *executionContext) field_Query_GetItemAddons_argsItemID(
 ) (string, error) {
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("itemId"))
 	if tmp, ok := rawArgs["itemId"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_GetItemStock_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_GetItemStock_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_GetItemStock_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
 		return ec.unmarshalNID2string(ctx, tmp)
 	}
 
@@ -3446,6 +3759,29 @@ func (ec *executionContext) field_Query_GetShop_args(ctx context.Context, rawArg
 	return args, nil
 }
 func (ec *executionContext) field_Query_GetShop_argsID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["id"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_GetVariantStock_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_GetVariantStock_argsID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["id"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_GetVariantStock_argsID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
@@ -10222,6 +10558,384 @@ func (ec *executionContext) fieldContext_Mutation_CreateAddonStock(ctx context.C
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_UpdateItemStock(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_UpdateItemStock(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateItemStock(rctx, fc.Args["input"].(UpdateItemStockInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ItemStock)
+	fc.Result = res
+	return ec.marshalNItemStock2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemStock(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_UpdateItemStock(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ItemStock_id(ctx, field)
+			case "item_id":
+				return ec.fieldContext_ItemStock_item_id(ctx, field)
+			case "quantity":
+				return ec.fieldContext_ItemStock_quantity(ctx, field)
+			case "restock_qty":
+				return ec.fieldContext_ItemStock_restock_qty(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_ItemStock_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ItemStock", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_UpdateItemStock_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_UpdateVariantStock(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_UpdateVariantStock(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateVariantStock(rctx, fc.Args["input"].(UpdateVariantStockInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*VariantStock)
+	fc.Result = res
+	return ec.marshalNVariantStock2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐVariantStock(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_UpdateVariantStock(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_VariantStock_id(ctx, field)
+			case "variant_id":
+				return ec.fieldContext_VariantStock_variant_id(ctx, field)
+			case "quantity":
+				return ec.fieldContext_VariantStock_quantity(ctx, field)
+			case "restock_qty":
+				return ec.fieldContext_VariantStock_restock_qty(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_VariantStock_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type VariantStock", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_UpdateVariantStock_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_UpdateAddonStock(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_UpdateAddonStock(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAddonStock(rctx, fc.Args["input"].(UpdateAddonStockInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*AddonStock)
+	fc.Result = res
+	return ec.marshalNAddonStock2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAddonStock(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_UpdateAddonStock(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_AddonStock_id(ctx, field)
+			case "addon_id":
+				return ec.fieldContext_AddonStock_addon_id(ctx, field)
+			case "quantity":
+				return ec.fieldContext_AddonStock_quantity(ctx, field)
+			case "restock_qty":
+				return ec.fieldContext_AddonStock_restock_qty(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_AddonStock_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type AddonStock", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_UpdateAddonStock_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_DeleteItemStock(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_DeleteItemStock(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteItemStock(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*DeleteOutput)
+	fc.Result = res
+	return ec.marshalNDeleteOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDeleteOutput(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_DeleteItemStock(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "message":
+				return ec.fieldContext_DeleteOutput_message(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeleteOutput", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_DeleteItemStock_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_DeleteVariantStock(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_DeleteVariantStock(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteVariantStock(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*DeleteOutput)
+	fc.Result = res
+	return ec.marshalNDeleteOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDeleteOutput(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_DeleteVariantStock(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "message":
+				return ec.fieldContext_DeleteOutput_message(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeleteOutput", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_DeleteVariantStock_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_DeleteAddonStock(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_DeleteAddonStock(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteAddonStock(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*DeleteOutput)
+	fc.Result = res
+	return ec.marshalNDeleteOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDeleteOutput(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_DeleteAddonStock(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "message":
+				return ec.fieldContext_DeleteOutput_message(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeleteOutput", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_DeleteAddonStock_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Profile_id(ctx context.Context, field graphql.CollectedField, obj *Profile) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Profile_id(ctx, field)
 	if err != nil {
@@ -11840,6 +12554,207 @@ func (ec *executionContext) fieldContext_Query_ListMedicineCategory(ctx context.
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_ListMedicineCategory_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_GetItemStock(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_GetItemStock(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetItemStock(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ItemStock)
+	fc.Result = res
+	return ec.marshalNItemStock2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐItemStock(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_GetItemStock(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ItemStock_id(ctx, field)
+			case "item_id":
+				return ec.fieldContext_ItemStock_item_id(ctx, field)
+			case "quantity":
+				return ec.fieldContext_ItemStock_quantity(ctx, field)
+			case "restock_qty":
+				return ec.fieldContext_ItemStock_restock_qty(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_ItemStock_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ItemStock", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_GetItemStock_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_GetVariantStock(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_GetVariantStock(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetVariantStock(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*VariantStock)
+	fc.Result = res
+	return ec.marshalNVariantStock2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐVariantStock(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_GetVariantStock(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_VariantStock_id(ctx, field)
+			case "variant_id":
+				return ec.fieldContext_VariantStock_variant_id(ctx, field)
+			case "quantity":
+				return ec.fieldContext_VariantStock_quantity(ctx, field)
+			case "restock_qty":
+				return ec.fieldContext_VariantStock_restock_qty(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_VariantStock_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type VariantStock", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_GetVariantStock_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_GetAddonStock(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_GetAddonStock(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetAddonStock(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*AddonStock)
+	fc.Result = res
+	return ec.marshalNAddonStock2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAddonStock(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_GetAddonStock(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_AddonStock_id(ctx, field)
+			case "addon_id":
+				return ec.fieldContext_AddonStock_addon_id(ctx, field)
+			case "quantity":
+				return ec.fieldContext_AddonStock_quantity(ctx, field)
+			case "restock_qty":
+				return ec.fieldContext_AddonStock_restock_qty(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_AddonStock_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type AddonStock", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_GetAddonStock_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -18670,6 +19585,47 @@ func (ec *executionContext) unmarshalInputSignInWithPhoneInput(ctx context.Conte
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateAddonStockInput(ctx context.Context, obj any) (UpdateAddonStockInput, error) {
+	var it UpdateAddonStockInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "quantity", "restock_qty"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "quantity":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("quantity"))
+			data, err := ec.unmarshalNInt2int32(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Quantity = data
+		case "restock_qty":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restock_qty"))
+			data, err := ec.unmarshalNInt2int32(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RestockQty = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateDefaultDeliveryAddressInput(ctx context.Context, obj any) (UpdateDefaultDeliveryAddressInput, error) {
 	var it UpdateDefaultDeliveryAddressInput
 	asMap := map[string]any{}
@@ -18788,6 +19744,47 @@ func (ec *executionContext) unmarshalInputUpdateDeliveryAddressInput(ctx context
 				return it, err
 			}
 			it.AuthID = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateItemStockInput(ctx context.Context, obj any) (UpdateItemStockInput, error) {
+	var it UpdateItemStockInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "quantity", "restock_qty"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "quantity":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("quantity"))
+			data, err := ec.unmarshalNInt2int32(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Quantity = data
+		case "restock_qty":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restock_qty"))
+			data, err := ec.unmarshalNInt2int32(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RestockQty = data
 		}
 	}
 
@@ -19125,6 +20122,47 @@ func (ec *executionContext) unmarshalInputUpdateShopTimingInput(ctx context.Cont
 				return it, err
 			}
 			it.ClosesAt = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateVariantStockInput(ctx context.Context, obj any) (UpdateVariantStockInput, error) {
+	var it UpdateVariantStockInput
+	asMap := map[string]any{}
+	for k, v := range obj.(map[string]any) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "quantity", "restock_qty"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "quantity":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("quantity"))
+			data, err := ec.unmarshalNInt2int32(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Quantity = data
+		case "restock_qty":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restock_qty"))
+			data, err := ec.unmarshalNInt2int32(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RestockQty = data
 		}
 	}
 
@@ -20502,6 +21540,48 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "UpdateItemStock":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_UpdateItemStock(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "UpdateVariantStock":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_UpdateVariantStock(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "UpdateAddonStock":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_UpdateAddonStock(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "DeleteItemStock":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_DeleteItemStock(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "DeleteVariantStock":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_DeleteVariantStock(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "DeleteAddonStock":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_DeleteAddonStock(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -20992,6 +22072,72 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_ListMedicineCategory(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "GetItemStock":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_GetItemStock(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "GetVariantStock":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_GetVariantStock(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "GetAddonStock":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_GetAddonStock(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -23249,6 +24395,11 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
+func (ec *executionContext) unmarshalNUpdateAddonStockInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateAddonStockInput(ctx context.Context, v any) (UpdateAddonStockInput, error) {
+	res, err := ec.unmarshalInputUpdateAddonStockInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUpdateDefaultDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDefaultDeliveryAddressInput(ctx context.Context, v any) (UpdateDefaultDeliveryAddressInput, error) {
 	res, err := ec.unmarshalInputUpdateDefaultDeliveryAddressInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -23256,6 +24407,11 @@ func (ec *executionContext) unmarshalNUpdateDefaultDeliveryAddressInput2github�
 
 func (ec *executionContext) unmarshalNUpdateDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDeliveryAddressInput(ctx context.Context, v any) (UpdateDeliveryAddressInput, error) {
 	res, err := ec.unmarshalInputUpdateDeliveryAddressInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateItemStockInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateItemStockInput(ctx context.Context, v any) (UpdateItemStockInput, error) {
+	res, err := ec.unmarshalInputUpdateItemStockInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -23349,6 +24505,11 @@ func (ec *executionContext) unmarshalNUpdateShopTimingInput2ᚕᚖgithubᚗcom�
 func (ec *executionContext) unmarshalNUpdateShopTimingInput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateShopTimingInput(ctx context.Context, v any) (*UpdateShopTimingInput, error) {
 	res, err := ec.unmarshalInputUpdateShopTimingInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateVariantStockInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateVariantStockInput(ctx context.Context, v any) (UpdateVariantStockInput, error) {
+	res, err := ec.unmarshalInputUpdateVariantStockInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNVariantStock2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐVariantStock(ctx context.Context, sel ast.SelectionSet, v VariantStock) graphql.Marshaler {

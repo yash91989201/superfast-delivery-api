@@ -457,6 +457,12 @@ type SignInWithPhoneInput struct {
 	Otp      *string  `json:"otp,omitempty"`
 }
 
+type UpdateAddonStockInput struct {
+	ID         string `json:"id"`
+	Quantity   int32  `json:"quantity"`
+	RestockQty int32  `json:"restock_qty"`
+}
+
 type UpdateDefaultDeliveryAddressInput struct {
 	DeliveryAddressID string `json:"delivery_address_id"`
 	AuthID            string `json:"auth_id"`
@@ -473,6 +479,12 @@ type UpdateDeliveryAddressInput struct {
 	DeliveryInstruction *string       `json:"delivery_instruction,omitempty"`
 	IsDefault           bool          `json:"is_default"`
 	AuthID              string        `json:"auth_id"`
+}
+
+type UpdateItemStockInput struct {
+	ID         string `json:"id"`
+	Quantity   int32  `json:"quantity"`
+	RestockQty int32  `json:"restock_qty"`
 }
 
 type UpdateOutput struct {
@@ -530,6 +542,12 @@ type UpdateShopTimingInput struct {
 	Day      *DayOfWeek `json:"day,omitempty"`
 	OpensAt  *time.Time `json:"opens_at,omitempty"`
 	ClosesAt *time.Time `json:"closes_at,omitempty"`
+}
+
+type UpdateVariantStockInput struct {
+	ID         string `json:"id"`
+	Quantity   int32  `json:"quantity"`
+	RestockQty int32  `json:"restock_qty"`
 }
 
 type VariantStock struct {

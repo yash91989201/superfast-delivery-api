@@ -212,3 +212,30 @@ func (r *queryResolver) ListMedicineCategory(ctx context.Context, shopId string)
 		TotalCategory:        int32(len(medicineCategoryList)),
 	}, nil
 }
+
+func (r *queryResolver) GetItemStock(ctx context.Context, id string) (*ItemStock, error) {
+	res, err := r.server.inventoryClient.GetItemStock(ctx, &pb.GetItemStockReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemStock(res), nil
+}
+
+func (r *queryResolver) GetVariantStock(ctx context.Context, id string) (*VariantStock, error) {
+	res, err := r.server.inventoryClient.GetVariantStock(ctx, &pb.GetVariantStockReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQVariantStock(res), nil
+}
+
+func (r *queryResolver) GetAddonStock(ctx context.Context, id string) (*AddonStock, error) {
+	res, err := r.server.inventoryClient.GetAddonStock(ctx, &pb.GetAddonStockReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQAddonStock(res), nil
+}

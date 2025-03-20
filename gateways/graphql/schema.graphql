@@ -570,6 +570,24 @@ type ListDeliveryAddressOutput {
   delivery_address: [DeliveryAddress!]!
 }
 
+input UpdateItemStockInput {
+  id: ID!
+  quantity: Int!
+  restock_qty: Int!
+}
+
+input UpdateVariantStockInput {
+  id: ID!
+  quantity: Int!
+  restock_qty: Int!
+}
+
+input UpdateAddonStockInput {
+  id: ID!
+  quantity: Int!
+  restock_qty: Int!
+}
+
 type UpdateOutput {
   message: String!
 }
@@ -600,6 +618,10 @@ type Query {
   ListRetailCategory(shopId: ID!): ListRetailCategoryOutput
   GetMedicineCategory(id: ID!): MedicineCategory!
   ListMedicineCategory(shopId: ID!): ListMedicineCategoryOutput
+
+  GetItemStock(id: ID!): ItemStock!
+  GetVariantStock(id: ID!): VariantStock!
+  GetAddonStock(id: ID!): AddonStock!
 }
 
 type Mutation {
@@ -638,4 +660,12 @@ type Mutation {
   CreateItemStock(input: CreateItemStockInput!): ItemStock!
   CreateVariantStock(input: CreateVariantStockInput!): VariantStock!
   CreateAddonStock(input: CreateAddonStockInput!): AddonStock!
+
+  UpdateItemStock(input: UpdateItemStockInput!): ItemStock!
+  UpdateVariantStock(input: UpdateVariantStockInput!): VariantStock!
+  UpdateAddonStock(input: UpdateAddonStockInput!): AddonStock!
+
+  DeleteItemStock(id: ID!): DeleteOutput!
+  DeleteVariantStock(id: ID!): DeleteOutput!
+  DeleteAddonStock(id: ID!): DeleteOutput!
 }

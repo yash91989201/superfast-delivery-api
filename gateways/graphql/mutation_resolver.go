@@ -284,3 +284,57 @@ func (r *mutationResolver) CreateAddonStock(ctx context.Context, in CreateAddonS
 
 	return ToGQAddonStock(res), nil
 }
+
+func (r *mutationResolver) UpdateItemStock(ctx context.Context, in UpdateItemStockInput) (*ItemStock, error) {
+	res, err := r.server.inventoryClient.UpdateItemStock(ctx, ToPbUpdateItemStockReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemStock(res), nil
+}
+
+func (r *mutationResolver) UpdateVariantStock(ctx context.Context, in UpdateVariantStockInput) (*VariantStock, error) {
+	res, err := r.server.inventoryClient.UpdateVariantStock(ctx, ToPbUpdateVariantStockReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQVariantStock(res), nil
+}
+
+func (r *mutationResolver) UpdateAddonStock(ctx context.Context, in UpdateAddonStockInput) (*AddonStock, error) {
+	res, err := r.server.inventoryClient.UpdateAddonStock(ctx, ToPbUpdateAddonStockReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQAddonStock(res), nil
+}
+
+func (r *mutationResolver) DeleteItemStock(ctx context.Context, id string) (*DeleteOutput, error) {
+	_, err := r.server.inventoryClient.DeleteItemStock(ctx, &pb.DeleteItemStockReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeleteOutput{Message: "Item stock deleted successfully"}, nil
+}
+
+func (r *mutationResolver) DeleteVariantStock(ctx context.Context, id string) (*DeleteOutput, error) {
+	_, err := r.server.inventoryClient.DeleteVariantStock(ctx, &pb.DeleteVariantStockReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeleteOutput{Message: "Variant stock deleted successfully"}, nil
+}
+
+func (r *mutationResolver) DeleteAddonStock(ctx context.Context, id string) (*DeleteOutput, error) {
+	_, err := r.server.inventoryClient.DeleteAddonStock(ctx, &pb.DeleteAddonStockReq{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeleteOutput{Message: "Addon stock deleted successfully"}, nil
+}
