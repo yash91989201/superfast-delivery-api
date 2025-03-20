@@ -134,7 +134,7 @@ input CreateProfileInput {
 }
 
 input UpdateProfileInput {
-  id: String
+  id: String!
   name: String
   image_url: String
   dob: Date

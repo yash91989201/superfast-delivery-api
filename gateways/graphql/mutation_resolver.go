@@ -97,6 +97,7 @@ func (r *mutationResolver) CreateProfile(ctx context.Context, in CreateProfileIn
 
 func (r *mutationResolver) UpdateProfile(ctx context.Context, in UpdateProfileInput) (*Profile, error) {
 	res, err := r.server.userClient.UpdateProfile(ctx, &pb.UpdateProfileReq{
+		Id:          in.ID,
 		Name:        in.Name,
 		ImageUrl:    in.ImageURL,
 		Dob:         ToPbDate(in.Dob),

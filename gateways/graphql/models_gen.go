@@ -480,7 +480,7 @@ type UpdateOutput struct {
 }
 
 type UpdateProfileInput struct {
-	ID          *string `json:"id,omitempty"`
+	ID          string  `json:"id"`
 	Name        *string `json:"name,omitempty"`
 	ImageURL    *string `json:"image_url,omitempty"`
 	Dob         *string `json:"dob,omitempty"`

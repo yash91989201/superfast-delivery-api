@@ -441,6 +441,7 @@ func PbUpdateProfileReqToProfile(p *pb.UpdateProfileReq) *Profile {
 	}
 
 	profile := &Profile{
+		ID:     p.Id,
 		AuthID: p.AuthId,
 	}
 
