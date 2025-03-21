@@ -243,19 +243,39 @@ func (r *mutationResolver) CreateMenuItem(ctx context.Context, in CreateMenuItem
 }
 
 func (r *mutationResolver) CreateRetailCategory(ctx context.Context, in CreateRetailCategoryInput) (*RetailCategory, error) {
-	return nil, nil
+	res, err := r.server.productClient.CreateRetailCategory(ctx, ToPbCreateRetailCategoryReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQRetailCategory(res), nil
 }
 
 func (r *mutationResolver) CreateRetailItem(ctx context.Context, in CreateRetailItemInput) (*RetailItem, error) {
-	return nil, nil
+	res, err := r.server.productClient.CreateRetailItem(ctx, ToPbCreateRetailItemReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQRetailItem(res), nil
 }
 
 func (r *mutationResolver) CreateMedicineCategory(ctx context.Context, in CreateMedicineCategoryInput) (*MedicineCategory, error) {
-	return nil, nil
+	res, err := r.server.productClient.CreateMedicineCategory(ctx, ToPbCreateMedicineCategoryReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQMedicineCategory(res), nil
 }
 
 func (r *mutationResolver) CreateMedicineItem(ctx context.Context, in CreateMedicineItemInput) (*MedicineItem, error) {
-	return nil, nil
+	res, err := r.server.productClient.CreateMedicineItem(ctx, ToPbCreateMedicineItemReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQMedicineItem(res), nil
 }
 
 func (r *mutationResolver) CreateItemStock(ctx context.Context, in CreateItemStockInput) (*ItemStock, error) {

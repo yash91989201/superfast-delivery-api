@@ -52,8 +52,16 @@ func (c *ProductClient) CreateRetailCategory(ctx context.Context, req *pb.Create
 	return c.service.CreateRetailCategory(ctx, req)
 }
 
+func (c *ProductClient) CreateRetailItem(ctx context.Context, req *pb.CreateRetailItemReq) (*pb.RetailItem, error) {
+	return c.service.CreateRetailItem(ctx, req)
+}
+
 func (c *ProductClient) CreateMedicineCategory(ctx context.Context, req *pb.CreateMedicineCategoryReq) (*pb.MedicineCategory, error) {
 	return c.service.CreateMedicineCategory(ctx, req)
+}
+
+func (c *ProductClient) CreateMedicineItem(ctx context.Context, req *pb.CreateMedicineItemReq) (*pb.MedicineItem, error) {
+	return c.service.CreateMedicineItem(ctx, req)
 }
 
 func (c *ProductClient) GetItemVariant(ctx context.Context, req *pb.GetItemVariantReq) (*pb.ItemVariant, error) {

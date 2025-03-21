@@ -35,6 +35,15 @@ type Repository interface {
 	ListRetailCategory(ctx context.Context, shopId string) ([]*types.RetailCategory, error)
 	GetMedicineCategory(ctx context.Context, id string) (*types.MedicineCategory, error)
 	ListMedicineCategory(ctx context.Context, shopId string) ([]*types.MedicineCategory, error)
+
+	DeleteItemVariant(ctx context.Context, id string) error
+	DeleteItemAddon(ctx context.Context, id string) error
+	DeleteRestaurantMenu(ctx context.Context, id string) error
+	DeleteMenuItem(ctx context.Context, id string) error
+	DeleteRetailCategory(ctx context.Context, id string) error
+	DeleteRetailItem(ctx context.Context, id string) error
+	DeleteMedicineCategory(ctx context.Context, id string) error
+	DeleteMedicineItem(ctx context.Context, id string) error
 }
 
 type mongoRepository struct {
@@ -555,4 +564,52 @@ func (r *mongoRepository) ListMedicineCategory(ctx context.Context, shopId strin
 	}
 
 	return medicineCategoryList, nil
+}
+
+func (r *mongoRepository) DeleteItemVariant(ctx context.Context, id string) error {
+	filter := bson.M{"_id": types.HexToObjectId(id)}
+	_, err := r.itemVariant.DeleteOne(ctx, filter)
+	return err
+}
+
+func (r *mongoRepository) DeleteItemAddon(ctx context.Context, id string) error {
+	filter := bson.M{"_id": types.HexToObjectId(id)}
+	_, err := r.itemAddon.DeleteOne(ctx, filter)
+	return err
+}
+
+func (r *mongoRepository) DeleteRestaurantMenu(ctx context.Context, id string) error {
+	filter := bson.M{"_id": types.HexToObjectId(id)}
+	_, err := r.restaurantMenu.DeleteOne(ctx, filter)
+	return err
+}
+
+func (r *mongoRepository) DeleteMenuItem(ctx context.Context, id string) error {
+	filter := bson.M{"_id": types.HexToObjectId(id)}
+	_, err := r.menuItem.DeleteOne(ctx, filter)
+	return err
+}
+
+func (r *mongoRepository) DeleteRetailCategory(ctx context.Context, id string) error {
+	filter := bson.M{"_id": types.HexToObjectId(id)}
+	_, err := r.retailCategory.DeleteOne(ctx, filter)
+	return err
+}
+
+func (r *mongoRepository) DeleteRetailItem(ctx context.Context, id string) error {
+	filter := bson.M{"_id": types.HexToObjectId(id)}
+	_, err := r.retailItem.DeleteOne(ctx, filter)
+	return err
+}
+
+func (r *mongoRepository) DeleteMedicineCategory(ctx context.Context, id string) error {
+	filter := bson.M{"_id": types.HexToObjectId(id)}
+	_, err := r.medicineCategory.DeleteOne(ctx, filter)
+	return err
+}
+
+func (r *mongoRepository) DeleteMedicineItem(ctx context.Context, id string) error {
+	filter := bson.M{"_id": types.HexToObjectId(id)}
+	_, err := r.medicineItem.DeleteOne(ctx, filter)
+	return err
 }

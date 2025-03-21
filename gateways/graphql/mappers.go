@@ -927,3 +927,35 @@ func ToPbUpdateAddonStockReq(in *UpdateAddonStockInput) *pb.UpdateAddonStockReq 
 		RestockQty: in.RestockQty,
 	}
 }
+
+func ToPbCreateRetailCategoryReq(in *CreateRetailCategoryInput) *pb.CreateRetailCategoryReq {
+	return &pb.CreateRetailCategoryReq{
+		CategoryName: in.CategoryName,
+		ShopId:       in.ShopID,
+	}
+}
+
+func ToPbCreateRetailItemReq(in *CreateRetailItemInput) *pb.CreateRetailItemReq {
+	return &pb.CreateRetailItemReq{
+		Name:        in.Name,
+		Description: in.Description,
+		Price:       in.Price,
+		CategoryId:  in.CategoryID,
+	}
+}
+
+func ToPbCreateMedicineCategoryReq(in *CreateMedicineCategoryInput) *pb.CreateMedicineCategoryReq {
+	return &pb.CreateMedicineCategoryReq{
+		CategoryName: in.CategoryName,
+		ShopId:       in.ShopID,
+	}
+}
+
+func ToPbCreateMedicineItemReq(in *CreateMedicineItemInput) *pb.CreateMedicineItemReq {
+	return &pb.CreateMedicineItemReq{
+		Name:        in.Name,
+		Price:       in.Price,
+		Description: in.Description,
+		CategoryId:  in.CategoryID,
+	}
+}

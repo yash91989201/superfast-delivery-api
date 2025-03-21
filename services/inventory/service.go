@@ -11,12 +11,15 @@ type Service interface {
 	CreateItemStock(ctx context.Context, stock *types.CreateItemStock) (*types.ItemStock, error)
 	CreateVariantStock(ctx context.Context, stock *types.CreateVariantStock) (*types.VariantStock, error)
 	CreateAddonStock(ctx context.Context, stock *types.CreateAddonStock) (*types.AddonStock, error)
+
 	GetItemStockByID(ctx context.Context, id string) (*types.ItemStock, error)
 	GetVariantStockByID(ctx context.Context, id string) (*types.VariantStock, error)
 	GetAddonStockByID(ctx context.Context, id string) (*types.AddonStock, error)
+
 	UpdateItemStock(ctx context.Context, stock *types.ItemStock) (*types.ItemStock, error)
 	UpdateVariantStock(ctx context.Context, stock *types.VariantStock) (*types.VariantStock, error)
 	UpdateAddonStock(ctx context.Context, stock *types.AddonStock) (*types.AddonStock, error)
+
 	DeleteItemStock(ctx context.Context, id string) error
 	DeleteVariantStock(ctx context.Context, id string) error
 	DeleteAddonStock(ctx context.Context, id string) error

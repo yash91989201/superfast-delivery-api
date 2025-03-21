@@ -139,6 +139,6 @@ type CreateMedicineCategory struct {
 type CreateMedicineItem struct {
 	Name        string        `json:"name" bson:"name"`
 	Price       float64       `json:"price" bson:"price"`
-	Description *string       `json:"description" bson:"description"`
+	Description string        `json:"description" bson:"description"`
 	CategoryId  bson.ObjectID `json:"category_id" bson:"category_id"`
 }
