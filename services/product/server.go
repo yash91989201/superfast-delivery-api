@@ -29,50 +29,13 @@ func StartGRPCServer(s Service, serviceUrl string) error {
 	return server.Serve(listener)
 }
 
-func (s *grpcServer) GetItemVariant(ctx context.Context, req *pb.GetItemVariantReq) (*pb.ItemVariant, error) {
-	res, err := s.service.GetItemVariant(ctx, req.Id)
-	if err != nil {
-		return nil, err
-	}
-
-	return types.ToPbItemVariant(res), nil
-}
-func (s *grpcServer) GetItemAddon(ctx context.Context, req *pb.GetItemAddonReq) (*pb.ItemAddon, error) {
-	res, err := s.service.GetItemAddon(ctx, req.Id)
-	if err != nil {
-		return nil, err
-	}
-
-	return types.ToPbItemAddon(res), nil
-}
-func (s *grpcServer) GetItemVariants(ctx context.Context, req *pb.GetItemVariantsReq) (*pb.GetItemVariantsRes, error) {
-	res, err := s.service.GetItemVariants(ctx, req.ItemId)
-	if err != nil {
-		return nil, err
-	}
-
-	return &pb.GetItemVariantsRes{
-		Variants: types.ToPbItemVariants(res),
-	}, nil
-}
-func (s *grpcServer) GetItemAddons(ctx context.Context, req *pb.GetItemAddonsReq) (*pb.GetItemAddonsRes, error) {
-	res, err := s.service.GetItemAddons(ctx, req.ItemId)
-	if err != nil {
-		return nil, err
-	}
-
-	return &pb.GetItemAddonsRes{
-		Addons: types.ToPbItemAddons(res),
-	}, nil
-}
-
+// Create operations
 func (s *grpcServer) CreateItemVariant(ctx context.Context, req *pb.CreateItemVariantReq) (*pb.ItemVariant, error) {
 	res, err := s.service.CreateItemVariant(ctx, types.ToCreateItemVariant(req))
 	if err != nil {
 		return nil, err
 	}
-
-	return types.ToPbItemVariant(res), err
+	return types.ToPbItemVariant(res), nil
 }
 
 func (s *grpcServer) CreateItemAddon(ctx context.Context, req *pb.CreateItemAddonReq) (*pb.ItemAddon, error) {
@@ -80,8 +43,7 @@ func (s *grpcServer) CreateItemAddon(ctx context.Context, req *pb.CreateItemAddo
 	if err != nil {
 		return nil, err
 	}
-
-	return types.ToPbItemAddon(res), err
+	return types.ToPbItemAddon(res), nil
 }
 
 func (s *grpcServer) CreateRestaurantMenu(ctx context.Context, req *pb.CreateRestaurantMenuReq) (*pb.RestaurantMenu, error) {
@@ -89,7 +51,6 @@ func (s *grpcServer) CreateRestaurantMenu(ctx context.Context, req *pb.CreateRes
 	if err != nil {
 		return nil, err
 	}
-
 	return types.ToPbRestaurantMenu(res), nil
 }
 
@@ -98,7 +59,6 @@ func (s *grpcServer) CreateMenuItem(ctx context.Context, req *pb.CreateMenuItemR
 	if err != nil {
 		return nil, err
 	}
-
 	return types.ToPbMenuItem(res), nil
 }
 
@@ -107,11 +67,9 @@ func (s *grpcServer) CreateRetailCategory(ctx context.Context, req *pb.CreateRet
 		CategoryName: req.CategoryName,
 		ShopID:       req.ShopId,
 	})
-
 	if err != nil {
 		return nil, err
 	}
-
 	return types.ToPbRetailCategory(res), nil
 }
 
@@ -120,13 +78,11 @@ func (s *grpcServer) CreateRetailItem(ctx context.Context, req *pb.CreateRetailI
 		Name:        req.Name,
 		Description: req.Description,
 		Price:       req.Price,
-		CategoryId:  types.HexToObjectId(req.CategoryId),
+		CategoryID:  types.HexToObjectID(req.CategoryId),
 	})
-
 	if err != nil {
 		return nil, err
 	}
-
 	return types.ToPbRetailItem(res), nil
 }
 
@@ -135,11 +91,9 @@ func (s *grpcServer) CreateMedicineCategory(ctx context.Context, req *pb.CreateM
 		CategoryName: req.CategoryName,
 		ShopID:       req.ShopId,
 	})
-
 	if err != nil {
 		return nil, err
 	}
-
 	return types.ToPbMedicineCategory(res), nil
 }
 
@@ -148,14 +102,29 @@ func (s *grpcServer) CreateMedicineItem(ctx context.Context, req *pb.CreateMedic
 		Name:        req.Name,
 		Price:       req.Price,
 		Description: req.Description,
-		CategoryId:  types.HexToObjectId(req.CategoryId),
+		CategoryID:  types.HexToObjectID(req.CategoryId),
 	})
-
 	if err != nil {
 		return nil, err
 	}
-
 	return types.ToPbMedicineItem(res), nil
+}
+
+// Get operations
+func (s *grpcServer) GetItemVariant(ctx context.Context, req *pb.GetItemVariantReq) (*pb.ItemVariant, error) {
+	res, err := s.service.GetItemVariant(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return types.ToPbItemVariant(res), nil
+}
+
+func (s *grpcServer) GetItemAddon(ctx context.Context, req *pb.GetItemAddonReq) (*pb.ItemAddon, error) {
+	res, err := s.service.GetItemAddon(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return types.ToPbItemAddon(res), nil
 }
 
 func (s *grpcServer) GetRestaurantMenu(ctx context.Context, req *pb.GetRestaurantMenuReq) (*pb.RestaurantMenu, error) {
@@ -163,19 +132,15 @@ func (s *grpcServer) GetRestaurantMenu(ctx context.Context, req *pb.GetRestauran
 	if err != nil {
 		return nil, err
 	}
-
-	return types.ToPbRestaurantMenu(res), err
+	return types.ToPbRestaurantMenu(res), nil
 }
 
-func (s *grpcServer) ListRestaurantMenu(ctx context.Context, req *pb.ListRestaurantMenuReq) (*pb.ListRestaurantMenuRes, error) {
-	res, err := s.service.ListRestaurantMenu(ctx, req.ShopId)
+func (s *grpcServer) GetMenuItem(ctx context.Context, req *pb.GetMenuItemReq) (*pb.MenuItem, error) {
+	res, err := s.service.GetMenuItem(ctx, req.Id)
 	if err != nil {
 		return nil, err
 	}
-
-	return &pb.ListRestaurantMenuRes{
-		RestaurantMenuList: types.ToPbRestaurantMenuList(res),
-	}, nil
+	return types.ToPbMenuItem(res), nil
 }
 
 func (s *grpcServer) GetRetailCategory(ctx context.Context, req *pb.GetRetailCategoryReq) (*pb.RetailCategory, error) {
@@ -183,19 +148,15 @@ func (s *grpcServer) GetRetailCategory(ctx context.Context, req *pb.GetRetailCat
 	if err != nil {
 		return nil, err
 	}
-
-	return types.ToPbRetailCategory(res), err
+	return types.ToPbRetailCategory(res), nil
 }
 
-func (s *grpcServer) ListRetailCategory(ctx context.Context, req *pb.ListRetailCategoryReq) (*pb.ListRetailCategoryRes, error) {
-	res, err := s.service.ListRetailCategory(ctx, req.ShopId)
+func (s *grpcServer) GetRetailItem(ctx context.Context, req *pb.GetRetailItemReq) (*pb.RetailItem, error) {
+	res, err := s.service.GetRetailItem(ctx, req.Id)
 	if err != nil {
 		return nil, err
 	}
-
-	return &pb.ListRetailCategoryRes{
-		RetailCategoryList: types.ToPbRetailCategoryList(res),
-	}, nil
+	return types.ToPbRetailItem(res), nil
 }
 
 func (s *grpcServer) GetMedicineCategory(ctx context.Context, req *pb.GetMedicineCategoryReq) (*pb.MedicineCategory, error) {
@@ -203,8 +164,75 @@ func (s *grpcServer) GetMedicineCategory(ctx context.Context, req *pb.GetMedicin
 	if err != nil {
 		return nil, err
 	}
+	return types.ToPbMedicineCategory(res), nil
+}
 
-	return types.ToPbMedicineCategory(res), err
+func (s *grpcServer) GetMedicineItem(ctx context.Context, req *pb.GetMedicineItemReq) (*pb.MedicineItem, error) {
+	res, err := s.service.GetMedicineItem(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return types.ToPbMedicineItem(res), nil
+}
+
+func (s *grpcServer) ListItemVariant(ctx context.Context, req *pb.ListItemVariantReq) (*pb.ListItemVariantRes, error) {
+	res, err := s.service.ListItemVariant(ctx, req.ItemId)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ListItemVariantRes{
+		Variants: types.ToPbItemVariants(res),
+	}, nil
+}
+
+func (s *grpcServer) ListItemAddon(ctx context.Context, req *pb.ListItemAddonReq) (*pb.ListItemAddonRes, error) {
+	res, err := s.service.ListItemAddon(ctx, req.ItemId)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ListItemAddonRes{
+		Addons: types.ToPbItemAddons(res),
+	}, nil
+}
+
+func (s *grpcServer) ListRestaurantMenu(ctx context.Context, req *pb.ListRestaurantMenuReq) (*pb.ListRestaurantMenuRes, error) {
+	res, err := s.service.ListRestaurantMenu(ctx, req.ShopId)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ListRestaurantMenuRes{
+		RestaurantMenuList: types.ToPbRestaurantMenuList(res),
+	}, nil
+}
+
+func (s *grpcServer) ListMenuItem(ctx context.Context, req *pb.ListMenuItemReq) (*pb.ListMenuItemRes, error) {
+	res, err := s.service.ListMenuItem(ctx, req.MenuId)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ListMenuItemRes{
+		MenuItemList: types.ToPbMenuItemList(res),
+	}, nil
+}
+
+func (s *grpcServer) ListRetailCategory(ctx context.Context, req *pb.ListRetailCategoryReq) (*pb.ListRetailCategoryRes, error) {
+	res, err := s.service.ListRetailCategory(ctx, req.ShopId)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ListRetailCategoryRes{
+		RetailCategoryList: types.ToPbRetailCategoryList(res),
+	}, nil
+}
+
+func (s *grpcServer) ListRetailItem(ctx context.Context, req *pb.ListRetailItemReq) (*pb.ListRetailItemRes, error) {
+	res, err := s.service.ListRetailItem(ctx, req.CategoryId)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ListRetailItemRes{
+		RetailItemList: types.ToPbRetailItemList(res),
+	}, nil
 }
 
 func (s *grpcServer) ListMedicineCategory(ctx context.Context, req *pb.ListMedicineCategoryReq) (*pb.ListMedicineCategoryRes, error) {
@@ -212,10 +240,84 @@ func (s *grpcServer) ListMedicineCategory(ctx context.Context, req *pb.ListMedic
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.ListMedicineCategoryRes{
 		MedicineCategoryList: types.ToPbMedicineCategoryList(res),
 	}, nil
+}
+
+func (s *grpcServer) ListMedicineItem(ctx context.Context, req *pb.ListMedicineItemReq) (*pb.ListMedicineItemRes, error) {
+	res, err := s.service.ListMedicineItem(ctx, req.CategoryId)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.ListMedicineItemRes{
+		MedicineItemList: types.ToPbMedicineItemList(res),
+	}, nil
+}
+
+// Update operations
+func (s *grpcServer) UpdateItemVariant(ctx context.Context, req *pb.UpdateItemVariantReq) (*pb.EmptyRes, error) {
+	err := s.service.UpdateItemVariant(ctx, types.ToUpdateItemVariant(req))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.EmptyRes{}, nil
+}
+
+func (s *grpcServer) UpdateItemAddon(ctx context.Context, req *pb.UpdateItemAddonReq) (*pb.EmptyRes, error) {
+	err := s.service.UpdateItemAddon(ctx, types.ToUpdateItemAddon(req))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.EmptyRes{}, nil
+}
+
+func (s *grpcServer) UpdateRestaurantMenu(ctx context.Context, req *pb.UpdateRestaurantMenuReq) (*pb.EmptyRes, error) {
+	err := s.service.UpdateRestaurantMenu(ctx, types.ToUpdateRestaurantMenu(req))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.EmptyRes{}, nil
+}
+
+func (s *grpcServer) UpdateMenuItem(ctx context.Context, req *pb.UpdateMenuItemReq) (*pb.EmptyRes, error) {
+	err := s.service.UpdateMenuItem(ctx, types.ToUpdateMenuItem(req))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.EmptyRes{}, nil
+}
+
+func (s *grpcServer) UpdateRetailCategory(ctx context.Context, req *pb.UpdateRetailCategoryReq) (*pb.EmptyRes, error) {
+	err := s.service.UpdateRetailCategory(ctx, types.ToUpdateRetailCategory(req))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.EmptyRes{}, nil
+}
+
+func (s *grpcServer) UpdateRetailItem(ctx context.Context, req *pb.UpdateRetailItemReq) (*pb.EmptyRes, error) {
+	err := s.service.UpdateRetailItem(ctx, types.ToUpdateRetailItem(req))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.EmptyRes{}, nil
+}
+
+func (s *grpcServer) UpdateMedicineCategory(ctx context.Context, req *pb.UpdateMedicineCategoryReq) (*pb.EmptyRes, error) {
+	err := s.service.UpdateMedicineCategory(ctx, types.ToUpdateMedicineCategory(req))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.EmptyRes{}, nil
+}
+
+func (s *grpcServer) UpdateMedicineItem(ctx context.Context, req *pb.UpdateMedicineItemReq) (*pb.EmptyRes, error) {
+	err := s.service.UpdateMedicineItem(ctx, types.ToUpdateMedicineItem(req))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.EmptyRes{}, nil
 }
 
 func (s *grpcServer) DeleteItemVariant(ctx context.Context, req *pb.DeleteItemVariantReq) (*pb.EmptyRes, error) {
@@ -223,7 +325,6 @@ func (s *grpcServer) DeleteItemVariant(ctx context.Context, req *pb.DeleteItemVa
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.EmptyRes{}, nil
 }
 
@@ -232,7 +333,6 @@ func (s *grpcServer) DeleteItemAddon(ctx context.Context, req *pb.DeleteItemAddo
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.EmptyRes{}, nil
 }
 
@@ -241,7 +341,6 @@ func (s *grpcServer) DeleteRestaurantMenu(ctx context.Context, req *pb.DeleteRes
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.EmptyRes{}, nil
 }
 
@@ -250,7 +349,6 @@ func (s *grpcServer) DeleteMenuItem(ctx context.Context, req *pb.DeleteMenuItemR
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.EmptyRes{}, nil
 }
 
@@ -259,7 +357,6 @@ func (s *grpcServer) DeleteRetailCategory(ctx context.Context, req *pb.DeleteRet
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.EmptyRes{}, nil
 }
 
@@ -268,7 +365,6 @@ func (s *grpcServer) DeleteRetailItem(ctx context.Context, req *pb.DeleteRetailI
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.EmptyRes{}, nil
 }
 
@@ -277,7 +373,6 @@ func (s *grpcServer) DeleteMedicineCategory(ctx context.Context, req *pb.DeleteM
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.EmptyRes{}, nil
 }
 
@@ -286,6 +381,5 @@ func (s *grpcServer) DeleteMedicineItem(ctx context.Context, req *pb.DeleteMedic
 	if err != nil {
 		return nil, err
 	}
-
 	return &pb.EmptyRes{}, nil
 }

@@ -13,7 +13,6 @@ func ToPbOrderBy(o *OrderBy) *pb.OrderBy {
 		return nil
 	}
 	switch *o {
-
 	case OrderByAsc:
 		orderByAsc := pb.OrderBy_ASC
 		return &orderByAsc
@@ -44,7 +43,6 @@ func ToPbGenderPtr(g *Gender) *pb.Gender {
 	if g == nil {
 		return nil
 	}
-
 	switch *g {
 	case GenderMale:
 		return pbGenderPtr(pb.Gender_MALE)
@@ -57,7 +55,6 @@ func ToPbGenderPtr(g *Gender) *pb.Gender {
 	default:
 		return nil
 	}
-
 }
 
 func pbGenderPtr(g pb.Gender) *pb.Gender {
@@ -68,15 +65,10 @@ func ToPbDate(dateStr *string) *pb.Date {
 	if dateStr == nil || *dateStr == "" {
 		return nil
 	}
-
-	// Parse the date string (ISO 8601 format)
 	parsedTime, err := time.Parse("2006-01-02", *dateStr)
 	if err != nil {
-		// Handle parse error
 		return nil
 	}
-
-	// Extract year, month, and day
 	return &pb.Date{
 		Year:  int32(parsedTime.Year()),
 		Month: int32(parsedTime.Month()),
@@ -88,12 +80,10 @@ func ToPbTime(dateTimeStr *string) *timestamppb.Timestamp {
 	if dateTimeStr == nil || *dateTimeStr == "" {
 		return nil
 	}
-
 	parsedTime, err := time.Parse(time.RFC3339, *dateTimeStr)
 	if err != nil {
 		return nil
 	}
-
 	return timestamppb.New(parsedTime)
 }
 
@@ -143,7 +133,6 @@ func ToGenderPtr(pbGender *pb.Gender) *Gender {
 	if pbGender == nil {
 		return nil
 	}
-
 	g := ToGender(*pbGender)
 	return &g
 }
@@ -165,7 +154,6 @@ func ToGender(pbGender pb.Gender) Gender {
 
 func ToGQShopType(t pb.ShopType) ShopType {
 	switch t {
-
 	case pb.ShopType_GROCERY:
 		return ShopTypeGrocery
 	case pb.ShopType_PHARMACEUTICAL:
@@ -179,7 +167,6 @@ func ToGQShopType(t pb.ShopType) ShopType {
 
 func ToGQShopStatus(s pb.ShopStatus) ShopStatus {
 	switch s {
-
 	case pb.ShopStatus_CLOSED:
 		return ShopStatusClosed
 	case pb.ShopStatus_OPEN:
@@ -191,7 +178,6 @@ func ToGQShopStatus(s pb.ShopStatus) ShopStatus {
 
 func ToGQDayOfWeek(d pb.DayOfWeek) DayOfWeek {
 	switch d {
-
 	case pb.DayOfWeek_FRIDAY:
 		return DayOfWeekFriday
 	case pb.DayOfWeek_MONDAY:
@@ -215,14 +201,12 @@ func ToDate(pbDate *pb.Date) *string {
 	if pbDate == nil || (pbDate.Year == 0 && pbDate.Month == 0 && pbDate.Day == 0) {
 		return nil
 	}
-
 	dateStr := time.Date(
 		int(pbDate.Year),
 		time.Month(pbDate.Month),
 		int(pbDate.Day),
 		0, 0, 0, 0, time.UTC,
 	).Format("2006-01-02")
-
 	return &dateStr
 }
 
@@ -230,9 +214,9 @@ func ToGQTime(pbTime *timestamppb.Timestamp) string {
 	if pbTime == nil || pbTime.AsTime().IsZero() {
 		return time.Now().UTC().String()
 	}
-	timeStr := pbTime.AsTime().Format(time.RFC3339)
-	return timeStr
+	return pbTime.AsTime().Format(time.RFC3339)
 }
+
 func ToGQTimePtr(pbTime *timestamppb.Timestamp) *string {
 	if pbTime == nil || pbTime.AsTime().IsZero() {
 		return nil
@@ -245,7 +229,6 @@ func ToGQAuth(a *pb.Auth) *Auth {
 	if a == nil {
 		return nil
 	}
-
 	return &Auth{
 		ID:            a.Id,
 		Email:         a.Email,
@@ -270,7 +253,6 @@ func ToGQProfile(p *pb.Profile) *Profile {
 	if p == nil {
 		return nil
 	}
-
 	return &Profile{
 		ID:          p.Id,
 		Name:        p.Name,
@@ -337,7 +319,6 @@ func ToPbDeliveryAddress(d *DeliveryAddress) *pb.DeliveryAddress {
 	if d == nil {
 		return nil
 	}
-
 	return &pb.DeliveryAddress{
 		Id:                  d.ID,
 		ReceiverName:        d.ReceiverName,
@@ -384,7 +365,6 @@ func ToGQAddressDetail(d *pb.AddressDetail) *AddressDetail {
 	if d == nil {
 		return nil
 	}
-
 	return &AddressDetail{
 		ID:               d.Id,
 		Route:            d.Route,
@@ -417,7 +397,6 @@ func ToPbShopType(t ShopType) pb.ShopType {
 
 func ToPbShopStatus(s ShopStatus) pb.ShopStatus {
 	switch s {
-
 	case ShopStatusClosed:
 		return pb.ShopStatus_CLOSED
 	case ShopStatusOpen:
@@ -429,7 +408,6 @@ func ToPbShopStatus(s ShopStatus) pb.ShopStatus {
 
 func ToPbDayOfWeek(d DayOfWeek) pb.DayOfWeek {
 	switch d {
-
 	case DayOfWeekFriday:
 		return pb.DayOfWeek_FRIDAY
 	case DayOfWeekMonday:
@@ -450,7 +428,6 @@ func ToPbDayOfWeek(d DayOfWeek) pb.DayOfWeek {
 }
 
 func ToPbCreateShopReq(cs CreateShopInput) *pb.CreateShopReq {
-
 	images := make([]*pb.CreateShopImage, len(cs.Images))
 	for i, img := range cs.Images {
 		images[i] = &pb.CreateShopImage{
@@ -529,7 +506,6 @@ func ToGQTimings(t []*pb.ShopTiming) []*ShopTiming {
 	for i, timing := range t {
 		timings[i] = ToGQTiming(timing)
 	}
-
 	return timings
 }
 
@@ -549,12 +525,10 @@ func ToGQImages(i []*pb.ShopImage) []*ShopImage {
 	for idx, image := range i {
 		images[idx] = ToGQImage(image)
 	}
-
 	return images
 }
 
 func ToGQShop(s *pb.Shop) *Shop {
-
 	return &Shop{
 		ID:          s.Id,
 		Name:        s.Name,
@@ -576,7 +550,6 @@ func ToGQShops(shopList []*pb.Shop) []*Shop {
 	for i, shop := range shopList {
 		shops[i] = ToGQShop(shop)
 	}
-
 	return shops
 }
 
@@ -584,7 +557,6 @@ func ToPbListShopReq(r *ListShopsInput) *pb.ListShopsReq {
 	if r == nil {
 		return nil
 	}
-
 	req := &pb.ListShopsReq{}
 
 	if r.Name != nil {
@@ -622,7 +594,6 @@ func ToPbCreateRestaurantMenuReq(r *CreateRestaurantMenuInput) *pb.CreateRestaur
 	if r == nil {
 		return nil
 	}
-
 	return &pb.CreateRestaurantMenuReq{
 		MenuName: r.MenuName,
 		ShopId:   r.ShopID,
@@ -633,7 +604,6 @@ func ToPbCreateMenuItemReq(r *CreateMenuItemInput) *pb.CreateMenuItemReq {
 	if r == nil {
 		return nil
 	}
-
 	return &pb.CreateMenuItemReq{
 		Name:        r.Name,
 		Description: r.Description,
@@ -646,7 +616,6 @@ func ToPbCreateItemVariantReq(r *CreateItemVariantInput) *pb.CreateItemVariantRe
 	if r == nil {
 		return nil
 	}
-
 	return &pb.CreateItemVariantReq{
 		VariantName:     r.VariantName,
 		RelativePrice:   r.RelativePrice,
@@ -661,7 +630,6 @@ func ToPbCreateItemAddonReq(r *CreateItemAddonInput) *pb.CreateItemAddonReq {
 	if r == nil {
 		return nil
 	}
-
 	return &pb.CreateItemAddonReq{
 		AddonName:   r.AddonName,
 		AddonPrice:  r.AddonPrice,
@@ -675,7 +643,6 @@ func ToGQRestaurantMenuList(m []*pb.RestaurantMenu) []*RestaurantMenu {
 	for i, rm := range m {
 		list[i] = ToGQRestaurantMenu(rm)
 	}
-
 	return list
 }
 
@@ -684,10 +651,8 @@ func ToGQRestaurantMenu(m *pb.RestaurantMenu) *RestaurantMenu {
 		ID:        m.Id,
 		MenuName:  m.MenuName,
 		ShopID:    m.ShopId,
-		MenuItems: ToGQMenuItems(m.MenuItems),
 		CreatedAt: ToGQTime(m.CreatedAt),
 		UpdatedAt: ToGQTime(m.UpdatedAt),
-		DeletedAt: ToGQTimePtr(m.DeletedAt),
 	}
 }
 
@@ -696,46 +661,26 @@ func ToGQMenuItems(m []*pb.MenuItem) []*MenuItem {
 	for i, mi := range m {
 		menuItems[i] = ToGQMenuItem(mi)
 	}
-
 	return menuItems
 }
 
-func ToGQMenuItem(m *pb.MenuItem) *MenuItem {
-
-	return &MenuItem{
-		ID:          m.Id,
-		Name:        m.Name,
-		Description: &m.Description,
-		Price:       float64(m.Price),
-		MenuID:      m.MenuId,
-		Variants:    ToGQItemVariants(m.Variants),
-		Addons:      ToGQItemAddons(m.Addons),
-		CreatedAt:   ToGQTime(m.CreatedAt),
-		UpdatedAt:   ToGQTime(m.UpdatedAt),
-		DeletedAt:   ToGQTimePtr(m.DeletedAt),
-	}
-}
-
-func ToGQItemVariants(v []*pb.ItemVariant) []*ItemVariant {
+func ToGQItemVariantList(v []*pb.ItemVariant) []*ItemVariant {
 	variants := make([]*ItemVariant, len(v))
 	for i, vars := range v {
 		variants[i] = ToGQItemVariant(vars)
 	}
-
 	return variants
 }
 
-func ToGQItemAddons(a []*pb.ItemAddon) []*ItemAddon {
+func ToGQItemAddonList(a []*pb.ItemAddon) []*ItemAddon {
 	addons := make([]*ItemAddon, len(a))
 	for i, addon := range a {
 		addons[i] = ToGQItemAddon(addon)
 	}
-
 	return addons
 }
 
 func ToGQItemVariant(v *pb.ItemVariant) *ItemVariant {
-
 	return &ItemVariant{
 		ID:              v.Id,
 		VariantName:     v.VariantName,
@@ -748,7 +693,6 @@ func ToGQItemVariant(v *pb.ItemVariant) *ItemVariant {
 }
 
 func ToGQItemAddon(a *pb.ItemAddon) *ItemAddon {
-
 	return &ItemAddon{
 		ID:          a.Id,
 		AddonName:   a.AddonName,
@@ -763,10 +707,8 @@ func ToGQRetailCategory(c *pb.RetailCategory) *RetailCategory {
 		ID:           c.Id,
 		CategoryName: c.CategoryName,
 		ShopID:       c.ShopId,
-		RetailItems:  ToGQRetailItems(c.RetailItems),
 		CreatedAt:    ToGQTime(c.CreatedAt),
 		UpdatedAt:    ToGQTime(c.UpdatedAt),
-		DeletedAt:    ToGQTimePtr(c.DeletedAt),
 	}
 }
 
@@ -777,17 +719,14 @@ func ToGQRetailItem(i *pb.RetailItem) *RetailItem {
 		Description: i.Description,
 		Price:       i.Price,
 		CategoryID:  i.CategoryId,
-		Variants:    ToGQItemVariants(i.Variants),
-		Addons:      ToGQItemAddons(i.Addons),
+		Variants:    ToGQItemVariantList(i.Variants),
 		CreatedAt:   ToGQTime(i.CreatedAt),
 		UpdatedAt:   ToGQTime(i.UpdatedAt),
-		DeletedAt:   ToGQTimePtr(i.DeletedAt),
 	}
 }
 
 func ToGQRetailItems(il []*pb.RetailItem) []*RetailItem {
 	list := make([]*RetailItem, len(il))
-
 	for i, item := range il {
 		if item != nil {
 			list[i] = ToGQRetailItem(item)
@@ -798,7 +737,6 @@ func ToGQRetailItems(il []*pb.RetailItem) []*RetailItem {
 
 func ToGQRetailCategoryList(cl []*pb.RetailCategory) []*RetailCategory {
 	list := make([]*RetailCategory, len(cl))
-
 	for i, item := range cl {
 		if item != nil {
 			list[i] = ToGQRetailCategory(item)
@@ -809,13 +747,12 @@ func ToGQRetailCategoryList(cl []*pb.RetailCategory) []*RetailCategory {
 
 func ToGQMedicineCategory(c *pb.MedicineCategory) *MedicineCategory {
 	return &MedicineCategory{
-		ID:            c.Id,
-		CategoryName:  c.CategoryName,
-		ShopID:        c.ShopId,
-		MedicineItems: ToGQMedicineItems(c.MedicineItems),
-		CreatedAt:     ToGQTime(c.CreatedAt),
-		UpdatedAt:     ToGQTime(c.UpdatedAt),
-		DeletedAt:     ToGQTimePtr(c.DeletedAt),
+		ID:              c.Id,
+		CategoryName:    c.CategoryName,
+		ShopID:          c.ShopId,
+		MedicineItemsID: c.MedicineItemsId,
+		CreatedAt:       ToGQTime(c.CreatedAt),
+		UpdatedAt:       ToGQTime(c.UpdatedAt),
 	}
 }
 
@@ -828,8 +765,46 @@ func ToGQMedicineItem(i *pb.MedicineItem) *MedicineItem {
 		CategoryID:  i.CategoryId,
 		CreatedAt:   ToGQTime(i.CreatedAt),
 		UpdatedAt:   ToGQTime(i.UpdatedAt),
-		DeletedAt:   ToGQTimePtr(i.DeletedAt),
 	}
+}
+
+func ToGQMenuItem(item *pb.MenuItem) *MenuItem {
+	return &MenuItem{
+		ID:          item.Id,
+		Name:        item.Name,
+		Price:       item.Price,
+		ImageURL:    item.ImageUrl,
+		Description: item.Description,
+		Variants:    ToGQItemVariantList(item.Variants),
+		Addons:      ToGQItemAddonList(item.Addons),
+		MenuID:      item.MenuId,
+		CreatedAt:   item.CreatedAt.String(),
+		UpdatedAt:   item.UpdatedAt.String(),
+	}
+}
+
+func ToGQMenuItemList(items []*pb.MenuItem) []*MenuItem {
+	var result []*MenuItem
+	for _, item := range items {
+		result = append(result, ToGQMenuItem(item))
+	}
+	return result
+}
+
+func ToGQRetailItemList(items []*pb.RetailItem) []*RetailItem {
+	var result []*RetailItem
+	for _, item := range items {
+		result = append(result, ToGQRetailItem(item))
+	}
+	return result
+}
+
+func ToGQMedicineItemList(items []*pb.MedicineItem) []*MedicineItem {
+	var result []*MedicineItem
+	for _, item := range items {
+		result = append(result, ToGQMedicineItem(item))
+	}
+	return result
 }
 
 func ToGQMedicineItems(il []*pb.MedicineItem) []*MedicineItem {
@@ -844,7 +819,6 @@ func ToGQMedicineItems(il []*pb.MedicineItem) []*MedicineItem {
 
 func ToGQMedicineCategoryList(cl []*pb.MedicineCategory) []*MedicineCategory {
 	list := make([]*MedicineCategory, len(cl))
-
 	for i, item := range cl {
 		if item != nil {
 			list[i] = ToGQMedicineCategory(item)

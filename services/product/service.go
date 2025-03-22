@@ -19,15 +19,31 @@ type Service interface {
 	CreateMedicineItem(ctx context.Context, mi *types.CreateMedicineItem) (*types.MedicineItem, error)
 
 	GetItemVariant(ctx context.Context, id string) (*types.ItemVariant, error)
-	GetItemVariants(ctx context.Context, itemId string) ([]*types.ItemVariant, error)
 	GetItemAddon(ctx context.Context, id string) (*types.ItemAddon, error)
-	GetItemAddons(ctx context.Context, itemId string) ([]*types.ItemAddon, error)
 	GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error)
-	ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error)
+	GetMenuItem(ctx context.Context, id string) (*types.MenuItem, error)
 	GetRetailCategory(ctx context.Context, id string) (*types.RetailCategory, error)
-	ListRetailCategory(ctx context.Context, shopId string) ([]*types.RetailCategory, error)
+	GetRetailItem(ctx context.Context, id string) (*types.RetailItem, error)
 	GetMedicineCategory(ctx context.Context, id string) (*types.MedicineCategory, error)
-	ListMedicineCategory(ctx context.Context, shopId string) ([]*types.MedicineCategory, error)
+	GetMedicineItem(ctx context.Context, id string) (*types.MedicineItem, error)
+
+	ListItemVariant(ctx context.Context, itemID string) ([]*types.ItemVariant, error)
+	ListItemAddon(ctx context.Context, itemID string) ([]*types.ItemAddon, error)
+	ListRestaurantMenu(ctx context.Context, shopID string) ([]*types.RestaurantMenu, error)
+	ListMenuItem(ctx context.Context, menuID string) ([]*types.MenuItem, error)
+	ListRetailCategory(ctx context.Context, shopID string) ([]*types.RetailCategory, error)
+	ListRetailItem(ctx context.Context, categoryID string) ([]*types.RetailItem, error)
+	ListMedicineCategory(ctx context.Context, shopID string) ([]*types.MedicineCategory, error)
+	ListMedicineItem(ctx context.Context, categoryID string) ([]*types.MedicineItem, error)
+
+	UpdateItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error
+	UpdateItemAddon(ctx context.Context, addon *types.UpdateItemAddon) error
+	UpdateRestaurantMenu(ctx context.Context, menu *types.UpdateRestaurantMenu) error
+	UpdateMenuItem(ctx context.Context, item *types.UpdateMenuItem) error
+	UpdateRetailCategory(ctx context.Context, category *types.UpdateRetailCategory) error
+	UpdateRetailItem(ctx context.Context, item *types.UpdateRetailItem) error
+	UpdateMedicineCategory(ctx context.Context, category *types.UpdateMedicineCategory) error
+	UpdateMedicineItem(ctx context.Context, item *types.UpdateMedicineItem) error
 
 	DeleteItemVariant(ctx context.Context, id string) error
 	DeleteItemAddon(ctx context.Context, id string) error
@@ -55,7 +71,7 @@ func (s *productService) CreateItemVariant(ctx context.Context, v *types.CreateI
 		RelativePricing: v.RelativePricing,
 		Price:           v.Price,
 		Description:     v.Description,
-		ItemId:          v.ItemId,
+		ItemID:          v.ItemID,
 	}
 
 	if err := s.r.CreateItemVariant(ctx, newVariant); err != nil {
@@ -71,7 +87,7 @@ func (s *productService) CreateItemAddon(ctx context.Context, a *types.CreateIte
 		AddonName:   a.AddonName,
 		AddonPrice:  a.AddonPrice,
 		Description: a.Description,
-		ItemId:      a.ItemId,
+		ItemID:      a.ItemID,
 	}
 
 	if err := s.r.CreateItemAddon(ctx, newAddon); err != nil {
@@ -88,7 +104,6 @@ func (s *productService) CreateRestaurantMenu(ctx context.Context, rm *types.Cre
 		ShopID:    rm.ShopID,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		DeletedAt: nil,
 	}
 
 	if err := s.r.CreateRestaurantMenu(ctx, newRestaurantMenu); err != nil {
@@ -106,7 +121,6 @@ func (s *productService) CreateMenuItem(ctx context.Context, mi *types.CreateMen
 		Price:       mi.Price,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
-		DeletedAt:   nil,
 		MenuID:      mi.MenuID,
 	}
 
@@ -117,16 +131,13 @@ func (s *productService) CreateMenuItem(ctx context.Context, mi *types.CreateMen
 	return newMenuItem, nil
 }
 
-// CreateMedicineCategory creates a new medicine category
 func (s *productService) CreateMedicineCategory(ctx context.Context, mc *types.CreateMedicineCategory) (*types.MedicineCategory, error) {
 	medicineCategory := &types.MedicineCategory{
-		ID:            bson.NewObjectID(),
-		CategoryName:  mc.CategoryName,
-		ShopID:        mc.ShopID,
-		CreatedAt:     time.Now(),
-		UpdatedAt:     time.Now(),
-		DeletedAt:     nil,
-		MedicineItems: []*types.MedicineItem{},
+		ID:           bson.NewObjectID(),
+		CategoryName: mc.CategoryName,
+		ShopID:       mc.ShopID,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	err := s.r.CreateMedicineCategory(ctx, medicineCategory)
@@ -143,10 +154,9 @@ func (s *productService) CreateMedicineItem(ctx context.Context, mi *types.Creat
 		Name:        mi.Name,
 		Price:       mi.Price,
 		Description: mi.Description,
-		CategoryID:  mi.CategoryId,
+		CategoryID:  mi.CategoryID,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
-		DeletedAt:   nil,
 	}
 
 	err := s.r.CreateMedicineItem(ctx, medicineItem)
@@ -164,8 +174,6 @@ func (s *productService) CreateRetailCategory(ctx context.Context, rc *types.Cre
 		ShopID:       rc.ShopID,
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
-		DeletedAt:    nil,
-		RetailItems:  []*types.RetailItem{},
 	}
 
 	err := s.r.CreateRetailCategory(ctx, retailCategory)
@@ -182,12 +190,9 @@ func (s *productService) CreateRetailItem(ctx context.Context, ri *types.CreateR
 		Name:        ri.Name,
 		Description: ri.Description,
 		Price:       ri.Price,
-		CategoryID:  ri.CategoryId,
+		CategoryID:  ri.CategoryID,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
-		DeletedAt:   nil,
-		Variants:    []*types.ItemVariant{},
-		AddOns:      []*types.ItemAddon{},
 	}
 
 	err := s.r.CreateRetailItem(ctx, retailItem)
@@ -199,73 +204,129 @@ func (s *productService) CreateRetailItem(ctx context.Context, ri *types.CreateR
 }
 
 func (s *productService) GetItemVariant(ctx context.Context, id string) (*types.ItemVariant, error) {
-	return s.r.GetItemVariant(ctx, id)
+	return s.r.GetItemVariant(ctx, types.HexToObjectID(id))
 }
 
 func (s *productService) GetItemAddon(ctx context.Context, id string) (*types.ItemAddon, error) {
-	return s.r.GetItemAddon(ctx, id)
-}
-
-func (s *productService) GetItemVariants(ctx context.Context, itemId string) ([]*types.ItemVariant, error) {
-	return s.r.GetItemVariants(ctx, itemId)
-}
-
-func (s *productService) GetItemAddons(ctx context.Context, itemId string) ([]*types.ItemAddon, error) {
-	return s.r.GetItemAddons(ctx, itemId)
+	return s.r.GetItemAddon(ctx, types.HexToObjectID(id))
 }
 
 func (s *productService) GetRestaurantMenu(ctx context.Context, id string) (*types.RestaurantMenu, error) {
-	return s.r.GetRestaurantMenu(ctx, id)
+	return s.r.GetRestaurantMenu(ctx, types.HexToObjectID(id))
 }
 
-func (s *productService) ListRestaurantMenu(ctx context.Context, shopId string) ([]*types.RestaurantMenu, error) {
-	return s.r.ListRestaurantMenu(ctx, shopId)
+func (s *productService) GetMenuItem(ctx context.Context, id string) (*types.MenuItem, error) {
+	return s.r.GetMenuItem(ctx, types.HexToObjectID(id))
 }
 
 func (s *productService) GetRetailCategory(ctx context.Context, id string) (*types.RetailCategory, error) {
-	return s.r.GetRetailCategory(ctx, id)
+	return s.r.GetRetailCategory(ctx, types.HexToObjectID(id))
 }
 
-func (s *productService) ListRetailCategory(ctx context.Context, shopId string) ([]*types.RetailCategory, error) {
-	return s.r.ListRetailCategory(ctx, shopId)
+func (s *productService) GetRetailItem(ctx context.Context, id string) (*types.RetailItem, error) {
+	return s.r.GetRetailItem(ctx, types.HexToObjectID(id))
 }
 
 func (s *productService) GetMedicineCategory(ctx context.Context, id string) (*types.MedicineCategory, error) {
-	return s.r.GetMedicineCategory(ctx, id)
+	return s.r.GetMedicineCategory(ctx, types.HexToObjectID(id))
 }
 
-func (s *productService) ListMedicineCategory(ctx context.Context, shopId string) ([]*types.MedicineCategory, error) {
-	return s.r.ListMedicineCategory(ctx, shopId)
+func (s *productService) GetMedicineItem(ctx context.Context, id string) (*types.MedicineItem, error) {
+	return s.r.GetMedicineItem(ctx, types.HexToObjectID(id))
 }
 
-func (s *productService) DeleteItemAddon(ctx context.Context, id string) error {
-	return s.r.DeleteItemAddon(ctx, id)
+func (s *productService) ListItemVariant(ctx context.Context, itemID string) ([]*types.ItemVariant, error) {
+	return s.r.ListItemVariant(ctx, types.HexToObjectID(itemID))
+}
+
+func (s *productService) ListItemAddon(ctx context.Context, itemID string) ([]*types.ItemAddon, error) {
+	return s.r.ListItemAddon(ctx, types.HexToObjectID(itemID))
+}
+
+func (s *productService) ListRestaurantMenu(ctx context.Context, shopID string) ([]*types.RestaurantMenu, error) {
+	return s.r.ListRestaurantMenu(ctx, shopID)
+}
+
+func (s *productService) ListMenuItem(ctx context.Context, menuID string) ([]*types.MenuItem, error) {
+	return s.r.ListMenuItem(ctx, types.HexToObjectID(menuID))
+}
+
+func (s *productService) ListRetailCategory(ctx context.Context, shopID string) ([]*types.RetailCategory, error) {
+	return s.r.ListRetailCategory(ctx, shopID)
+}
+
+func (s *productService) ListRetailItem(ctx context.Context, categoryID string) ([]*types.RetailItem, error) {
+	return s.r.ListRetailItem(ctx, types.HexToObjectID(categoryID))
+}
+
+func (s *productService) ListMedicineCategory(ctx context.Context, shopID string) ([]*types.MedicineCategory, error) {
+	return s.r.ListMedicineCategory(ctx, shopID)
+}
+
+func (s *productService) ListMedicineItem(ctx context.Context, categoryID string) ([]*types.MedicineItem, error) {
+	return s.r.ListMedicineItem(ctx, types.HexToObjectID(categoryID))
+}
+
+func (s *productService) UpdateItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error {
+	return s.r.UpdateItemVariant(ctx, variant)
+}
+
+func (s *productService) UpdateItemAddon(ctx context.Context, addon *types.UpdateItemAddon) error {
+	return s.r.UpdateItemAddon(ctx, addon)
+}
+
+func (s *productService) UpdateRestaurantMenu(ctx context.Context, menu *types.UpdateRestaurantMenu) error {
+	return s.r.UpdateRestaurantMenu(ctx, menu)
+}
+
+func (s *productService) UpdateMenuItem(ctx context.Context, item *types.UpdateMenuItem) error {
+	return s.r.UpdateMenuItem(ctx, item)
+}
+
+func (s *productService) UpdateRetailCategory(ctx context.Context, category *types.UpdateRetailCategory) error {
+	return s.r.UpdateRetailCategory(ctx, category)
+}
+
+func (s *productService) UpdateRetailItem(ctx context.Context, item *types.UpdateRetailItem) error {
+	return s.r.UpdateRetailItem(ctx, item)
+}
+
+func (s *productService) UpdateMedicineCategory(ctx context.Context, category *types.UpdateMedicineCategory) error {
+	return s.r.UpdateMedicineCategory(ctx, category)
+}
+
+func (s *productService) UpdateMedicineItem(ctx context.Context, item *types.UpdateMedicineItem) error {
+	return s.r.UpdateMedicineItem(ctx, item)
 }
 
 func (s *productService) DeleteItemVariant(ctx context.Context, id string) error {
-	return s.r.DeleteItemVariant(ctx, id)
+	return s.r.DeleteItemVariant(ctx, types.HexToObjectID(id))
 }
 
-func (s *productService) DeleteMedicineCategory(ctx context.Context, id string) error {
-	return s.r.DeleteMedicineCategory(ctx, id)
-}
-
-func (s *productService) DeleteMedicineItem(ctx context.Context, id string) error {
-	return s.r.DeleteMedicineItem(ctx, id)
-}
-
-func (s *productService) DeleteMenuItem(ctx context.Context, id string) error {
-	return s.r.DeleteMenuItem(ctx, id)
+func (s *productService) DeleteItemAddon(ctx context.Context, id string) error {
+	return s.r.DeleteItemAddon(ctx, types.HexToObjectID(id))
 }
 
 func (s *productService) DeleteRestaurantMenu(ctx context.Context, id string) error {
-	return s.r.DeleteMenuItem(ctx, id)
+	return s.r.DeleteRestaurantMenu(ctx, types.HexToObjectID(id))
+}
+
+func (s *productService) DeleteMenuItem(ctx context.Context, id string) error {
+	return s.r.DeleteMenuItem(ctx, types.HexToObjectID(id))
 }
 
 func (s *productService) DeleteRetailCategory(ctx context.Context, id string) error {
-	return s.r.DeleteRetailCategory(ctx, id)
+	return s.r.DeleteRetailCategory(ctx, types.HexToObjectID(id))
 }
 
 func (s *productService) DeleteRetailItem(ctx context.Context, id string) error {
-	return s.r.DeleteRetailItem(ctx, id)
+	return s.r.DeleteRetailItem(ctx, types.HexToObjectID(id))
+}
+
+func (s *productService) DeleteMedicineCategory(ctx context.Context, id string) error {
+	return s.r.DeleteMedicineCategory(ctx, types.HexToObjectID(id))
+}
+
+func (s *productService) DeleteMedicineItem(ctx context.Context, id string) error {
+	return s.r.DeleteMedicineItem(ctx, types.HexToObjectID(id))
 }

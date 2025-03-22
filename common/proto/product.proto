@@ -10,139 +10,171 @@ option go_package = "github.com/yash91989201/superfast-delivery-api/common/pb";
 message ItemVariant {
   string id = 1;
   string variant_name = 2;
-  double relative_price = 3;
-  bool relative_pricing = 4;
+  bool relative_pricing = 3;
+  double relative_price = 4;
   double price = 5;
-  optional string description = 6;
-  string item_id = 7;
+  optional string image_url = 6;
+  optional string description = 7;
+  string item_id = 8;
 }
 
 message ItemAddon {
   string id = 1;
   string addon_name = 2;
   double addon_price = 3;
-  optional string description = 4;
-  string item_id = 5;
+  optional string image_url = 4;
+  optional string description = 5;
+  string item_id = 6;
 }
 
 message RestaurantMenu {
   string id = 1;
   string menu_name = 2;
-  string shop_id = 3;
-  repeated MenuItem menu_items = 4;
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
-  google.protobuf.Timestamp deleted_at = 7;
+  optional string image_url = 3;
+  string shop_id = 4;
+  repeated string menu_items_id = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
 }
 
 message MenuItem {
   string id = 1;
   string name = 2;
-  string description = 3;
   double price = 4;
-  string menu_id = 5;
-  repeated ItemVariant variants = 6;
-  repeated ItemAddon addons = 7;
-  google.protobuf.Timestamp created_at = 8;
-  google.protobuf.Timestamp updated_at = 9;
-  google.protobuf.Timestamp deleted_at = 10;
+  optional string image_url = 5;
+  optional string description = 6;
+  repeated ItemVariant variants = 7;
+  repeated ItemAddon addons = 8;
+  string menu_id = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
 }
 
 message RetailCategory {
   string id = 1;
   string category_name = 2;
-  string shop_id = 3;
-  repeated RetailItem retail_items = 4;
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
-  google.protobuf.Timestamp deleted_at = 7;
+  optional string image_url = 3;
+  string shop_id = 4;
+  repeated string retail_items_id = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
 }
 
 message RetailItem {
   string id = 1;
   string name = 2;
-  string description = 3;
-  double price = 4;
-  string category_id = 5;
-  repeated ItemVariant variants = 6;
-  repeated ItemAddon addons = 7;
-  google.protobuf.Timestamp created_at = 8;
-  google.protobuf.Timestamp updated_at = 9;
-  google.protobuf.Timestamp deleted_at = 10;
+  double price = 3;
+  optional string image_url = 4;
+  optional string description = 5;
+  string category_id = 6;
+  repeated ItemVariant variants = 7;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
 }
 
 message MedicineCategory {
   string id = 1;
   string category_name = 2;
-  string shop_id = 3;
-  repeated MedicineItem medicine_items = 4;
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
-  google.protobuf.Timestamp deleted_at = 7;
+  optional string image_url = 3;
+  string shop_id = 4;
+  repeated string medicine_items_id = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
 }
 
 message MedicineItem {
   string id = 1;
   string name = 2;
   double price = 3;
-  string description = 4;
-  string category_id = 5;
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
-  google.protobuf.Timestamp deleted_at = 8;
+  optional string image_url = 4;
+  optional string description = 5;
+  string category_id = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
 }
 
-// types for create request
 message CreateItemVariantReq {
   string variant_name = 1;
-  double relative_price = 2;
-  bool relative_pricing = 3;
+  bool relative_pricing = 2;
+  double relative_price = 3;
   double price = 4;
-  optional string description = 5;
-  string item_id = 6;
+  optional string image_url = 5;
+  optional string description = 6;
+  string item_id = 7;
 }
 
 message CreateItemAddonReq {
   string addon_name = 1;
   double addon_price = 2;
-  optional string description = 3;
-  string item_id = 4;
+  optional string image_url = 3;
+  optional string description = 4;
+  string item_id = 5;
 }
 
 message CreateRestaurantMenuReq {
   string menu_name = 1;
-  string shop_id = 2;
+  optional string image_url = 2;
+  string shop_id = 3;
 }
 
 message CreateMenuItemReq {
   string name = 1;
-  string description = 2;
-  double price = 3;
-  string menu_id = 4;
+  double price = 2;
+  optional string image_url = 3;
+  optional string description = 4;
+  string menu_id = 5;
 }
 
 message CreateRetailCategoryReq {
   string category_name = 1;
-  string shop_id = 2;
+  optional string image_url = 2;
+  string shop_id = 3;
 }
 
 message CreateRetailItemReq {
   string name = 1;
-  string description = 2;
-  double price = 3;
-  string category_id = 4;
+  double price = 2;
+  optional string image_url = 3;
+  optional string description = 4;
+  string category_id = 5;
 }
 
 message CreateMedicineCategoryReq {
   string category_name = 1;
-  string shop_id = 2;
+  optional string image_url = 2;
+  string shop_id = 3;
 }
 
 message CreateMedicineItemReq {
   string name = 1;
   double price = 2;
-  string description = 3;
-  string category_id = 4;
+  optional string image_url = 3;
+  optional string description = 4;
+  string category_id = 5;
+}
+
+message GetItemVariantReq {
+  string id = 1;
+}
+
+message GetItemAddonReq {
+  string id = 1;
+}
+
+message ListItemVariantReq {
+  string item_id = 1;
+}
+
+message ListItemVariantRes {
+  repeated ItemVariant variants = 1;
+}
+
+message ListItemAddonReq {
+  string item_id = 1;
+}
+
+message ListItemAddonRes {
+  repeated ItemAddon addons = 1;
 }
 
 message GetRestaurantMenuReq {
@@ -157,26 +189,16 @@ message ListRestaurantMenuRes {
   repeated RestaurantMenu restaurant_menu_list = 1;
 }
 
-message GetItemVariantReq {
+message GetMenuItemReq {
   string id = 1;
 }
 
-message GetItemAddonReq {
-  string id = 1;
+message ListMenuItemReq {
+  string menu_id = 1;
 }
 
-message GetItemVariantsReq {
-  string item_id = 1;
-}
-
-message GetItemVariantsRes {
-  repeated ItemVariant variants = 1;
-}
-message GetItemAddonsReq {
-  string item_id = 1;
-}
-message GetItemAddonsRes {
-  repeated ItemAddon addons = 1;
+message ListMenuItemRes {
+  repeated MenuItem menu_item_list = 1;
 }
 
 message GetRetailCategoryReq {
@@ -191,6 +213,18 @@ message ListRetailCategoryRes {
   repeated RetailCategory retail_category_list = 1;
 }
 
+message GetRetailItemReq {
+  string id = 1;
+}
+
+message ListRetailItemReq {
+  string category_id = 1;
+}
+
+message ListRetailItemRes {
+  repeated RetailItem retail_item_list = 1;
+}
+
 message GetMedicineCategoryReq {
   string id = 1;
 }
@@ -203,56 +237,76 @@ message ListMedicineCategoryRes {
   repeated MedicineCategory medicine_category_list = 1;
 }
 
+message GetMedicineItemReq {
+  string id = 1;
+}
+
+message ListMedicineItemReq {
+  string category_id = 1;
+}
+
+message ListMedicineItemRes {
+  repeated MedicineItem medicine_item_list = 1;
+}
+
 message UpdateItemVariantReq {
   string id = 1;
   optional string variant_name = 2;
-  optional double relative_price = 3;
-  optional bool relative_pricing = 4;
+  optional bool relative_pricing = 3;
+  optional double relative_price = 4;
   optional double price = 5;
-  optional string description = 6;
+  optional string image_url = 6;
+  optional string description = 7;
 }
 
 message UpdateItemAddonReq {
   string id = 1;
   optional string addon_name = 2;
   optional double addon_price = 3;
-  optional string description = 4;
+  optional string image_url = 4;
+  optional string description = 5;
 }
 
 message UpdateRestaurantMenuReq {
   string id = 1;
   optional string menu_name = 2;
+  optional string image_url = 3;
 }
 
 message UpdateMenuItemReq {
   string id = 1;
   optional string name = 2;
-  optional string description = 3;
-  optional double price = 4;
+  optional double price = 3;
+  optional string image_url = 4;
+  optional string description = 5;
 }
 
 message UpdateRetailCategoryReq {
   string id = 1;
   optional string category_name = 2;
+  optional string image_url = 3;
 }
 
 message UpdateRetailItemReq {
   string id = 1;
   optional string name = 2;
-  optional string description = 3;
-  optional double price = 4;
+  optional double price = 3;
+  optional string image_url = 4;
+  optional string description = 5;
 }
 
 message UpdateMedicineCategoryReq {
   string id = 1;
   optional string category_name = 2;
+  optional string image_url = 3;
 }
 
 message UpdateMedicineItemReq {
   string id = 1;
   optional string name = 2;
   optional double price = 3;
-  optional string description = 4;
+  optional string image_url = 4;
+  optional string description = 5;
 }
 
 message DeleteItemVariantReq {
@@ -290,39 +344,46 @@ message DeleteMedicineItemReq {
 service ProductService {
   rpc CreateItemVariant(CreateItemVariantReq) returns (ItemVariant) {}
   rpc CreateItemAddon(CreateItemAddonReq) returns (ItemAddon) {}
-
   rpc CreateRestaurantMenu(CreateRestaurantMenuReq) returns (RestaurantMenu) {}
   rpc CreateMenuItem(CreateMenuItemReq) returns (MenuItem) {}
-
   rpc CreateRetailCategory(CreateRetailCategoryReq) returns (RetailCategory) {}
   rpc CreateRetailItem(CreateRetailItemReq) returns (RetailItem) {}
-
   rpc CreateMedicineCategory(CreateMedicineCategoryReq) returns (MedicineCategory) {}
   rpc CreateMedicineItem(CreateMedicineItemReq) returns (MedicineItem) {}
 
   rpc GetItemVariant(GetItemVariantReq) returns (ItemVariant) {}
-  rpc GetItemVariants(GetItemVariantsReq) returns (GetItemVariantsRes) {}
   rpc GetItemAddon(GetItemAddonReq) returns (ItemAddon) {}
-  rpc GetItemAddons(GetItemAddonsReq) returns (GetItemAddonsRes) {}
-
   rpc GetRestaurantMenu(GetRestaurantMenuReq) returns (RestaurantMenu) {}
-  rpc ListRestaurantMenu(ListRestaurantMenuReq) returns (ListRestaurantMenuRes) {}
-
+  rpc GetMenuItem(GetMenuItemReq) returns (MenuItem) {}
   rpc GetRetailCategory(GetRetailCategoryReq) returns (RetailCategory) {}
-  rpc ListRetailCategory(ListRetailCategoryReq) returns (ListRetailCategoryRes) {}
-
+  rpc GetRetailItem(GetRetailItemReq) returns (RetailItem) {}
   rpc GetMedicineCategory(GetMedicineCategoryReq) returns (MedicineCategory) {}
+  rpc GetMedicineItem(GetMedicineItemReq) returns (MedicineItem) {}
+
+  rpc ListItemVariant(ListItemVariantReq) returns (ListItemVariantRes) {}
+  rpc ListItemAddon(ListItemAddonReq) returns (ListItemAddonRes) {}
+  rpc ListRestaurantMenu(ListRestaurantMenuReq) returns (ListRestaurantMenuRes) {}
+  rpc ListMenuItem(ListMenuItemReq) returns (ListMenuItemRes) {}
+  rpc ListRetailCategory(ListRetailCategoryReq) returns (ListRetailCategoryRes) {}
+  rpc ListRetailItem(ListRetailItemReq) returns (ListRetailItemRes) {}
   rpc ListMedicineCategory(ListMedicineCategoryReq) returns (ListMedicineCategoryRes) {}
+  rpc ListMedicineItem(ListMedicineItemReq) returns (ListMedicineItemRes) {}
+
+  rpc UpdateItemVariant(UpdateItemVariantReq) returns (EmptyRes) {}
+  rpc UpdateItemAddon(UpdateItemAddonReq) returns (EmptyRes) {}
+  rpc UpdateRestaurantMenu(UpdateRestaurantMenuReq) returns (EmptyRes) {}
+  rpc UpdateMenuItem(UpdateMenuItemReq) returns (EmptyRes) {}
+  rpc UpdateRetailCategory(UpdateRetailCategoryReq) returns (EmptyRes) {}
+  rpc UpdateRetailItem(UpdateRetailItemReq) returns (EmptyRes) {}
+  rpc UpdateMedicineCategory(UpdateMedicineCategoryReq) returns (EmptyRes) {}
+  rpc UpdateMedicineItem(UpdateMedicineItemReq) returns (EmptyRes) {}
 
   rpc DeleteItemVariant(DeleteItemVariantReq) returns (EmptyRes) {}
   rpc DeleteItemAddon(DeleteItemAddonReq) returns (EmptyRes) {}
-
   rpc DeleteRestaurantMenu(DeleteRestaurantMenuReq) returns (EmptyRes) {}
   rpc DeleteMenuItem(DeleteMenuItemReq) returns (EmptyRes) {}
-
   rpc DeleteRetailCategory(DeleteRetailCategoryReq) returns (EmptyRes) {}
   rpc DeleteRetailItem(DeleteRetailItemReq) returns (EmptyRes) {}
-
   rpc DeleteMedicineCategory(DeleteMedicineCategoryReq) returns (EmptyRes) {}
   rpc DeleteMedicineItem(DeleteMedicineItemReq) returns (EmptyRes) {}
 }

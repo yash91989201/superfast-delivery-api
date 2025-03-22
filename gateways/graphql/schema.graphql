@@ -364,9 +364,10 @@ type ListShopsOutput {
 type ItemVariant {
   id: ID!
   variant_name: String!
-  relative_price: Float!
   relative_pricing: Boolean!
+  relative_price: Float!
   price: Float!
+  image_url: String
   description: String
   item_id: String!
 }
@@ -375,6 +376,7 @@ type ItemAddon {
   id: ID!
   addon_name: String!
   addon_price: Float!
+  image_url: String
   description: String
   item_id: String!
 }
@@ -382,34 +384,34 @@ type ItemAddon {
 type MenuItem {
   id: ID!
   name: String!
-  description: String
   price: Float!
+  image_url: String
+  description: String
+  variants: [ItemVariant!]!
+  addons: [ItemAddon!]!
   menu_id: String!
-  variants: [ItemVariant]!
-  addons: [ItemAddon]!
   created_at: DateTime!
   updated_at: DateTime!
-  deleted_at: DateTime
 }
 
 type RetailItem {
   id: ID!
   name: String!
-  description: String!
   price: Float!
+  image_url: String
+  description: String
   category_id: String!
-  variants: [ItemVariant]!
-  addons: [ItemAddon]!
+  variants: [ItemVariant!]!
   created_at: DateTime!
   updated_at: DateTime!
-  deleted_at: DateTime
 }
 
 type MedicineItem {
   id: ID!
   name: String!
   price: Float!
-  description: String!
+  image_url: String
+  description: String
   category_id: String!
   created_at: DateTime!
   updated_at: DateTime!
@@ -421,40 +423,40 @@ type MedicineItem {
 type RestaurantMenu {
   id: ID!
   menu_name: String!
+  image_url: String
   shop_id: String!
-  menu_items: [MenuItem]!
+  menu_items_id: [String!]!
   created_at: DateTime!
   updated_at: DateTime!
-  deleted_at: DateTime
 }
 
 type RetailCategory {
   id: ID!
   category_name: String!
+  image_url: String
   shop_id: String!
-  retail_items: [RetailItem]!
+  retail_items_id: [String!]!
   created_at: DateTime!
   updated_at: DateTime!
-  deleted_at: DateTime
 }
 
 type MedicineCategory {
   id: ID!
   category_name: String!
+  image_url: String
   shop_id: String!
-  medicine_items: [MedicineItem]!
+  medicine_items_id: [String!]!
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
 }
 
-# Input Types for CreateAction
-
 input CreateItemVariantInput {
   variant_name: String!
-  relative_price: Float!
   relative_pricing: Boolean!
+  relative_price: Float!
   price: Float!
+  image_url: String
   description: String
   item_id: ID!
 }
@@ -462,44 +464,111 @@ input CreateItemVariantInput {
 input CreateItemAddonInput {
   addon_name: String!
   addon_price: Float!
+  image_url: String
   description: String
   item_id: ID!
 }
 
 input CreateMenuItemInput {
   name: String!
-  description: String!
   price: Float!
+  image_url: String
+  description: String
   menu_id: ID!
 }
 
 input CreateRestaurantMenuInput {
   menu_name: String!
+  image_url: String
   shop_id: String!
 }
 
 input CreateRetailItemInput {
   name: String!
-  description: String!
   price: Float!
+  image_url: String
+  description: String
   category_id: String!
 }
 
 input CreateRetailCategoryInput {
   category_name: String!
+  image_url: String
   shop_id: String!
 }
 
 input CreateMedicineItemInput {
   name: String!
   price: Float!
-  description: String!
+  image_url: String
+  description: String
   category_id: String!
 }
 
 input CreateMedicineCategoryInput {
   category_name: String!
+  image_url: String
   shop_id: String!
+}
+
+input UpdateItemVariantInput {
+  id: ID!
+  variant_name: String
+  relative_pricing: Boolean
+  relative_price: Float
+  price: Float
+  image_url: String
+  description: String
+}
+
+input UpdateItemAddonInput {
+  id: ID!
+  addon_name: String
+  addon_price: Float
+  image_url: String
+  description: String
+}
+
+input UpdateRestaurantMenuInput {
+  id: ID!
+  menu_name: String
+  image_url: String
+}
+
+input UpdateMenuItemInput {
+  id: ID!
+  name: String
+  price: Float
+  image_url: String
+  description: String
+}
+
+input UpdateRetailCategoryInput {
+  id: ID!
+  category_name: String
+  image_url: String
+}
+
+input UpdateRetailItemInput {
+  id: ID!
+  name: String
+  price: Float
+  image_url: String
+  description: String
+}
+
+input UpdateMedicineCategoryInput {
+  id: ID!
+  category_name: String
+  image_url: String
+}
+
+input UpdateMedicineItemInput {
+  id: ID!
+  name: String
+  price: Float
+  image_url: String
+  description: String
 }
 
 type ListRestaurantMenuOutput {
@@ -525,6 +594,21 @@ type ListRetailCategoryOutput {
 type ListMedicineCategoryOutput {
   medicine_category_list: [MedicineCategory!]!
   total_category: Int!
+}
+
+type ListMenuItemOutput {
+  menu_items: [MenuItem!]!
+  total_items: Int!
+}
+
+type ListRetailItemOutput {
+  retail_items: [RetailItem!]!
+  total_items: Int!
+}
+
+type ListMedicineItemOutput {
+  medicine_items: [MedicineItem!]!
+  total_items: Int!
 }
 
 type ItemStock {
@@ -596,6 +680,38 @@ type DeleteOutput {
   message: String!
 }
 
+input DeleteItemVariantInput {
+  id: ID!
+}
+
+input DeleteItemAddonInput {
+  id: ID!
+}
+
+input DeleteRestaurantMenuInput {
+  id: ID!
+}
+
+input DeleteMenuItemInput {
+  id: ID!
+}
+
+input DeleteRetailCategoryInput {
+  id: ID!
+}
+
+input DeleteRetailItemInput {
+  id: ID!
+}
+
+input DeleteMedicineCategoryInput {
+  id: ID!
+}
+
+input DeleteMedicineItemInput {
+  id: ID!
+}
+
 type Query {
   GetAuth(input: GetAuthInput!): Auth!
   GetAuthById(input: GetAuthByIdInput!): Auth!
@@ -610,14 +726,17 @@ type Query {
 
   GetItemVariant(id: ID!): ItemVariant!
   GetItemAddon(id: ID!): ItemAddon!
-  GetItemVariants(itemId: ID!): GetItemVariantsOutput!
-  GetItemAddons(itemId: ID!): GetItemAddonsOutput!
   GetRestaurantMenu(id: ID!): RestaurantMenu!
-  ListRestaurantMenu(shopId: ID!): ListRestaurantMenuOutput!
+  GetMenuItem(id: ID!): MenuItem!
   GetRetailCategory(id: ID!): RetailCategory!
-  ListRetailCategory(shopId: ID!): ListRetailCategoryOutput
+  GetRetailItem(id: ID!): RetailItem!
   GetMedicineCategory(id: ID!): MedicineCategory!
+  GetMedicineItem(id: ID!): MedicineItem!
+  ListRestaurantMenu(shopId: ID!): ListRestaurantMenuOutput!
+  ListRetailCategory(shopId: ID!): ListRetailCategoryOutput
   ListMedicineCategory(shopId: ID!): ListMedicineCategoryOutput
+  ListRetailItem(categoryId: ID!): ListRetailItemOutput!
+  ListMedicineItem(categoryId: ID!): ListMedicineItemOutput!
 
   GetItemStock(id: ID!): ItemStock!
   GetVariantStock(id: ID!): VariantStock!
@@ -628,12 +747,12 @@ type Mutation {
   SignInWithEmail(input: SignInWithEmailInput!): SignInOutput!
   SignInWithPhone(input: SignInWithPhoneInput!): SignInOutput!
   SignInWithGoogle(input: SignInWithGoogleInput!): SignInOutput!
-  RefreshToken(session_id: ID!): SignInOutput!
-  LogOut(session_id: ID!): SignInOutput!
+  RefreshToken(sessionId: ID!): SignInOutput!
+  LogOut(sessionId: ID!): SignInOutput!
 
   CreateProfile(input: CreateProfileInput!): Profile!
-  UpdateProfile(input: UpdateProfileInput!): Profile!
   CreateDeliveryAddress(input: CreateDeliveryAddressInput!): DeliveryAddress!
+  UpdateProfile(input: UpdateProfileInput!): Profile!
   UpdateDeliveryAddress(input: UpdateDeliveryAddressInput!): DeliveryAddress!
   UpdateDefaultDeliveryAddress(
     input: UpdateDefaultDeliveryAddressInput!
@@ -656,15 +775,29 @@ type Mutation {
   CreateRetailItem(input: CreateRetailItemInput!): RetailItem!
   CreateMedicineCategory(input: CreateMedicineCategoryInput!): MedicineCategory!
   CreateMedicineItem(input: CreateMedicineItemInput!): MedicineItem!
+  UpdateItemVariant(input: UpdateItemVariantInput!): UpdateOutput!
+  UpdateItemAddon(input: UpdateItemAddonInput!): UpdateOutput!
+  UpdateRestaurantMenu(input: UpdateRestaurantMenuInput!): UpdateOutput!
+  UpdateMenuItem(input: UpdateMenuItemInput!): UpdateOutput!
+  UpdateRetailCategory(input: UpdateRetailCategoryInput!): UpdateOutput!
+  UpdateRetailItem(input: UpdateRetailItemInput!): UpdateOutput!
+  UpdateMedicineCategory(input: UpdateMedicineCategoryInput!): UpdateOutput!
+  UpdateMedicineItem(input: UpdateMedicineItemInput!): UpdateOutput!
+  DeleteItemVariant(input: DeleteItemVariantInput!): DeleteOutput!
+  DeleteItemAddon(input: DeleteItemAddonInput!): DeleteOutput!
+  DeleteRestaurantMenu(input: DeleteRestaurantMenuInput!): DeleteOutput!
+  DeleteMenuItem(input: DeleteMenuItemInput!): DeleteOutput!
+  DeleteRetailCategory(input: DeleteRetailCategoryInput!): DeleteOutput!
+  DeleteRetailItem(input: DeleteRetailItemInput!): DeleteOutput!
+  DeleteMedicineCategory(input: DeleteMedicineCategoryInput!): DeleteOutput!
+  DeleteMedicineItem(input: DeleteMedicineItemInput!): DeleteOutput!
 
   CreateItemStock(input: CreateItemStockInput!): ItemStock!
   CreateVariantStock(input: CreateVariantStockInput!): VariantStock!
   CreateAddonStock(input: CreateAddonStockInput!): AddonStock!
-
   UpdateItemStock(input: UpdateItemStockInput!): ItemStock!
   UpdateVariantStock(input: UpdateVariantStockInput!): VariantStock!
   UpdateAddonStock(input: UpdateAddonStockInput!): AddonStock!
-
   DeleteItemStock(id: ID!): DeleteOutput!
   DeleteVariantStock(id: ID!): DeleteOutput!
   DeleteAddonStock(id: ID!): DeleteOutput!

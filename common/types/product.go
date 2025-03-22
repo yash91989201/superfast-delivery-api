@@ -7,138 +7,210 @@ import (
 )
 
 type ItemVariant struct {
-	ID              bson.ObjectID `json:"id" bson:"_id"`
-	VariantName     string        `json:"variant_name" bson:"variant_name"`
-	RelativePrice   float64       `json:"relative_price" bson:"relative_price"`
-	RelativePricing bool          `json:"relative_pricing" bson:"relative_pricing"`
-	Price           float64       `json:"price" bson:"price"`
-	Description     *string       `json:"description" bson:"description"`
-	ItemId          bson.ObjectID `json:"item_id" bson:"item_id"`
+	ID              bson.ObjectID `bson:"_id" json:"id"`
+	VariantName     string        `bson:"variant_name" json:"variant_name"`
+	RelativePricing bool          `bson:"relative_pricing" json:"relative_pricing"`
+	RelativePrice   float64       `bson:"relative_price" json:"relative_price"`
+	Price           float64       `bson:"price" json:"price"`
+	ImageURL        *string       `bson:"image_url" json:"imageUrl"`
+	Description     *string       `bson:"description" json:"description"`
+	ItemID          bson.ObjectID `bson:"item_id" json:"item_id"`
 }
 
 type ItemAddon struct {
-	ID          bson.ObjectID `json:"id" bson:"_id"`
-	AddonName   string        `json:"addon_name" bson:"addon_name"`
-	AddonPrice  float64       `json:"addon_price" bson:"addon_price"`
-	Description *string       `json:"description" bson:"description"`
-	ItemId      bson.ObjectID `json:"item_id" bson:"item_id"`
+	ID          bson.ObjectID `bson:"_id" json:"id"`
+	AddonName   string        `bson:"addon_name" json:"addon_name"`
+	AddonPrice  float64       `bson:"addon_price" json:"addon_price"`
+	ImageURL    *string       `bson:"image_url" json:"imageUrl"`
+	Description *string       `bson:"description" json:"description"`
+	ItemID      bson.ObjectID `bson:"item_id" json:"item_id"`
 }
 
 type RestaurantMenu struct {
-	ID        bson.ObjectID `json:"id" bson:"_id"`
-	MenuName  string        `json:"menu_name" bson:"menu_name"`
-	ShopID    string        `json:"shop_id" bson:"shop_id"`
-	CreatedAt time.Time     `json:"created_at" bson:"created_at"`
-	UpdatedAt time.Time     `json:"updated_at" bson:"updated_at"`
-	DeletedAt *time.Time    `json:"deleted_at" bson:"deleted_at"`
-	MenuItems []*MenuItem   `json:"menu_items" bson:"menu_items"`
+	ID          bson.ObjectID   `bson:"_id" json:"id"`
+	MenuName    string          `bson:"menu_name" json:"menu_name"`
+	ImageURL    *string         `bson:"image_url" json:"imageUrl"`
+	ShopID      string          `bson:"shop_id" json:"shop_id"`
+	MenuItemsID []bson.ObjectID `bson:"menu_items_id" json:"menu_items_id"`
+	CreatedAt   time.Time       `bson:"created_at" json:"created_at"`
+	UpdatedAt   time.Time       `bson:"updated_at" json:"updated_at"`
 }
 
 type MenuItem struct {
-	ID          bson.ObjectID  `json:"id" bson:"_id"`
-	Name        string         `json:"name" bson:"name"`
-	Description string         `json:"description" bson:"description"`
-	Price       float64        `json:"price" bson:"price"`
-	CreatedAt   time.Time      `json:"created_at" bson:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at" bson:"updated_at"`
-	DeletedAt   *time.Time     `json:"deleted_at" bson:"deleted_at"`
-	MenuID      bson.ObjectID  `json:"menu_id" bson:"menu_id"`
-	Variants    []*ItemVariant `json:"variants" bson:"variants"`
-	AddOns      []*ItemAddon   `json:"addons" bson:"addons"`
+	ID          bson.ObjectID  `bson:"_id" json:"id"`
+	Name        string         `bson:"name" json:"name"`
+	Price       float64        `bson:"price" json:"price"`
+	ImageURL    *string        `bson:"image_url" json:"imageUrl"`
+	Description *string        `bson:"description" json:"description"`
+	Variants    []*ItemVariant `bson:"variants" json:"variants"`
+	Addons      []*ItemAddon   `bson:"addons" json:"addons"`
+	MenuID      bson.ObjectID  `bson:"menu_id" json:"menu_id"`
+	CreatedAt   time.Time      `bson:"created_at" json:"created_at"`
+	UpdatedAt   time.Time      `bson:"updated_at" json:"updated_at"`
 }
 
 type RetailCategory struct {
-	ID           bson.ObjectID `json:"id" bson:"_id"`
-	CategoryName string        `json:"category_name" bson:"category_name"`
-	ShopID       string        `json:"shop_id" bson:"shop_id"`
-	CreatedAt    time.Time     `json:"created_at" bson:"created_at"`
-	UpdatedAt    time.Time     `json:"updated_at" bson:"updated_at"`
-	DeletedAt    *time.Time    `json:"deleted_at" bson:"deleted_at"`
-	RetailItems  []*RetailItem `json:"retail_items" bson:"retail_items"`
+	ID            bson.ObjectID   `bson:"_id" json:"id"`
+	CategoryName  string          `bson:"category_name" json:"category_name"`
+	ImageURL      *string         `bson:"image_url" json:"imageUrl"`
+	ShopID        string          `bson:"shop_id" json:"shop_id"`
+	RetailItemsID []bson.ObjectID `bson:"retail_items_id" json:"retail_items_id"`
+	CreatedAt     time.Time       `bson:"created_at" json:"created_at"`
+	UpdatedAt     time.Time       `bson:"updated_at" json:"updated_at"`
 }
 
 type RetailItem struct {
-	ID          bson.ObjectID  `json:"id" bson:"_id"`
-	Name        string         `json:"name" bson:"name"`
-	Description string         `json:"description" bson:"description"`
-	Price       float64        `json:"price" bson:"price"`
-	CategoryID  bson.ObjectID  `json:"category_id" bson:"category_id"`
-	CreatedAt   time.Time      `json:"created_at" bson:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at" bson:"updated_at"`
-	DeletedAt   *time.Time     `json:"deleted_at" bson:"deleted_at"`
-	Variants    []*ItemVariant `json:"variants" bson:"variants"`
-	AddOns      []*ItemAddon   `json:"addons" bson:"addons"`
+	ID          bson.ObjectID  `bson:"_id" json:"id"`
+	Name        string         `bson:"name" json:"name"`
+	Price       float64        `bson:"price" json:"price"`
+	ImageURL    *string        `bson:"image_url" json:"imageUrl"`
+	Description *string        `bson:"description" json:"description"`
+	CategoryID  bson.ObjectID  `bson:"category_id" json:"category_id"`
+	Variants    []*ItemVariant `bson:"variants" json:"variants"`
+	CreatedAt   time.Time      `bson:"created_at" json:"created_at"`
+	UpdatedAt   time.Time      `bson:"updated_at" json:"updated_at"`
 }
 
 type MedicineCategory struct {
-	ID            bson.ObjectID   `json:"id" bson:"_id"`
-	CategoryName  string          `json:"category_name" bson:"category_name"`
-	ShopID        string          `json:"shop_id" bson:"shop_id"`
-	CreatedAt     time.Time       `json:"created_at" bson:"created_at"`
-	UpdatedAt     time.Time       `json:"updated_at" bson:"updated_at"`
-	DeletedAt     *time.Time      `json:"deleted_at" bson:"deleted_at"`
-	MedicineItems []*MedicineItem `json:"medicine_items" bson:"medicine_items"`
+	ID              bson.ObjectID   `bson:"_id" json:"id"`
+	CategoryName    string          `bson:"category_name" json:"category_name"`
+	ImageURL        *string         `bson:"image_url" json:"imageUrl"`
+	ShopID          string          `bson:"shop_id" json:"shop_id"`
+	MedicineItemsID []bson.ObjectID `bson:"medicine_items_id" json:"medicine_items_id"`
+	CreatedAt       time.Time       `bson:"created_at" json:"created_at"`
+	UpdatedAt       time.Time       `bson:"updated_at" json:"updated_at"`
 }
 
 type MedicineItem struct {
-	ID          bson.ObjectID `json:"id" bson:"_id"`
-	Name        string        `json:"name" bson:"name"`
-	Price       float64       `json:"price" bson:"price"`
-	Description string        `json:"description" bson:"description"`
-	CategoryID  bson.ObjectID `json:"category_id" bson:"category_id"`
-	CreatedAt   time.Time     `json:"created_at" bson:"created_at"`
-	UpdatedAt   time.Time     `json:"updated_at" bson:"updated_at"`
-	DeletedAt   *time.Time    `json:"deleted_at" bson:"deleted_at"`
+	ID          bson.ObjectID `bson:"_id" json:"id"`
+	Name        string        `bson:"name" json:"name"`
+	Price       float64       `bson:"price" json:"price"`
+	ImageURL    *string       `bson:"image_url" json:"imageUrl"`
+	Description *string       `bson:"description" json:"description"`
+	CategoryID  bson.ObjectID `bson:"category_id" json:"category_id"`
+	CreatedAt   time.Time     `bson:"created_at" json:"created_at"`
+	UpdatedAt   time.Time     `bson:"updated_at" json:"updated_at"`
 }
 
 type CreateItemVariant struct {
-	VariantName     string        `json:"variant_name" bson:"variant_name"`
-	RelativePrice   float64       `json:"relative_price" bson:"relative_price"`
-	RelativePricing bool          `json:"relative_pricing" bson:"relative_pricing"`
-	Price           float64       `json:"price" bson:"price"`
-	Description     *string       `json:"description" bson:"description"`
-	ItemId          bson.ObjectID `json:"item_id" bson:"item_id"`
+	VariantName     string
+	RelativePricing bool
+	RelativePrice   float64
+	Price           float64
+	ImageURL        *string
+	Description     *string
+	ItemID          bson.ObjectID
 }
 
 type CreateItemAddon struct {
-	AddonName   string        `json:"addon_name" bson:"addon_name"`
-	AddonPrice  float64       `json:"addon_price" bson:"addon_price"`
-	Description *string       `json:"description" bson:"description"`
-	ItemId      bson.ObjectID `json:"item_id" bson:"item_id"`
+	AddonName   string
+	AddonPrice  float64
+	ImageURL    *string
+	Description *string
+	ItemID      bson.ObjectID
 }
 
 type CreateRestaurantMenu struct {
-	MenuName string `json:"menu_name" bson:"menu_name"`
-	ShopID   string `json:"shop_id" bson:"shop_id"`
+	MenuName string
+	ImageURL *string
+	ShopID   string
 }
 
 type CreateMenuItem struct {
-	Name        string        `json:"name" bson:"name"`
-	Description string        `json:"description" bson:"description"`
-	Price       float64       `json:"price" bson:"price"`
-	MenuID      bson.ObjectID `json:"menu_id" bson:"menu_id"`
+	Name        string
+	Price       float64
+	ImageUrl    *string
+	Description *string
+	MenuID      bson.ObjectID
 }
 
 type CreateRetailCategory struct {
-	CategoryName string `json:"category_name" bson:"category_name"`
-	ShopID       string `json:"shop_id" bson:"shop_id"`
+	CategoryName string
+	ImageURL     *string
+	ShopID       string
 }
 
 type CreateRetailItem struct {
-	Name        string        `json:"name" bson:"name"`
-	Description string        `json:"description" bson:"description"`
-	Price       float64       `json:"price" bson:"price"`
-	CategoryId  bson.ObjectID `json:"category_id" bson:"category_id"`
+	Name        string
+	Price       float64
+	ImageURL    *string
+	Description *string
+	CategoryID  bson.ObjectID
 }
 
 type CreateMedicineCategory struct {
-	CategoryName string `json:"category_name" bson:"category_name"`
-	ShopID       string `json:"shop_id" bson:"shop_id"`
+	CategoryName string
+	ImageURL     *string
+	ShopID       string
 }
 
 type CreateMedicineItem struct {
-	Name        string        `json:"name" bson:"name"`
-	Price       float64       `json:"price" bson:"price"`
-	Description string        `json:"description" bson:"description"`
-	CategoryId  bson.ObjectID `json:"category_id" bson:"category_id"`
+	Name        string
+	Price       float64
+	ImageURL    *string
+	Description *string
+	CategoryID  bson.ObjectID
+}
+
+type UpdateItemVariant struct {
+	ID              bson.ObjectID `bson:"_id" json:"id"`
+	VariantName     *string       `bson:"variant_name,omitempty" json:"variant_name,omitempty"`
+	RelativePricing *bool         `bson:"relative_pricing,omitempty" json:"relative_pricing,omitempty"`
+	RelativePrice   *float64      `bson:"relative_price,omitempty" json:"relative_price,omitempty"`
+	Price           *float64      `bson:"price,omitempty" json:"price,omitempty"`
+	ImageURL        *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
+	Description     *string       `bson:"description,omitempty" json:"description,omitempty"`
+}
+
+type UpdateItemAddon struct {
+	ID          bson.ObjectID `bson:"_id" json:"id"`
+	AddonName   *string       `bson:"addon_name,omitempty" json:"addon_name,omitempty"`
+	AddonPrice  *float64      `bson:"addon_price,omitempty" json:"addon_price,omitempty"`
+	ImageURL    *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
+	Description *string       `bson:"description,omitempty" json:"description,omitempty"`
+}
+
+type UpdateRestaurantMenu struct {
+	ID       bson.ObjectID `bson:"_id" json:"id"`
+	MenuName *string       `bson:"menu_name,omitempty" json:"menu_name,omitempty"`
+	ImageURL *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
+	ShopID   *string       `bson:"shop_id,omitempty" json:"shop_id,omitempty"`
+}
+
+type UpdateMenuItem struct {
+	ID          bson.ObjectID `bson:"_id" json:"id"`
+	Name        *string       `bson:"name,omitempty" json:"name,omitempty"`
+	Price       *float64      `bson:"price,omitempty" json:"price,omitempty"`
+	ImageURL    *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
+	Description *string       `bson:"description,omitempty" json:"description,omitempty"`
+}
+
+type UpdateRetailCategory struct {
+	ID           bson.ObjectID `bson:"_id" json:"id"`
+	CategoryName *string       `bson:"category_name,omitempty" json:"category_name,omitempty"`
+	ImageURL     *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
+	ShopID       *string       `bson:"shop_id,omitempty" json:"shop_id,omitempty"`
+}
+
+type UpdateRetailItem struct {
+	ID          bson.ObjectID `bson:"_id" json:"id"`
+	Name        *string       `bson:"name,omitempty" json:"name,omitempty"`
+	Price       *float64      `bson:"price,omitempty" json:"price,omitempty"`
+	ImageURL    *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
+	Description *string       `bson:"description,omitempty" json:"description,omitempty"`
+}
+
+type UpdateMedicineCategory struct {
+	ID           bson.ObjectID `bson:"_id" json:"id"`
+	CategoryName *string       `bson:"category_name,omitempty" json:"category_name,omitempty"`
+	ImageURL     *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
+	ShopID       *string       `bson:"shop_id,omitempty" json:"shop_id,omitempty"`
+}
+
+type UpdateMedicineItem struct {
+	ID          bson.ObjectID `bson:"_id" json:"id"`
+	Name        *string       `bson:"name,omitempty" json:"name,omitempty"`
+	Price       *float64      `bson:"price,omitempty" json:"price,omitempty"`
+	ImageURL    *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
+	Description *string       `bson:"description,omitempty" json:"description,omitempty"`
 }
