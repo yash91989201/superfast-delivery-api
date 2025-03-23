@@ -206,24 +206,6 @@ func (r *mutationResolver) DeleteShop(ctx context.Context, in string) (*UpdateSh
 	return nil, nil
 }
 
-func (r *mutationResolver) CreateItemVariant(ctx context.Context, in CreateItemVariantInput) (*ItemVariant, error) {
-	res, err := r.server.productClient.CreateItemVariant(ctx, ToPbCreateItemVariantReq(&in))
-	if err != nil {
-		return nil, err
-	}
-
-	return ToGQItemVariant(res), nil
-}
-
-func (r *mutationResolver) CreateItemAddon(ctx context.Context, in CreateItemAddonInput) (*ItemAddon, error) {
-	res, err := r.server.productClient.CreateItemAddon(ctx, ToPbCreateItemAddonReq(&in))
-	if err != nil {
-		return nil, err
-	}
-
-	return ToGQItemAddon(res), nil
-}
-
 func (r *mutationResolver) CreateRestaurantMenu(ctx context.Context, in CreateRestaurantMenuInput) (*RestaurantMenu, error) {
 	res, err := r.server.productClient.CreateRestaurantMenu(ctx, ToPbCreateRestaurantMenuReq(&in))
 	if err != nil {
@@ -242,6 +224,24 @@ func (r *mutationResolver) CreateMenuItem(ctx context.Context, in CreateMenuItem
 	return ToGQMenuItem(res), nil
 }
 
+func (r *mutationResolver) CreateMenuItemVariant(ctx context.Context, in CreateItemVariantInput) (*ItemVariant, error) {
+	res, err := r.server.productClient.CreateMenuItemVariant(ctx, ToPbCreateItemVariantReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemVariant(res), nil
+}
+
+func (r *mutationResolver) CreateMenuItemAddon(ctx context.Context, in CreateItemAddonInput) (*ItemAddon, error) {
+	res, err := r.server.productClient.CreateMenuItemAddon(ctx, ToPbCreateItemAddonReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemAddon(res), nil
+}
+
 func (r *mutationResolver) CreateRetailCategory(ctx context.Context, in CreateRetailCategoryInput) (*RetailCategory, error) {
 	res, err := r.server.productClient.CreateRetailCategory(ctx, ToPbCreateRetailCategoryReq(&in))
 	if err != nil {
@@ -258,6 +258,15 @@ func (r *mutationResolver) CreateRetailItem(ctx context.Context, in CreateRetail
 	}
 
 	return ToGQRetailItem(res), nil
+}
+
+func (r *mutationResolver) CreateRetailItemVariant(ctx context.Context, in CreateItemVariantInput) (*ItemVariant, error) {
+	res, err := r.server.productClient.CreateRetailItemVariant(ctx, ToPbCreateItemVariantReq(&in))
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemVariant(res), nil
 }
 
 func (r *mutationResolver) CreateMedicineCategory(ctx context.Context, in CreateMedicineCategoryInput) (*MedicineCategory, error) {
@@ -279,42 +288,6 @@ func (r *mutationResolver) CreateMedicineItem(ctx context.Context, in CreateMedi
 }
 
 // UpdateItemVariant resolver
-func (r *mutationResolver) UpdateItemVariant(ctx context.Context, input UpdateItemVariantInput) (*UpdateOutput, error) {
-	req := &pb.UpdateItemVariantReq{
-		Id:              input.ID,
-		VariantName:     input.VariantName,
-		RelativePricing: input.RelativePricing,
-		RelativePrice:   input.RelativePrice,
-		Price:           input.Price,
-		ImageUrl:        input.ImageURL,
-		Description:     input.Description,
-	}
-
-	_, err := r.server.productClient.UpdateItemVariant(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return &UpdateOutput{Message: "Item variant updated successfully"}, nil
-}
-
-// UpdateItemAddon resolver
-func (r *mutationResolver) UpdateItemAddon(ctx context.Context, input UpdateItemAddonInput) (*UpdateOutput, error) {
-	req := &pb.UpdateItemAddonReq{
-		Id:          input.ID,
-		AddonName:   input.AddonName,
-		AddonPrice:  input.AddonPrice,
-		ImageUrl:    input.ImageURL,
-		Description: input.Description,
-	}
-
-	_, err := r.server.productClient.UpdateItemAddon(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return &UpdateOutput{Message: "Item addon updated successfully"}, nil
-}
 
 // UpdateRestaurantMenu resolver
 func (r *mutationResolver) UpdateRestaurantMenu(ctx context.Context, input UpdateRestaurantMenuInput) (*UpdateOutput, error) {
@@ -348,6 +321,43 @@ func (r *mutationResolver) UpdateMenuItem(ctx context.Context, input UpdateMenuI
 	}
 
 	return &UpdateOutput{Message: "Menu item updated successfully"}, nil
+}
+
+func (r *mutationResolver) UpdateMenuItemVariant(ctx context.Context, input UpdateItemVariantInput) (*UpdateOutput, error) {
+	req := &pb.UpdateItemVariantReq{
+		Id:              input.ID,
+		VariantName:     input.VariantName,
+		RelativePricing: input.RelativePricing,
+		RelativePrice:   input.RelativePrice,
+		Price:           input.Price,
+		ImageUrl:        input.ImageURL,
+		Description:     input.Description,
+	}
+
+	_, err := r.server.productClient.UpdateMenuItemVariant(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UpdateOutput{Message: "Item variant updated successfully"}, nil
+}
+
+// UpdateItemAddon resolver
+func (r *mutationResolver) UpdateMenuItemAddon(ctx context.Context, input UpdateItemAddonInput) (*UpdateOutput, error) {
+	req := &pb.UpdateItemAddonReq{
+		Id:          input.ID,
+		AddonName:   input.AddonName,
+		AddonPrice:  input.AddonPrice,
+		ImageUrl:    input.ImageURL,
+		Description: input.Description,
+	}
+
+	_, err := r.server.productClient.UpdateMenuItemAddon(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UpdateOutput{Message: "Item addon updated successfully"}, nil
 }
 
 // UpdateRetailCategory resolver
@@ -384,6 +394,25 @@ func (r *mutationResolver) UpdateRetailItem(ctx context.Context, input UpdateRet
 	return &UpdateOutput{Message: "Retail item updated successfully"}, nil
 }
 
+func (r *mutationResolver) UpdateRetailItemVariant(ctx context.Context, input UpdateItemVariantInput) (*UpdateOutput, error) {
+	req := &pb.UpdateItemVariantReq{
+		Id:              input.ID,
+		VariantName:     input.VariantName,
+		RelativePricing: input.RelativePricing,
+		RelativePrice:   input.RelativePrice,
+		Price:           input.Price,
+		ImageUrl:        input.ImageURL,
+		Description:     input.Description,
+	}
+
+	_, err := r.server.productClient.UpdateRetailItemVariant(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UpdateOutput{Message: "Item variant updated successfully"}, nil
+}
+
 // UpdateMedicineCategory resolver
 func (r *mutationResolver) UpdateMedicineCategory(ctx context.Context, input UpdateMedicineCategoryInput) (*UpdateOutput, error) {
 	req := &pb.UpdateMedicineCategoryReq{
@@ -418,33 +447,8 @@ func (r *mutationResolver) UpdateMedicineItem(ctx context.Context, input UpdateM
 	return &UpdateOutput{Message: "Medicine item updated successfully"}, nil
 }
 
-// DeleteItemVariant resolver
-func (r *mutationResolver) DeleteItemVariant(ctx context.Context, input DeleteItemVariantInput) (*DeleteOutput, error) {
-	req := &pb.DeleteItemVariantReq{Id: input.ID}
-
-	_, err := r.server.productClient.DeleteItemVariant(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return &DeleteOutput{Message: "Item variant deleted successfully"}, nil
-}
-
-// DeleteItemAddon resolver
-func (r *mutationResolver) DeleteItemAddon(ctx context.Context, input DeleteItemAddonInput) (*DeleteOutput, error) {
-	req := &pb.DeleteItemAddonReq{Id: input.ID}
-
-	_, err := r.server.productClient.DeleteItemAddon(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return &DeleteOutput{Message: "Item addon deleted successfully"}, nil
-}
-
-// DeleteRestaurantMenu resolver
-func (r *mutationResolver) DeleteRestaurantMenu(ctx context.Context, input DeleteRestaurantMenuInput) (*DeleteOutput, error) {
-	req := &pb.DeleteRestaurantMenuReq{Id: input.ID}
+func (r *mutationResolver) DeleteRestaurantMenu(ctx context.Context, menuID string) (*DeleteOutput, error) {
+	req := &pb.DeleteRestaurantMenuReq{Id: menuID}
 
 	_, err := r.server.productClient.DeleteRestaurantMenu(ctx, req)
 	if err != nil {
@@ -454,9 +458,8 @@ func (r *mutationResolver) DeleteRestaurantMenu(ctx context.Context, input Delet
 	return &DeleteOutput{Message: "Restaurant menu deleted successfully"}, nil
 }
 
-// DeleteMenuItem resolver
-func (r *mutationResolver) DeleteMenuItem(ctx context.Context, input DeleteMenuItemInput) (*DeleteOutput, error) {
-	req := &pb.DeleteMenuItemReq{Id: input.ID}
+func (r *mutationResolver) DeleteMenuItem(ctx context.Context, itemID string) (*DeleteOutput, error) {
+	req := &pb.DeleteMenuItemReq{Id: itemID}
 
 	_, err := r.server.productClient.DeleteMenuItem(ctx, req)
 	if err != nil {
@@ -466,9 +469,34 @@ func (r *mutationResolver) DeleteMenuItem(ctx context.Context, input DeleteMenuI
 	return &DeleteOutput{Message: "Menu item deleted successfully"}, nil
 }
 
-// DeleteRetailCategory resolver
-func (r *mutationResolver) DeleteRetailCategory(ctx context.Context, input DeleteRetailCategoryInput) (*DeleteOutput, error) {
-	req := &pb.DeleteRetailCategoryReq{Id: input.ID}
+func (r *mutationResolver) DeleteMenuItemVariant(ctx context.Context, in DeleteItemVariantInput) (*DeleteOutput, error) {
+	_, err := r.server.productClient.DeleteMenuItemVariant(ctx, &pb.DeleteItemVariantReq{
+		ItemId:    in.ItemID,
+		VariantId: in.VariantID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeleteOutput{Message: "Retail category deleted successfully"}, nil
+}
+
+func (r *mutationResolver) DeleteMenuItemAddon(ctx context.Context, in DeleteItemAddonInput) (*DeleteOutput, error) {
+	_, err := r.server.productClient.DeleteMenuItemAddon(ctx, &pb.DeleteItemAddonReq{
+		ItemId:  in.ItemID,
+		AddonId: in.AddonID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeleteOutput{Message: "Retail category deleted successfully"}, nil
+}
+
+func (r *mutationResolver) DeleteRetailCategory(ctx context.Context, categoryID string) (*DeleteOutput, error) {
+	req := &pb.DeleteRetailCategoryReq{Id: categoryID}
 
 	_, err := r.server.productClient.DeleteRetailCategory(ctx, req)
 	if err != nil {
@@ -478,11 +506,8 @@ func (r *mutationResolver) DeleteRetailCategory(ctx context.Context, input Delet
 	return &DeleteOutput{Message: "Retail category deleted successfully"}, nil
 }
 
-// DeleteRetailItem resolver
-func (r *mutationResolver) DeleteRetailItem(ctx context.Context, input DeleteRetailItemInput) (*DeleteOutput, error) {
-	req := &pb.DeleteRetailItemReq{Id: input.ID}
-
-	_, err := r.server.productClient.DeleteRetailItem(ctx, req)
+func (r *mutationResolver) DeleteRetailItem(ctx context.Context, itemID string) (*DeleteOutput, error) {
+	_, err := r.server.productClient.DeleteRetailItem(ctx, &pb.DeleteRetailItemReq{Id: itemID})
 	if err != nil {
 		return nil, err
 	}
@@ -490,9 +515,21 @@ func (r *mutationResolver) DeleteRetailItem(ctx context.Context, input DeleteRet
 	return &DeleteOutput{Message: "Retail item deleted successfully"}, nil
 }
 
-// DeleteMedicineCategory resolver
-func (r *mutationResolver) DeleteMedicineCategory(ctx context.Context, input DeleteMedicineCategoryInput) (*DeleteOutput, error) {
-	req := &pb.DeleteMedicineCategoryReq{Id: input.ID}
+func (r *mutationResolver) DeleteRetailItemVariant(ctx context.Context, in DeleteItemVariantInput) (*DeleteOutput, error) {
+	_, err := r.server.productClient.DeleteRetailItemVariant(ctx, &pb.DeleteItemVariantReq{
+		ItemId:    in.ItemID,
+		VariantId: in.VariantID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeleteOutput{Message: "Retail category deleted successfully"}, nil
+}
+
+func (r *mutationResolver) DeleteMedicineCategory(ctx context.Context, categoryID string) (*DeleteOutput, error) {
+	req := &pb.DeleteMedicineCategoryReq{Id: categoryID}
 
 	_, err := r.server.productClient.DeleteMedicineCategory(ctx, req)
 	if err != nil {
@@ -503,8 +540,8 @@ func (r *mutationResolver) DeleteMedicineCategory(ctx context.Context, input Del
 }
 
 // DeleteMedicineItem resolver
-func (r *mutationResolver) DeleteMedicineItem(ctx context.Context, input DeleteMedicineItemInput) (*DeleteOutput, error) {
-	req := &pb.DeleteMedicineItemReq{Id: input.ID}
+func (r *mutationResolver) DeleteMedicineItem(ctx context.Context, itemID string) (*DeleteOutput, error) {
+	req := &pb.DeleteMedicineItemReq{Id: itemID}
 
 	_, err := r.server.productClient.DeleteMedicineItem(ctx, req)
 	if err != nil {

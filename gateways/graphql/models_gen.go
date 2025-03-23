@@ -183,39 +183,17 @@ type CreateVariantStockInput struct {
 }
 
 type DeleteItemAddonInput struct {
-	ID string `json:"id"`
+	ItemID  string `json:"item_id"`
+	AddonID string `json:"addon_id"`
 }
 
 type DeleteItemVariantInput struct {
-	ID string `json:"id"`
-}
-
-type DeleteMedicineCategoryInput struct {
-	ID string `json:"id"`
-}
-
-type DeleteMedicineItemInput struct {
-	ID string `json:"id"`
-}
-
-type DeleteMenuItemInput struct {
-	ID string `json:"id"`
+	ItemID    string `json:"item_id"`
+	VariantID string `json:"variant_id"`
 }
 
 type DeleteOutput struct {
 	Message string `json:"message"`
-}
-
-type DeleteRestaurantMenuInput struct {
-	ID string `json:"id"`
-}
-
-type DeleteRetailCategoryInput struct {
-	ID string `json:"id"`
-}
-
-type DeleteRetailItemInput struct {
-	ID string `json:"id"`
 }
 
 type DeliveryAddress struct {
@@ -244,14 +222,14 @@ type GetAuthInput struct {
 	Phone *string `json:"phone,omitempty"`
 }
 
-type GetItemAddonsOutput struct {
-	Addons      []*ItemAddon `json:"addons"`
-	TotalAddons int32        `json:"total_addons"`
+type GetItemAddonInput struct {
+	ItemID  string `json:"item_id"`
+	AddonID string `json:"addon_id"`
 }
 
-type GetItemVariantsOutput struct {
-	Variants      []*ItemVariant `json:"variants"`
-	TotalVariants int32          `json:"total_variants"`
+type GetItemVariantInput struct {
+	ItemID    string `json:"item_id"`
+	VariantID string `json:"variant_id"`
 }
 
 type GetProfileInput struct {
@@ -300,6 +278,16 @@ type ListDeliveryAddressOutput struct {
 	DeliveryAddress []*DeliveryAddress `json:"delivery_address"`
 }
 
+type ListItemAddonOutput struct {
+	Addons      []*ItemAddon `json:"addons"`
+	TotalAddons int32        `json:"total_addons"`
+}
+
+type ListItemVariantOutput struct {
+	Variants      []*ItemVariant `json:"variants"`
+	TotalVariants int32          `json:"total_variants"`
+}
+
 type ListMedicineCategoryOutput struct {
 	MedicineCategoryList []*MedicineCategory `json:"medicine_category_list"`
 	TotalCategory        int32               `json:"total_category"`
@@ -345,14 +333,13 @@ type ListShopsOutput struct {
 }
 
 type MedicineCategory struct {
-	ID              string   `json:"id"`
-	CategoryName    string   `json:"category_name"`
-	ImageURL        *string  `json:"image_url,omitempty"`
-	ShopID          string   `json:"shop_id"`
-	MedicineItemsID []string `json:"medicine_items_id"`
-	CreatedAt       string   `json:"created_at"`
-	UpdatedAt       string   `json:"updated_at"`
-	DeletedAt       *string  `json:"deleted_at,omitempty"`
+	ID           string  `json:"id"`
+	CategoryName string  `json:"category_name"`
+	ImageURL     *string `json:"image_url,omitempty"`
+	ShopID       string  `json:"shop_id"`
+	CreatedAt    string  `json:"created_at"`
+	UpdatedAt    string  `json:"updated_at"`
+	DeletedAt    *string `json:"deleted_at,omitempty"`
 }
 
 type MedicineItem struct {
@@ -399,23 +386,21 @@ type Query struct {
 }
 
 type RestaurantMenu struct {
-	ID          string   `json:"id"`
-	MenuName    string   `json:"menu_name"`
-	ImageURL    *string  `json:"image_url,omitempty"`
-	ShopID      string   `json:"shop_id"`
-	MenuItemsID []string `json:"menu_items_id"`
-	CreatedAt   string   `json:"created_at"`
-	UpdatedAt   string   `json:"updated_at"`
+	ID        string  `json:"id"`
+	MenuName  string  `json:"menu_name"`
+	ImageURL  *string `json:"image_url,omitempty"`
+	ShopID    string  `json:"shop_id"`
+	CreatedAt string  `json:"created_at"`
+	UpdatedAt string  `json:"updated_at"`
 }
 
 type RetailCategory struct {
-	ID            string   `json:"id"`
-	CategoryName  string   `json:"category_name"`
-	ImageURL      *string  `json:"image_url,omitempty"`
-	ShopID        string   `json:"shop_id"`
-	RetailItemsID []string `json:"retail_items_id"`
-	CreatedAt     string   `json:"created_at"`
-	UpdatedAt     string   `json:"updated_at"`
+	ID           string  `json:"id"`
+	CategoryName string  `json:"category_name"`
+	ImageURL     *string `json:"image_url,omitempty"`
+	ShopID       string  `json:"shop_id"`
+	CreatedAt    string  `json:"created_at"`
+	UpdatedAt    string  `json:"updated_at"`
 }
 
 type RetailItem struct {

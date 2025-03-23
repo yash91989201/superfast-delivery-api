@@ -124,19 +124,3 @@ func TimePtrToPbTime(t *time.Time) *timestamppb.Timestamp {
 
 	return timestamppb.New(*t)
 }
-
-func stringsToBsonObjectIDs(ids []string) []bson.ObjectID {
-	objectIDs := make([]bson.ObjectID, len(ids))
-	for i, id := range ids {
-		objectIDs[i] = HexToObjectID(id)
-	}
-	return objectIDs
-}
-
-func bsonObjectIDsToStrings(ids []bson.ObjectID) []string {
-	strIDs := make([]string, len(ids))
-	for i, id := range ids {
-		strIDs[i] = id.Hex()
-	}
-	return strIDs
-}

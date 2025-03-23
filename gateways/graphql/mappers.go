@@ -594,8 +594,10 @@ func ToPbCreateRestaurantMenuReq(r *CreateRestaurantMenuInput) *pb.CreateRestaur
 	if r == nil {
 		return nil
 	}
+
 	return &pb.CreateRestaurantMenuReq{
 		MenuName: r.MenuName,
+		ImageUrl: r.ImageURL,
 		ShopId:   r.ShopID,
 	}
 }
@@ -604,8 +606,10 @@ func ToPbCreateMenuItemReq(r *CreateMenuItemInput) *pb.CreateMenuItemReq {
 	if r == nil {
 		return nil
 	}
+
 	return &pb.CreateMenuItemReq{
 		Name:        r.Name,
+		ImageUrl:    r.ImageURL,
 		Description: r.Description,
 		Price:       r.Price,
 		MenuId:      r.MenuID,
@@ -616,11 +620,13 @@ func ToPbCreateItemVariantReq(r *CreateItemVariantInput) *pb.CreateItemVariantRe
 	if r == nil {
 		return nil
 	}
+
 	return &pb.CreateItemVariantReq{
 		VariantName:     r.VariantName,
 		RelativePrice:   r.RelativePrice,
 		RelativePricing: r.RelativePricing,
 		Price:           r.Price,
+		ImageUrl:        r.ImageURL,
 		Description:     r.Description,
 		ItemId:          r.ItemID,
 	}
@@ -630,9 +636,11 @@ func ToPbCreateItemAddonReq(r *CreateItemAddonInput) *pb.CreateItemAddonReq {
 	if r == nil {
 		return nil
 	}
+
 	return &pb.CreateItemAddonReq{
 		AddonName:   r.AddonName,
 		AddonPrice:  r.AddonPrice,
+		ImageUrl:    r.ImageURL,
 		Description: r.Description,
 		ItemId:      r.ItemID,
 	}
@@ -650,6 +658,7 @@ func ToGQRestaurantMenu(m *pb.RestaurantMenu) *RestaurantMenu {
 	return &RestaurantMenu{
 		ID:        m.Id,
 		MenuName:  m.MenuName,
+		ImageURL:  m.ImageUrl,
 		ShopID:    m.ShopId,
 		CreatedAt: ToGQTime(m.CreatedAt),
 		UpdatedAt: ToGQTime(m.UpdatedAt),
@@ -687,6 +696,7 @@ func ToGQItemVariant(v *pb.ItemVariant) *ItemVariant {
 		RelativePrice:   float64(v.RelativePrice),
 		RelativePricing: v.RelativePricing,
 		Price:           float64(v.Price),
+		ImageURL:        v.ImageUrl,
 		Description:     v.Description,
 		ItemID:          v.ItemId,
 	}
@@ -697,6 +707,7 @@ func ToGQItemAddon(a *pb.ItemAddon) *ItemAddon {
 		ID:          a.Id,
 		AddonName:   a.AddonName,
 		AddonPrice:  float64(a.AddonPrice),
+		ImageURL:    a.ImageUrl,
 		Description: a.Description,
 		ItemID:      a.ItemId,
 	}
@@ -706,6 +717,7 @@ func ToGQRetailCategory(c *pb.RetailCategory) *RetailCategory {
 	return &RetailCategory{
 		ID:           c.Id,
 		CategoryName: c.CategoryName,
+		ImageURL:     c.ImageUrl,
 		ShopID:       c.ShopId,
 		CreatedAt:    ToGQTime(c.CreatedAt),
 		UpdatedAt:    ToGQTime(c.UpdatedAt),
@@ -716,6 +728,7 @@ func ToGQRetailItem(i *pb.RetailItem) *RetailItem {
 	return &RetailItem{
 		ID:          i.Id,
 		Name:        i.Name,
+		ImageURL:    i.ImageUrl,
 		Description: i.Description,
 		Price:       i.Price,
 		CategoryID:  i.CategoryId,
@@ -747,12 +760,12 @@ func ToGQRetailCategoryList(cl []*pb.RetailCategory) []*RetailCategory {
 
 func ToGQMedicineCategory(c *pb.MedicineCategory) *MedicineCategory {
 	return &MedicineCategory{
-		ID:              c.Id,
-		CategoryName:    c.CategoryName,
-		ShopID:          c.ShopId,
-		MedicineItemsID: c.MedicineItemsId,
-		CreatedAt:       ToGQTime(c.CreatedAt),
-		UpdatedAt:       ToGQTime(c.UpdatedAt),
+		ID:           c.Id,
+		CategoryName: c.CategoryName,
+		ImageURL:     c.ImageUrl,
+		ShopID:       c.ShopId,
+		CreatedAt:    ToGQTime(c.CreatedAt),
+		UpdatedAt:    ToGQTime(c.UpdatedAt),
 	}
 }
 
@@ -761,6 +774,7 @@ func ToGQMedicineItem(i *pb.MedicineItem) *MedicineItem {
 		ID:          i.Id,
 		Name:        i.Name,
 		Price:       i.Price,
+		ImageURL:    i.ImageUrl,
 		Description: i.Description,
 		CategoryID:  i.CategoryId,
 		CreatedAt:   ToGQTime(i.CreatedAt),
@@ -905,6 +919,7 @@ func ToPbUpdateAddonStockReq(in *UpdateAddonStockInput) *pb.UpdateAddonStockReq 
 func ToPbCreateRetailCategoryReq(in *CreateRetailCategoryInput) *pb.CreateRetailCategoryReq {
 	return &pb.CreateRetailCategoryReq{
 		CategoryName: in.CategoryName,
+		ImageUrl:     in.ImageURL,
 		ShopId:       in.ShopID,
 	}
 }
@@ -912,8 +927,9 @@ func ToPbCreateRetailCategoryReq(in *CreateRetailCategoryInput) *pb.CreateRetail
 func ToPbCreateRetailItemReq(in *CreateRetailItemInput) *pb.CreateRetailItemReq {
 	return &pb.CreateRetailItemReq{
 		Name:        in.Name,
-		Description: in.Description,
 		Price:       in.Price,
+		ImageUrl:    in.ImageURL,
+		Description: in.Description,
 		CategoryId:  in.CategoryID,
 	}
 }
@@ -921,6 +937,7 @@ func ToPbCreateRetailItemReq(in *CreateRetailItemInput) *pb.CreateRetailItemReq 
 func ToPbCreateMedicineCategoryReq(in *CreateMedicineCategoryInput) *pb.CreateMedicineCategoryReq {
 	return &pb.CreateMedicineCategoryReq{
 		CategoryName: in.CategoryName,
+		ImageUrl:     in.ImageURL,
 		ShopId:       in.ShopID,
 	}
 }
@@ -929,6 +946,7 @@ func ToPbCreateMedicineItemReq(in *CreateMedicineItemInput) *pb.CreateMedicineIt
 	return &pb.CreateMedicineItemReq{
 		Name:        in.Name,
 		Price:       in.Price,
+		ImageUrl:    in.ImageURL,
 		Description: in.Description,
 		CategoryId:  in.CategoryID,
 	}

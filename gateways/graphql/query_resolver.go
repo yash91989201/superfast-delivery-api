@@ -99,24 +99,6 @@ func (r *queryResolver) ListShops(ctx context.Context, in *ListShopsInput) (*Lis
 	}, nil
 }
 
-func (r *queryResolver) GetItemVariant(ctx context.Context, id string) (*ItemVariant, error) {
-	res, err := r.server.productClient.GetItemVariant(ctx, &pb.GetItemVariantReq{Id: id})
-	if err != nil {
-		return nil, err
-	}
-
-	return ToGQItemVariant(res), err
-}
-
-func (r *queryResolver) GetItemAddon(ctx context.Context, id string) (*ItemAddon, error) {
-	res, err := r.server.productClient.GetItemAddon(ctx, &pb.GetItemAddonReq{Id: id})
-	if err != nil {
-		return nil, err
-	}
-
-	return ToGQItemAddon(res), err
-}
-
 func (r *queryResolver) GetRestaurantMenu(ctx context.Context, id string) (*RestaurantMenu, error) {
 	res, err := r.server.productClient.GetRestaurantMenu(ctx, &pb.GetRestaurantMenuReq{Id: id})
 	if err != nil {
@@ -134,6 +116,32 @@ func (r *queryResolver) GetMenuItem(ctx context.Context, id string) (*MenuItem, 
 	return ToGQMenuItem(res), nil
 }
 
+func (r *queryResolver) GetMenuItemVariant(ctx context.Context, in GetItemVariantInput) (*ItemVariant, error) {
+	res, err := r.server.productClient.GetMenuItemVariant(ctx, &pb.GetItemVariantReq{
+		ItemId:    in.ItemID,
+		VariantId: in.VariantID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemVariant(res), err
+}
+
+func (r *queryResolver) GetMenuItemAddon(ctx context.Context, in GetItemAddonInput) (*ItemAddon, error) {
+	res, err := r.server.productClient.GetMenuItemAddon(ctx, &pb.GetItemAddonReq{
+		ItemId:  in.ItemID,
+		AddonId: in.AddonID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemAddon(res), err
+}
+
 func (r *queryResolver) GetRetailCategory(ctx context.Context, id string) (*RetailCategory, error) {
 	res, err := r.server.productClient.GetRetailCategory(ctx, &pb.GetRetailCategoryReq{Id: id})
 	if err != nil {
@@ -149,6 +157,19 @@ func (r *queryResolver) GetRetailItem(ctx context.Context, id string) (*RetailIt
 		return nil, err
 	}
 	return ToGQRetailItem(res), nil
+}
+
+func (r *queryResolver) GetRetailItemVariant(ctx context.Context, in GetItemVariantInput) (*ItemVariant, error) {
+	res, err := r.server.productClient.GetRetailItemVariant(ctx, &pb.GetItemVariantReq{
+		ItemId:    in.ItemID,
+		VariantId: in.VariantID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return ToGQItemVariant(res), nil
 }
 
 func (r *queryResolver) GetMedicineCategory(ctx context.Context, id string) (*MedicineCategory, error) {
@@ -222,6 +243,40 @@ func (r *queryResolver) ListMenuItem(ctx context.Context, menuId string) (*ListM
 	}, nil
 }
 
+func (r *queryResolver) ListMenuItemVariant(ctx context.Context, itemID string) (*ListItemVariantOutput, error) {
+	res, err := r.server.productClient.ListMenuItemVariant(ctx, &pb.ListItemVariantReq{
+		ItemId: itemID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	variants := ToGQItemVariantList(res.Variants)
+
+	return &ListItemVariantOutput{
+		Variants:      variants,
+		TotalVariants: int32(len(variants)),
+	}, nil
+}
+
+func (r *queryResolver) ListMenuItemAddon(ctx context.Context, itemID string) (*ListItemAddonOutput, error) {
+	res, err := r.server.productClient.ListMenuItemAddon(ctx, &pb.ListItemAddonReq{
+		ItemId: itemID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	addons := ToGQItemAddonList(res.Addons)
+
+	return &ListItemAddonOutput{
+		Addons:      addons,
+		TotalAddons: int32(len(addons)),
+	}, nil
+}
+
 func (r *queryResolver) ListRetailItem(ctx context.Context, categoryId string) (*ListRetailItemOutput, error) {
 	res, err := r.server.productClient.ListRetailItem(ctx, &pb.ListRetailItemReq{CategoryId: categoryId})
 	if err != nil {
@@ -232,6 +287,23 @@ func (r *queryResolver) ListRetailItem(ctx context.Context, categoryId string) (
 	return &ListRetailItemOutput{
 		RetailItems: retailItems,
 		TotalItems:  int32(len(retailItems)),
+	}, nil
+}
+
+func (r *queryResolver) ListRetailItemVariant(ctx context.Context, itemID string) (*ListItemVariantOutput, error) {
+	res, err := r.server.productClient.ListRetailItemVariant(ctx, &pb.ListItemVariantReq{
+		ItemId: itemID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	variants := ToGQItemVariantList(res.Variants)
+
+	return &ListItemVariantOutput{
+		Variants:      variants,
+		TotalVariants: int32(len(variants)),
 	}, nil
 }
 

@@ -2,8 +2,7 @@ package product
 
 import (
 	"context"
-	"fmt"
-	"reflect"
+	"time"
 
 	"github.com/yash91989201/superfast-delivery-api/common/types"
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -16,48 +15,53 @@ type Repository interface {
 	Close(ctx context.Context) error
 	Ping(ctx context.Context) error
 
-	CreateItemVariant(ctx context.Context, variant *types.ItemVariant) error
-	CreateItemAddon(ctx context.Context, addon *types.ItemAddon) error
 	CreateRestaurantMenu(ctx context.Context, menu *types.RestaurantMenu) error
 	CreateMenuItem(ctx context.Context, item *types.MenuItem) error
+	CreateMenuItemVariant(ctx context.Context, variant *types.ItemVariant) error
+	CreateMenuItemAddon(ctx context.Context, addon *types.ItemAddon) error
 	CreateRetailCategory(ctx context.Context, category *types.RetailCategory) error
 	CreateRetailItem(ctx context.Context, item *types.RetailItem) error
+	CreateRetailItemVariant(ctx context.Context, variant *types.ItemVariant) error
 	CreateMedicineCategory(ctx context.Context, category *types.MedicineCategory) error
 	CreateMedicineItem(ctx context.Context, item *types.MedicineItem) error
 
-	GetItemVariant(ctx context.Context, variantID bson.ObjectID) (*types.ItemVariant, error)
-	GetItemAddon(ctx context.Context, addonID bson.ObjectID) (*types.ItemAddon, error)
 	GetRestaurantMenu(ctx context.Context, menuID bson.ObjectID) (*types.RestaurantMenu, error)
 	GetMenuItem(ctx context.Context, itemID bson.ObjectID) (*types.MenuItem, error)
+	GetMenuItemVariant(ctx context.Context, itemID bson.ObjectID, variantID bson.ObjectID) (*types.ItemVariant, error)
+	GetMenuItemAddon(ctx context.Context, itemID bson.ObjectID, addonID bson.ObjectID) (*types.ItemAddon, error)
 	GetRetailCategory(ctx context.Context, categoryID bson.ObjectID) (*types.RetailCategory, error)
 	GetRetailItem(ctx context.Context, itemID bson.ObjectID) (*types.RetailItem, error)
+	GetRetailItemVariant(ctx context.Context, itemID bson.ObjectID, variantID bson.ObjectID) (*types.ItemVariant, error)
 	GetMedicineCategory(ctx context.Context, categoryID bson.ObjectID) (*types.MedicineCategory, error)
 	GetMedicineItem(ctx context.Context, itemID bson.ObjectID) (*types.MedicineItem, error)
 
-	ListItemVariant(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemVariant, error)
-	ListItemAddon(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemAddon, error)
 	ListRestaurantMenu(ctx context.Context, shopID string) ([]*types.RestaurantMenu, error)
 	ListMenuItem(ctx context.Context, menuID bson.ObjectID) ([]*types.MenuItem, error)
+	ListMenuItemVariant(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemVariant, error)
+	ListMenuItemAddon(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemAddon, error)
 	ListRetailCategory(ctx context.Context, shopID string) ([]*types.RetailCategory, error)
 	ListRetailItem(ctx context.Context, categoryID bson.ObjectID) ([]*types.RetailItem, error)
+	ListRetailItemVariant(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemVariant, error)
 	ListMedicineCategory(ctx context.Context, shopID string) ([]*types.MedicineCategory, error)
 	ListMedicineItem(ctx context.Context, categoryID bson.ObjectID) ([]*types.MedicineItem, error)
 
-	UpdateItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error
-	UpdateItemAddon(ctx context.Context, addon *types.UpdateItemAddon) error
 	UpdateRestaurantMenu(ctx context.Context, menu *types.UpdateRestaurantMenu) error
 	UpdateMenuItem(ctx context.Context, item *types.UpdateMenuItem) error
+	UpdateMenuItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error
+	UpdateMenuItemAddon(ctx context.Context, addon *types.UpdateItemAddon) error
 	UpdateRetailCategory(ctx context.Context, category *types.UpdateRetailCategory) error
 	UpdateRetailItem(ctx context.Context, item *types.UpdateRetailItem) error
+	UpdateRetailItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error
 	UpdateMedicineCategory(ctx context.Context, category *types.UpdateMedicineCategory) error
 	UpdateMedicineItem(ctx context.Context, item *types.UpdateMedicineItem) error
 
-	DeleteItemVariant(ctx context.Context, variantID bson.ObjectID) error
-	DeleteItemAddon(ctx context.Context, addonID bson.ObjectID) error
 	DeleteRestaurantMenu(ctx context.Context, menuID bson.ObjectID) error
 	DeleteMenuItem(ctx context.Context, itemID bson.ObjectID) error
+	DeleteMenuItemVariant(ctx context.Context, itemID bson.ObjectID, variantID bson.ObjectID) error
+	DeleteMenuItemAddon(ctx context.Context, itemID bson.ObjectID, addonID bson.ObjectID) error
 	DeleteRetailCategory(ctx context.Context, categoryID bson.ObjectID) error
 	DeleteRetailItem(ctx context.Context, itemID bson.ObjectID) error
+	DeleteRetailItemVariant(ctx context.Context, itemID bson.ObjectID, variantID bson.ObjectID) error
 	DeleteMedicineCategory(ctx context.Context, categoryID bson.ObjectID) error
 	DeleteMedicineItem(ctx context.Context, itemID bson.ObjectID) error
 }
@@ -86,8 +90,6 @@ func NewMongoRepository(dbUrl string, dbName string) (Repository, error) {
 	return &mongoRepository{
 		client:           mongoClient,
 		db:               mongoDb,
-		itemVariant:      mongoDb.Collection("item_variant"),
-		itemAddon:        mongoDb.Collection("item_addon"),
 		restaurantMenu:   mongoDb.Collection("restaurant_menu"),
 		menuItem:         mongoDb.Collection("menu_item"),
 		retailCategory:   mongoDb.Collection("retail_category"),
@@ -103,24 +105,6 @@ func (r *mongoRepository) Close(ctx context.Context) error {
 
 func (r *mongoRepository) Ping(ctx context.Context) error {
 	return r.client.Ping(ctx, readpref.Primary())
-}
-
-func (r *mongoRepository) CreateItemVariant(ctx context.Context, variant *types.ItemVariant) error {
-	_, err := r.itemVariant.InsertOne(ctx, variant)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (r *mongoRepository) CreateItemAddon(ctx context.Context, addon *types.ItemAddon) error {
-	_, err := r.itemAddon.InsertOne(ctx, addon)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (r *mongoRepository) CreateRestaurantMenu(ctx context.Context, menu *types.RestaurantMenu) error {
@@ -141,6 +125,38 @@ func (r *mongoRepository) CreateMenuItem(ctx context.Context, item *types.MenuIt
 	return nil
 }
 
+func (r *mongoRepository) CreateMenuItemVariant(ctx context.Context, variant *types.ItemVariant) error {
+	filter := bson.M{"_id": variant.ItemID}
+	update := bson.M{
+		"$push": bson.M{"variants": variant},
+		"$set":  bson.M{"updated_at": time.Now()},
+	}
+	opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
+
+	var updated types.MenuItem
+	err := r.menuItem.FindOneAndUpdate(ctx, filter, update, opts).Decode(&updated)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *mongoRepository) CreateMenuItemAddon(ctx context.Context, addon *types.ItemAddon) error {
+	filter := bson.M{"_id": addon.ItemID}
+	update := bson.M{
+		"$push": bson.M{"addons": addon},
+		"$set":  bson.M{"updated_at": time.Now()},
+	}
+	opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
+
+	var updated types.MenuItem
+	err := r.menuItem.FindOneAndUpdate(ctx, filter, update, opts).Decode(&updated)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *mongoRepository) CreateRetailCategory(ctx context.Context, category *types.RetailCategory) error {
 	_, err := r.retailCategory.InsertOne(ctx, category)
 	if err != nil {
@@ -157,6 +173,21 @@ func (r *mongoRepository) CreateRetailItem(ctx context.Context, item *types.Reta
 	}
 
 	return nil
+}
+
+func (r *mongoRepository) CreateRetailItemVariant(ctx context.Context, variant *types.ItemVariant) error {
+	filter := bson.M{"_id": variant.ItemID}
+	update := bson.M{
+		"$push": bson.M{
+			"variants": variant,
+		},
+		"$set": bson.M{
+			"updated_at": time.Now(),
+		},
+	}
+
+	_, err := r.retailItem.UpdateOne(ctx, filter, update)
+	return err
 }
 
 func (r *mongoRepository) CreateMedicineCategory(ctx context.Context, category *types.MedicineCategory) error {
@@ -217,6 +248,42 @@ func (r *mongoRepository) GetMenuItem(ctx context.Context, itemID bson.ObjectID)
 	return &item, nil
 }
 
+func (r *mongoRepository) GetMenuItemVariant(ctx context.Context, itemID bson.ObjectID, variantID bson.ObjectID) (*types.ItemVariant, error) {
+	var item types.MenuItem
+	err := r.menuItem.FindOne(
+		ctx,
+		bson.M{"_id": itemID, "variants._id": variantID},
+		options.FindOne().SetProjection(bson.M{"variants.$": 1}),
+	).Decode(&item)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(item.Variants) == 0 {
+		return nil, mongo.ErrNoDocuments
+	}
+
+	return item.Variants[0], nil
+}
+
+func (r *mongoRepository) GetMenuItemAddon(ctx context.Context, itemID bson.ObjectID, addonID bson.ObjectID) (*types.ItemAddon, error) {
+	var item types.MenuItem
+	err := r.menuItem.FindOne(
+		ctx,
+		bson.M{"_id": itemID, "addons._id": addonID},
+		options.FindOne().SetProjection(bson.M{"addons.$": 1}),
+	).Decode(&item)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(item.Addons) == 0 {
+		return nil, mongo.ErrNoDocuments
+	}
+
+	return item.Addons[0], nil
+}
+
 func (r *mongoRepository) GetRetailCategory(ctx context.Context, categoryID bson.ObjectID) (*types.RetailCategory, error) {
 	var category types.RetailCategory
 	err := r.retailCategory.FindOne(ctx, bson.M{"_id": categoryID}).Decode(&category)
@@ -235,6 +302,24 @@ func (r *mongoRepository) GetRetailItem(ctx context.Context, itemID bson.ObjectI
 	}
 
 	return &item, nil
+}
+
+func (r *mongoRepository) GetRetailItemVariant(ctx context.Context, itemID bson.ObjectID, variantID bson.ObjectID) (*types.ItemVariant, error) {
+	var item types.RetailItem
+	err := r.retailItem.FindOne(
+		ctx,
+		bson.M{"_id": itemID, "variants._id": variantID},
+		options.FindOne().SetProjection(bson.M{"variants.$": 1}),
+	).Decode(&item)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(item.Variants) == 0 {
+		return nil, mongo.ErrNoDocuments
+	}
+
+	return item.Variants[0], nil
 }
 
 func (r *mongoRepository) GetMedicineCategory(ctx context.Context, categoryID bson.ObjectID) (*types.MedicineCategory, error) {
@@ -258,35 +343,23 @@ func (r *mongoRepository) GetMedicineItem(ctx context.Context, itemID bson.Objec
 }
 
 func (r *mongoRepository) ListItemVariant(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemVariant, error) {
-	var variants []*types.ItemVariant
-	cursor, err := r.itemVariant.Find(ctx, bson.M{"item_id": itemID})
+	var item types.MenuItem
+	err := r.menuItem.FindOne(ctx, bson.M{"_id": itemID}).Decode(&item)
 	if err != nil {
 		return nil, err
 	}
 
-	defer cursor.Close(ctx)
-
-	if err = cursor.All(ctx, &variants); err != nil {
-		return nil, err
-	}
-
-	return variants, nil
+	return item.Variants, nil
 }
 
 func (r *mongoRepository) ListItemAddon(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemAddon, error) {
-	var addons []*types.ItemAddon
-	cursor, err := r.itemAddon.Find(ctx, bson.M{"item_id": itemID})
+	var item types.MenuItem
+	err := r.menuItem.FindOne(ctx, bson.M{"_id": itemID}).Decode(&item)
 	if err != nil {
 		return nil, err
 	}
 
-	defer cursor.Close(ctx)
-
-	if err = cursor.All(ctx, &addons); err != nil {
-		return nil, err
-	}
-
-	return addons, nil
+	return item.Addons, nil
 }
 
 func (r *mongoRepository) ListRestaurantMenu(ctx context.Context, shopID string) ([]*types.RestaurantMenu, error) {
@@ -321,6 +394,24 @@ func (r *mongoRepository) ListMenuItem(ctx context.Context, menuID bson.ObjectID
 	return items, nil
 }
 
+func (r *mongoRepository) ListMenuItemVariant(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemVariant, error) {
+	var item types.MenuItem
+	err := r.menuItem.FindOne(ctx, bson.M{"_id": itemID}).Decode(&item)
+	if err != nil {
+		return nil, err
+	}
+	return item.Variants, nil
+}
+
+func (r *mongoRepository) ListMenuItemAddon(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemAddon, error) {
+	var item types.MenuItem
+	err := r.menuItem.FindOne(ctx, bson.M{"_id": itemID}).Decode(&item)
+	if err != nil {
+		return nil, err
+	}
+	return item.Addons, nil
+}
+
 func (r *mongoRepository) ListRetailCategory(ctx context.Context, shopID string) ([]*types.RetailCategory, error) {
 	var categories []*types.RetailCategory
 	cursor, err := r.retailCategory.Find(ctx, bson.M{"shop_id": shopID})
@@ -351,6 +442,15 @@ func (r *mongoRepository) ListRetailItem(ctx context.Context, categoryID bson.Ob
 	}
 
 	return items, nil
+}
+
+func (r *mongoRepository) ListRetailItemVariant(ctx context.Context, itemID bson.ObjectID) ([]*types.ItemVariant, error) {
+	var item types.RetailItem
+	err := r.retailItem.FindOne(ctx, bson.M{"_id": itemID}).Decode(&item)
+	if err != nil {
+		return nil, err
+	}
+	return item.Variants, nil
 }
 
 func (r *mongoRepository) ListMedicineCategory(ctx context.Context, shopID string) ([]*types.MedicineCategory, error) {
@@ -386,116 +486,252 @@ func (r *mongoRepository) ListMedicineItem(ctx context.Context, categoryID bson.
 }
 
 func (r *mongoRepository) UpdateItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error {
-	filter, update, err := BuildUpdateDocument(variant)
-	if err != nil {
-		return err
+	filter := bson.M{"_id": variant.ID}
+	setDoc := bson.M{}
+
+	if variant.VariantName != nil {
+		setDoc["variant_name"] = *variant.VariantName
+	}
+	if variant.RelativePricing != nil {
+		setDoc["relative_pricing"] = *variant.RelativePricing
+	}
+	if variant.RelativePrice != nil {
+		setDoc["relative_price"] = *variant.RelativePrice
+	}
+	if variant.Price != nil {
+		setDoc["price"] = *variant.Price
+	}
+	if variant.ImageURL != nil {
+		setDoc["image_url"] = *variant.ImageURL
+	}
+	if variant.Description != nil {
+		setDoc["description"] = *variant.Description
 	}
 
-	if len(update) == 0 {
-		return nil
-	}
-
-	_, err = r.itemVariant.UpdateOne(ctx, filter, update)
-
+	update := bson.M{"$set": setDoc}
+	_, err := r.itemVariant.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateItemAddon(ctx context.Context, addon *types.UpdateItemAddon) error {
-	filter, update, err := BuildUpdateDocument(addon)
-	if err != nil {
-		return err
+	filter := bson.M{"_id": addon.ID}
+	setDoc := bson.M{}
+
+	if addon.AddonName != nil {
+		setDoc["addon_name"] = *addon.AddonName
+	}
+	if addon.AddonPrice != nil {
+		setDoc["addon_price"] = *addon.AddonPrice
+	}
+	if addon.ImageURL != nil {
+		setDoc["image_url"] = *addon.ImageURL
+	}
+	if addon.Description != nil {
+		setDoc["description"] = *addon.Description
 	}
 
-	if len(update) == 0 {
-		return nil
-	}
-
-	_, err = r.itemVariant.UpdateOne(ctx, filter, update)
-
+	update := bson.M{"$set": setDoc}
+	_, err := r.itemAddon.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateRestaurantMenu(ctx context.Context, menu *types.UpdateRestaurantMenu) error {
-	filter, update, err := BuildUpdateDocument(menu)
-	if err != nil {
-		return err
+	filter := bson.M{"_id": menu.ID}
+	setDoc := bson.M{}
+
+	if menu.MenuName != nil {
+		setDoc["menu_name"] = *menu.MenuName
+	}
+	if menu.ImageURL != nil {
+		setDoc["image_url"] = *menu.ImageURL
 	}
 
-	if len(update) == 0 {
-		return nil
-	}
-
-	_, err = r.restaurantMenu.UpdateOne(ctx, filter, update)
+	setDoc["updated_at"] = time.Now()
+	update := bson.M{"$set": setDoc}
+	_, err := r.restaurantMenu.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateMenuItem(ctx context.Context, item *types.UpdateMenuItem) error {
-	filter, update, err := BuildUpdateDocument(item)
-	if err != nil {
-		return err
+	filter := bson.M{"_id": item.ID}
+	setDoc := bson.M{}
+
+	if item.Name != nil {
+		setDoc["name"] = *item.Name
+	}
+	if item.Price != nil {
+		setDoc["price"] = *item.Price
+	}
+	if item.ImageURL != nil {
+		setDoc["image_url"] = *item.ImageURL
+	}
+	if item.Description != nil {
+		setDoc["description"] = *item.Description
 	}
 
-	if len(update) == 0 {
-		return nil
-	}
+	setDoc["updated_at"] = time.Now()
+	update := bson.M{"$set": setDoc}
+	_, err := r.menuItem.UpdateOne(ctx, filter, update)
+	return err
+}
 
-	_, err = r.menuItem.UpdateOne(ctx, filter, update)
+func (r *mongoRepository) UpdateMenuItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error {
+	filter := bson.M{"variants._id": variant.ID}
+	setFields := bson.M{}
+	if variant.VariantName != nil {
+		setFields["variants.$.variant_name"] = *variant.VariantName
+	}
+	if variant.RelativePricing != nil {
+		setFields["variants.$.relative_pricing"] = *variant.RelativePricing
+	}
+	if variant.RelativePrice != nil {
+		setFields["variants.$.relative_price"] = *variant.RelativePrice
+	}
+	if variant.Price != nil {
+		setFields["variants.$.price"] = *variant.Price
+	}
+	if variant.ImageURL != nil {
+		setFields["variants.$.image_url"] = *variant.ImageURL
+	}
+	if variant.Description != nil {
+		setFields["variants.$.description"] = *variant.Description
+	}
+	setFields["updated_at"] = time.Now()
+
+	update := bson.M{"$set": setFields}
+	_, err := r.menuItem.UpdateOne(ctx, filter, update)
+	return err
+}
+
+func (r *mongoRepository) UpdateMenuItemAddon(ctx context.Context, addon *types.UpdateItemAddon) error {
+	filter := bson.M{"addons._id": addon.ID}
+	setFields := bson.M{}
+	if addon.AddonName != nil {
+		setFields["addons.$.addon_name"] = *addon.AddonName
+	}
+	if addon.AddonPrice != nil {
+		setFields["addons.$.addon_price"] = *addon.AddonPrice
+	}
+	if addon.ImageURL != nil {
+		setFields["addons.$.image_url"] = *addon.ImageURL
+	}
+	if addon.Description != nil {
+		setFields["addons.$.description"] = *addon.Description
+	}
+	setFields["updated_at"] = time.Now()
+
+	update := bson.M{"$set": setFields}
+	_, err := r.menuItem.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateRetailCategory(ctx context.Context, category *types.UpdateRetailCategory) error {
-	filter, update, err := BuildUpdateDocument(category)
-	if err != nil {
-		return err
+	filter := bson.M{"_id": category.ID}
+	setDoc := bson.M{}
+
+	if category.CategoryName != nil {
+		setDoc["category_name"] = *category.CategoryName
+	}
+	if category.ImageURL != nil {
+		setDoc["image_url"] = *category.ImageURL
 	}
 
-	if len(update) == 0 {
-		return nil
-	}
-
-	_, err = r.retailCategory.UpdateOne(ctx, filter, update)
+	setDoc["updated_at"] = time.Now()
+	update := bson.M{"$set": setDoc}
+	_, err := r.retailCategory.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateRetailItem(ctx context.Context, item *types.UpdateRetailItem) error {
-	filter, update, err := BuildUpdateDocument(item)
-	if err != nil {
-		return err
+	filter := bson.M{"_id": item.ID}
+	setDoc := bson.M{}
+
+	if item.Name != nil {
+		setDoc["name"] = *item.Name
+	}
+	if item.Price != nil {
+		setDoc["price"] = *item.Price
+	}
+	if item.ImageURL != nil {
+		setDoc["image_url"] = *item.ImageURL
+	}
+	if item.Description != nil {
+		setDoc["description"] = *item.Description
 	}
 
-	if len(update) == 0 {
-		return nil
+	setDoc["updated_at"] = time.Now()
+	update := bson.M{"$set": setDoc}
+	_, err := r.retailItem.UpdateOne(ctx, filter, update)
+	return err
+}
+
+func (r *mongoRepository) UpdateRetailItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error {
+	filter := bson.M{"variants._id": variant.ID}
+	update := bson.M{
+		"$set":         bson.M{},
+		"$currentDate": bson.M{"updated_at": true},
 	}
 
-	_, err = r.retailItem.UpdateOne(ctx, filter, update)
+	if variant.VariantName != nil {
+		update["$set"].(bson.M)["variants.$.variant_name"] = *variant.VariantName
+	}
+	if variant.RelativePricing != nil {
+		update["$set"].(bson.M)["variants.$.relative_pricing"] = *variant.RelativePricing
+	}
+	if variant.RelativePrice != nil {
+		update["$set"].(bson.M)["variants.$.relative_price"] = *variant.RelativePrice
+	}
+	if variant.Price != nil {
+		update["$set"].(bson.M)["variants.$.price"] = *variant.Price
+	}
+	if variant.ImageURL != nil {
+		update["$set"].(bson.M)["variants.$.image_url"] = *variant.ImageURL
+	}
+	if variant.Description != nil {
+		update["$set"].(bson.M)["variants.$.description"] = *variant.Description
+	}
+
+	_, err := r.retailItem.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateMedicineCategory(ctx context.Context, category *types.UpdateMedicineCategory) error {
-	filter, update, err := BuildUpdateDocument(category)
-	if err != nil {
-		return err
+	filter := bson.M{"_id": category.ID}
+	setDoc := bson.M{}
+
+	if category.CategoryName != nil {
+		setDoc["category_name"] = *category.CategoryName
+	}
+	if category.ImageURL != nil {
+		setDoc["image_url"] = *category.ImageURL
 	}
 
-	if len(update) == 0 {
-		return nil
-	}
-
-	_, err = r.medicineCategory.UpdateOne(ctx, filter, update)
+	setDoc["updated_at"] = time.Now()
+	update := bson.M{"$set": setDoc}
+	_, err := r.medicineCategory.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateMedicineItem(ctx context.Context, item *types.UpdateMedicineItem) error {
-	filter, update, err := BuildUpdateDocument(item)
-	if err != nil {
-		return err
+	filter := bson.M{"_id": item.ID}
+	setDoc := bson.M{}
+
+	if item.Name != nil {
+		setDoc["name"] = *item.Name
+	}
+	if item.Price != nil {
+		setDoc["price"] = *item.Price
+	}
+	if item.ImageURL != nil {
+		setDoc["image_url"] = *item.ImageURL
+	}
+	if item.Description != nil {
+		setDoc["description"] = *item.Description
 	}
 
-	if len(update) == 0 {
-		return nil
-	}
-
-	_, err = r.medicineItem.UpdateOne(ctx, filter, update)
+	setDoc["updated_at"] = time.Now()
+	update := bson.M{"$set": setDoc}
+	_, err := r.medicineItem.UpdateOne(ctx, filter, update)
 	return err
 }
 
@@ -519,6 +755,36 @@ func (r *mongoRepository) DeleteMenuItem(ctx context.Context, itemID bson.Object
 	return err
 }
 
+func (r *mongoRepository) DeleteMenuItemVariant(ctx context.Context, itemID bson.ObjectID, variantID bson.ObjectID) error {
+	filter := bson.M{"_id": itemID}
+	update := bson.M{
+		"$pull": bson.M{
+			"variants": bson.M{"_id": variantID},
+		},
+		"$set": bson.M{
+			"updated_at": time.Now(),
+		},
+	}
+
+	_, err := r.menuItem.UpdateOne(ctx, filter, update)
+	return err
+}
+
+func (r *mongoRepository) DeleteMenuItemAddon(ctx context.Context, itemID bson.ObjectID, addonID bson.ObjectID) error {
+	filter := bson.M{"_id": itemID}
+	update := bson.M{
+		"$pull": bson.M{
+			"addons": bson.M{"_id": addonID},
+		},
+		"$set": bson.M{
+			"updated_at": time.Now(),
+		},
+	}
+
+	_, err := r.menuItem.UpdateOne(ctx, filter, update)
+	return err
+}
+
 func (r *mongoRepository) DeleteRetailCategory(ctx context.Context, categoryID bson.ObjectID) error {
 	_, err := r.retailCategory.DeleteOne(ctx, bson.M{"_id": categoryID})
 	return err
@@ -526,6 +792,21 @@ func (r *mongoRepository) DeleteRetailCategory(ctx context.Context, categoryID b
 
 func (r *mongoRepository) DeleteRetailItem(ctx context.Context, itemID bson.ObjectID) error {
 	_, err := r.retailItem.DeleteOne(ctx, bson.M{"_id": itemID})
+	return err
+}
+
+func (r *mongoRepository) DeleteRetailItemVariant(ctx context.Context, itemID bson.ObjectID, variantID bson.ObjectID) error {
+	filter := bson.M{"_id": itemID}
+	update := bson.M{
+		"$pull": bson.M{
+			"variants": bson.M{"_id": variantID},
+		},
+		"$set": bson.M{
+			"updated_at": time.Now(),
+		},
+	}
+
+	_, err := r.retailItem.UpdateOne(ctx, filter, update)
 	return err
 }
 
@@ -537,58 +818,4 @@ func (r *mongoRepository) DeleteMedicineCategory(ctx context.Context, categoryID
 func (r *mongoRepository) DeleteMedicineItem(ctx context.Context, itemID bson.ObjectID) error {
 	_, err := r.medicineItem.DeleteOne(ctx, bson.M{"_id": itemID})
 	return err
-}
-
-func BuildUpdateDocument(updateStruct any) (filter bson.M, update bson.M, err error) {
-	v := reflect.ValueOf(updateStruct).Elem()
-	t := v.Type()
-
-	set := make(bson.M)
-	unset := make(bson.M)
-	filter = make(bson.M)
-	update = make(bson.M)
-
-	// Find ID field
-	for i := range t.NumField() {
-		field := t.Field(i)
-		if bsonTag := field.Tag.Get("bson"); bsonTag == "_id" {
-			filter["_id"] = v.Field(i).Interface()
-			break
-		}
-	}
-
-	if filter["_id"] == nil {
-		return nil, nil, fmt.Errorf("missing _id field")
-	}
-
-	// Process fields
-	for i := range t.NumField() {
-		field := t.Field(i)
-		bsonTag := field.Tag.Get("bson")
-		fieldValue := v.Field(i)
-
-		if bsonTag == "_id" || bsonTag == "" {
-			continue
-		}
-
-		if fieldValue.Kind() == reflect.Ptr {
-			if fieldValue.IsNil() {
-				unset[bsonTag] = ""
-			} else {
-				set[bsonTag] = fieldValue.Elem().Interface()
-			}
-		} else {
-			set[bsonTag] = fieldValue.Interface()
-		}
-	}
-
-	// Build final update command
-	if len(set) > 0 {
-		update["$set"] = set
-	}
-	if len(unset) > 0 {
-		update["$unset"] = unset
-	}
-
-	return filter, update, nil
 }

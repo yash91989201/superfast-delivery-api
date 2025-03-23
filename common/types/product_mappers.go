@@ -25,13 +25,12 @@ func ToRestaurantMenu(rm *pb.RestaurantMenu) *RestaurantMenu {
 	}
 
 	return &RestaurantMenu{
-		ID:          HexToObjectID(rm.Id),
-		MenuName:    rm.MenuName,
-		ImageURL:    rm.ImageUrl,
-		ShopID:      rm.ShopId,
-		MenuItemsID: stringsToBsonObjectIDs(rm.MenuItemsId),
-		CreatedAt:   ToTime(rm.CreatedAt),
-		UpdatedAt:   ToTime(rm.UpdatedAt),
+		ID:        HexToObjectID(rm.Id),
+		MenuName:  rm.MenuName,
+		ImageURL:  rm.ImageUrl,
+		ShopID:    rm.ShopId,
+		CreatedAt: ToTime(rm.CreatedAt),
+		UpdatedAt: ToTime(rm.UpdatedAt),
 	}
 }
 
@@ -60,13 +59,12 @@ func ToRetailCategory(rc *pb.RetailCategory) *RetailCategory {
 	}
 
 	return &RetailCategory{
-		ID:            HexToObjectID(rc.Id),
-		CategoryName:  rc.CategoryName,
-		ImageURL:      rc.ImageUrl,
-		ShopID:        rc.ShopId,
-		RetailItemsID: stringsToBsonObjectIDs(rc.RetailItemsId),
-		CreatedAt:     ToTime(rc.CreatedAt),
-		UpdatedAt:     ToTime(rc.UpdatedAt),
+		ID:           HexToObjectID(rc.Id),
+		CategoryName: rc.CategoryName,
+		ImageURL:     rc.ImageUrl,
+		ShopID:       rc.ShopId,
+		CreatedAt:    ToTime(rc.CreatedAt),
+		UpdatedAt:    ToTime(rc.UpdatedAt),
 	}
 }
 
@@ -94,13 +92,12 @@ func ToMedicineCategory(mc *pb.MedicineCategory) *MedicineCategory {
 	}
 
 	return &MedicineCategory{
-		ID:              HexToObjectID(mc.Id),
-		CategoryName:    mc.CategoryName,
-		ImageURL:        mc.ImageUrl,
-		ShopID:          mc.ShopId,
-		MedicineItemsID: stringsToBsonObjectIDs(mc.MedicineItemsId),
-		CreatedAt:       ToTime(mc.CreatedAt),
-		UpdatedAt:       ToTime(mc.UpdatedAt),
+		ID:           HexToObjectID(mc.Id),
+		CategoryName: mc.CategoryName,
+		ImageURL:     mc.ImageUrl,
+		ShopID:       mc.ShopId,
+		CreatedAt:    ToTime(mc.CreatedAt),
+		UpdatedAt:    ToTime(mc.UpdatedAt),
 	}
 }
 
@@ -169,6 +166,7 @@ func ToCreateItemVariant(iv *pb.CreateItemVariantReq) *CreateItemVariant {
 		RelativePrice:   iv.RelativePrice,
 		RelativePricing: iv.RelativePricing,
 		Price:           iv.Price,
+		ImageURL:        iv.ImageUrl,
 		Description:     iv.Description,
 		ItemID:          HexToObjectID(iv.ItemId),
 	}
@@ -182,6 +180,7 @@ func ToCreateItemAddon(ia *pb.CreateItemAddonReq) *CreateItemAddon {
 	return &CreateItemAddon{
 		AddonName:   ia.AddonName,
 		AddonPrice:  ia.AddonPrice,
+		ImageURL:    ia.ImageUrl,
 		Description: ia.Description,
 		ItemID:      HexToObjectID(ia.ItemId),
 	}
@@ -303,13 +302,12 @@ func ToPbRestaurantMenu(rm *RestaurantMenu) *pb.RestaurantMenu {
 	}
 
 	return &pb.RestaurantMenu{
-		Id:          rm.ID.Hex(),
-		MenuName:    rm.MenuName,
-		ImageUrl:    rm.ImageURL,
-		ShopId:      rm.ShopID,
-		MenuItemsId: bsonObjectIDsToStrings(rm.MenuItemsID),
-		CreatedAt:   ToPbTimestamp(rm.CreatedAt),
-		UpdatedAt:   ToPbTimestamp(rm.UpdatedAt),
+		Id:        rm.ID.Hex(),
+		MenuName:  rm.MenuName,
+		ImageUrl:  rm.ImageURL,
+		ShopId:    rm.ShopID,
+		CreatedAt: ToPbTimestamp(rm.CreatedAt),
+		UpdatedAt: ToPbTimestamp(rm.UpdatedAt),
 	}
 }
 
@@ -356,13 +354,12 @@ func ToPbRetailCategory(rc *RetailCategory) *pb.RetailCategory {
 	}
 
 	return &pb.RetailCategory{
-		Id:            rc.ID.Hex(),
-		CategoryName:  rc.CategoryName,
-		ImageUrl:      rc.ImageURL,
-		ShopId:        rc.ShopID,
-		RetailItemsId: bsonObjectIDsToStrings(rc.RetailItemsID),
-		CreatedAt:     ToPbTimestamp(rc.CreatedAt),
-		UpdatedAt:     ToPbTimestamp(rc.UpdatedAt),
+		Id:           rc.ID.Hex(),
+		CategoryName: rc.CategoryName,
+		ImageUrl:     rc.ImageURL,
+		ShopId:       rc.ShopID,
+		CreatedAt:    ToPbTimestamp(rc.CreatedAt),
+		UpdatedAt:    ToPbTimestamp(rc.UpdatedAt),
 	}
 }
 
@@ -408,13 +405,12 @@ func ToPbMedicineCategory(mc *MedicineCategory) *pb.MedicineCategory {
 	}
 
 	return &pb.MedicineCategory{
-		Id:              mc.ID.Hex(),
-		CategoryName:    mc.CategoryName,
-		ImageUrl:        mc.ImageURL,
-		ShopId:          mc.ShopID,
-		MedicineItemsId: bsonObjectIDsToStrings(mc.MedicineItemsID),
-		CreatedAt:       ToPbTimestamp(mc.CreatedAt),
-		UpdatedAt:       ToPbTimestamp(mc.UpdatedAt),
+		Id:           mc.ID.Hex(),
+		CategoryName: mc.CategoryName,
+		ImageUrl:     mc.ImageURL,
+		ShopId:       mc.ShopID,
+		CreatedAt:    ToPbTimestamp(mc.CreatedAt),
+		UpdatedAt:    ToPbTimestamp(mc.UpdatedAt),
 	}
 }
 
@@ -459,10 +455,10 @@ func ToUpdateItemAddon(req *pb.UpdateItemAddonReq) *UpdateItemAddon {
 
 	return &UpdateItemAddon{
 		ID:          HexToObjectID(req.Id),
-		AddonName:   new(string),
-		AddonPrice:  new(float64),
-		ImageURL:    new(string),
-		Description: new(string),
+		AddonName:   req.AddonName,
+		AddonPrice:  req.AddonPrice,
+		ImageURL:    req.ImageUrl,
+		Description: req.Description,
 	}
 }
 
@@ -473,9 +469,8 @@ func ToUpdateRestaurantMenu(req *pb.UpdateRestaurantMenuReq) *UpdateRestaurantMe
 
 	return &UpdateRestaurantMenu{
 		ID:       HexToObjectID(req.Id),
-		MenuName: new(string),
-		ImageURL: new(string),
-		ShopID:   new(string),
+		MenuName: req.MenuName,
+		ImageURL: req.ImageUrl,
 	}
 }
 
@@ -486,10 +481,10 @@ func ToUpdateMenuItem(req *pb.UpdateMenuItemReq) *UpdateMenuItem {
 
 	return &UpdateMenuItem{
 		ID:          HexToObjectID(req.Id),
-		Name:        new(string),
-		Price:       new(float64),
-		ImageURL:    new(string),
-		Description: new(string),
+		Name:        req.Name,
+		Price:       req.Price,
+		ImageURL:    req.ImageUrl,
+		Description: req.Description,
 	}
 }
 
@@ -500,9 +495,8 @@ func ToUpdateRetailCategory(req *pb.UpdateRetailCategoryReq) *UpdateRetailCatego
 
 	return &UpdateRetailCategory{
 		ID:           HexToObjectID(req.Id),
-		CategoryName: new(string),
-		ImageURL:     new(string),
-		ShopID:       new(string),
+		CategoryName: req.CategoryName,
+		ImageURL:     req.ImageUrl,
 	}
 }
 
@@ -513,10 +507,10 @@ func ToUpdateRetailItem(req *pb.UpdateRetailItemReq) *UpdateRetailItem {
 
 	return &UpdateRetailItem{
 		ID:          HexToObjectID(req.Id),
-		Name:        new(string),
-		Price:       new(float64),
-		ImageURL:    new(string),
-		Description: new(string),
+		Name:        req.Name,
+		Price:       req.Price,
+		ImageURL:    req.ImageUrl,
+		Description: req.Description,
 	}
 }
 
@@ -527,9 +521,8 @@ func ToUpdateMedicineCategory(req *pb.UpdateMedicineCategoryReq) *UpdateMedicine
 
 	return &UpdateMedicineCategory{
 		ID:           HexToObjectID(req.Id),
-		CategoryName: new(string),
-		ImageURL:     new(string),
-		ShopID:       new(string),
+		CategoryName: req.CategoryName,
+		ImageURL:     req.ImageUrl,
 	}
 
 }
@@ -541,9 +534,9 @@ func ToUpdateMedicineItem(req *pb.UpdateMedicineItemReq) *UpdateMedicineItem {
 
 	return &UpdateMedicineItem{
 		ID:          HexToObjectID(req.Id),
-		Name:        new(string),
-		Price:       new(float64),
-		ImageURL:    new(string),
-		Description: new(string),
+		Name:        req.Name,
+		Price:       req.Price,
+		ImageURL:    req.ImageUrl,
+		Description: req.Description,
 	}
 }

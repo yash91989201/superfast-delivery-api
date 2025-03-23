@@ -27,13 +27,12 @@ type ItemAddon struct {
 }
 
 type RestaurantMenu struct {
-	ID          bson.ObjectID   `bson:"_id" json:"id"`
-	MenuName    string          `bson:"menu_name" json:"menu_name"`
-	ImageURL    *string         `bson:"image_url" json:"imageUrl"`
-	ShopID      string          `bson:"shop_id" json:"shop_id"`
-	MenuItemsID []bson.ObjectID `bson:"menu_items_id" json:"menu_items_id"`
-	CreatedAt   time.Time       `bson:"created_at" json:"created_at"`
-	UpdatedAt   time.Time       `bson:"updated_at" json:"updated_at"`
+	ID        bson.ObjectID `bson:"_id" json:"id"`
+	MenuName  string        `bson:"menu_name" json:"menu_name"`
+	ImageURL  *string       `bson:"image_url" json:"imageUrl"`
+	ShopID    string        `bson:"shop_id" json:"shop_id"`
+	CreatedAt time.Time     `bson:"created_at" json:"created_at"`
+	UpdatedAt time.Time     `bson:"updated_at" json:"updated_at"`
 }
 
 type MenuItem struct {
@@ -42,21 +41,20 @@ type MenuItem struct {
 	Price       float64        `bson:"price" json:"price"`
 	ImageURL    *string        `bson:"image_url" json:"imageUrl"`
 	Description *string        `bson:"description" json:"description"`
+	MenuID      bson.ObjectID  `bson:"menu_id" json:"menu_id"`
 	Variants    []*ItemVariant `bson:"variants" json:"variants"`
 	Addons      []*ItemAddon   `bson:"addons" json:"addons"`
-	MenuID      bson.ObjectID  `bson:"menu_id" json:"menu_id"`
 	CreatedAt   time.Time      `bson:"created_at" json:"created_at"`
 	UpdatedAt   time.Time      `bson:"updated_at" json:"updated_at"`
 }
 
 type RetailCategory struct {
-	ID            bson.ObjectID   `bson:"_id" json:"id"`
-	CategoryName  string          `bson:"category_name" json:"category_name"`
-	ImageURL      *string         `bson:"image_url" json:"imageUrl"`
-	ShopID        string          `bson:"shop_id" json:"shop_id"`
-	RetailItemsID []bson.ObjectID `bson:"retail_items_id" json:"retail_items_id"`
-	CreatedAt     time.Time       `bson:"created_at" json:"created_at"`
-	UpdatedAt     time.Time       `bson:"updated_at" json:"updated_at"`
+	ID           bson.ObjectID `bson:"_id" json:"id"`
+	CategoryName string        `bson:"category_name" json:"category_name"`
+	ImageURL     *string       `bson:"image_url" json:"imageUrl"`
+	ShopID       string        `bson:"shop_id" json:"shop_id"`
+	CreatedAt    time.Time     `bson:"created_at" json:"created_at"`
+	UpdatedAt    time.Time     `bson:"updated_at" json:"updated_at"`
 }
 
 type RetailItem struct {
@@ -72,13 +70,12 @@ type RetailItem struct {
 }
 
 type MedicineCategory struct {
-	ID              bson.ObjectID   `bson:"_id" json:"id"`
-	CategoryName    string          `bson:"category_name" json:"category_name"`
-	ImageURL        *string         `bson:"image_url" json:"imageUrl"`
-	ShopID          string          `bson:"shop_id" json:"shop_id"`
-	MedicineItemsID []bson.ObjectID `bson:"medicine_items_id" json:"medicine_items_id"`
-	CreatedAt       time.Time       `bson:"created_at" json:"created_at"`
-	UpdatedAt       time.Time       `bson:"updated_at" json:"updated_at"`
+	ID           bson.ObjectID `bson:"_id" json:"id"`
+	CategoryName string        `bson:"category_name" json:"category_name"`
+	ImageURL     *string       `bson:"image_url" json:"imageUrl"`
+	ShopID       string        `bson:"shop_id" json:"shop_id"`
+	CreatedAt    time.Time     `bson:"created_at" json:"created_at"`
+	UpdatedAt    time.Time     `bson:"updated_at" json:"updated_at"`
 }
 
 type MedicineItem struct {
@@ -174,7 +171,6 @@ type UpdateRestaurantMenu struct {
 	ID       bson.ObjectID `bson:"_id" json:"id"`
 	MenuName *string       `bson:"menu_name,omitempty" json:"menu_name,omitempty"`
 	ImageURL *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
-	ShopID   *string       `bson:"shop_id,omitempty" json:"shop_id,omitempty"`
 }
 
 type UpdateMenuItem struct {
@@ -189,7 +185,6 @@ type UpdateRetailCategory struct {
 	ID           bson.ObjectID `bson:"_id" json:"id"`
 	CategoryName *string       `bson:"category_name,omitempty" json:"category_name,omitempty"`
 	ImageURL     *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
-	ShopID       *string       `bson:"shop_id,omitempty" json:"shop_id,omitempty"`
 }
 
 type UpdateRetailItem struct {
@@ -204,7 +199,6 @@ type UpdateMedicineCategory struct {
 	ID           bson.ObjectID `bson:"_id" json:"id"`
 	CategoryName *string       `bson:"category_name,omitempty" json:"category_name,omitempty"`
 	ImageURL     *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
-	ShopID       *string       `bson:"shop_id,omitempty" json:"shop_id,omitempty"`
 }
 
 type UpdateMedicineItem struct {

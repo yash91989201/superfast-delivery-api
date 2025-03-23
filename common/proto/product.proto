@@ -32,22 +32,21 @@ message RestaurantMenu {
   string menu_name = 2;
   optional string image_url = 3;
   string shop_id = 4;
-  repeated string menu_items_id = 5;
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
 }
 
 message MenuItem {
   string id = 1;
   string name = 2;
-  double price = 4;
-  optional string image_url = 5;
-  optional string description = 6;
+  double price = 3;
+  optional string image_url = 4;
+  optional string description = 5;
+  string menu_id = 6;
   repeated ItemVariant variants = 7;
   repeated ItemAddon addons = 8;
-  string menu_id = 9;
-  google.protobuf.Timestamp created_at = 10;
-  google.protobuf.Timestamp updated_at = 11;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
 }
 
 message RetailCategory {
@@ -55,9 +54,8 @@ message RetailCategory {
   string category_name = 2;
   optional string image_url = 3;
   string shop_id = 4;
-  repeated string retail_items_id = 5;
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
 }
 
 message RetailItem {
@@ -77,9 +75,8 @@ message MedicineCategory {
   string category_name = 2;
   optional string image_url = 3;
   string shop_id = 4;
-  repeated string medicine_items_id = 5;
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
 }
 
 message MedicineItem {
@@ -154,23 +151,25 @@ message CreateMedicineItemReq {
 }
 
 message GetItemVariantReq {
-  string id = 1;
+  string item_id = 1;
+  string variant_id = 2;
 }
 
 message GetItemAddonReq {
-  string id = 1;
+  string item_id = 1;
+  string addon_id = 2;
 }
 
 message ListItemVariantReq {
   string item_id = 1;
 }
 
-message ListItemVariantRes {
-  repeated ItemVariant variants = 1;
-}
-
 message ListItemAddonReq {
   string item_id = 1;
+}
+
+message ListItemVariantRes {
+  repeated ItemVariant variants = 1;
 }
 
 message ListItemAddonRes {
@@ -257,6 +256,7 @@ message UpdateItemVariantReq {
   optional double price = 5;
   optional string image_url = 6;
   optional string description = 7;
+  string item_id = 8;
 }
 
 message UpdateItemAddonReq {
@@ -265,6 +265,7 @@ message UpdateItemAddonReq {
   optional double addon_price = 3;
   optional string image_url = 4;
   optional string description = 5;
+  string item_id = 6;
 }
 
 message UpdateRestaurantMenuReq {
@@ -310,11 +311,13 @@ message UpdateMedicineItemReq {
 }
 
 message DeleteItemVariantReq {
-  string id = 1;
+  string item_id = 1;
+  string variant_id = 2;
 }
 
 message DeleteItemAddonReq {
-  string id = 1;
+  string item_id = 1;
+  string addon_id = 2;
 }
 
 message DeleteRestaurantMenuReq {
@@ -342,48 +345,53 @@ message DeleteMedicineItemReq {
 }
 
 service ProductService {
-  rpc CreateItemVariant(CreateItemVariantReq) returns (ItemVariant) {}
-  rpc CreateItemAddon(CreateItemAddonReq) returns (ItemAddon) {}
   rpc CreateRestaurantMenu(CreateRestaurantMenuReq) returns (RestaurantMenu) {}
   rpc CreateMenuItem(CreateMenuItemReq) returns (MenuItem) {}
+  rpc CreateMenuItemVariant(CreateItemVariantReq) returns (ItemVariant) {}
+  rpc CreateMenuItemAddon(CreateItemAddonReq) returns (ItemAddon) {}
   rpc CreateRetailCategory(CreateRetailCategoryReq) returns (RetailCategory) {}
   rpc CreateRetailItem(CreateRetailItemReq) returns (RetailItem) {}
+  rpc CreateRetailItemVariant(CreateItemVariantReq) returns (ItemVariant) {}
   rpc CreateMedicineCategory(CreateMedicineCategoryReq) returns (MedicineCategory) {}
   rpc CreateMedicineItem(CreateMedicineItemReq) returns (MedicineItem) {}
 
-  rpc GetItemVariant(GetItemVariantReq) returns (ItemVariant) {}
-  rpc GetItemAddon(GetItemAddonReq) returns (ItemAddon) {}
   rpc GetRestaurantMenu(GetRestaurantMenuReq) returns (RestaurantMenu) {}
   rpc GetMenuItem(GetMenuItemReq) returns (MenuItem) {}
+  rpc GetMenuItemVariant(GetItemVariantReq) returns (ItemVariant) {}
+  rpc GetMenuItemAddon(GetItemAddonReq) returns (ItemAddon) {}
   rpc GetRetailCategory(GetRetailCategoryReq) returns (RetailCategory) {}
   rpc GetRetailItem(GetRetailItemReq) returns (RetailItem) {}
+  rpc GetRetailItemVariant(GetItemVariantReq) returns (ItemVariant) {}
   rpc GetMedicineCategory(GetMedicineCategoryReq) returns (MedicineCategory) {}
   rpc GetMedicineItem(GetMedicineItemReq) returns (MedicineItem) {}
 
-  rpc ListItemVariant(ListItemVariantReq) returns (ListItemVariantRes) {}
-  rpc ListItemAddon(ListItemAddonReq) returns (ListItemAddonRes) {}
   rpc ListRestaurantMenu(ListRestaurantMenuReq) returns (ListRestaurantMenuRes) {}
   rpc ListMenuItem(ListMenuItemReq) returns (ListMenuItemRes) {}
+  rpc ListMenuItemVariant(ListItemVariantReq) returns (ListItemVariantRes) {}
+  rpc ListMenuItemAddon(ListItemAddonReq) returns (ListItemAddonRes) {}
   rpc ListRetailCategory(ListRetailCategoryReq) returns (ListRetailCategoryRes) {}
   rpc ListRetailItem(ListRetailItemReq) returns (ListRetailItemRes) {}
+  rpc ListRetailItemVariant(ListItemVariantReq) returns (ListItemVariantRes) {}
   rpc ListMedicineCategory(ListMedicineCategoryReq) returns (ListMedicineCategoryRes) {}
   rpc ListMedicineItem(ListMedicineItemReq) returns (ListMedicineItemRes) {}
 
-  rpc UpdateItemVariant(UpdateItemVariantReq) returns (EmptyRes) {}
-  rpc UpdateItemAddon(UpdateItemAddonReq) returns (EmptyRes) {}
   rpc UpdateRestaurantMenu(UpdateRestaurantMenuReq) returns (EmptyRes) {}
   rpc UpdateMenuItem(UpdateMenuItemReq) returns (EmptyRes) {}
+  rpc UpdateMenuItemVariant(UpdateItemVariantReq) returns (EmptyRes) {}
+  rpc UpdateMenuItemAddon(UpdateItemAddonReq) returns (EmptyRes) {}
   rpc UpdateRetailCategory(UpdateRetailCategoryReq) returns (EmptyRes) {}
   rpc UpdateRetailItem(UpdateRetailItemReq) returns (EmptyRes) {}
+  rpc UpdateRetailItemVariant(UpdateItemVariantReq) returns (EmptyRes) {}
   rpc UpdateMedicineCategory(UpdateMedicineCategoryReq) returns (EmptyRes) {}
   rpc UpdateMedicineItem(UpdateMedicineItemReq) returns (EmptyRes) {}
 
-  rpc DeleteItemVariant(DeleteItemVariantReq) returns (EmptyRes) {}
-  rpc DeleteItemAddon(DeleteItemAddonReq) returns (EmptyRes) {}
   rpc DeleteRestaurantMenu(DeleteRestaurantMenuReq) returns (EmptyRes) {}
   rpc DeleteMenuItem(DeleteMenuItemReq) returns (EmptyRes) {}
+  rpc DeleteMenuItemVariant(DeleteItemVariantReq) returns (EmptyRes) {}
+  rpc DeleteMenuItemAddon(DeleteItemAddonReq) returns (EmptyRes) {}
   rpc DeleteRetailCategory(DeleteRetailCategoryReq) returns (EmptyRes) {}
   rpc DeleteRetailItem(DeleteRetailItemReq) returns (EmptyRes) {}
+  rpc DeleteRetailItemVariant(DeleteItemVariantReq) returns (EmptyRes) {}
   rpc DeleteMedicineCategory(DeleteMedicineCategoryReq) returns (EmptyRes) {}
   rpc DeleteMedicineItem(DeleteMedicineItemReq) returns (EmptyRes) {}
 }
