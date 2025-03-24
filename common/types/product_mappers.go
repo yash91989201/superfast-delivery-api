@@ -189,6 +189,7 @@ func ToCreateItemAddon(ia *pb.CreateItemAddonReq) *CreateItemAddon {
 func ToCreateRestaurantMenu(rm *pb.CreateRestaurantMenuReq) *CreateRestaurantMenu {
 	return &CreateRestaurantMenu{
 		MenuName: rm.MenuName,
+		ImageURL: rm.ImageUrl,
 		ShopID:   rm.ShopId,
 	}
 }
@@ -196,6 +197,7 @@ func ToCreateRestaurantMenu(rm *pb.CreateRestaurantMenuReq) *CreateRestaurantMen
 func ToCreateMenuItem(mi *pb.CreateMenuItemReq) *CreateMenuItem {
 	return &CreateMenuItem{
 		Name:        mi.Name,
+		ImageUrl:    mi.ImageUrl,
 		Description: mi.Description,
 		Price:       mi.Price,
 		MenuID:      HexToObjectID(mi.MenuId),
@@ -226,12 +228,14 @@ func ToPbRetailItems(il []*RetailItem) []*pb.RetailItem {
 
 func ToPbMedicineItem(mi *MedicineItem) *pb.MedicineItem {
 	return &pb.MedicineItem{
-		Id:         mi.ID.Hex(),
-		Name:       mi.Name,
-		Price:      mi.Price,
-		CategoryId: mi.CategoryID.Hex(),
-		CreatedAt:  ToPbTimestamp(mi.CreatedAt),
-		UpdatedAt:  ToPbTimestamp(mi.CreatedAt),
+		Id:          mi.ID.Hex(),
+		Name:        mi.Name,
+		ImageUrl:    mi.ImageURL,
+		Description: mi.Description,
+		Price:       mi.Price,
+		CategoryId:  mi.CategoryID.Hex(),
+		CreatedAt:   ToPbTimestamp(mi.CreatedAt),
+		UpdatedAt:   ToPbTimestamp(mi.CreatedAt),
 	}
 }
 

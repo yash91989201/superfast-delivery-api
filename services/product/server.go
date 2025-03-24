@@ -124,6 +124,7 @@ func (s *grpcServer) CreateMedicineItem(ctx context.Context, req *pb.CreateMedic
 	if err != nil {
 		return nil, err
 	}
+
 	return types.ToPbMedicineItem(res), nil
 }
 
