@@ -11,21 +11,21 @@ type queryResolver struct {
 }
 
 func (r *queryResolver) GetAuthByID(ctx context.Context, in GetAuthByIDInput) (*Auth, error) {
-	auth, err := r.server.authenticationClient.GetAuthById(ctx, &pb.GetAuthByIdReq{Id: in.ID})
+	res, err := r.server.authenticationClient.GetAuthById(ctx, &pb.GetAuthByIdReq{Id: in.ID})
 	if err != nil {
 		return nil, err
 	}
 
-	return ToGQAuth(auth), nil
+	return ToGQAuth(res), nil
 }
 
 func (r *queryResolver) GetAuth(ctx context.Context, in GetAuthInput) (*Auth, error) {
-	auth, err := r.server.authenticationClient.GetAuth(ctx, &pb.GetAuthReq{Email: in.Email, Phone: in.Phone})
+	res, err := r.server.authenticationClient.GetAuth(ctx, &pb.GetAuthReq{Email: in.Email, Phone: in.Phone})
 	if err != nil {
 		return nil, err
 	}
 
-	return ToGQAuth(auth), nil
+	return ToGQAuth(res), nil
 }
 
 func (r *queryResolver) GetProfile(ctx context.Context, in GetProfileInput) (*Profile, error) {
@@ -33,7 +33,7 @@ func (r *queryResolver) GetProfile(ctx context.Context, in GetProfileInput) (*Pr
 }
 
 func (r *queryResolver) GetDeliveryAddress(ctx context.Context, id string) (*DeliveryAddress, error) {
-	deliveryAddress, err := r.server.userClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{
+	res, err := r.server.userClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{
 		Id: id,
 	})
 
@@ -41,18 +41,30 @@ func (r *queryResolver) GetDeliveryAddress(ctx context.Context, id string) (*Del
 		return nil, err
 	}
 
-	return ToGQDeliveryAddress(deliveryAddress), nil
+	return ToGQDeliveryAddress(res), nil
 }
 
-func (r *queryResolver) GetDeliveryAddressDetail(ctx context.Context, addressId string) (*AddressDetail, error) {
-	deliveryAddress, err := r.server.userClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{Id: addressId})
+func (r *queryResolver) GetDefaultDeliveryAddress(ctx context.Context, authID string) (*DeliveryAddress, error) {
+	res, err := r.server.userClient.GetDefaultDeliveryAddress(ctx, &pb.GetDefaultDeliveryAddressReq{
+		AuthId: authID,
+	})
+
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := r.server.geolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
-		Latitude:  deliveryAddress.Latitude,
-		Longitude: deliveryAddress.Longitude,
+	return ToGQDeliveryAddress(res), nil
+}
+
+func (r *queryResolver) GetDeliveryAddressDetail(ctx context.Context, addressId string) (*AddressDetail, error) {
+	res, err := r.server.userClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{Id: addressId})
+	if err != nil {
+		return nil, err
+	}
+
+	addressDetail, err := r.server.geolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
+		Latitude:  res.Latitude,
+		Longitude: res.Longitude,
 		AddressId: addressId,
 	})
 
@@ -60,7 +72,7 @@ func (r *queryResolver) GetDeliveryAddressDetail(ctx context.Context, addressId 
 		return nil, err
 	}
 
-	return ToGQAddressDetail(res), nil
+	return ToGQAddressDetail(addressDetail), nil
 }
 
 func (r *queryResolver) ListDeliveryAddress(ctx context.Context, authId string) (*ListDeliveryAddressOutput, error) {
@@ -79,12 +91,12 @@ func (r *queryResolver) ListDeliveryAddress(ctx context.Context, authId string) 
 }
 
 func (r *queryResolver) GetShop(ctx context.Context, id string) (*Shop, error) {
-	shop, err := r.server.shopClient.GetShop(ctx, &pb.GetShopReq{Id: id})
+	res, err := r.server.shopClient.GetShop(ctx, &pb.GetShopReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
 
-	return ToGQShop(shop), nil
+	return ToGQShop(res), nil
 }
 
 func (r *queryResolver) ListShops(ctx context.Context, in *ListShopsInput) (*ListShopsOutput, error) {

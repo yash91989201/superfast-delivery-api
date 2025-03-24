@@ -95,6 +95,10 @@ message GetDeliveryAddressReq {
   string id = 1;
 }
 
+message GetDefaultDeliveryAddressReq {
+  string auth_id = 1;
+}
+
 message ListDeliveryAddressReq {
   string auth_id = 1;
 }
@@ -131,6 +135,7 @@ service UserService {
 
   rpc CreateDeliveryAddress(CreateDeliveryAddressReq) returns (DeliveryAddress) {}
   rpc GetDeliveryAddress(GetDeliveryAddressReq) returns (DeliveryAddress) {}
+  rpc GetDefaultDeliveryAddress(GetDefaultDeliveryAddressReq) returns (DeliveryAddress) {}
   rpc ListDeliveryAddress(ListDeliveryAddressReq) returns (ListDeliveryAddressRes) {}
   rpc UpdateDeliveryAddress(DeliveryAddress) returns (DeliveryAddress) {}
   rpc UpdateDefaultDeliveryAddress(UpdateDefaultDeliveryAddressReq) returns (EmptyRes) {}

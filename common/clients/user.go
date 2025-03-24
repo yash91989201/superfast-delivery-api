@@ -33,97 +33,45 @@ func (c *UserClient) Close() {
 }
 
 func (c *UserClient) CreateProfile(ctx context.Context, req *pb.CreateProfileReq) (*pb.Profile, error) {
-	res, err := c.service.CreateProfile(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return c.service.CreateProfile(ctx, req)
 }
 
 func (c *UserClient) GetProfile(ctx context.Context, req *pb.GetProfileReq) (*pb.Profile, error) {
-	res, err := c.service.GetProfile(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return c.service.GetProfile(ctx, req)
 }
 
 func (c *UserClient) UpdateProfile(ctx context.Context, req *pb.UpdateProfileReq) (*pb.Profile, error) {
-	res, err := c.service.UpdateProfile(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
-
+	return c.service.UpdateProfile(ctx, req)
 }
 
 func (c *UserClient) DeleteProfile(ctx context.Context, req *pb.DeleteProfileReq) (*pb.EmptyRes, error) {
-	res, err := c.service.DeleteProfile(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
-
+	return c.service.DeleteProfile(ctx, req)
 }
 
 func (c *UserClient) CreateDeliveryAddress(ctx context.Context, req *pb.CreateDeliveryAddressReq) (*pb.DeliveryAddress, error) {
-	res, err := c.service.CreateDeliveryAddress(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
-
+	return c.service.CreateDeliveryAddress(ctx, req)
 }
 
 func (c *UserClient) GetDeliveryAddress(ctx context.Context, req *pb.GetDeliveryAddressReq) (*pb.DeliveryAddress, error) {
-	res, err := c.service.GetDeliveryAddress(ctx, req)
-	if err != nil {
-		return nil, err
-	}
+	return c.service.GetDeliveryAddress(ctx, req)
+}
 
-	return res, nil
-
+func (c *UserClient) GetDefaultDeliveryAddress(ctx context.Context, req *pb.GetDefaultDeliveryAddressReq) (*pb.DeliveryAddress, error) {
+	return c.service.GetDefaultDeliveryAddress(ctx, req)
 }
 
 func (c *UserClient) ListDeliveryAddress(ctx context.Context, req *pb.ListDeliveryAddressReq) (*pb.ListDeliveryAddressRes, error) {
-	res, err := c.service.ListDeliveryAddress(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
-
+	return c.service.ListDeliveryAddress(ctx, req)
 }
 
 func (c *UserClient) UpdateDeliveryAddress(ctx context.Context, req *pb.DeliveryAddress) (*pb.DeliveryAddress, error) {
-	res, err := c.service.UpdateDeliveryAddress(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return c.service.UpdateDeliveryAddress(ctx, req)
 }
 
 func (c *UserClient) UpdateDefaultDeliveryAddress(ctx context.Context, req *pb.UpdateDefaultDeliveryAddressReq) (*pb.EmptyRes, error) {
-	res, err := c.service.UpdateDefaultDeliveryAddress(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
+	return c.service.UpdateDefaultDeliveryAddress(ctx, req)
 }
 
 func (c *UserClient) DeleteDeliveryAddress(ctx context.Context, req *pb.DeleteDeliveryAddressReq) (*pb.EmptyRes, error) {
-	res, err := c.service.DeleteDeliveryAddress(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
-
+	return c.service.DeleteDeliveryAddress(ctx, req)
 }

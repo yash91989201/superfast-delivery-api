@@ -93,6 +93,15 @@ func (s *grpcServer) GetDeliveryAddress(ctx context.Context, req *pb.GetDelivery
 	return types.ToPbDeliveryAddress(res), nil
 }
 
+func (s *grpcServer) GetDefaultDeliveryAddress(ctx context.Context, req *pb.GetDefaultDeliveryAddressReq) (*pb.DeliveryAddress, error) {
+	res, err := s.service.GetDefaultDeliveryAddress(ctx, req.AuthId)
+	if err != nil {
+		return nil, err
+	}
+
+	return types.ToPbDeliveryAddress(res), err
+}
+
 func (s *grpcServer) ListDeliveryAddress(ctx context.Context, req *pb.ListDeliveryAddressReq) (*pb.ListDeliveryAddressRes, error) {
 	res, err := s.service.GetDeliveryAddresses(ctx, req.AuthId)
 	if err != nil {

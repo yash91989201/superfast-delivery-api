@@ -710,7 +710,6 @@ type DeleteOutput {
   message: String!
 }
 
-# Query Definitions
 type Query {
   # Authentication Service
   GetAuth(input: GetAuthInput!): Auth!
@@ -719,6 +718,7 @@ type Query {
   # User Service
   GetProfile(input: GetProfileInput!): Profile!
   GetDeliveryAddress(id: ID!): DeliveryAddress!
+  GetDefaultDeliveryAddress(authID: ID!): DeliveryAddress!
   GetDeliveryAddressDetail(addressID: ID!): AddressDetail!
   ListDeliveryAddress(authID: ID!): ListDeliveryAddressOutput!
 
@@ -752,7 +752,6 @@ type Query {
   GetAddonStock(id: ID!): AddonStock!
 }
 
-# Mutation Definitions
 type Mutation {
   # Authentication Service
   SignInWithEmail(input: SignInWithEmailInput!): SignInOutput!

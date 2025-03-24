@@ -66,6 +66,18 @@ const (
 		WHERE id = ?
 	`
 
+	GET_DEFAULT_DELIVERY_ADDRESS = `
+  SELECT 
+    id, receiver_name, receiver_phone, address_alias, other_alias, 
+    longitude, latitude, address, nearby_landmark, delivery_instruction,
+    is_default, auth_id, created_at, updated_at 
+  FROM delivery_address 
+  WHERE 
+    auth_id = ? 
+    AND
+    is_default = 1 
+  `
+
 	GET_DELIVERY_ADDRESSES_BY_AUTH_ID = `
 		SELECT 
     	id, receiver_name, receiver_phone, address_alias, other_alias, 

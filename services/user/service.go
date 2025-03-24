@@ -16,6 +16,7 @@ type Service interface {
 
 	CreateDeliveryAddress(ctx context.Context, d *types.CreateDeliveryAddress) (*types.DeliveryAddress, error)
 	GetDeliveryAddress(ctx context.Context, id string) (*types.DeliveryAddress, error)
+	GetDefaultDeliveryAddress(ctx context.Context, authID string) (*types.DeliveryAddress, error)
 	GetDeliveryAddresses(ctx context.Context, authID string) ([]*types.DeliveryAddress, error)
 	UpdateDeliveryAddress(ctx context.Context, d *types.DeliveryAddress) error
 	UpdateDefaultDeliveryAddress(ctx context.Context, deliveryAddressId string, authId string) error
@@ -86,6 +87,10 @@ func (s *userService) CreateDeliveryAddress(ctx context.Context, d *types.Create
 
 func (s *userService) GetDeliveryAddress(ctx context.Context, id string) (*types.DeliveryAddress, error) {
 	return s.r.GetDeliveryAddressById(ctx, id)
+}
+
+func (s *userService) GetDefaultDeliveryAddress(ctx context.Context, authID string) (*types.DeliveryAddress, error) {
+	return s.r.GetDefaultDeliveryAddress(ctx, authID)
 }
 
 func (s *userService) GetDeliveryAddresses(ctx context.Context, authID string) ([]*types.DeliveryAddress, error) {

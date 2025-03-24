@@ -21,6 +21,7 @@ type Repository interface {
 
 	CreateDeliveryAddress(ctx context.Context, d *types.DeliveryAddress) error
 	GetDeliveryAddressById(ctx context.Context, id string) (*types.DeliveryAddress, error)
+	GetDefaultDeliveryAddress(ctx context.Context, authID string) (*types.DeliveryAddress, error)
 	GetDeliveryAddresses(ctx context.Context, authID string) ([]*types.DeliveryAddress, error)
 	UpdateDeliveryAddress(ctx context.Context, d *types.DeliveryAddress) error
 	UpdateDefaultDeliveryAddress(ctx context.Context, deliveryAddressId string, authId string) error
@@ -138,6 +139,21 @@ func (r *mysqlRepository) GetDeliveryAddressById(ctx context.Context, id string)
 
 		return nil, fmt.Errorf("Failed to get delivery address by id: %w", err)
 	}
+	return &d, nil
+}
+
+func (r *mysqlRepository) GetDefaultDeliveryAddress(ctx context.Context, authID string) (*types.DeliveryAddress, error) {
+
+	var d types.DeliveryAddress
+	err := r.db.GetContext(ctx, &d, queries.GET_DEFAULT_DELIVERY_ADDRESS, authID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("failed to get delivery address, no rows found")
+		}
+
+		return nil, fmt.Errorf("failed to get delivery address by auth id: %w", err)
+	}
+
 	return &d, nil
 }
 

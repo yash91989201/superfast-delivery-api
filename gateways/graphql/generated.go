@@ -295,35 +295,36 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetAddonStock            func(childComplexity int, id string) int
-		GetAuth                  func(childComplexity int, input GetAuthInput) int
-		GetAuthByID              func(childComplexity int, input GetAuthByIDInput) int
-		GetDeliveryAddress       func(childComplexity int, id string) int
-		GetDeliveryAddressDetail func(childComplexity int, addressID string) int
-		GetItemStock             func(childComplexity int, id string) int
-		GetMedicineCategory      func(childComplexity int, id string) int
-		GetMedicineItem          func(childComplexity int, itemID string) int
-		GetMenuItem              func(childComplexity int, itemID string) int
-		GetMenuItemAddon         func(childComplexity int, input GetItemAddonInput) int
-		GetMenuItemVariant       func(childComplexity int, input GetItemVariantInput) int
-		GetProfile               func(childComplexity int, input GetProfileInput) int
-		GetRestaurantMenu        func(childComplexity int, id string) int
-		GetRetailCategory        func(childComplexity int, id string) int
-		GetRetailItem            func(childComplexity int, itemID string) int
-		GetRetailItemVariant     func(childComplexity int, input GetItemVariantInput) int
-		GetShop                  func(childComplexity int, id string) int
-		GetVariantStock          func(childComplexity int, id string) int
-		ListDeliveryAddress      func(childComplexity int, authID string) int
-		ListMedicineCategory     func(childComplexity int, shopID string) int
-		ListMedicineItem         func(childComplexity int, categoryID string) int
-		ListMenuItem             func(childComplexity int, menuID string) int
-		ListMenuItemAddon        func(childComplexity int, itemID string) int
-		ListMenuItemVariant      func(childComplexity int, itemID string) int
-		ListRestaurantMenu       func(childComplexity int, shopID string) int
-		ListRetailCategory       func(childComplexity int, shopID string) int
-		ListRetailItem           func(childComplexity int, categoryID string) int
-		ListRetailItemVariant    func(childComplexity int, itemID string) int
-		ListShops                func(childComplexity int, input *ListShopsInput) int
+		GetAddonStock             func(childComplexity int, id string) int
+		GetAuth                   func(childComplexity int, input GetAuthInput) int
+		GetAuthByID               func(childComplexity int, input GetAuthByIDInput) int
+		GetDefaultDeliveryAddress func(childComplexity int, authID string) int
+		GetDeliveryAddress        func(childComplexity int, id string) int
+		GetDeliveryAddressDetail  func(childComplexity int, addressID string) int
+		GetItemStock              func(childComplexity int, id string) int
+		GetMedicineCategory       func(childComplexity int, id string) int
+		GetMedicineItem           func(childComplexity int, itemID string) int
+		GetMenuItem               func(childComplexity int, itemID string) int
+		GetMenuItemAddon          func(childComplexity int, input GetItemAddonInput) int
+		GetMenuItemVariant        func(childComplexity int, input GetItemVariantInput) int
+		GetProfile                func(childComplexity int, input GetProfileInput) int
+		GetRestaurantMenu         func(childComplexity int, id string) int
+		GetRetailCategory         func(childComplexity int, id string) int
+		GetRetailItem             func(childComplexity int, itemID string) int
+		GetRetailItemVariant      func(childComplexity int, input GetItemVariantInput) int
+		GetShop                   func(childComplexity int, id string) int
+		GetVariantStock           func(childComplexity int, id string) int
+		ListDeliveryAddress       func(childComplexity int, authID string) int
+		ListMedicineCategory      func(childComplexity int, shopID string) int
+		ListMedicineItem          func(childComplexity int, categoryID string) int
+		ListMenuItem              func(childComplexity int, menuID string) int
+		ListMenuItemAddon         func(childComplexity int, itemID string) int
+		ListMenuItemVariant       func(childComplexity int, itemID string) int
+		ListRestaurantMenu        func(childComplexity int, shopID string) int
+		ListRetailCategory        func(childComplexity int, shopID string) int
+		ListRetailItem            func(childComplexity int, categoryID string) int
+		ListRetailItemVariant     func(childComplexity int, itemID string) int
+		ListShops                 func(childComplexity int, input *ListShopsInput) int
 	}
 
 	RestaurantMenu struct {
@@ -502,6 +503,7 @@ type QueryResolver interface {
 	GetAuthByID(ctx context.Context, input GetAuthByIDInput) (*Auth, error)
 	GetProfile(ctx context.Context, input GetProfileInput) (*Profile, error)
 	GetDeliveryAddress(ctx context.Context, id string) (*DeliveryAddress, error)
+	GetDefaultDeliveryAddress(ctx context.Context, authID string) (*DeliveryAddress, error)
 	GetDeliveryAddressDetail(ctx context.Context, addressID string) (*AddressDetail, error)
 	ListDeliveryAddress(ctx context.Context, authID string) (*ListDeliveryAddressOutput, error)
 	GetShop(ctx context.Context, id string) (*Shop, error)
@@ -2057,6 +2059,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetAuthByID(childComplexity, args["input"].(GetAuthByIDInput)), true
+
+	case "Query.GetDefaultDeliveryAddress":
+		if e.complexity.Query.GetDefaultDeliveryAddress == nil {
+			break
+		}
+
+		args, err := ec.field_Query_GetDefaultDeliveryAddress_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetDefaultDeliveryAddress(childComplexity, args["authID"].(string)), true
 
 	case "Query.GetDeliveryAddress":
 		if e.complexity.Query.GetDeliveryAddress == nil {
@@ -4376,6 +4390,29 @@ func (ec *executionContext) field_Query_GetAuth_argsInput(
 	}
 
 	var zeroVal GetAuthInput
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_GetDefaultDeliveryAddress_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_GetDefaultDeliveryAddress_argsAuthID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["authID"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_GetDefaultDeliveryAddress_argsAuthID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("authID"))
+	if tmp, ok := rawArgs["authID"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
 	return zeroVal, nil
 }
 
@@ -14252,6 +14289,91 @@ func (ec *executionContext) fieldContext_Query_GetDeliveryAddress(ctx context.Co
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_GetDeliveryAddress_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_GetDefaultDeliveryAddress(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_GetDefaultDeliveryAddress(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetDefaultDeliveryAddress(rctx, fc.Args["authID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*DeliveryAddress)
+	fc.Result = res
+	return ec.marshalNDeliveryAddress2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDeliveryAddress(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_GetDefaultDeliveryAddress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_DeliveryAddress_id(ctx, field)
+			case "receiver_name":
+				return ec.fieldContext_DeliveryAddress_receiver_name(ctx, field)
+			case "receiver_phone":
+				return ec.fieldContext_DeliveryAddress_receiver_phone(ctx, field)
+			case "address_alias":
+				return ec.fieldContext_DeliveryAddress_address_alias(ctx, field)
+			case "other_alias":
+				return ec.fieldContext_DeliveryAddress_other_alias(ctx, field)
+			case "latitude":
+				return ec.fieldContext_DeliveryAddress_latitude(ctx, field)
+			case "longitude":
+				return ec.fieldContext_DeliveryAddress_longitude(ctx, field)
+			case "address":
+				return ec.fieldContext_DeliveryAddress_address(ctx, field)
+			case "nearby_landmark":
+				return ec.fieldContext_DeliveryAddress_nearby_landmark(ctx, field)
+			case "delivery_instruction":
+				return ec.fieldContext_DeliveryAddress_delivery_instruction(ctx, field)
+			case "is_default":
+				return ec.fieldContext_DeliveryAddress_is_default(ctx, field)
+			case "auth_id":
+				return ec.fieldContext_DeliveryAddress_auth_id(ctx, field)
+			case "created_at":
+				return ec.fieldContext_DeliveryAddress_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_DeliveryAddress_updated_at(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeliveryAddress", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_GetDefaultDeliveryAddress_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -25637,6 +25759,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_GetDeliveryAddress(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "GetDefaultDeliveryAddress":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_GetDefaultDeliveryAddress(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
