@@ -530,6 +530,7 @@ type UpdateItemAddonInput struct {
 	AddonPrice  *float64 `json:"addon_price,omitempty"`
 	ImageURL    *string  `json:"image_url,omitempty"`
 	Description *string  `json:"description,omitempty"`
+	ItemID      string   `json:"item_id"`
 }
 
 type UpdateItemStockInput struct {
@@ -546,6 +547,7 @@ type UpdateItemVariantInput struct {
 	Price           *float64 `json:"price,omitempty"`
 	ImageURL        *string  `json:"image_url,omitempty"`
 	Description     *string  `json:"description,omitempty"`
+	ItemID          string   `json:"item_id"`
 }
 
 type UpdateMedicineCategoryInput struct {

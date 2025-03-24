@@ -445,6 +445,7 @@ func ToUpdateItemVariant(req *pb.UpdateItemVariantReq) *UpdateItemVariant {
 		Price:           req.Price,
 		ImageURL:        req.ImageUrl,
 		Description:     req.Description,
+		ItemID:          HexToObjectID(req.ItemId),
 	}
 }
 
@@ -459,6 +460,7 @@ func ToUpdateItemAddon(req *pb.UpdateItemAddonReq) *UpdateItemAddon {
 		AddonPrice:  req.AddonPrice,
 		ImageURL:    req.ImageUrl,
 		Description: req.Description,
+		ItemID:      HexToObjectID(req.ItemId),
 	}
 }
 

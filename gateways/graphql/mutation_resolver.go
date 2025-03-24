@@ -287,14 +287,11 @@ func (r *mutationResolver) CreateMedicineItem(ctx context.Context, in CreateMedi
 	return ToGQMedicineItem(res), nil
 }
 
-// UpdateItemVariant resolver
-
-// UpdateRestaurantMenu resolver
-func (r *mutationResolver) UpdateRestaurantMenu(ctx context.Context, input UpdateRestaurantMenuInput) (*UpdateOutput, error) {
+func (r *mutationResolver) UpdateRestaurantMenu(ctx context.Context, in UpdateRestaurantMenuInput) (*UpdateOutput, error) {
 	req := &pb.UpdateRestaurantMenuReq{
-		Id:       input.ID,
-		MenuName: input.MenuName,
-		ImageUrl: input.ImageURL,
+		Id:       in.ID,
+		MenuName: in.MenuName,
+		ImageUrl: in.ImageURL,
 	}
 
 	_, err := r.server.productClient.UpdateRestaurantMenu(ctx, req)
@@ -305,14 +302,13 @@ func (r *mutationResolver) UpdateRestaurantMenu(ctx context.Context, input Updat
 	return &UpdateOutput{Message: "Restaurant menu updated successfully"}, nil
 }
 
-// UpdateMenuItem resolver
-func (r *mutationResolver) UpdateMenuItem(ctx context.Context, input UpdateMenuItemInput) (*UpdateOutput, error) {
+func (r *mutationResolver) UpdateMenuItem(ctx context.Context, in UpdateMenuItemInput) (*UpdateOutput, error) {
 	req := &pb.UpdateMenuItemReq{
-		Id:          input.ID,
-		Name:        input.Name,
-		Price:       input.Price,
-		ImageUrl:    input.ImageURL,
-		Description: input.Description,
+		Id:          in.ID,
+		Name:        in.Name,
+		Price:       in.Price,
+		ImageUrl:    in.ImageURL,
+		Description: in.Description,
 	}
 
 	_, err := r.server.productClient.UpdateMenuItem(ctx, req)
@@ -323,15 +319,15 @@ func (r *mutationResolver) UpdateMenuItem(ctx context.Context, input UpdateMenuI
 	return &UpdateOutput{Message: "Menu item updated successfully"}, nil
 }
 
-func (r *mutationResolver) UpdateMenuItemVariant(ctx context.Context, input UpdateItemVariantInput) (*UpdateOutput, error) {
+func (r *mutationResolver) UpdateMenuItemVariant(ctx context.Context, in UpdateItemVariantInput) (*UpdateOutput, error) {
 	req := &pb.UpdateItemVariantReq{
-		Id:              input.ID,
-		VariantName:     input.VariantName,
-		RelativePricing: input.RelativePricing,
-		RelativePrice:   input.RelativePrice,
-		Price:           input.Price,
-		ImageUrl:        input.ImageURL,
-		Description:     input.Description,
+		Id:              in.ID,
+		VariantName:     in.VariantName,
+		RelativePricing: in.RelativePricing,
+		RelativePrice:   in.RelativePrice,
+		Price:           in.Price,
+		ImageUrl:        in.ImageURL,
+		Description:     in.Description,
 	}
 
 	_, err := r.server.productClient.UpdateMenuItemVariant(ctx, req)
@@ -342,14 +338,13 @@ func (r *mutationResolver) UpdateMenuItemVariant(ctx context.Context, input Upda
 	return &UpdateOutput{Message: "Item variant updated successfully"}, nil
 }
 
-// UpdateItemAddon resolver
-func (r *mutationResolver) UpdateMenuItemAddon(ctx context.Context, input UpdateItemAddonInput) (*UpdateOutput, error) {
+func (r *mutationResolver) UpdateMenuItemAddon(ctx context.Context, in UpdateItemAddonInput) (*UpdateOutput, error) {
 	req := &pb.UpdateItemAddonReq{
-		Id:          input.ID,
-		AddonName:   input.AddonName,
-		AddonPrice:  input.AddonPrice,
-		ImageUrl:    input.ImageURL,
-		Description: input.Description,
+		Id:          in.ID,
+		AddonName:   in.AddonName,
+		AddonPrice:  in.AddonPrice,
+		ImageUrl:    in.ImageURL,
+		Description: in.Description,
 	}
 
 	_, err := r.server.productClient.UpdateMenuItemAddon(ctx, req)
@@ -360,12 +355,11 @@ func (r *mutationResolver) UpdateMenuItemAddon(ctx context.Context, input Update
 	return &UpdateOutput{Message: "Item addon updated successfully"}, nil
 }
 
-// UpdateRetailCategory resolver
-func (r *mutationResolver) UpdateRetailCategory(ctx context.Context, input UpdateRetailCategoryInput) (*UpdateOutput, error) {
+func (r *mutationResolver) UpdateRetailCategory(ctx context.Context, in UpdateRetailCategoryInput) (*UpdateOutput, error) {
 	req := &pb.UpdateRetailCategoryReq{
-		Id:           input.ID,
-		CategoryName: input.CategoryName,
-		ImageUrl:     input.ImageURL,
+		Id:           in.ID,
+		CategoryName: in.CategoryName,
+		ImageUrl:     in.ImageURL,
 	}
 
 	_, err := r.server.productClient.UpdateRetailCategory(ctx, req)
@@ -376,14 +370,13 @@ func (r *mutationResolver) UpdateRetailCategory(ctx context.Context, input Updat
 	return &UpdateOutput{Message: "Retail category updated successfully"}, nil
 }
 
-// UpdateRetailItem resolver
-func (r *mutationResolver) UpdateRetailItem(ctx context.Context, input UpdateRetailItemInput) (*UpdateOutput, error) {
+func (r *mutationResolver) UpdateRetailItem(ctx context.Context, in UpdateRetailItemInput) (*UpdateOutput, error) {
 	req := &pb.UpdateRetailItemReq{
-		Id:          input.ID,
-		Name:        input.Name,
-		Price:       input.Price,
-		ImageUrl:    input.ImageURL,
-		Description: input.Description,
+		Id:          in.ID,
+		Name:        in.Name,
+		Price:       in.Price,
+		ImageUrl:    in.ImageURL,
+		Description: in.Description,
 	}
 
 	_, err := r.server.productClient.UpdateRetailItem(ctx, req)
@@ -394,15 +387,16 @@ func (r *mutationResolver) UpdateRetailItem(ctx context.Context, input UpdateRet
 	return &UpdateOutput{Message: "Retail item updated successfully"}, nil
 }
 
-func (r *mutationResolver) UpdateRetailItemVariant(ctx context.Context, input UpdateItemVariantInput) (*UpdateOutput, error) {
+func (r *mutationResolver) UpdateRetailItemVariant(ctx context.Context, in UpdateItemVariantInput) (*UpdateOutput, error) {
 	req := &pb.UpdateItemVariantReq{
-		Id:              input.ID,
-		VariantName:     input.VariantName,
-		RelativePricing: input.RelativePricing,
-		RelativePrice:   input.RelativePrice,
-		Price:           input.Price,
-		ImageUrl:        input.ImageURL,
-		Description:     input.Description,
+		Id:              in.ID,
+		VariantName:     in.VariantName,
+		RelativePricing: in.RelativePricing,
+		RelativePrice:   in.RelativePrice,
+		Price:           in.Price,
+		ImageUrl:        in.ImageURL,
+		Description:     in.Description,
+		ItemId:          in.ItemID,
 	}
 
 	_, err := r.server.productClient.UpdateRetailItemVariant(ctx, req)
@@ -413,12 +407,11 @@ func (r *mutationResolver) UpdateRetailItemVariant(ctx context.Context, input Up
 	return &UpdateOutput{Message: "Item variant updated successfully"}, nil
 }
 
-// UpdateMedicineCategory resolver
-func (r *mutationResolver) UpdateMedicineCategory(ctx context.Context, input UpdateMedicineCategoryInput) (*UpdateOutput, error) {
+func (r *mutationResolver) UpdateMedicineCategory(ctx context.Context, in UpdateMedicineCategoryInput) (*UpdateOutput, error) {
 	req := &pb.UpdateMedicineCategoryReq{
-		Id:           input.ID,
-		CategoryName: input.CategoryName,
-		ImageUrl:     input.ImageURL,
+		Id:           in.ID,
+		CategoryName: in.CategoryName,
+		ImageUrl:     in.ImageURL,
 	}
 
 	_, err := r.server.productClient.UpdateMedicineCategory(ctx, req)
@@ -429,14 +422,13 @@ func (r *mutationResolver) UpdateMedicineCategory(ctx context.Context, input Upd
 	return &UpdateOutput{Message: "Medicine category updated successfully"}, nil
 }
 
-// UpdateMedicineItem resolver
-func (r *mutationResolver) UpdateMedicineItem(ctx context.Context, input UpdateMedicineItemInput) (*UpdateOutput, error) {
+func (r *mutationResolver) UpdateMedicineItem(ctx context.Context, in UpdateMedicineItemInput) (*UpdateOutput, error) {
 	req := &pb.UpdateMedicineItemReq{
-		Id:          input.ID,
-		Name:        input.Name,
-		Price:       input.Price,
-		ImageUrl:    input.ImageURL,
-		Description: input.Description,
+		Id:          in.ID,
+		Name:        in.Name,
+		Price:       in.Price,
+		ImageUrl:    in.ImageURL,
+		Description: in.Description,
 	}
 
 	_, err := r.server.productClient.UpdateMedicineItem(ctx, req)
@@ -539,7 +531,6 @@ func (r *mutationResolver) DeleteMedicineCategory(ctx context.Context, categoryI
 	return &DeleteOutput{Message: "Medicine category deleted successfully"}, nil
 }
 
-// DeleteMedicineItem resolver
 func (r *mutationResolver) DeleteMedicineItem(ctx context.Context, itemID string) (*DeleteOutput, error) {
 	req := &pb.DeleteMedicineItemReq{Id: itemID}
 

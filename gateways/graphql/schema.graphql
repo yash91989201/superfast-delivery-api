@@ -527,6 +527,7 @@ input UpdateItemVariantInput {
   price: Float
   image_url: String
   description: String
+  item_id: String!
 }
 
 input UpdateItemAddonInput {
@@ -535,6 +536,7 @@ input UpdateItemAddonInput {
   addon_price: Float
   image_url: String
   description: String
+  item_id: String!
 }
 
 input UpdateRestaurantMenuInput {
@@ -726,14 +728,14 @@ type Query {
 
   # Product Service
   GetRestaurantMenu(id: ID!): RestaurantMenu!
-  GetMenuItem(id: ID!): MenuItem!
+  GetMenuItem(itemID: ID!): MenuItem!
   GetMenuItemVariant(input: GetItemVariantInput!): ItemVariant!
   GetMenuItemAddon(input: GetItemAddonInput!): ItemAddon!
   GetRetailCategory(id: ID!): RetailCategory!
-  GetRetailItem(id: ID!): RetailItem!
+  GetRetailItem(itemID: ID!): RetailItem!
   GetRetailItemVariant(input: GetItemVariantInput!): ItemVariant!
   GetMedicineCategory(id: ID!): MedicineCategory!
-  GetMedicineItem(id: ID!): MedicineItem!
+  GetMedicineItem(itemID: ID!): MedicineItem!
   ListRestaurantMenu(shopID: ID!): ListRestaurantMenuOutput!
   ListMenuItem(menuID: ID!): ListMenuItemOutput!
   ListMenuItemVariant(itemID: ID!): ListItemVariantOutput!

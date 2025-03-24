@@ -13,6 +13,7 @@ import (
 
 type Repository interface {
 	Close() error
+
 	CreateItemStock(ctx context.Context, stock *types.ItemStock) error
 	CreateVariantStock(ctx context.Context, stock *types.VariantStock) error
 	CreateAddonStock(ctx context.Context, stock *types.AddonStock) error

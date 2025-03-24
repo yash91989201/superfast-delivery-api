@@ -302,14 +302,14 @@ type ComplexityRoot struct {
 		GetDeliveryAddressDetail func(childComplexity int, addressID string) int
 		GetItemStock             func(childComplexity int, id string) int
 		GetMedicineCategory      func(childComplexity int, id string) int
-		GetMedicineItem          func(childComplexity int, id string) int
-		GetMenuItem              func(childComplexity int, id string) int
+		GetMedicineItem          func(childComplexity int, itemID string) int
+		GetMenuItem              func(childComplexity int, itemID string) int
 		GetMenuItemAddon         func(childComplexity int, input GetItemAddonInput) int
 		GetMenuItemVariant       func(childComplexity int, input GetItemVariantInput) int
 		GetProfile               func(childComplexity int, input GetProfileInput) int
 		GetRestaurantMenu        func(childComplexity int, id string) int
 		GetRetailCategory        func(childComplexity int, id string) int
-		GetRetailItem            func(childComplexity int, id string) int
+		GetRetailItem            func(childComplexity int, itemID string) int
 		GetRetailItemVariant     func(childComplexity int, input GetItemVariantInput) int
 		GetShop                  func(childComplexity int, id string) int
 		GetVariantStock          func(childComplexity int, id string) int
@@ -507,14 +507,14 @@ type QueryResolver interface {
 	GetShop(ctx context.Context, id string) (*Shop, error)
 	ListShops(ctx context.Context, input *ListShopsInput) (*ListShopsOutput, error)
 	GetRestaurantMenu(ctx context.Context, id string) (*RestaurantMenu, error)
-	GetMenuItem(ctx context.Context, id string) (*MenuItem, error)
+	GetMenuItem(ctx context.Context, itemID string) (*MenuItem, error)
 	GetMenuItemVariant(ctx context.Context, input GetItemVariantInput) (*ItemVariant, error)
 	GetMenuItemAddon(ctx context.Context, input GetItemAddonInput) (*ItemAddon, error)
 	GetRetailCategory(ctx context.Context, id string) (*RetailCategory, error)
-	GetRetailItem(ctx context.Context, id string) (*RetailItem, error)
+	GetRetailItem(ctx context.Context, itemID string) (*RetailItem, error)
 	GetRetailItemVariant(ctx context.Context, input GetItemVariantInput) (*ItemVariant, error)
 	GetMedicineCategory(ctx context.Context, id string) (*MedicineCategory, error)
-	GetMedicineItem(ctx context.Context, id string) (*MedicineItem, error)
+	GetMedicineItem(ctx context.Context, itemID string) (*MedicineItem, error)
 	ListRestaurantMenu(ctx context.Context, shopID string) (*ListRestaurantMenuOutput, error)
 	ListMenuItem(ctx context.Context, menuID string) (*ListMenuItemOutput, error)
 	ListMenuItemVariant(ctx context.Context, itemID string) (*ListItemVariantOutput, error)
@@ -2116,7 +2116,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetMedicineItem(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.GetMedicineItem(childComplexity, args["itemID"].(string)), true
 
 	case "Query.GetMenuItem":
 		if e.complexity.Query.GetMenuItem == nil {
@@ -2128,7 +2128,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetMenuItem(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.GetMenuItem(childComplexity, args["itemID"].(string)), true
 
 	case "Query.GetMenuItemAddon":
 		if e.complexity.Query.GetMenuItemAddon == nil {
@@ -2200,7 +2200,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetRetailItem(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.GetRetailItem(childComplexity, args["itemID"].(string)), true
 
 	case "Query.GetRetailItemVariant":
 		if e.complexity.Query.GetRetailItemVariant == nil {
@@ -4474,19 +4474,19 @@ func (ec *executionContext) field_Query_GetMedicineCategory_argsID(
 func (ec *executionContext) field_Query_GetMedicineItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Query_GetMedicineItem_argsID(ctx, rawArgs)
+	arg0, err := ec.field_Query_GetMedicineItem_argsItemID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["id"] = arg0
+	args["itemID"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Query_GetMedicineItem_argsID(
+func (ec *executionContext) field_Query_GetMedicineItem_argsItemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-	if tmp, ok := rawArgs["id"]; ok {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("itemID"))
+	if tmp, ok := rawArgs["itemID"]; ok {
 		return ec.unmarshalNID2string(ctx, tmp)
 	}
 
@@ -4543,19 +4543,19 @@ func (ec *executionContext) field_Query_GetMenuItemVariant_argsInput(
 func (ec *executionContext) field_Query_GetMenuItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Query_GetMenuItem_argsID(ctx, rawArgs)
+	arg0, err := ec.field_Query_GetMenuItem_argsItemID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["id"] = arg0
+	args["itemID"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Query_GetMenuItem_argsID(
+func (ec *executionContext) field_Query_GetMenuItem_argsItemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-	if tmp, ok := rawArgs["id"]; ok {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("itemID"))
+	if tmp, ok := rawArgs["itemID"]; ok {
 		return ec.unmarshalNID2string(ctx, tmp)
 	}
 
@@ -4658,19 +4658,19 @@ func (ec *executionContext) field_Query_GetRetailItemVariant_argsInput(
 func (ec *executionContext) field_Query_GetRetailItem_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Query_GetRetailItem_argsID(ctx, rawArgs)
+	arg0, err := ec.field_Query_GetRetailItem_argsItemID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["id"] = arg0
+	args["itemID"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Query_GetRetailItem_argsID(
+func (ec *executionContext) field_Query_GetRetailItem_argsItemID(
 	ctx context.Context,
 	rawArgs map[string]any,
 ) (string, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-	if tmp, ok := rawArgs["id"]; ok {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("itemID"))
+	if tmp, ok := rawArgs["itemID"]; ok {
 		return ec.unmarshalNID2string(ctx, tmp)
 	}
 
@@ -14625,7 +14625,7 @@ func (ec *executionContext) _Query_GetMenuItem(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetMenuItem(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().GetMenuItem(rctx, fc.Args["itemID"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14913,7 +14913,7 @@ func (ec *executionContext) _Query_GetRetailItem(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetRetailItem(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().GetRetailItem(rctx, fc.Args["itemID"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -15132,7 +15132,7 @@ func (ec *executionContext) _Query_GetMedicineItem(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetMedicineItem(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Query().GetMedicineItem(rctx, fc.Args["itemID"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -22936,7 +22936,7 @@ func (ec *executionContext) unmarshalInputUpdateItemAddonInput(ctx context.Conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "addon_name", "addon_price", "image_url", "description"}
+	fieldsInOrder := [...]string{"id", "addon_name", "addon_price", "image_url", "description", "item_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -22978,6 +22978,13 @@ func (ec *executionContext) unmarshalInputUpdateItemAddonInput(ctx context.Conte
 				return it, err
 			}
 			it.Description = data
+		case "item_id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("item_id"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ItemID = data
 		}
 	}
 
@@ -23032,7 +23039,7 @@ func (ec *executionContext) unmarshalInputUpdateItemVariantInput(ctx context.Con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "variant_name", "relative_pricing", "relative_price", "price", "image_url", "description"}
+	fieldsInOrder := [...]string{"id", "variant_name", "relative_pricing", "relative_price", "price", "image_url", "description", "item_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -23088,6 +23095,13 @@ func (ec *executionContext) unmarshalInputUpdateItemVariantInput(ctx context.Con
 				return it, err
 			}
 			it.Description = data
+		case "item_id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("item_id"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ItemID = data
 		}
 	}
 

@@ -157,6 +157,7 @@ type UpdateItemVariant struct {
 	Price           *float64      `bson:"price,omitempty" json:"price,omitempty"`
 	ImageURL        *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
 	Description     *string       `bson:"description,omitempty" json:"description,omitempty"`
+	ItemID          bson.ObjectID `bson:"item_id" json:"item_id"`
 }
 
 type UpdateItemAddon struct {
@@ -165,6 +166,7 @@ type UpdateItemAddon struct {
 	AddonPrice  *float64      `bson:"addon_price,omitempty" json:"addon_price,omitempty"`
 	ImageURL    *string       `bson:"image_url,omitempty" json:"imageUrl,omitempty"`
 	Description *string       `bson:"description,omitempty" json:"description,omitempty"`
+	ItemID      bson.ObjectID `bson:"item_id" json:"item_id"`
 }
 
 type UpdateRestaurantMenu struct {

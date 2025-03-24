@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/yash91989201/superfast-delivery-api/common/types"
@@ -485,98 +486,65 @@ func (r *mongoRepository) ListMedicineItem(ctx context.Context, categoryID bson.
 	return items, nil
 }
 
-func (r *mongoRepository) UpdateItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error {
-	filter := bson.M{"_id": variant.ID}
-	setDoc := bson.M{}
-
-	if variant.VariantName != nil {
-		setDoc["variant_name"] = *variant.VariantName
-	}
-	if variant.RelativePricing != nil {
-		setDoc["relative_pricing"] = *variant.RelativePricing
-	}
-	if variant.RelativePrice != nil {
-		setDoc["relative_price"] = *variant.RelativePrice
-	}
-	if variant.Price != nil {
-		setDoc["price"] = *variant.Price
-	}
-	if variant.ImageURL != nil {
-		setDoc["image_url"] = *variant.ImageURL
-	}
-	if variant.Description != nil {
-		setDoc["description"] = *variant.Description
-	}
-
-	update := bson.M{"$set": setDoc}
-	_, err := r.itemVariant.UpdateOne(ctx, filter, update)
-	return err
-}
-
-func (r *mongoRepository) UpdateItemAddon(ctx context.Context, addon *types.UpdateItemAddon) error {
-	filter := bson.M{"_id": addon.ID}
-	setDoc := bson.M{}
-
-	if addon.AddonName != nil {
-		setDoc["addon_name"] = *addon.AddonName
-	}
-	if addon.AddonPrice != nil {
-		setDoc["addon_price"] = *addon.AddonPrice
-	}
-	if addon.ImageURL != nil {
-		setDoc["image_url"] = *addon.ImageURL
-	}
-	if addon.Description != nil {
-		setDoc["description"] = *addon.Description
-	}
-
-	update := bson.M{"$set": setDoc}
-	_, err := r.itemAddon.UpdateOne(ctx, filter, update)
-	return err
-}
-
 func (r *mongoRepository) UpdateRestaurantMenu(ctx context.Context, menu *types.UpdateRestaurantMenu) error {
 	filter := bson.M{"_id": menu.ID}
-	setDoc := bson.M{}
+	setFields := bson.M{}
 
 	if menu.MenuName != nil {
-		setDoc["menu_name"] = *menu.MenuName
+		setFields["menu_name"] = *menu.MenuName
 	}
 	if menu.ImageURL != nil {
-		setDoc["image_url"] = *menu.ImageURL
+		setFields["image_url"] = *menu.ImageURL
 	}
 
-	setDoc["updated_at"] = time.Now()
-	update := bson.M{"$set": setDoc}
+	if len(setFields) == 0 {
+		return fmt.Errorf("no fields to update")
+	}
+
+	update := bson.M{
+		"$set":         setFields,
+		"$currentDate": bson.M{"updated_at": true},
+	}
+
 	_, err := r.restaurantMenu.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateMenuItem(ctx context.Context, item *types.UpdateMenuItem) error {
 	filter := bson.M{"_id": item.ID}
-	setDoc := bson.M{}
+	setFields := bson.M{}
 
 	if item.Name != nil {
-		setDoc["name"] = *item.Name
+		setFields["name"] = *item.Name
 	}
 	if item.Price != nil {
-		setDoc["price"] = *item.Price
+		setFields["price"] = *item.Price
 	}
 	if item.ImageURL != nil {
-		setDoc["image_url"] = *item.ImageURL
+		setFields["image_url"] = *item.ImageURL
 	}
 	if item.Description != nil {
-		setDoc["description"] = *item.Description
+		setFields["description"] = *item.Description
 	}
 
-	setDoc["updated_at"] = time.Now()
-	update := bson.M{"$set": setDoc}
+	if len(setFields) == 0 {
+		return fmt.Errorf("no fields to update")
+	}
+
+	update := bson.M{
+		"$set":         setFields,
+		"$currentDate": bson.M{"updated_at": true},
+	}
 	_, err := r.menuItem.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateMenuItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error {
-	filter := bson.M{"variants._id": variant.ID}
+	filter := bson.M{
+		"_id":          variant.ItemID,
+		"variants._id": variant.ID,
+	}
+
 	setFields := bson.M{}
 	if variant.VariantName != nil {
 		setFields["variants.$.variant_name"] = *variant.VariantName
@@ -596,15 +564,26 @@ func (r *mongoRepository) UpdateMenuItemVariant(ctx context.Context, variant *ty
 	if variant.Description != nil {
 		setFields["variants.$.description"] = *variant.Description
 	}
-	setFields["updated_at"] = time.Now()
 
-	update := bson.M{"$set": setFields}
+	if len(setFields) == 0 {
+		return fmt.Errorf("No fields to update")
+	}
+
+	update := bson.M{
+		"$set":         setFields,
+		"$currentDate": bson.M{"updated_at": true},
+	}
+
 	_, err := r.menuItem.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateMenuItemAddon(ctx context.Context, addon *types.UpdateItemAddon) error {
-	filter := bson.M{"addons._id": addon.ID}
+	filter := bson.M{
+		"_id":        addon.ItemID,
+		"addons._id": addon.ID,
+	}
+
 	setFields := bson.M{}
 	if addon.AddonName != nil {
 		setFields["addons.$.addon_name"] = *addon.AddonName
@@ -618,119 +597,164 @@ func (r *mongoRepository) UpdateMenuItemAddon(ctx context.Context, addon *types.
 	if addon.Description != nil {
 		setFields["addons.$.description"] = *addon.Description
 	}
-	setFields["updated_at"] = time.Now()
 
-	update := bson.M{"$set": setFields}
+	if len(setFields) == 0 {
+		return fmt.Errorf("no fields to update")
+	}
+
+	update := bson.M{
+		"$set":         setFields,
+		"$currentDate": bson.M{"updated_at": true},
+	}
+
 	_, err := r.menuItem.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateRetailCategory(ctx context.Context, category *types.UpdateRetailCategory) error {
 	filter := bson.M{"_id": category.ID}
-	setDoc := bson.M{}
+	setFields := bson.M{}
 
 	if category.CategoryName != nil {
-		setDoc["category_name"] = *category.CategoryName
+		setFields["category_name"] = *category.CategoryName
 	}
 	if category.ImageURL != nil {
-		setDoc["image_url"] = *category.ImageURL
+		setFields["image_url"] = *category.ImageURL
 	}
 
-	setDoc["updated_at"] = time.Now()
-	update := bson.M{"$set": setDoc}
+	if len(setFields) == 0 {
+		return fmt.Errorf("No fields to update")
+	}
+
+	update := bson.M{
+		"$set":         setFields,
+		"$currentDate": bson.M{"updated_at": true},
+	}
 	_, err := r.retailCategory.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateRetailItem(ctx context.Context, item *types.UpdateRetailItem) error {
 	filter := bson.M{"_id": item.ID}
-	setDoc := bson.M{}
+	setFields := bson.M{}
 
 	if item.Name != nil {
-		setDoc["name"] = *item.Name
+		setFields["name"] = *item.Name
 	}
 	if item.Price != nil {
-		setDoc["price"] = *item.Price
+		setFields["price"] = *item.Price
 	}
 	if item.ImageURL != nil {
-		setDoc["image_url"] = *item.ImageURL
+		setFields["image_url"] = *item.ImageURL
 	}
 	if item.Description != nil {
-		setDoc["description"] = *item.Description
+		setFields["description"] = *item.Description
 	}
 
-	setDoc["updated_at"] = time.Now()
-	update := bson.M{"$set": setDoc}
+	if len(setFields) == 0 {
+		return fmt.Errorf("no fields to update")
+	}
+
+	update := bson.M{
+		"$set":         setFields,
+		"$currentDate": bson.M{"updated_at": true},
+	}
+
 	_, err := r.retailItem.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateRetailItemVariant(ctx context.Context, variant *types.UpdateItemVariant) error {
-	filter := bson.M{"variants._id": variant.ID}
+	filter := bson.M{
+		"_id":          variant.ItemID,
+		"variants._id": variant.ID,
+	}
+
+	setFields := bson.M{}
+
+	if variant.VariantName != nil {
+		setFields["variants.$.variant_name"] = *variant.VariantName
+	}
+	if variant.RelativePricing != nil {
+		setFields["variants.$.relative_pricing"] = *variant.RelativePricing
+	}
+	if variant.RelativePrice != nil {
+		setFields["variants.$.relative_price"] = *variant.RelativePrice
+	}
+	if variant.Price != nil {
+		setFields["variants.$.price"] = *variant.Price
+	}
+	if variant.ImageURL != nil {
+		setFields["variants.$.image_url"] = *variant.ImageURL
+	}
+	if variant.Description != nil {
+		setFields["variants.$.description"] = *variant.Description
+	}
+
+	if len(setFields) == 0 {
+		return fmt.Errorf("No fields to update")
+	}
+
 	update := bson.M{
-		"$set":         bson.M{},
+		"$set":         setFields,
 		"$currentDate": bson.M{"updated_at": true},
 	}
 
-	if variant.VariantName != nil {
-		update["$set"].(bson.M)["variants.$.variant_name"] = *variant.VariantName
-	}
-	if variant.RelativePricing != nil {
-		update["$set"].(bson.M)["variants.$.relative_pricing"] = *variant.RelativePricing
-	}
-	if variant.RelativePrice != nil {
-		update["$set"].(bson.M)["variants.$.relative_price"] = *variant.RelativePrice
-	}
-	if variant.Price != nil {
-		update["$set"].(bson.M)["variants.$.price"] = *variant.Price
-	}
-	if variant.ImageURL != nil {
-		update["$set"].(bson.M)["variants.$.image_url"] = *variant.ImageURL
-	}
-	if variant.Description != nil {
-		update["$set"].(bson.M)["variants.$.description"] = *variant.Description
-	}
-
 	_, err := r.retailItem.UpdateOne(ctx, filter, update)
+
 	return err
 }
 
 func (r *mongoRepository) UpdateMedicineCategory(ctx context.Context, category *types.UpdateMedicineCategory) error {
 	filter := bson.M{"_id": category.ID}
-	setDoc := bson.M{}
+	setFields := bson.M{}
 
 	if category.CategoryName != nil {
-		setDoc["category_name"] = *category.CategoryName
+		setFields["category_name"] = *category.CategoryName
 	}
 	if category.ImageURL != nil {
-		setDoc["image_url"] = *category.ImageURL
+		setFields["image_url"] = *category.ImageURL
 	}
 
-	setDoc["updated_at"] = time.Now()
-	update := bson.M{"$set": setDoc}
+	if len(setFields) == 0 {
+		return fmt.Errorf("No fields to update")
+	}
+
+	update := bson.M{
+		"$set":         setFields,
+		"$currentDate": bson.M{"updated_at": true},
+	}
+
 	_, err := r.medicineCategory.UpdateOne(ctx, filter, update)
 	return err
 }
 
 func (r *mongoRepository) UpdateMedicineItem(ctx context.Context, item *types.UpdateMedicineItem) error {
 	filter := bson.M{"_id": item.ID}
-	setDoc := bson.M{}
+	setFields := bson.M{}
 
 	if item.Name != nil {
-		setDoc["name"] = *item.Name
+		setFields["name"] = *item.Name
 	}
 	if item.Price != nil {
-		setDoc["price"] = *item.Price
+		setFields["price"] = *item.Price
 	}
 	if item.ImageURL != nil {
-		setDoc["image_url"] = *item.ImageURL
+		setFields["image_url"] = *item.ImageURL
 	}
 	if item.Description != nil {
-		setDoc["description"] = *item.Description
+		setFields["description"] = *item.Description
 	}
 
-	setDoc["updated_at"] = time.Now()
-	update := bson.M{"$set": setDoc}
+	if len(setFields) == 0 {
+		return fmt.Errorf("No fields to update")
+	}
+
+	update := bson.M{
+		"$set":         setFields,
+		"$currentDate": bson.M{"updated_at": true},
+	}
+
 	_, err := r.medicineItem.UpdateOne(ctx, filter, update)
 	return err
 }
