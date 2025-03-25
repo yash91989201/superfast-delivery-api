@@ -132,8 +132,8 @@ type Shop {
   deleted_at: String
   contact: ShopContact!
   address: ShopAddress!
-  timings: [ShopTiming!]
-  images: [ShopImage!]
+  timings: [ShopTiming!]!
+  images: [ShopImage!]!
 }
 
 type ShopContact {
@@ -654,7 +654,7 @@ type UpdateShopOutput {
 }
 
 type ListShopsOutput {
-  shops: [Shop!]
+  shops: [Shop!]!
   total: Int!
 }
 

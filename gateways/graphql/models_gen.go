@@ -328,7 +328,7 @@ type ListShopsInput struct {
 }
 
 type ListShopsOutput struct {
-	Shops []*Shop `json:"shops,omitempty"`
+	Shops []*Shop `json:"shops"`
 	Total int32   `json:"total"`
 }
 
@@ -432,8 +432,8 @@ type Shop struct {
 	DeletedAt   *string       `json:"deleted_at,omitempty"`
 	Contact     *ShopContact  `json:"contact"`
 	Address     *ShopAddress  `json:"address"`
-	Timings     []*ShopTiming `json:"timings,omitempty"`
-	Images      []*ShopImage  `json:"images,omitempty"`
+	Timings     []*ShopTiming `json:"timings"`
+	Images      []*ShopImage  `json:"images"`
 }
 
 type ShopAddress struct {
