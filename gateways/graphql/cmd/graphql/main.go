@@ -31,17 +31,19 @@ func main() {
 		log.Fatal("Failed to get env: %w", err)
 	}
 
-	s, err := graphql.NewGraphQLServer(
-		cfg.AuthenticationServiceUrl,
-		cfg.UserServiceUrl,
-		cfg.ShopServiceUrl,
-		cfg.ProductServiceUrl,
-		cfg.InventoryServiceUrl,
-		cfg.GeolocationServiceUrl,
-	)
+	graphqlServerCfg := graphql.ServerConfig{
+		AuthenticationServiceUrl: cfg.AuthenticationServiceUrl,
+		UserServiceUrl:           cfg.UserServiceUrl,
+		ShopServiceUrl:           cfg.ShopServiceUrl,
+		ProductServiceUrl:        cfg.ProductServiceUrl,
+		InventoryServiceUrl:      cfg.InventoryServiceUrl,
+		GeolocationServiceUrl:    cfg.GeolocationServiceUrl,
+	}
+
+	s, err := graphql.NewGraphQLServer(graphqlServerCfg)
 
 	if err != nil {
-		log.Fatal("Failed to start graphql server: %w", err)
+		log.Fatal("failed to start graphql server: %w", err)
 	}
 
 	srv := handler.New(s.ToExecutableSchema())

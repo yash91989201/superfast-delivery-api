@@ -14,40 +14,42 @@ type Server struct {
 	geolocationClient    *clients.GeolocationClient
 }
 
-func NewGraphQLServer(
-	authenticationServiceUrl string,
-	userServiceUrl string,
-	shopServiceUrl string,
-	productServiceUrl string,
-	inventoryServiceUrl string,
-	geolocationServiceUrl string,
-) (*Server, error) {
-	authenticationClient, err := clients.NewAuthenticationClient(authenticationServiceUrl)
+type ServerConfig struct {
+	AuthenticationServiceUrl string
+	UserServiceUrl           string
+	ShopServiceUrl           string
+	ProductServiceUrl        string
+	InventoryServiceUrl      string
+	GeolocationServiceUrl    string
+}
+
+func NewGraphQLServer(cfg ServerConfig) (*Server, error) {
+	authenticationClient, err := clients.NewAuthenticationClient(cfg.AuthenticationServiceUrl)
 	if err != nil {
 		return nil, err
 	}
 
-	userClient, err := clients.NewUserClient(userServiceUrl)
+	userClient, err := clients.NewUserClient(cfg.UserServiceUrl)
 	if err != nil {
 		return nil, err
 	}
 
-	shopClient, err := clients.NewShopClient(shopServiceUrl)
+	shopClient, err := clients.NewShopClient(cfg.ShopServiceUrl)
 	if err != nil {
 		return nil, err
 	}
 
-	productClient, err := clients.NewProductClient(productServiceUrl)
+	productClient, err := clients.NewProductClient(cfg.ProductServiceUrl)
 	if err != nil {
 		return nil, err
 	}
 
-	inventoryClient, err := clients.NewInventoryClient(inventoryServiceUrl)
+	inventoryClient, err := clients.NewInventoryClient(cfg.InventoryServiceUrl)
 	if err != nil {
 		return nil, err
 	}
 
-	geolocationClient, err := clients.NewGeolocationClient(geolocationServiceUrl)
+	geolocationClient, err := clients.NewGeolocationClient(cfg.GeolocationServiceUrl)
 	if err != nil {
 		return nil, err
 	}
