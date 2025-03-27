@@ -28,7 +28,9 @@ type Repository interface {
 	DeletePhoneVerification(ctx context.Context, phone string) error
 
 	CreateSession(ctx context.Context, s *types.Session) error
-	GetSession(ctx context.Context, id string) (*types.Session, error)
+	GetSession(ctx context.Context, refreshToken string) (*types.Session, error)
+	GetSessionById(ctx context.Context, id string) (*types.Session, error)
+	GetSessionByAuthId(ctx context.Context, authID string) (*types.Session, error)
 	RevokeSession(ctx context.Context, auth_id string) error
 	DeleteSession(ctx context.Context, auth_id string) error
 }
@@ -214,9 +216,27 @@ func (r *mysqlRepository) CreateSession(ctx context.Context, session *types.Sess
 	return nil
 }
 
-func (r *mysqlRepository) GetSession(ctx context.Context, id string) (*types.Session, error) {
+func (r *mysqlRepository) GetSession(ctx context.Context, refreshToken string) (*types.Session, error) {
 	s := &types.Session{}
-	if err := r.db.GetContext(ctx, s, queries.GET_SESSION, id); err != nil {
+	if err := r.db.GetContext(ctx, s, queries.GET_SESSION, refreshToken); err != nil {
+		return nil, fmt.Errorf("Failed to get session: %w", err)
+	}
+
+	return s, nil
+}
+
+func (r *mysqlRepository) GetSessionById(ctx context.Context, id string) (*types.Session, error) {
+	s := &types.Session{}
+	if err := r.db.GetContext(ctx, s, queries.GET_SESSION_BY_ID, id); err != nil {
+		return nil, fmt.Errorf("Failed to get session: %w", err)
+	}
+
+	return s, nil
+}
+
+func (r *mysqlRepository) GetSessionByAuthId(ctx context.Context, authID string) (*types.Session, error) {
+	s := &types.Session{}
+	if err := r.db.GetContext(ctx, s, queries.GET_SESSION_BY_AUTH_ID, authID); err != nil {
 		return nil, fmt.Errorf("Failed to get session: %w", err)
 	}
 

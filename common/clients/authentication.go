@@ -58,8 +58,8 @@ func (c *AuthenticationClient) SignInWithGoogle(ctx context.Context, req *pb.Sig
 	return res, nil
 }
 
-func (c *AuthenticationClient) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) (*pb.SignInRes, error) {
-	res, err := c.service.RefreshToken(ctx, req)
+func (c *AuthenticationClient) RefreshAccessToken(ctx context.Context, req *pb.RefreshAccessTokenReq) (*pb.SignInRes, error) {
+	res, err := c.service.RefreshAccessToken(ctx, req)
 	if err != nil {
 		return nil, err
 	}

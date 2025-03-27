@@ -9,7 +9,7 @@ import (
 	"github.com/nrednav/cuid2"
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
 	"github.com/yash91989201/superfast-delivery-api/common/types"
-	"github.com/yash91989201/superfast-delivery-api/common/utils/token"
+	utils "github.com/yash91989201/superfast-delivery-api/common/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
@@ -17,12 +17,12 @@ import (
 )
 
 type grpcServer struct {
-	service  Service
-	JwtMaker *token.JWTMaker
+	service      Service
+	TokenManager *utils.TokenManager
 	pb.UnimplementedAuthenticationServiceServer
 }
 
-func StartGRPCServer(s Service, jwtMaker *token.JWTMaker, serviceUrl string) error {
+func StartGRPCServer(s Service, tokenManager *utils.TokenManager, serviceUrl string) error {
 	listener, err := net.Listen("tcp", serviceUrl)
 	if err != nil {
 		return err
@@ -30,7 +30,7 @@ func StartGRPCServer(s Service, jwtMaker *token.JWTMaker, serviceUrl string) err
 
 	server := grpc.NewServer()
 
-	pb.RegisterAuthenticationServiceServer(server, &grpcServer{service: s, JwtMaker: jwtMaker})
+	pb.RegisterAuthenticationServiceServer(server, &grpcServer{service: s, TokenManager: tokenManager})
 
 	reflection.Register(server)
 
@@ -73,32 +73,23 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 			}
 		}
 
-		newAuthClaim := token.NewAuthClaim{
-			Email:         auth.Email,
-			EmailVerified: auth.EmailVerified,
-			Phone:         auth.Phone,
-			Role:          auth.AuthRole,
-			AuthId:        auth.ID,
-			SessionId:     cuid2.Generate(),
-			Duration:      15 * time.Minute,
-		}
-
-		accessToken, accessClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
+		sessionID := cuid2.Generate()
+		accessToken, err := s.TokenManager.GenerateAccessToken(auth, sessionID)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create access token: %w", err)
+			return nil, fmt.Errorf("failed to create access token: %w", err)
 		}
 
-		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
+		refreshToken, err := s.TokenManager.GenerateRefreshToken()
 		if err != nil {
 			return nil, fmt.Errorf("Failed to create refresh token: %w", err)
 		}
 
 		session := &types.Session{
-			ID:           refreshClaims.RegisteredClaims.ID,
-			AuthID:       refreshClaims.RegisteredClaims.Subject,
-			RefreshToken: refreshToken,
+			ID:           sessionID,
+			AuthID:       auth.ID,
+			RefreshToken: *refreshToken,
 			IsRevoked:    false,
-			ExpiresAt:    refreshClaims.ExpiresAt.Time,
+			ExpiresAt:    time.Now().Add(30 * 24 * time.Hour),
 		}
 
 		if err = s.service.CreateSession(ctx, session); err != nil {
@@ -106,12 +97,9 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 		}
 
 		signInRes := &types.SignInRes{
-			Auth: auth,
-			Session: &types.ClientSession{
-				ID:                   session.ID,
-				AccessToken:          accessToken,
-				AccessTokenExpiresAt: accessClaims.ExpiresAt.Time,
-			},
+			Auth:         auth,
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
 		}
 
 		return types.ToPbSignInRes(signInRes), nil
@@ -193,32 +181,23 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 			}
 		}
 
-		newAuthClaim := token.NewAuthClaim{
-			Email:         auth.Email,
-			EmailVerified: auth.EmailVerified,
-			Phone:         auth.Phone,
-			Role:          auth.AuthRole,
-			AuthId:        auth.ID,
-			SessionId:     cuid2.Generate(),
-			Duration:      15 * time.Minute,
+		sessionID := cuid2.Generate()
+		accessToken, err := s.TokenManager.GenerateAccessToken(auth, sessionID)
+		if err != nil {
+			return nil, err
 		}
 
-		accessToken, accessClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
+		refreshToken, err := s.TokenManager.GenerateRefreshToken()
 		if err != nil {
-			return nil, fmt.Errorf("Failed to create access token: %w", err)
-		}
-
-		refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
-		if err != nil {
-			return nil, fmt.Errorf("Failed to create refresh token: %w", err)
+			return nil, err
 		}
 
 		session := &types.Session{
-			ID:           refreshClaims.RegisteredClaims.ID,
-			AuthID:       refreshClaims.RegisteredClaims.Subject,
-			RefreshToken: refreshToken,
+			ID:           sessionID,
+			AuthID:       auth.ID,
+			RefreshToken: *refreshToken,
 			IsRevoked:    false,
-			ExpiresAt:    refreshClaims.ExpiresAt.Time,
+			ExpiresAt:    time.Now().Add(30 * 24 * time.Hour),
 		}
 
 		if err = s.service.CreateSession(ctx, session); err != nil {
@@ -226,12 +205,9 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 		}
 
 		signInRes := &types.SignInRes{
-			Auth: auth,
-			Session: &types.ClientSession{
-				ID:                   session.ID,
-				AccessToken:          accessToken,
-				AccessTokenExpiresAt: accessClaims.ExpiresAt.Time,
-			},
+			Auth:         auth,
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
 		}
 
 		return types.ToPbSignInRes(signInRes), nil
@@ -300,10 +276,13 @@ func (s *grpcServer) GetAuth(ctx context.Context, req *pb.GetAuthReq) (*pb.Auth,
 	return types.ToPbAuth(auth), nil
 }
 
-func (s *grpcServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) (*pb.SignInRes, error) {
-	// get session from db
-	session, err := s.service.GetSession(ctx, req.SessionId)
-	if err != nil || session.IsRevoked || session.ExpiresAt.Before(time.Now()) {
+func (s *grpcServer) RefreshAccessToken(ctx context.Context, req *pb.RefreshAccessTokenReq) (*pb.SignInRes, error) {
+	session, err := s.service.GetSession(ctx, req.RefreshToken)
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "Session expired, sign in again")
+	}
+
+	if session.IsRevoked || session.ExpiresAt.Before(time.Now()) {
 		return nil, status.Errorf(codes.NotFound, "Session expired, sign in again")
 	}
 
@@ -312,60 +291,50 @@ func (s *grpcServer) RefreshToken(ctx context.Context, req *pb.RefreshTokenReq) 
 		return nil, status.Errorf(codes.NotFound, "Account not found")
 	}
 
-	// delete and create new refresh refresh token
 	err = s.service.DeleteSession(ctx, session.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	newAuthClaim := token.NewAuthClaim{
-		Email:         auth.Email,
-		EmailVerified: auth.EmailVerified,
-		Phone:         auth.Phone,
-		Role:          auth.AuthRole,
-		AuthId:        auth.ID,
-		SessionId:     cuid2.Generate(),
-		Duration:      15 * time.Minute,
-	}
-
-	accessToken, accessClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
+	sessionID := cuid2.Generate()
+	accessToken, err := s.TokenManager.GenerateAccessToken(auth, sessionID)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to create access token: %w", err)
+		return nil, fmt.Errorf("failed to create access token: %w", err)
 	}
 
-	refreshToken, refreshClaims, err := s.JwtMaker.CreateToken(newAuthClaim)
+	refreshToken, err := s.TokenManager.GenerateRefreshToken()
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create refresh token: %w", err)
 	}
 
-	newSession := &types.Session{
-		ID:           refreshClaims.RegisteredClaims.ID,
-		AuthID:       refreshClaims.RegisteredClaims.Subject,
-		RefreshToken: refreshToken,
+	session = &types.Session{
+		ID:           sessionID,
+		AuthID:       auth.ID,
+		RefreshToken: *refreshToken,
 		IsRevoked:    false,
-		ExpiresAt:    refreshClaims.ExpiresAt.Time,
+		ExpiresAt:    time.Now().Add(30 * 24 * time.Hour),
 	}
 
-	if err = s.service.CreateSession(ctx, newSession); err != nil {
+	if err = s.service.CreateSession(ctx, session); err != nil {
 		return nil, fmt.Errorf("Failed to create session: %w", err)
 	}
 
 	signInRes := &types.SignInRes{
-		Auth: auth,
-		Session: &types.ClientSession{
-			ID:                   session.ID,
-			AccessToken:          accessToken,
-			AccessTokenExpiresAt: accessClaims.ExpiresAt.Time,
-		},
+		Auth:         auth,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}
 
 	return types.ToPbSignInRes(signInRes), nil
 }
 
 func (s *grpcServer) LogOut(ctx context.Context, req *pb.LogOutReq) (*pb.SignInRes, error) {
+	session, err := s.service.GetSessionById(ctx, req.SessionId)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "Session expired, sign in again")
+	}
 
-	session, err := s.service.GetSession(ctx, req.SessionId)
-	if err != nil || session.IsRevoked || session.ExpiresAt.Before(time.Now()) {
+	if session.IsRevoked || session.ExpiresAt.Before(time.Now()) {
 		return nil, status.Errorf(codes.Unauthenticated, "Session expired, sign in again")
 	}
 
@@ -383,13 +352,12 @@ func (s *grpcServer) LogOut(ctx context.Context, req *pb.LogOutReq) (*pb.SignInR
 }
 
 func (s *grpcServer) ValidateSession(ctx context.Context, req *pb.ValidateSessionReq) (*pb.ValidateSessionRes, error) {
-
-	token, err := s.JwtMaker.VerifyToken(req.AuthToken)
+	token, err := s.TokenManager.VerifyAccessToken(req.AccessToken)
 	if err != nil {
 		return nil, err
 	}
 
-	session, err := s.service.GetSession(ctx, token.RegisteredClaims.ID)
+	session, err := s.service.GetSessionById(ctx, token.RegisteredClaims.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -404,7 +372,6 @@ func (s *grpcServer) ValidateSession(ctx context.Context, req *pb.ValidateSessio
 	}
 
 	return &pb.ValidateSessionRes{
-		Valid: true,
-		Auth:  types.ToPbAuth(auth),
+		Auth: types.ToPbAuth(auth),
 	}, nil
 }

@@ -6,12 +6,12 @@ import (
 )
 
 type Server struct {
-	authenticationClient *clients.AuthenticationClient
-	userClient           *clients.UserClient
-	shopClient           *clients.ShopClient
-	productClient        *clients.ProductClient
-	inventoryClient      *clients.InventoryClient
-	geolocationClient    *clients.GeolocationClient
+	AuthenticationClient *clients.AuthenticationClient
+	UserClient           *clients.UserClient
+	ShopClient           *clients.ShopClient
+	ProductClient        *clients.ProductClient
+	InventoryClient      *clients.InventoryClient
+	GeolocationClient    *clients.GeolocationClient
 }
 
 type ServerConfig struct {
@@ -55,12 +55,12 @@ func NewGraphQLServer(cfg ServerConfig) (*Server, error) {
 	}
 
 	return &Server{
-		authenticationClient: authenticationClient,
-		userClient:           userClient,
-		shopClient:           shopClient,
-		productClient:        productClient,
-		inventoryClient:      inventoryClient,
-		geolocationClient:    geolocationClient,
+		AuthenticationClient: authenticationClient,
+		UserClient:           userClient,
+		ShopClient:           shopClient,
+		ProductClient:        productClient,
+		InventoryClient:      inventoryClient,
+		GeolocationClient:    geolocationClient,
 	}, nil
 }
 
@@ -77,7 +77,11 @@ func (s *Server) Query() QueryResolver {
 }
 
 func (s *Server) ToExecutableSchema() graphql.ExecutableSchema {
-	return NewExecutableSchema(Config{
+	schemaConfig := Config{
 		Resolvers: s,
-	})
+	}
+
+	schemaConfig.Directives.HasAuthRole = HasAuthRoleDirective
+
+	return NewExecutableSchema(schemaConfig)
 }

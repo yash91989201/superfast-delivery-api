@@ -478,7 +478,8 @@ type ShopTiming struct {
 type SignInOutput struct {
 	Auth          *Auth    `json:"auth,omitempty"`
 	Profile       *Profile `json:"profile,omitempty"`
-	Session       *Session `json:"session,omitempty"`
+	AccessToken   *string  `json:"access_token,omitempty"`
+	RefreshToken  *string  `json:"refresh_token,omitempty"`
 	CreateProfile bool     `json:"create_profile"`
 	VerifyOtp     bool     `json:"verify_otp"`
 }

@@ -32,12 +32,6 @@ type Session struct {
 	ExpiresAt    time.Time `json:"expires_at" db:"expires_at"`
 }
 
-type ClientSession struct {
-	ID                   string    `json:"id"`
-	AccessToken          string    `json:"access_token"`
-	AccessTokenExpiresAt time.Time `json:"access_token_expires_at"`
-}
-
 type EmailVerification struct {
 	Token     string    `json:"token" db:"token"`
 	Email     string    `json:"email" db:"email"`
@@ -59,6 +53,7 @@ type CreateAuth struct {
 }
 
 type SignInRes struct {
-	Auth    *Auth
-	Session *ClientSession
+	Auth         *Auth
+	AccessToken  *string
+	RefreshToken *string
 }

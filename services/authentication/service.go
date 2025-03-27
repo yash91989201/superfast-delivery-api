@@ -23,7 +23,9 @@ type Service interface {
 	DeletePhoneVerification(ctx context.Context, phone string) error
 
 	CreateSession(ctx context.Context, session *types.Session) error
-	GetSession(ctx context.Context, id string) (*types.Session, error)
+	GetSession(ctx context.Context, refreshToken string) (*types.Session, error)
+	GetSessionById(ctx context.Context, id string) (*types.Session, error)
+	GetSessionByAuthId(ctx context.Context, authID string) (*types.Session, error)
 	RevokeSession(ctx context.Context, id string) error
 	DeleteSession(ctx context.Context, id string) error
 }
@@ -114,8 +116,16 @@ func (s *authenticationService) CreateSession(ctx context.Context, session *type
 	return s.r.CreateSession(ctx, session)
 }
 
-func (s *authenticationService) GetSession(ctx context.Context, id string) (*types.Session, error) {
-	return s.r.GetSession(ctx, id)
+func (s *authenticationService) GetSession(ctx context.Context, refreshToken string) (*types.Session, error) {
+	return s.r.GetSession(ctx, refreshToken)
+}
+
+func (s *authenticationService) GetSessionById(ctx context.Context, id string) (*types.Session, error) {
+	return s.r.GetSessionById(ctx, id)
+}
+
+func (s *authenticationService) GetSessionByAuthId(ctx context.Context, authID string) (*types.Session, error) {
+	return s.r.GetSessionByAuthId(ctx, authID)
 }
 
 func (s *authenticationService) RevokeSession(ctx context.Context, id string) error {

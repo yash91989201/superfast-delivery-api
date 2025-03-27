@@ -22,7 +22,9 @@ const (
 	CREATE_SESSION = "INSERT INTO session " +
 		"(id, auth_id, refresh_token, is_revoked, expires_at)" +
 		"VALUES (:id, :auth_id, :refresh_token, :is_revoked, :expires_at)"
-	GET_SESSION    = "SELECT * FROM session WHERE id = ?"
-	REVOKE_SESSION = "UPDATE session SET is_revoked = 1 WHERE id = ?"
-	DELETE_SESSION = "DELETE FROM session WHERE id = ?"
+	GET_SESSION            = "SELECT * FROM session WHERE refresh_token = ?"
+	GET_SESSION_BY_ID      = "SELECT * FROM session WHERE id = ?"
+	GET_SESSION_BY_AUTH_ID = "SELECT * FROM session WHERE auth_id = ?"
+	REVOKE_SESSION         = "UPDATE session SET is_revoked = 1 WHERE id = ?"
+	DELETE_SESSION         = "DELETE FROM session WHERE id = ?"
 )

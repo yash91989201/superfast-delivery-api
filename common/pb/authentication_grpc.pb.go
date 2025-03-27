@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthenticationService_SignInWithEmail_FullMethodName  = "/pb.AuthenticationService/SignInWithEmail"
-	AuthenticationService_SignInWithPhone_FullMethodName  = "/pb.AuthenticationService/SignInWithPhone"
-	AuthenticationService_SignInWithGoogle_FullMethodName = "/pb.AuthenticationService/SignInWithGoogle"
-	AuthenticationService_GetAuthById_FullMethodName      = "/pb.AuthenticationService/GetAuthById"
-	AuthenticationService_GetAuth_FullMethodName          = "/pb.AuthenticationService/GetAuth"
-	AuthenticationService_RefreshToken_FullMethodName     = "/pb.AuthenticationService/RefreshToken"
-	AuthenticationService_LogOut_FullMethodName           = "/pb.AuthenticationService/LogOut"
-	AuthenticationService_ValidateSession_FullMethodName  = "/pb.AuthenticationService/ValidateSession"
+	AuthenticationService_SignInWithEmail_FullMethodName    = "/pb.AuthenticationService/SignInWithEmail"
+	AuthenticationService_SignInWithPhone_FullMethodName    = "/pb.AuthenticationService/SignInWithPhone"
+	AuthenticationService_SignInWithGoogle_FullMethodName   = "/pb.AuthenticationService/SignInWithGoogle"
+	AuthenticationService_GetAuthById_FullMethodName        = "/pb.AuthenticationService/GetAuthById"
+	AuthenticationService_GetAuth_FullMethodName            = "/pb.AuthenticationService/GetAuth"
+	AuthenticationService_RefreshAccessToken_FullMethodName = "/pb.AuthenticationService/RefreshAccessToken"
+	AuthenticationService_LogOut_FullMethodName             = "/pb.AuthenticationService/LogOut"
+	AuthenticationService_ValidateSession_FullMethodName    = "/pb.AuthenticationService/ValidateSession"
 )
 
 // AuthenticationServiceClient is the client API for AuthenticationService service.
@@ -38,7 +38,7 @@ type AuthenticationServiceClient interface {
 	SignInWithGoogle(ctx context.Context, in *SignInWithGoogleReq, opts ...grpc.CallOption) (*SignInRes, error)
 	GetAuthById(ctx context.Context, in *GetAuthByIdReq, opts ...grpc.CallOption) (*Auth, error)
 	GetAuth(ctx context.Context, in *GetAuthReq, opts ...grpc.CallOption) (*Auth, error)
-	RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*SignInRes, error)
+	RefreshAccessToken(ctx context.Context, in *RefreshAccessTokenReq, opts ...grpc.CallOption) (*SignInRes, error)
 	LogOut(ctx context.Context, in *LogOutReq, opts ...grpc.CallOption) (*SignInRes, error)
 	ValidateSession(ctx context.Context, in *ValidateSessionReq, opts ...grpc.CallOption) (*ValidateSessionRes, error)
 }
@@ -101,10 +101,10 @@ func (c *authenticationServiceClient) GetAuth(ctx context.Context, in *GetAuthRe
 	return out, nil
 }
 
-func (c *authenticationServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenReq, opts ...grpc.CallOption) (*SignInRes, error) {
+func (c *authenticationServiceClient) RefreshAccessToken(ctx context.Context, in *RefreshAccessTokenReq, opts ...grpc.CallOption) (*SignInRes, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SignInRes)
-	err := c.cc.Invoke(ctx, AuthenticationService_RefreshToken_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AuthenticationService_RefreshAccessToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +140,7 @@ type AuthenticationServiceServer interface {
 	SignInWithGoogle(context.Context, *SignInWithGoogleReq) (*SignInRes, error)
 	GetAuthById(context.Context, *GetAuthByIdReq) (*Auth, error)
 	GetAuth(context.Context, *GetAuthReq) (*Auth, error)
-	RefreshToken(context.Context, *RefreshTokenReq) (*SignInRes, error)
+	RefreshAccessToken(context.Context, *RefreshAccessTokenReq) (*SignInRes, error)
 	LogOut(context.Context, *LogOutReq) (*SignInRes, error)
 	ValidateSession(context.Context, *ValidateSessionReq) (*ValidateSessionRes, error)
 	mustEmbedUnimplementedAuthenticationServiceServer()
@@ -168,8 +168,8 @@ func (UnimplementedAuthenticationServiceServer) GetAuthById(context.Context, *Ge
 func (UnimplementedAuthenticationServiceServer) GetAuth(context.Context, *GetAuthReq) (*Auth, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAuth not implemented")
 }
-func (UnimplementedAuthenticationServiceServer) RefreshToken(context.Context, *RefreshTokenReq) (*SignInRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+func (UnimplementedAuthenticationServiceServer) RefreshAccessToken(context.Context, *RefreshAccessTokenReq) (*SignInRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshAccessToken not implemented")
 }
 func (UnimplementedAuthenticationServiceServer) LogOut(context.Context, *LogOutReq) (*SignInRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
@@ -288,20 +288,20 @@ func _AuthenticationService_GetAuth_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthenticationService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RefreshTokenReq)
+func _AuthenticationService_RefreshAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshAccessTokenReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthenticationServiceServer).RefreshToken(ctx, in)
+		return srv.(AuthenticationServiceServer).RefreshAccessToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthenticationService_RefreshToken_FullMethodName,
+		FullMethod: AuthenticationService_RefreshAccessToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticationServiceServer).RefreshToken(ctx, req.(*RefreshTokenReq))
+		return srv.(AuthenticationServiceServer).RefreshAccessToken(ctx, req.(*RefreshAccessTokenReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -370,8 +370,8 @@ var AuthenticationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthenticationService_GetAuth_Handler,
 		},
 		{
-			MethodName: "RefreshToken",
-			Handler:    _AuthenticationService_RefreshToken_Handler,
+			MethodName: "RefreshAccessToken",
+			Handler:    _AuthenticationService_RefreshAccessToken_Handler,
 		},
 		{
 			MethodName: "LogOut",

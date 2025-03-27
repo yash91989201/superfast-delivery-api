@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
+	customMiddleware "github.com/yash91989201/superfast-delivery-api/gateways/graphql/middleware"
 )
 
 type mutationResolver struct {
@@ -12,7 +13,7 @@ type mutationResolver struct {
 }
 
 func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEmailInput) (*SignInOutput, error) {
-	signInRes, err := r.server.authenticationClient.SignInWithEmail(
+	signInRes, err := r.server.AuthenticationClient.SignInWithEmail(
 		ctx,
 		&pb.SignInWithEmailReq{
 			Email:    in.Email,
@@ -28,11 +29,12 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 		return &SignInOutput{VerifyOtp: true}, nil
 	}
 
-	profile, err := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
+	profile, err := r.server.UserClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 	res := &SignInOutput{
-		Auth:      ToGQAuth(signInRes.Auth),
-		Session:   ToGQSession(signInRes.Session),
-		VerifyOtp: false,
+		Auth:         ToGQAuth(signInRes.Auth),
+		AccessToken:  &signInRes.AccessToken,
+		RefreshToken: &signInRes.RefreshToken,
+		VerifyOtp:    false,
 	}
 
 	if err != nil {
@@ -52,25 +54,30 @@ func (r *mutationResolver) SignInWithGoogle(ctx context.Context, in SignInWithGo
 	return nil, nil
 }
 
-func (r *mutationResolver) RefreshToken(ctx context.Context, session_id string) (*SignInOutput, error) {
-	signInRes, err := r.server.authenticationClient.RefreshToken(ctx, &pb.RefreshTokenReq{SessionId: session_id})
+func (r *mutationResolver) RefreshAccessToken(ctx context.Context, refreshToken string) (*SignInOutput, error) {
+	signInRes, err := r.server.AuthenticationClient.RefreshAccessToken(ctx, &pb.RefreshAccessTokenReq{RefreshToken: refreshToken})
 	if err != nil {
 		return nil, err
 	}
 
-	profile, _ := r.server.userClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
+	profile, _ := r.server.UserClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 
 	return &SignInOutput{
 		Auth:          ToGQAuth(signInRes.Auth),
-		Session:       ToGQSession(signInRes.Session),
 		Profile:       ToGQProfile(profile),
+		AccessToken:   &signInRes.AccessToken,
+		RefreshToken:  &signInRes.RefreshToken,
 		CreateProfile: profile == nil,
 		VerifyOtp:     false,
 	}, nil
 }
 
-func (r *mutationResolver) LogOut(ctx context.Context, session_id string) (*SignInOutput, error) {
-	_, err := r.server.authenticationClient.LogOut(ctx, &pb.LogOutReq{SessionId: session_id})
+func (r *mutationResolver) LogOut(ctx context.Context) (*SignInOutput, error) {
+	sessionID, err := customMiddleware.GetCtxSessionId(ctx)
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.server.AuthenticationClient.LogOut(ctx, &pb.LogOutReq{SessionId: sessionID})
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +86,7 @@ func (r *mutationResolver) LogOut(ctx context.Context, session_id string) (*Sign
 }
 
 func (r *mutationResolver) CreateProfile(ctx context.Context, in CreateProfileInput) (*Profile, error) {
-	res, err := r.server.userClient.CreateProfile(ctx, &pb.CreateProfileReq{
+	res, err := r.server.UserClient.CreateProfile(ctx, &pb.CreateProfileReq{
 		Name:        in.Name,
 		ImageUrl:    in.ImageURL,
 		Dob:         ToPbDate(in.Dob),
@@ -96,7 +103,7 @@ func (r *mutationResolver) CreateProfile(ctx context.Context, in CreateProfileIn
 }
 
 func (r *mutationResolver) UpdateProfile(ctx context.Context, in UpdateProfileInput) (*Profile, error) {
-	res, err := r.server.userClient.UpdateProfile(ctx, &pb.UpdateProfileReq{
+	res, err := r.server.UserClient.UpdateProfile(ctx, &pb.UpdateProfileReq{
 		Id:          in.ID,
 		Name:        in.Name,
 		ImageUrl:    in.ImageURL,
@@ -114,12 +121,12 @@ func (r *mutationResolver) UpdateProfile(ctx context.Context, in UpdateProfileIn
 }
 
 func (r *mutationResolver) CreateDeliveryAddress(ctx context.Context, in CreateDeliveryAddressInput) (*DeliveryAddress, error) {
-	newDeliveryAddress, err := r.server.userClient.CreateDeliveryAddress(ctx, ToPbCreateDeliveryAddress(in))
+	newDeliveryAddress, err := r.server.UserClient.CreateDeliveryAddress(ctx, ToPbCreateDeliveryAddress(in))
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = r.server.geolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
+	_, err = r.server.GeolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
 		Latitude:  in.Latitude,
 		Longitude: in.Longitude,
 		AddressId: newDeliveryAddress.Id,
@@ -137,7 +144,7 @@ func (r *mutationResolver) UpdateDeliveryAddress(ctx context.Context, in UpdateD
 }
 
 func (r *mutationResolver) UpdateDefaultDeliveryAddress(ctx context.Context, in UpdateDefaultDeliveryAddressInput) (*UpdateOutput, error) {
-	_, err := r.server.userClient.UpdateDefaultDeliveryAddress(ctx, &pb.UpdateDefaultDeliveryAddressReq{
+	_, err := r.server.UserClient.UpdateDefaultDeliveryAddress(ctx, &pb.UpdateDefaultDeliveryAddressReq{
 		DeliveryAddressId: in.DeliveryAddressID,
 		AuthId:            in.AuthID,
 	})
@@ -152,7 +159,7 @@ func (r *mutationResolver) UpdateDefaultDeliveryAddress(ctx context.Context, in 
 }
 
 func (r *mutationResolver) DeleteDeliveryAddress(ctx context.Context, addressId string) (*DeleteOutput, error) {
-	_, err := r.server.userClient.DeleteDeliveryAddress(ctx, &pb.DeleteDeliveryAddressReq{
+	_, err := r.server.UserClient.DeleteDeliveryAddress(ctx, &pb.DeleteDeliveryAddressReq{
 		Id: addressId,
 	})
 
@@ -166,12 +173,12 @@ func (r *mutationResolver) DeleteDeliveryAddress(ctx context.Context, addressId 
 }
 
 func (r *mutationResolver) CreateShop(ctx context.Context, in CreateShopInput) (*Shop, error) {
-	res, err := r.server.shopClient.CreateShop(ctx, ToPbCreateShopReq(in))
+	res, err := r.server.ShopClient.CreateShop(ctx, ToPbCreateShopReq(in))
 	if err != nil {
 		return nil, err
 	}
 
-	if _, err = r.server.geolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
+	if _, err = r.server.GeolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
 		AddressId: res.Address.Id,
 		Latitude:  in.Address.Latitude,
 		Longitude: in.Address.Longitude,
@@ -207,7 +214,7 @@ func (r *mutationResolver) DeleteShop(ctx context.Context, in string) (*UpdateSh
 }
 
 func (r *mutationResolver) CreateRestaurantMenu(ctx context.Context, in CreateRestaurantMenuInput) (*RestaurantMenu, error) {
-	res, err := r.server.productClient.CreateRestaurantMenu(ctx, ToPbCreateRestaurantMenuReq(&in))
+	res, err := r.server.ProductClient.CreateRestaurantMenu(ctx, ToPbCreateRestaurantMenuReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -216,7 +223,7 @@ func (r *mutationResolver) CreateRestaurantMenu(ctx context.Context, in CreateRe
 }
 
 func (r *mutationResolver) CreateMenuItem(ctx context.Context, in CreateMenuItemInput) (*MenuItem, error) {
-	res, err := r.server.productClient.CreateMenuItem(ctx, ToPbCreateMenuItemReq(&in))
+	res, err := r.server.ProductClient.CreateMenuItem(ctx, ToPbCreateMenuItemReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -225,7 +232,7 @@ func (r *mutationResolver) CreateMenuItem(ctx context.Context, in CreateMenuItem
 }
 
 func (r *mutationResolver) CreateMenuItemVariant(ctx context.Context, in CreateItemVariantInput) (*ItemVariant, error) {
-	res, err := r.server.productClient.CreateMenuItemVariant(ctx, ToPbCreateItemVariantReq(&in))
+	res, err := r.server.ProductClient.CreateMenuItemVariant(ctx, ToPbCreateItemVariantReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -234,7 +241,7 @@ func (r *mutationResolver) CreateMenuItemVariant(ctx context.Context, in CreateI
 }
 
 func (r *mutationResolver) CreateMenuItemAddon(ctx context.Context, in CreateItemAddonInput) (*ItemAddon, error) {
-	res, err := r.server.productClient.CreateMenuItemAddon(ctx, ToPbCreateItemAddonReq(&in))
+	res, err := r.server.ProductClient.CreateMenuItemAddon(ctx, ToPbCreateItemAddonReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -243,7 +250,7 @@ func (r *mutationResolver) CreateMenuItemAddon(ctx context.Context, in CreateIte
 }
 
 func (r *mutationResolver) CreateRetailCategory(ctx context.Context, in CreateRetailCategoryInput) (*RetailCategory, error) {
-	res, err := r.server.productClient.CreateRetailCategory(ctx, ToPbCreateRetailCategoryReq(&in))
+	res, err := r.server.ProductClient.CreateRetailCategory(ctx, ToPbCreateRetailCategoryReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -252,7 +259,7 @@ func (r *mutationResolver) CreateRetailCategory(ctx context.Context, in CreateRe
 }
 
 func (r *mutationResolver) CreateRetailItem(ctx context.Context, in CreateRetailItemInput) (*RetailItem, error) {
-	res, err := r.server.productClient.CreateRetailItem(ctx, ToPbCreateRetailItemReq(&in))
+	res, err := r.server.ProductClient.CreateRetailItem(ctx, ToPbCreateRetailItemReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -261,7 +268,7 @@ func (r *mutationResolver) CreateRetailItem(ctx context.Context, in CreateRetail
 }
 
 func (r *mutationResolver) CreateRetailItemVariant(ctx context.Context, in CreateItemVariantInput) (*ItemVariant, error) {
-	res, err := r.server.productClient.CreateRetailItemVariant(ctx, ToPbCreateItemVariantReq(&in))
+	res, err := r.server.ProductClient.CreateRetailItemVariant(ctx, ToPbCreateItemVariantReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -270,7 +277,7 @@ func (r *mutationResolver) CreateRetailItemVariant(ctx context.Context, in Creat
 }
 
 func (r *mutationResolver) CreateMedicineCategory(ctx context.Context, in CreateMedicineCategoryInput) (*MedicineCategory, error) {
-	res, err := r.server.productClient.CreateMedicineCategory(ctx, ToPbCreateMedicineCategoryReq(&in))
+	res, err := r.server.ProductClient.CreateMedicineCategory(ctx, ToPbCreateMedicineCategoryReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -279,7 +286,7 @@ func (r *mutationResolver) CreateMedicineCategory(ctx context.Context, in Create
 }
 
 func (r *mutationResolver) CreateMedicineItem(ctx context.Context, in CreateMedicineItemInput) (*MedicineItem, error) {
-	res, err := r.server.productClient.CreateMedicineItem(ctx, ToPbCreateMedicineItemReq(&in))
+	res, err := r.server.ProductClient.CreateMedicineItem(ctx, ToPbCreateMedicineItemReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -294,7 +301,7 @@ func (r *mutationResolver) UpdateRestaurantMenu(ctx context.Context, in UpdateRe
 		ImageUrl: in.ImageURL,
 	}
 
-	_, err := r.server.productClient.UpdateRestaurantMenu(ctx, req)
+	_, err := r.server.ProductClient.UpdateRestaurantMenu(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -311,7 +318,7 @@ func (r *mutationResolver) UpdateMenuItem(ctx context.Context, in UpdateMenuItem
 		Description: in.Description,
 	}
 
-	_, err := r.server.productClient.UpdateMenuItem(ctx, req)
+	_, err := r.server.ProductClient.UpdateMenuItem(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -330,7 +337,7 @@ func (r *mutationResolver) UpdateMenuItemVariant(ctx context.Context, in UpdateI
 		Description:     in.Description,
 	}
 
-	_, err := r.server.productClient.UpdateMenuItemVariant(ctx, req)
+	_, err := r.server.ProductClient.UpdateMenuItemVariant(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -347,7 +354,7 @@ func (r *mutationResolver) UpdateMenuItemAddon(ctx context.Context, in UpdateIte
 		Description: in.Description,
 	}
 
-	_, err := r.server.productClient.UpdateMenuItemAddon(ctx, req)
+	_, err := r.server.ProductClient.UpdateMenuItemAddon(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -362,7 +369,7 @@ func (r *mutationResolver) UpdateRetailCategory(ctx context.Context, in UpdateRe
 		ImageUrl:     in.ImageURL,
 	}
 
-	_, err := r.server.productClient.UpdateRetailCategory(ctx, req)
+	_, err := r.server.ProductClient.UpdateRetailCategory(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -379,7 +386,7 @@ func (r *mutationResolver) UpdateRetailItem(ctx context.Context, in UpdateRetail
 		Description: in.Description,
 	}
 
-	_, err := r.server.productClient.UpdateRetailItem(ctx, req)
+	_, err := r.server.ProductClient.UpdateRetailItem(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -399,7 +406,7 @@ func (r *mutationResolver) UpdateRetailItemVariant(ctx context.Context, in Updat
 		ItemId:          in.ItemID,
 	}
 
-	_, err := r.server.productClient.UpdateRetailItemVariant(ctx, req)
+	_, err := r.server.ProductClient.UpdateRetailItemVariant(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -414,7 +421,7 @@ func (r *mutationResolver) UpdateMedicineCategory(ctx context.Context, in Update
 		ImageUrl:     in.ImageURL,
 	}
 
-	_, err := r.server.productClient.UpdateMedicineCategory(ctx, req)
+	_, err := r.server.ProductClient.UpdateMedicineCategory(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -431,7 +438,7 @@ func (r *mutationResolver) UpdateMedicineItem(ctx context.Context, in UpdateMedi
 		Description: in.Description,
 	}
 
-	_, err := r.server.productClient.UpdateMedicineItem(ctx, req)
+	_, err := r.server.ProductClient.UpdateMedicineItem(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -442,7 +449,7 @@ func (r *mutationResolver) UpdateMedicineItem(ctx context.Context, in UpdateMedi
 func (r *mutationResolver) DeleteRestaurantMenu(ctx context.Context, menuID string) (*DeleteOutput, error) {
 	req := &pb.DeleteRestaurantMenuReq{Id: menuID}
 
-	_, err := r.server.productClient.DeleteRestaurantMenu(ctx, req)
+	_, err := r.server.ProductClient.DeleteRestaurantMenu(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -453,7 +460,7 @@ func (r *mutationResolver) DeleteRestaurantMenu(ctx context.Context, menuID stri
 func (r *mutationResolver) DeleteMenuItem(ctx context.Context, itemID string) (*DeleteOutput, error) {
 	req := &pb.DeleteMenuItemReq{Id: itemID}
 
-	_, err := r.server.productClient.DeleteMenuItem(ctx, req)
+	_, err := r.server.ProductClient.DeleteMenuItem(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -462,7 +469,7 @@ func (r *mutationResolver) DeleteMenuItem(ctx context.Context, itemID string) (*
 }
 
 func (r *mutationResolver) DeleteMenuItemVariant(ctx context.Context, in DeleteItemVariantInput) (*DeleteOutput, error) {
-	_, err := r.server.productClient.DeleteMenuItemVariant(ctx, &pb.DeleteItemVariantReq{
+	_, err := r.server.ProductClient.DeleteMenuItemVariant(ctx, &pb.DeleteItemVariantReq{
 		ItemId:    in.ItemID,
 		VariantId: in.VariantID,
 	})
@@ -475,7 +482,7 @@ func (r *mutationResolver) DeleteMenuItemVariant(ctx context.Context, in DeleteI
 }
 
 func (r *mutationResolver) DeleteMenuItemAddon(ctx context.Context, in DeleteItemAddonInput) (*DeleteOutput, error) {
-	_, err := r.server.productClient.DeleteMenuItemAddon(ctx, &pb.DeleteItemAddonReq{
+	_, err := r.server.ProductClient.DeleteMenuItemAddon(ctx, &pb.DeleteItemAddonReq{
 		ItemId:  in.ItemID,
 		AddonId: in.AddonID,
 	})
@@ -490,7 +497,7 @@ func (r *mutationResolver) DeleteMenuItemAddon(ctx context.Context, in DeleteIte
 func (r *mutationResolver) DeleteRetailCategory(ctx context.Context, categoryID string) (*DeleteOutput, error) {
 	req := &pb.DeleteRetailCategoryReq{Id: categoryID}
 
-	_, err := r.server.productClient.DeleteRetailCategory(ctx, req)
+	_, err := r.server.ProductClient.DeleteRetailCategory(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -499,7 +506,7 @@ func (r *mutationResolver) DeleteRetailCategory(ctx context.Context, categoryID 
 }
 
 func (r *mutationResolver) DeleteRetailItem(ctx context.Context, itemID string) (*DeleteOutput, error) {
-	_, err := r.server.productClient.DeleteRetailItem(ctx, &pb.DeleteRetailItemReq{Id: itemID})
+	_, err := r.server.ProductClient.DeleteRetailItem(ctx, &pb.DeleteRetailItemReq{Id: itemID})
 	if err != nil {
 		return nil, err
 	}
@@ -508,7 +515,7 @@ func (r *mutationResolver) DeleteRetailItem(ctx context.Context, itemID string) 
 }
 
 func (r *mutationResolver) DeleteRetailItemVariant(ctx context.Context, in DeleteItemVariantInput) (*DeleteOutput, error) {
-	_, err := r.server.productClient.DeleteRetailItemVariant(ctx, &pb.DeleteItemVariantReq{
+	_, err := r.server.ProductClient.DeleteRetailItemVariant(ctx, &pb.DeleteItemVariantReq{
 		ItemId:    in.ItemID,
 		VariantId: in.VariantID,
 	})
@@ -523,7 +530,7 @@ func (r *mutationResolver) DeleteRetailItemVariant(ctx context.Context, in Delet
 func (r *mutationResolver) DeleteMedicineCategory(ctx context.Context, categoryID string) (*DeleteOutput, error) {
 	req := &pb.DeleteMedicineCategoryReq{Id: categoryID}
 
-	_, err := r.server.productClient.DeleteMedicineCategory(ctx, req)
+	_, err := r.server.ProductClient.DeleteMedicineCategory(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -534,7 +541,7 @@ func (r *mutationResolver) DeleteMedicineCategory(ctx context.Context, categoryI
 func (r *mutationResolver) DeleteMedicineItem(ctx context.Context, itemID string) (*DeleteOutput, error) {
 	req := &pb.DeleteMedicineItemReq{Id: itemID}
 
-	_, err := r.server.productClient.DeleteMedicineItem(ctx, req)
+	_, err := r.server.ProductClient.DeleteMedicineItem(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -543,7 +550,7 @@ func (r *mutationResolver) DeleteMedicineItem(ctx context.Context, itemID string
 }
 
 func (r *mutationResolver) CreateItemStock(ctx context.Context, in CreateItemStockInput) (*ItemStock, error) {
-	res, err := r.server.inventoryClient.CreateItemStock(ctx, ToPbCreateItemStockReq(&in))
+	res, err := r.server.InventoryClient.CreateItemStock(ctx, ToPbCreateItemStockReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -552,7 +559,7 @@ func (r *mutationResolver) CreateItemStock(ctx context.Context, in CreateItemSto
 }
 
 func (r *mutationResolver) CreateVariantStock(ctx context.Context, in CreateVariantStockInput) (*VariantStock, error) {
-	res, err := r.server.inventoryClient.CreateVariantStock(ctx, ToPbCreateVariantStockReq(&in))
+	res, err := r.server.InventoryClient.CreateVariantStock(ctx, ToPbCreateVariantStockReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -561,7 +568,7 @@ func (r *mutationResolver) CreateVariantStock(ctx context.Context, in CreateVari
 }
 
 func (r *mutationResolver) CreateAddonStock(ctx context.Context, in CreateAddonStockInput) (*AddonStock, error) {
-	res, err := r.server.inventoryClient.CreateAddonStock(ctx, ToPbCreateAddonStockReq(&in))
+	res, err := r.server.InventoryClient.CreateAddonStock(ctx, ToPbCreateAddonStockReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -570,7 +577,7 @@ func (r *mutationResolver) CreateAddonStock(ctx context.Context, in CreateAddonS
 }
 
 func (r *mutationResolver) UpdateItemStock(ctx context.Context, in UpdateItemStockInput) (*ItemStock, error) {
-	res, err := r.server.inventoryClient.UpdateItemStock(ctx, ToPbUpdateItemStockReq(&in))
+	res, err := r.server.InventoryClient.UpdateItemStock(ctx, ToPbUpdateItemStockReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -579,7 +586,7 @@ func (r *mutationResolver) UpdateItemStock(ctx context.Context, in UpdateItemSto
 }
 
 func (r *mutationResolver) UpdateVariantStock(ctx context.Context, in UpdateVariantStockInput) (*VariantStock, error) {
-	res, err := r.server.inventoryClient.UpdateVariantStock(ctx, ToPbUpdateVariantStockReq(&in))
+	res, err := r.server.InventoryClient.UpdateVariantStock(ctx, ToPbUpdateVariantStockReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -588,7 +595,7 @@ func (r *mutationResolver) UpdateVariantStock(ctx context.Context, in UpdateVari
 }
 
 func (r *mutationResolver) UpdateAddonStock(ctx context.Context, in UpdateAddonStockInput) (*AddonStock, error) {
-	res, err := r.server.inventoryClient.UpdateAddonStock(ctx, ToPbUpdateAddonStockReq(&in))
+	res, err := r.server.InventoryClient.UpdateAddonStock(ctx, ToPbUpdateAddonStockReq(&in))
 	if err != nil {
 		return nil, err
 	}
@@ -597,7 +604,7 @@ func (r *mutationResolver) UpdateAddonStock(ctx context.Context, in UpdateAddonS
 }
 
 func (r *mutationResolver) DeleteItemStock(ctx context.Context, id string) (*DeleteOutput, error) {
-	_, err := r.server.inventoryClient.DeleteItemStock(ctx, &pb.DeleteItemStockReq{Id: id})
+	_, err := r.server.InventoryClient.DeleteItemStock(ctx, &pb.DeleteItemStockReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -606,7 +613,7 @@ func (r *mutationResolver) DeleteItemStock(ctx context.Context, id string) (*Del
 }
 
 func (r *mutationResolver) DeleteVariantStock(ctx context.Context, id string) (*DeleteOutput, error) {
-	_, err := r.server.inventoryClient.DeleteVariantStock(ctx, &pb.DeleteVariantStockReq{Id: id})
+	_, err := r.server.InventoryClient.DeleteVariantStock(ctx, &pb.DeleteVariantStockReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -615,7 +622,7 @@ func (r *mutationResolver) DeleteVariantStock(ctx context.Context, id string) (*
 }
 
 func (r *mutationResolver) DeleteAddonStock(ctx context.Context, id string) (*DeleteOutput, error) {
-	_, err := r.server.inventoryClient.DeleteAddonStock(ctx, &pb.DeleteAddonStockReq{Id: id})
+	_, err := r.server.InventoryClient.DeleteAddonStock(ctx, &pb.DeleteAddonStockReq{Id: id})
 	if err != nil {
 		return nil, err
 	}

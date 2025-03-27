@@ -14,6 +14,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/vektah/gqlparser/v2/ast"
 	graphql "github.com/yash91989201/superfast-delivery-api/gateways/graphql"
+	customMiddleware "github.com/yash91989201/superfast-delivery-api/gateways/graphql/middleware"
 )
 
 type Config struct {
@@ -61,6 +62,8 @@ func main() {
 	})
 
 	r := chi.NewRouter()
+
+	r.Use(customMiddleware.AuthenticationMiddleware(s.AuthenticationClient))
 
 	r.Handle("/graphql", srv)
 	r.Handle("/playground", playground.Handler("GraphQL Playground", "/graphql"))

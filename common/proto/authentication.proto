@@ -49,11 +49,12 @@ message SignInWithGoogleReq {
 
 message SignInRes {
   Auth auth = 1;
-  Session session = 2;
+  string access_token = 2;
+  string refresh_token = 3;
 }
 
-message RefreshTokenReq {
-  string session_id = 1;
+message RefreshAccessTokenReq {
+  string refresh_token = 1;
 }
 
 message LogOutReq {
@@ -70,12 +71,12 @@ message GetAuthReq {
 }
 
 message ValidateSessionReq {
-  string auth_token = 1;
+  string access_token = 1;
 }
 
 message ValidateSessionRes {
-  bool valid = 1;
-  Auth auth = 2;
+  Auth auth = 1;
+  string session_id = 2;
 }
 
 service AuthenticationService {
@@ -86,7 +87,7 @@ service AuthenticationService {
   rpc GetAuthById(GetAuthByIdReq) returns (Auth) {}
   rpc GetAuth(GetAuthReq) returns (Auth) {}
 
-  rpc RefreshToken(RefreshTokenReq) returns (SignInRes) {}
+  rpc RefreshAccessToken(RefreshAccessTokenReq) returns (SignInRes) {}
   rpc LogOut(LogOutReq) returns (SignInRes) {}
 
   rpc ValidateSession(ValidateSessionReq) returns (ValidateSessionRes) {}

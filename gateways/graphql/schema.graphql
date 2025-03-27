@@ -51,6 +51,9 @@ enum DayOfWeek {
   SUNDAY
 }
 
+# Directives
+directive @hasAuthRole(auth_role: AuthRole!) on FIELD_DEFINITION
+
 # Authentication Types
 type Auth {
   id: String!
@@ -639,7 +642,8 @@ input UpdateAddonStockInput {
 type SignInOutput {
   auth: Auth
   profile: Profile
-  session: Session
+  access_token: String
+  refresh_token: String
   create_profile: Boolean!
   verify_otp: Boolean!
 }
@@ -757,8 +761,8 @@ type Mutation {
   SignInWithEmail(input: SignInWithEmailInput!): SignInOutput!
   SignInWithPhone(input: SignInWithPhoneInput!): SignInOutput!
   SignInWithGoogle(input: SignInWithGoogleInput!): SignInOutput!
-  RefreshToken(sessionID: ID!): SignInOutput!
-  LogOut(sessionID: ID!): SignInOutput!
+  RefreshAccessToken(refreshToken: String!): SignInOutput!
+  LogOut: SignInOutput!
 
   # User Service
   CreateProfile(input: CreateProfileInput!): Profile!

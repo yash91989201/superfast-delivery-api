@@ -11,7 +11,7 @@ type queryResolver struct {
 }
 
 func (r *queryResolver) GetAuthByID(ctx context.Context, in GetAuthByIDInput) (*Auth, error) {
-	res, err := r.server.authenticationClient.GetAuthById(ctx, &pb.GetAuthByIdReq{Id: in.ID})
+	res, err := r.server.AuthenticationClient.GetAuthById(ctx, &pb.GetAuthByIdReq{Id: in.ID})
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +20,7 @@ func (r *queryResolver) GetAuthByID(ctx context.Context, in GetAuthByIDInput) (*
 }
 
 func (r *queryResolver) GetAuth(ctx context.Context, in GetAuthInput) (*Auth, error) {
-	res, err := r.server.authenticationClient.GetAuth(ctx, &pb.GetAuthReq{Email: in.Email, Phone: in.Phone})
+	res, err := r.server.AuthenticationClient.GetAuth(ctx, &pb.GetAuthReq{Email: in.Email, Phone: in.Phone})
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func (r *queryResolver) GetProfile(ctx context.Context, in GetProfileInput) (*Pr
 }
 
 func (r *queryResolver) GetDeliveryAddress(ctx context.Context, id string) (*DeliveryAddress, error) {
-	res, err := r.server.userClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{
+	res, err := r.server.UserClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{
 		Id: id,
 	})
 
@@ -45,7 +45,7 @@ func (r *queryResolver) GetDeliveryAddress(ctx context.Context, id string) (*Del
 }
 
 func (r *queryResolver) GetDefaultDeliveryAddress(ctx context.Context, authID string) (*DeliveryAddress, error) {
-	res, err := r.server.userClient.GetDefaultDeliveryAddress(ctx, &pb.GetDefaultDeliveryAddressReq{
+	res, err := r.server.UserClient.GetDefaultDeliveryAddress(ctx, &pb.GetDefaultDeliveryAddressReq{
 		AuthId: authID,
 	})
 
@@ -57,12 +57,12 @@ func (r *queryResolver) GetDefaultDeliveryAddress(ctx context.Context, authID st
 }
 
 func (r *queryResolver) GetDeliveryAddressDetail(ctx context.Context, addressId string) (*AddressDetail, error) {
-	res, err := r.server.userClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{Id: addressId})
+	res, err := r.server.UserClient.GetDeliveryAddress(ctx, &pb.GetDeliveryAddressReq{Id: addressId})
 	if err != nil {
 		return nil, err
 	}
 
-	addressDetail, err := r.server.geolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
+	addressDetail, err := r.server.GeolocationClient.ReverseGeocode(ctx, &pb.ReverseGeocodeReq{
 		Latitude:  res.Latitude,
 		Longitude: res.Longitude,
 		AddressId: addressId,
@@ -77,7 +77,7 @@ func (r *queryResolver) GetDeliveryAddressDetail(ctx context.Context, addressId 
 
 func (r *queryResolver) ListDeliveryAddress(ctx context.Context, authId string) (*ListDeliveryAddressOutput, error) {
 
-	res, err := r.server.userClient.ListDeliveryAddress(ctx, &pb.ListDeliveryAddressReq{
+	res, err := r.server.UserClient.ListDeliveryAddress(ctx, &pb.ListDeliveryAddressReq{
 		AuthId: authId,
 	})
 
@@ -91,7 +91,7 @@ func (r *queryResolver) ListDeliveryAddress(ctx context.Context, authId string) 
 }
 
 func (r *queryResolver) GetShop(ctx context.Context, id string) (*Shop, error) {
-	res, err := r.server.shopClient.GetShop(ctx, &pb.GetShopReq{Id: id})
+	res, err := r.server.ShopClient.GetShop(ctx, &pb.GetShopReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +100,7 @@ func (r *queryResolver) GetShop(ctx context.Context, id string) (*Shop, error) {
 }
 
 func (r *queryResolver) ListShops(ctx context.Context, in *ListShopsInput) (*ListShopsOutput, error) {
-	res, err := r.server.shopClient.ListShops(ctx, ToPbListShopReq(in))
+	res, err := r.server.ShopClient.ListShops(ctx, ToPbListShopReq(in))
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +112,7 @@ func (r *queryResolver) ListShops(ctx context.Context, in *ListShopsInput) (*Lis
 }
 
 func (r *queryResolver) GetRestaurantMenu(ctx context.Context, id string) (*RestaurantMenu, error) {
-	res, err := r.server.productClient.GetRestaurantMenu(ctx, &pb.GetRestaurantMenuReq{Id: id})
+	res, err := r.server.ProductClient.GetRestaurantMenu(ctx, &pb.GetRestaurantMenuReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +121,7 @@ func (r *queryResolver) GetRestaurantMenu(ctx context.Context, id string) (*Rest
 }
 
 func (r *queryResolver) GetMenuItem(ctx context.Context, id string) (*MenuItem, error) {
-	res, err := r.server.productClient.GetMenuItem(ctx, &pb.GetMenuItemReq{Id: id})
+	res, err := r.server.ProductClient.GetMenuItem(ctx, &pb.GetMenuItemReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +129,7 @@ func (r *queryResolver) GetMenuItem(ctx context.Context, id string) (*MenuItem, 
 }
 
 func (r *queryResolver) GetMenuItemVariant(ctx context.Context, in GetItemVariantInput) (*ItemVariant, error) {
-	res, err := r.server.productClient.GetMenuItemVariant(ctx, &pb.GetItemVariantReq{
+	res, err := r.server.ProductClient.GetMenuItemVariant(ctx, &pb.GetItemVariantReq{
 		ItemId:    in.ItemID,
 		VariantId: in.VariantID,
 	})
@@ -142,7 +142,7 @@ func (r *queryResolver) GetMenuItemVariant(ctx context.Context, in GetItemVarian
 }
 
 func (r *queryResolver) GetMenuItemAddon(ctx context.Context, in GetItemAddonInput) (*ItemAddon, error) {
-	res, err := r.server.productClient.GetMenuItemAddon(ctx, &pb.GetItemAddonReq{
+	res, err := r.server.ProductClient.GetMenuItemAddon(ctx, &pb.GetItemAddonReq{
 		ItemId:  in.ItemID,
 		AddonId: in.AddonID,
 	})
@@ -155,7 +155,7 @@ func (r *queryResolver) GetMenuItemAddon(ctx context.Context, in GetItemAddonInp
 }
 
 func (r *queryResolver) GetRetailCategory(ctx context.Context, id string) (*RetailCategory, error) {
-	res, err := r.server.productClient.GetRetailCategory(ctx, &pb.GetRetailCategoryReq{Id: id})
+	res, err := r.server.ProductClient.GetRetailCategory(ctx, &pb.GetRetailCategoryReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +164,7 @@ func (r *queryResolver) GetRetailCategory(ctx context.Context, id string) (*Reta
 }
 
 func (r *queryResolver) GetRetailItem(ctx context.Context, id string) (*RetailItem, error) {
-	res, err := r.server.productClient.GetRetailItem(ctx, &pb.GetRetailItemReq{Id: id})
+	res, err := r.server.ProductClient.GetRetailItem(ctx, &pb.GetRetailItemReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +172,7 @@ func (r *queryResolver) GetRetailItem(ctx context.Context, id string) (*RetailIt
 }
 
 func (r *queryResolver) GetRetailItemVariant(ctx context.Context, in GetItemVariantInput) (*ItemVariant, error) {
-	res, err := r.server.productClient.GetRetailItemVariant(ctx, &pb.GetItemVariantReq{
+	res, err := r.server.ProductClient.GetRetailItemVariant(ctx, &pb.GetItemVariantReq{
 		ItemId:    in.ItemID,
 		VariantId: in.VariantID,
 	})
@@ -185,7 +185,7 @@ func (r *queryResolver) GetRetailItemVariant(ctx context.Context, in GetItemVari
 }
 
 func (r *queryResolver) GetMedicineCategory(ctx context.Context, id string) (*MedicineCategory, error) {
-	res, err := r.server.productClient.GetMedicineCategory(ctx, &pb.GetMedicineCategoryReq{Id: id})
+	res, err := r.server.ProductClient.GetMedicineCategory(ctx, &pb.GetMedicineCategoryReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +194,7 @@ func (r *queryResolver) GetMedicineCategory(ctx context.Context, id string) (*Me
 }
 
 func (r *queryResolver) GetMedicineItem(ctx context.Context, id string) (*MedicineItem, error) {
-	res, err := r.server.productClient.GetMedicineItem(ctx, &pb.GetMedicineItemReq{Id: id})
+	res, err := r.server.ProductClient.GetMedicineItem(ctx, &pb.GetMedicineItemReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -202,7 +202,7 @@ func (r *queryResolver) GetMedicineItem(ctx context.Context, id string) (*Medici
 }
 
 func (r *queryResolver) ListRestaurantMenu(ctx context.Context, shopId string) (*ListRestaurantMenuOutput, error) {
-	res, err := r.server.productClient.ListRestaurantMenu(ctx, &pb.ListRestaurantMenuReq{ShopId: shopId})
+	res, err := r.server.ProductClient.ListRestaurantMenu(ctx, &pb.ListRestaurantMenuReq{ShopId: shopId})
 	if err != nil {
 		return nil, err
 	}
@@ -215,7 +215,7 @@ func (r *queryResolver) ListRestaurantMenu(ctx context.Context, shopId string) (
 }
 
 func (r *queryResolver) ListRetailCategory(ctx context.Context, shopId string) (*ListRetailCategoryOutput, error) {
-	res, err := r.server.productClient.ListRetailCategory(ctx, &pb.ListRetailCategoryReq{ShopId: shopId})
+	res, err := r.server.ProductClient.ListRetailCategory(ctx, &pb.ListRetailCategoryReq{ShopId: shopId})
 	if err != nil {
 		return nil, err
 	}
@@ -229,7 +229,7 @@ func (r *queryResolver) ListRetailCategory(ctx context.Context, shopId string) (
 }
 
 func (r *queryResolver) ListMedicineCategory(ctx context.Context, shopId string) (*ListMedicineCategoryOutput, error) {
-	res, err := r.server.productClient.ListMedicineCategory(ctx, &pb.ListMedicineCategoryReq{ShopId: shopId})
+	res, err := r.server.ProductClient.ListMedicineCategory(ctx, &pb.ListMedicineCategoryReq{ShopId: shopId})
 	if err != nil {
 		return nil, err
 	}
@@ -243,7 +243,7 @@ func (r *queryResolver) ListMedicineCategory(ctx context.Context, shopId string)
 }
 
 func (r *queryResolver) ListMenuItem(ctx context.Context, menuId string) (*ListMenuItemOutput, error) {
-	res, err := r.server.productClient.ListMenuItem(ctx, &pb.ListMenuItemReq{MenuId: menuId})
+	res, err := r.server.ProductClient.ListMenuItem(ctx, &pb.ListMenuItemReq{MenuId: menuId})
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +256,7 @@ func (r *queryResolver) ListMenuItem(ctx context.Context, menuId string) (*ListM
 }
 
 func (r *queryResolver) ListMenuItemVariant(ctx context.Context, itemID string) (*ListItemVariantOutput, error) {
-	res, err := r.server.productClient.ListMenuItemVariant(ctx, &pb.ListItemVariantReq{
+	res, err := r.server.ProductClient.ListMenuItemVariant(ctx, &pb.ListItemVariantReq{
 		ItemId: itemID,
 	})
 
@@ -273,7 +273,7 @@ func (r *queryResolver) ListMenuItemVariant(ctx context.Context, itemID string) 
 }
 
 func (r *queryResolver) ListMenuItemAddon(ctx context.Context, itemID string) (*ListItemAddonOutput, error) {
-	res, err := r.server.productClient.ListMenuItemAddon(ctx, &pb.ListItemAddonReq{
+	res, err := r.server.ProductClient.ListMenuItemAddon(ctx, &pb.ListItemAddonReq{
 		ItemId: itemID,
 	})
 
@@ -290,7 +290,7 @@ func (r *queryResolver) ListMenuItemAddon(ctx context.Context, itemID string) (*
 }
 
 func (r *queryResolver) ListRetailItem(ctx context.Context, categoryId string) (*ListRetailItemOutput, error) {
-	res, err := r.server.productClient.ListRetailItem(ctx, &pb.ListRetailItemReq{CategoryId: categoryId})
+	res, err := r.server.ProductClient.ListRetailItem(ctx, &pb.ListRetailItemReq{CategoryId: categoryId})
 	if err != nil {
 		return nil, err
 	}
@@ -303,7 +303,7 @@ func (r *queryResolver) ListRetailItem(ctx context.Context, categoryId string) (
 }
 
 func (r *queryResolver) ListRetailItemVariant(ctx context.Context, itemID string) (*ListItemVariantOutput, error) {
-	res, err := r.server.productClient.ListRetailItemVariant(ctx, &pb.ListItemVariantReq{
+	res, err := r.server.ProductClient.ListRetailItemVariant(ctx, &pb.ListItemVariantReq{
 		ItemId: itemID,
 	})
 
@@ -320,7 +320,7 @@ func (r *queryResolver) ListRetailItemVariant(ctx context.Context, itemID string
 }
 
 func (r *queryResolver) ListMedicineItem(ctx context.Context, categoryId string) (*ListMedicineItemOutput, error) {
-	res, err := r.server.productClient.ListMedicineItem(ctx, &pb.ListMedicineItemReq{CategoryId: categoryId})
+	res, err := r.server.ProductClient.ListMedicineItem(ctx, &pb.ListMedicineItemReq{CategoryId: categoryId})
 	if err != nil {
 		return nil, err
 	}
@@ -333,7 +333,7 @@ func (r *queryResolver) ListMedicineItem(ctx context.Context, categoryId string)
 }
 
 func (r *queryResolver) GetItemStock(ctx context.Context, id string) (*ItemStock, error) {
-	res, err := r.server.inventoryClient.GetItemStock(ctx, &pb.GetItemStockReq{Id: id})
+	res, err := r.server.InventoryClient.GetItemStock(ctx, &pb.GetItemStockReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -342,7 +342,7 @@ func (r *queryResolver) GetItemStock(ctx context.Context, id string) (*ItemStock
 }
 
 func (r *queryResolver) GetVariantStock(ctx context.Context, id string) (*VariantStock, error) {
-	res, err := r.server.inventoryClient.GetVariantStock(ctx, &pb.GetVariantStockReq{Id: id})
+	res, err := r.server.InventoryClient.GetVariantStock(ctx, &pb.GetVariantStockReq{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -351,7 +351,7 @@ func (r *queryResolver) GetVariantStock(ctx context.Context, id string) (*Varian
 }
 
 func (r *queryResolver) GetAddonStock(ctx context.Context, id string) (*AddonStock, error) {
-	res, err := r.server.inventoryClient.GetAddonStock(ctx, &pb.GetAddonStockReq{Id: id})
+	res, err := r.server.InventoryClient.GetAddonStock(ctx, &pb.GetAddonStockReq{Id: id})
 	if err != nil {
 		return nil, err
 	}

@@ -66,17 +66,10 @@ func ToPbAuth(p *Auth) *pb.Auth {
 	}
 }
 
-func ToPbSession(s *ClientSession) *pb.Session {
-	return &pb.Session{
-		Id:                   s.ID,
-		AccessToken:          s.AccessToken,
-		AccessTokenExpiresAt: ToPbTimestamp(s.AccessTokenExpiresAt),
-	}
-}
-
 func ToPbSignInRes(r *SignInRes) *pb.SignInRes {
 	return &pb.SignInRes{
-		Auth:    ToPbAuth(r.Auth),
-		Session: ToPbSession(r.Session),
+		Auth:         ToPbAuth(r.Auth),
+		AccessToken:  *r.AccessToken,
+		RefreshToken: *r.RefreshToken,
 	}
 }
