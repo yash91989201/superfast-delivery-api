@@ -10,6 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/go-chi/chi/v5"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/vektah/gqlparser/v2/ast"
 	graphql "github.com/yash91989201/superfast-delivery-api/gateways/graphql"
@@ -59,9 +60,11 @@ func main() {
 		Cache: lru.New[string](100),
 	})
 
-	http.Handle("/graphql", srv)
-	http.Handle("/playground", playground.Handler("GraphQL playground", "/graphql"))
+	r := chi.NewRouter()
+
+	r.Handle("/graphql", srv)
+	r.Handle("/playground", playground.Handler("GraphQL Playground", "/graphql"))
 
 	log.Printf("Graphql server started at :%d", cfg.Port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), r))
 }

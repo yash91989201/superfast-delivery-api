@@ -4,6 +4,7 @@ go 1.24.0
 
 require (
 	github.com/99designs/gqlgen v0.17.66
+	github.com/go-chi/chi/v5 v5.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/vektah/gqlparser/v2 v2.5.22
 	github.com/yash91989201/superfast-delivery-api/common v0.0.0-20250309055017-edc39db580b5
