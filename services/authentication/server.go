@@ -9,7 +9,7 @@ import (
 	"github.com/nrednav/cuid2"
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
 	"github.com/yash91989201/superfast-delivery-api/common/types"
-	utils "github.com/yash91989201/superfast-delivery-api/common/utils"
+	"github.com/yash91989201/superfast-delivery-api/common/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
@@ -87,7 +87,7 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 		session := &types.Session{
 			ID:           sessionID,
 			AuthID:       auth.ID,
-			RefreshToken: *refreshToken,
+			RefreshToken: refreshToken,
 			IsRevoked:    false,
 			ExpiresAt:    time.Now().Add(30 * 24 * time.Hour),
 		}
@@ -98,8 +98,8 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 
 		signInRes := &types.SignInRes{
 			Auth:         auth,
-			AccessToken:  accessToken,
-			RefreshToken: refreshToken,
+			AccessToken:  &accessToken,
+			RefreshToken: &refreshToken,
 		}
 
 		return types.ToPbSignInRes(signInRes), nil
@@ -195,7 +195,7 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 		session := &types.Session{
 			ID:           sessionID,
 			AuthID:       auth.ID,
-			RefreshToken: *refreshToken,
+			RefreshToken: refreshToken,
 			IsRevoked:    false,
 			ExpiresAt:    time.Now().Add(30 * 24 * time.Hour),
 		}
@@ -206,8 +206,8 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 
 		signInRes := &types.SignInRes{
 			Auth:         auth,
-			AccessToken:  accessToken,
-			RefreshToken: refreshToken,
+			AccessToken:  &accessToken,
+			RefreshToken: &refreshToken,
 		}
 
 		return types.ToPbSignInRes(signInRes), nil
@@ -304,25 +304,25 @@ func (s *grpcServer) RefreshAccessToken(ctx context.Context, req *pb.RefreshAcce
 
 	refreshToken, err := s.TokenManager.GenerateRefreshToken()
 	if err != nil {
-		return nil, fmt.Errorf("Failed to create refresh token: %w", err)
+		return nil, fmt.Errorf("failed to create refresh token: %w", err)
 	}
 
 	session = &types.Session{
 		ID:           sessionID,
 		AuthID:       auth.ID,
-		RefreshToken: *refreshToken,
+		RefreshToken: refreshToken,
 		IsRevoked:    false,
 		ExpiresAt:    time.Now().Add(30 * 24 * time.Hour),
 	}
 
 	if err = s.service.CreateSession(ctx, session); err != nil {
-		return nil, fmt.Errorf("Failed to create session: %w", err)
+		return nil, fmt.Errorf("failed to create session: %w", err)
 	}
 
 	signInRes := &types.SignInRes{
 		Auth:         auth,
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
+		AccessToken:  &accessToken,
+		RefreshToken: &refreshToken,
 	}
 
 	return types.ToPbSignInRes(signInRes), nil

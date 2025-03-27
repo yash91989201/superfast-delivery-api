@@ -6,7 +6,7 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/tinrab/retry"
-	utils "github.com/yash91989201/superfast-delivery-api/common/utils"
+	"github.com/yash91989201/superfast-delivery-api/common/utils"
 	authenticationService "github.com/yash91989201/superfast-delivery-api/services/authentication"
 )
 

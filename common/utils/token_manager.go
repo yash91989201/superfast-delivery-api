@@ -1,4 +1,4 @@
-package token
+package utils
 
 import (
 	"crypto/rand"
@@ -26,7 +26,7 @@ func NewTokenManager(secretKey string) *TokenManager {
 	return &TokenManager{secretKey}
 }
 
-func (manager *TokenManager) GenerateAccessToken(auth *types.Auth, sessionID string) (*string, error) {
+func (manager *TokenManager) GenerateAccessToken(auth *types.Auth, sessionID string) (string, error) {
 	authClaims := &AuthClaims{
 		Email: auth.Email,
 		Phone: auth.Phone,
@@ -42,22 +42,22 @@ func (manager *TokenManager) GenerateAccessToken(auth *types.Auth, sessionID str
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, authClaims)
 	accessTokenStr, err := accessToken.SignedString([]byte(manager.secretKey))
 	if err != nil {
-		return nil, fmt.Errorf("failed to create access token")
+		return "", fmt.Errorf("failed to create access token")
 	}
 
-	return &accessTokenStr, nil
+	return accessTokenStr, nil
 }
 
-func (manager *TokenManager) GenerateRefreshToken() (*string, error) {
+func (manager *TokenManager) GenerateRefreshToken() (string, error) {
 	b := make([]byte, 32)
 	_, err := rand.Read(b)
 	if err != nil {
-		return nil, fmt.Errorf("failed to generate token: %w", err)
+		return "", fmt.Errorf("failed to generate token: %w", err)
 	}
 
-	refreshToken := base64.URLEncoding.EncodeToString(b)
+	rawToken := base64.URLEncoding.EncodeToString(b)
 
-	return &refreshToken, nil
+	return rawToken, nil
 }
 
 func (manager *TokenManager) VerifyAccessToken(accessToken string) (*AuthClaims, error) {
