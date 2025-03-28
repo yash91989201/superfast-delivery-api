@@ -77,6 +77,7 @@ func (r *mutationResolver) LogOut(ctx context.Context) (*SignInOutput, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	_, err = r.server.AuthenticationClient.LogOut(ctx, &pb.LogOutReq{SessionId: sessionID})
 	if err != nil {
 		return nil, err

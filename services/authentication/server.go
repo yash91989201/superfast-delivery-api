@@ -372,6 +372,7 @@ func (s *grpcServer) ValidateSession(ctx context.Context, req *pb.ValidateSessio
 	}
 
 	return &pb.ValidateSessionRes{
-		Auth: types.ToPbAuth(auth),
+		Auth:      types.ToPbAuth(auth),
+		SessionId: session.ID,
 	}, nil
 }
