@@ -52,7 +52,7 @@ enum DayOfWeek {
 }
 
 # Directives
-directive @hasAuthRole(auth_role: AuthRole!) on FIELD_DEFINITION
+directive @requireAuthRole(roles: [AuthRole!]!) on FIELD_DEFINITION
 
 # Authentication Types
 type Auth {
@@ -729,6 +729,7 @@ type Query {
   # Shop Service
   GetShop(id: ID!): Shop!
   ListShops(input: ListShopsInput): ListShopsOutput!
+    @requireAuthRole(roles: [CUSTOMER])
 
   # Product Service
   GetRestaurantMenu(id: ID!): RestaurantMenu!

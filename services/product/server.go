@@ -2,7 +2,6 @@ package product
 
 import (
 	"context"
-	"log"
 	"net"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
@@ -329,7 +328,6 @@ func (s *grpcServer) UpdateMenuItemAddon(ctx context.Context, req *pb.UpdateItem
 }
 
 func (s *grpcServer) UpdateRetailCategory(ctx context.Context, req *pb.UpdateRetailCategoryReq) (*pb.EmptyRes, error) {
-	log.Printf("server: %+v", req)
 	err := s.service.UpdateRetailCategory(ctx, types.ToUpdateRetailCategory(req))
 	if err != nil {
 		return nil, err

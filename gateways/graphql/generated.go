@@ -44,7 +44,7 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
-	HasAuthRole func(ctx context.Context, obj any, next graphql.Resolver, authRole AuthRole) (res any, err error)
+	RequireAuthRole func(ctx context.Context, obj any, next graphql.Resolver, roles []AuthRole) (res any, err error)
 }
 
 type ComplexityRoot struct {
@@ -3086,31 +3086,31 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) dir_hasAuthRole_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+func (ec *executionContext) dir_requireAuthRole_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.dir_hasAuthRole_argsAuthRole(ctx, rawArgs)
+	arg0, err := ec.dir_requireAuthRole_argsRoles(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["auth_role"] = arg0
+	args["roles"] = arg0
 	return args, nil
 }
-func (ec *executionContext) dir_hasAuthRole_argsAuthRole(
+func (ec *executionContext) dir_requireAuthRole_argsRoles(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (AuthRole, error) {
-	if _, ok := rawArgs["auth_role"]; !ok {
-		var zeroVal AuthRole
+) ([]AuthRole, error) {
+	if _, ok := rawArgs["roles"]; !ok {
+		var zeroVal []AuthRole
 		return zeroVal, nil
 	}
 
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_role"))
-	if tmp, ok := rawArgs["auth_role"]; ok {
-		return ec.unmarshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx, tmp)
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("roles"))
+	if tmp, ok := rawArgs["roles"]; ok {
+		return ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, tmp)
 	}
 
-	var zeroVal AuthRole
+	var zeroVal []AuthRole
 	return zeroVal, nil
 }
 
@@ -14627,8 +14627,35 @@ func (ec *executionContext) _Query_ListShops(ctx context.Context, field graphql.
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().ListShops(rctx, fc.Args["input"].(*ListShopsInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().ListShops(rctx, fc.Args["input"].(*ListShopsInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *ListShopsOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *ListShopsOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*ListShopsOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.ListShopsOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -27611,6 +27638,67 @@ func (ec *executionContext) unmarshalNAuthRole2githubᚗcomᚋyash91989201ᚋsup
 
 func (ec *executionContext) marshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx context.Context, sel ast.SelectionSet, v AuthRole) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx context.Context, v any) ([]AuthRole, error) {
+	var vSlice []any
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]AuthRole, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx context.Context, sel ast.SelectionSet, v []AuthRole) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNAuthRole2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRole(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v any) (bool, error) {

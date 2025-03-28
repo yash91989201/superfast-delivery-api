@@ -2,6 +2,7 @@ package graphql
 
 import (
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/casbin/casbin/v2"
 	"github.com/yash91989201/superfast-delivery-api/common/clients"
 )
 
@@ -12,6 +13,7 @@ type Server struct {
 	ProductClient        *clients.ProductClient
 	InventoryClient      *clients.InventoryClient
 	GeolocationClient    *clients.GeolocationClient
+	CasbinEnforcer       *casbin.Enforcer
 }
 
 type ServerConfig struct {
@@ -54,6 +56,11 @@ func NewGraphQLServer(cfg ServerConfig) (*Server, error) {
 		return nil, err
 	}
 
+	casbinEnforcer, err := casbin.NewEnforcer("model.conf", "policy.csv")
+	if err != nil {
+		return nil, err
+	}
+
 	return &Server{
 		AuthenticationClient: authenticationClient,
 		UserClient:           userClient,
@@ -61,6 +68,7 @@ func NewGraphQLServer(cfg ServerConfig) (*Server, error) {
 		ProductClient:        productClient,
 		InventoryClient:      inventoryClient,
 		GeolocationClient:    geolocationClient,
+		CasbinEnforcer:       casbinEnforcer,
 	}, nil
 }
 
@@ -81,7 +89,9 @@ func (s *Server) ToExecutableSchema() graphql.ExecutableSchema {
 		Resolvers: s,
 	}
 
-	schemaConfig.Directives.HasAuthRole = HasAuthRoleDirective
+	directives := NewGQLDirective(s.CasbinEnforcer)
+
+	schemaConfig.Directives.RequireAuthRole = directives.RequireAuthRole
 
 	return NewExecutableSchema(schemaConfig)
 }

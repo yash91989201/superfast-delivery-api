@@ -49,7 +49,7 @@ func (manager *TokenManager) GenerateAccessToken(auth *types.Auth, sessionID str
 }
 
 func (manager *TokenManager) GenerateRefreshToken() (string, error) {
-	b := make([]byte, 32)
+	b := make([]byte, 64)
 	_, err := rand.Read(b)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate token: %w", err)

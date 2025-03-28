@@ -56,7 +56,7 @@ func AuthenticationMiddleware(authClient *clients.AuthenticationClient) func(htt
 
 			accessToken, err := extractToken(r)
 			if err != nil {
-				writeGraphQLAuthError(w, "UNAUTHORIZED", operationName)
+				writeGraphQLAuthError(w, "UNAUTHENTICATED", operationName)
 				return
 			}
 
@@ -65,7 +65,7 @@ func AuthenticationMiddleware(authClient *clients.AuthenticationClient) func(htt
 			})
 
 			if err != nil {
-				writeGraphQLAuthError(w, "UNAUTHORIZED", operationName)
+				writeGraphQLAuthError(w, "UNAUTHENTICATED", operationName)
 				return
 			}
 

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
+	"github.com/yash91989201/superfast-delivery-api/common/types"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -126,6 +127,21 @@ func ToGQAuthRole(t pb.AuthRole) AuthRole {
 		return AuthRoleAdmin
 	default:
 		return AuthRoleCustomer
+	}
+}
+
+func TypesToGQAuthRole(role types.AuthRole) AuthRole {
+	switch role {
+	case types.Customer:
+		return AuthRoleCustomer
+	case types.DeliveryPartner:
+		return AuthRoleDeliveryPartner
+	case types.Vendor:
+		return AuthRoleVendor
+	case types.Admin:
+		return AuthRoleAdmin
+	default:
+		return ""
 	}
 }
 

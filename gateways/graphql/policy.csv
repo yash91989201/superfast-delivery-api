@@ -1,0 +1,81 @@
+# ROLE HIERARCHY (ADMIN inherits all permissions)
+g, ADMIN, VENDOR
+g, ADMIN, DELIVERY_PARTNER
+g, ADMIN, CUSTOMER
+g, VENDOR, CUSTOMER
+g, DELIVERY_PARTNER, CUSTOMER
+
+# Allow CUSTOMER to access public operations
+g, CUSTOMER, *
+
+# --------------------------------------------------
+# PUBLIC OPERATIONS (No auth required)
+# --------------------------------------------------
+p, *, mutation/SignInWithEmail, allow
+p, *, mutation/SignInWithPhone, allow
+p, *, mutation/SignInWithGoogle, allow
+p, *, mutation/RefreshAccessToken, allow
+p, *, mutation/LogOut, allow
+
+# --------------------------------------------------
+# CUSTOMER ACCESS (User Service + Public Queries)
+# --------------------------------------------------
+# Queries
+p, CUSTOMER, query/GetProfile, allow
+p, CUSTOMER, query/GetDeliveryAddress, allow
+p, CUSTOMER, query/GetDefaultDeliveryAddress, allow
+p, CUSTOMER, query/GetDeliveryAddressDetail, allow
+p, CUSTOMER, query/ListDeliveryAddress, allow
+p, CUSTOMER, query/ListShops, allow   # <-- ADDED EXPLICITLY
+
+# Mutations
+p, CUSTOMER, mutation/CreateProfile, allow
+p, CUSTOMER, mutation/CreateDeliveryAddress, allow
+p, CUSTOMER, mutation/UpdateProfile, allow
+p, CUSTOMER, mutation/UpdateDeliveryAddress, allow
+p, CUSTOMER, mutation/UpdateDefaultDeliveryAddress, allow
+p, CUSTOMER, mutation/DeleteDeliveryAddress, allow
+
+# --------------------------------------------------
+# VENDOR ACCESS (Shop/Product Management)
+# --------------------------------------------------
+# Shop Service
+p, VENDOR, mutation/CreateShop, allow
+p, VENDOR, mutation/UpdateShop*, allow
+p, VENDOR, mutation/DeleteShop, allow
+
+# Product Service 
+p, VENDOR, mutation/CreateRestaurantMenu, allow
+p, VENDOR, mutation/CreateMenuItem*, allow
+p, VENDOR, mutation/CreateRetail*, allow
+p, VENDOR, mutation/CreateMedicine*, allow
+p, VENDOR, mutation/Update*, allow
+p, VENDOR, mutation/Delete*, allow
+
+# Inventory Service
+p, VENDOR, mutation/Create*Stock, allow
+p, VENDOR, mutation/Update*Stock, allow
+p, VENDOR, mutation/Delete*Stock, allow
+p, VENDOR, query/Get*Stock, allow
+
+# --------------------------------------------------
+# DELIVERY PARTNER ACCESS (Future-Proofing)
+# --------------------------------------------------
+p, DELIVERY_PARTNER, query/GetShop, allow
+p, DELIVERY_PARTNER, query/ListShops, allow
+
+# --------------------------------------------------
+# ADMIN ACCESS (Full Control)
+# --------------------------------------------------
+p, ADMIN, *, allow
+
+# --------------------------------------------------
+# PUBLIC QUERIES (Shop/Product Browsing)
+# --------------------------------------------------
+p, *, query/GetShop, allow
+p, *, query/ListShops, allow
+p, *, query/GetRestaurantMenu, allow
+p, *, query/GetMenuItem*, allow
+p, *, query/GetRetail*, allow
+p, *, query/GetMedicine*, allow
+p, *, query/List*, allow
