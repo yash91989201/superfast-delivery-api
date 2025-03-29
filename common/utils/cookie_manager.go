@@ -2,6 +2,7 @@ package utils
 
 import (
 	"net/http"
+	"time"
 )
 
 type CookieManager struct {
@@ -49,8 +50,22 @@ func (c *CookieManager) GetCookieValue(name string) (string, error) {
 }
 
 func (c *CookieManager) DeleteCookie(name string, opts CookieOptions) {
-	opts.MaxAge = -1
-	c.SetCookie(name, "", opts)
+	if c.InSecure {
+		opts.Secure = false
+		opts.SameSite = http.SameSiteLaxMode
+	}
+
+	http.SetCookie(c.writer, &http.Cookie{
+		Name:     name,
+		Value:    "",
+		Path:     opts.Path,
+		Domain:   opts.Domain,
+		Expires:  time.Unix(0, 0),
+		MaxAge:   -1,
+		Secure:   opts.Secure,
+		HttpOnly: opts.HttpOnly,
+		SameSite: opts.SameSite,
+	})
 }
 
 type CookieOptions struct {

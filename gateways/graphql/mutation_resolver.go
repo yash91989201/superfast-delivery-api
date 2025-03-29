@@ -47,7 +47,7 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 
 	res.Profile = ToGQProfile(profile)
 
-	if err = setSessionTokens(ctx, signInRes.AccessToken, signInRes.RefreshToken); err != nil {
+	if err = setSessionCookies(ctx, signInRes.AccessToken, signInRes.RefreshToken); err != nil {
 		return &SignInOutput{}, err
 	}
 
@@ -70,7 +70,7 @@ func (r *mutationResolver) RefreshAccessToken(ctx context.Context, refreshToken 
 
 	profile, _ := r.server.UserClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 
-	if err = setSessionTokens(ctx, signInRes.AccessToken, signInRes.RefreshToken); err != nil {
+	if err = setSessionCookies(ctx, signInRes.AccessToken, signInRes.RefreshToken); err != nil {
 		return &SignInOutput{}, err
 	}
 
@@ -94,6 +94,8 @@ func (r *mutationResolver) LogOut(ctx context.Context) (*SignInOutput, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	deleteSessionCookies(ctx)
 
 	return &SignInOutput{}, nil
 }
@@ -643,7 +645,7 @@ func (r *mutationResolver) DeleteAddonStock(ctx context.Context, id string) (*De
 	return &DeleteOutput{Message: "Addon stock deleted successfully"}, nil
 }
 
-func setSessionTokens(ctx context.Context, accessToken, refreshToken string) error {
+func setSessionCookies(ctx context.Context, accessToken, refreshToken string) error {
 	cookieManager, err := customMiddleware.GetCookieManager(ctx)
 	if err != nil {
 		return err
@@ -678,4 +680,26 @@ func setSessionTokens(ctx context.Context, accessToken, refreshToken string) err
 	)
 
 	return nil
+}
+
+func deleteSessionCookies(ctx context.Context) {
+	cookieManager, err := customMiddleware.GetCookieManager(ctx)
+	if err != nil {
+		return
+	}
+
+	cookieManager.DeleteCookie("access_token", utils.CookieOptions{
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteStrictMode,
+	})
+
+	cookieManager.DeleteCookie("refresh_token", utils.CookieOptions{
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteStrictMode,
+	})
+
 }
