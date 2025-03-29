@@ -56,7 +56,7 @@ func NewGraphQLServer(cfg ServerConfig) (*Server, error) {
 		return nil, err
 	}
 
-	casbinEnforcer, err := casbin.NewEnforcer("model.conf", "policy.csv")
+	casbinEnforcer, err := casbin.NewEnforcer("rbac/model.conf", "rbac/policy.csv")
 	if err != nil {
 		return nil, err
 	}

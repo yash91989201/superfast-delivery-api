@@ -26,7 +26,6 @@ p, CUSTOMER, query/GetDeliveryAddress, allow
 p, CUSTOMER, query/GetDefaultDeliveryAddress, allow
 p, CUSTOMER, query/GetDeliveryAddressDetail, allow
 p, CUSTOMER, query/ListDeliveryAddress, allow
-p, CUSTOMER, query/ListShops, allow   # <-- ADDED EXPLICITLY
 
 # Mutations
 p, CUSTOMER, mutation/CreateProfile, allow
