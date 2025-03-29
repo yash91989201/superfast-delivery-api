@@ -191,6 +191,11 @@ type ComplexityRoot struct {
 		Total func(childComplexity int) int
 	}
 
+	LogOutOutput struct {
+		Message func(childComplexity int) int
+		Success func(childComplexity int) int
+	}
+
 	MedicineCategory struct {
 		CategoryName func(childComplexity int) int
 		CreatedAt    func(childComplexity int) int
@@ -449,7 +454,7 @@ type MutationResolver interface {
 	SignInWithPhone(ctx context.Context, input SignInWithPhoneInput) (*SignInOutput, error)
 	SignInWithGoogle(ctx context.Context, input SignInWithGoogleInput) (*SignInOutput, error)
 	RefreshAccessToken(ctx context.Context, refreshToken string) (*SignInOutput, error)
-	LogOut(ctx context.Context) (*SignInOutput, error)
+	LogOut(ctx context.Context) (*LogOutOutput, error)
 	CreateProfile(ctx context.Context, input CreateProfileInput) (*Profile, error)
 	CreateDeliveryAddress(ctx context.Context, input CreateDeliveryAddressInput) (*DeliveryAddress, error)
 	UpdateProfile(ctx context.Context, input UpdateProfileInput) (*Profile, error)
@@ -1132,6 +1137,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ListShopsOutput.Total(childComplexity), true
+
+	case "LogOutOutput.message":
+		if e.complexity.LogOutOutput.Message == nil {
+			break
+		}
+
+		return e.complexity.LogOutOutput.Message(childComplexity), true
+
+	case "LogOutOutput.success":
+		if e.complexity.LogOutOutput.Success == nil {
+			break
+		}
+
+		return e.complexity.LogOutOutput.Success(childComplexity), true
 
 	case "MedicineCategory.category_name":
 		if e.complexity.MedicineCategory.CategoryName == nil {
@@ -8962,6 +8981,94 @@ func (ec *executionContext) fieldContext_ListShopsOutput_total(_ context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _LogOutOutput_success(ctx context.Context, field graphql.CollectedField, obj *LogOutOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_LogOutOutput_success(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Success, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_LogOutOutput_success(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "LogOutOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _LogOutOutput_message(ctx context.Context, field graphql.CollectedField, obj *LogOutOutput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_LogOutOutput_message(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Message, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_LogOutOutput_message(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "LogOutOutput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _MedicineCategory_id(ctx context.Context, field graphql.CollectedField, obj *MedicineCategory) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_MedicineCategory_id(ctx, field)
 	if err != nil {
@@ -10419,9 +10526,9 @@ func (ec *executionContext) _Mutation_LogOut(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*SignInOutput)
+	res := resTmp.(*LogOutOutput)
 	fc.Result = res
-	return ec.marshalNSignInOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐSignInOutput(ctx, field.Selections, res)
+	return ec.marshalNLogOutOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐLogOutOutput(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_LogOut(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10432,20 +10539,12 @@ func (ec *executionContext) fieldContext_Mutation_LogOut(_ context.Context, fiel
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "auth":
-				return ec.fieldContext_SignInOutput_auth(ctx, field)
-			case "profile":
-				return ec.fieldContext_SignInOutput_profile(ctx, field)
-			case "access_token":
-				return ec.fieldContext_SignInOutput_access_token(ctx, field)
-			case "refresh_token":
-				return ec.fieldContext_SignInOutput_refresh_token(ctx, field)
-			case "create_profile":
-				return ec.fieldContext_SignInOutput_create_profile(ctx, field)
-			case "verify_otp":
-				return ec.fieldContext_SignInOutput_verify_otp(ctx, field)
+			case "success":
+				return ec.fieldContext_LogOutOutput_success(ctx, field)
+			case "message":
+				return ec.fieldContext_LogOutOutput_message(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type SignInOutput", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type LogOutOutput", field.Name)
 		},
 	}
 	return fc, nil
@@ -25046,6 +25145,50 @@ func (ec *executionContext) _ListShopsOutput(ctx context.Context, sel ast.Select
 	return out
 }
 
+var logOutOutputImplementors = []string{"LogOutOutput"}
+
+func (ec *executionContext) _LogOutOutput(ctx context.Context, sel ast.SelectionSet, obj *LogOutOutput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, logOutOutputImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("LogOutOutput")
+		case "success":
+			out.Values[i] = ec._LogOutOutput_success(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "message":
+			out.Values[i] = ec._LogOutOutput_message(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var medicineCategoryImplementors = []string{"MedicineCategory"}
 
 func (ec *executionContext) _MedicineCategory(ctx context.Context, sel ast.SelectionSet, obj *MedicineCategory) graphql.Marshaler {
@@ -28223,6 +28366,20 @@ func (ec *executionContext) marshalNListShopsOutput2ᚖgithubᚗcomᚋyash919892
 		return graphql.Null
 	}
 	return ec._ListShopsOutput(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNLogOutOutput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐLogOutOutput(ctx context.Context, sel ast.SelectionSet, v LogOutOutput) graphql.Marshaler {
+	return ec._LogOutOutput(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNLogOutOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐLogOutOutput(ctx context.Context, sel ast.SelectionSet, v *LogOutOutput) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._LogOutOutput(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNMedicineCategory2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐMedicineCategory(ctx context.Context, sel ast.SelectionSet, v MedicineCategory) graphql.Marshaler {

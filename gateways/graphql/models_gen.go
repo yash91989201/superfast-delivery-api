@@ -332,6 +332,11 @@ type ListShopsOutput struct {
 	Total int32   `json:"total"`
 }
 
+type LogOutOutput struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
 type MedicineCategory struct {
 	ID           string  `json:"id"`
 	CategoryName string  `json:"category_name"`

@@ -43,7 +43,7 @@ func Authentication(authClient *clients.AuthenticationClient) func(http.Handler)
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			operationName, err := getOperationName(r)
 			if err != nil {
-				http.Error(w, "invalid request body", http.StatusBadRequest)
+				http.Error(w, "invalid request", http.StatusBadRequest)
 				return
 			}
 
@@ -55,7 +55,7 @@ func Authentication(authClient *clients.AuthenticationClient) func(http.Handler)
 			ctx := r.Context()
 			auth, sessionID, err := authenticate(ctx, r, authClient)
 			if err != nil {
-				writeGraphQLAuthError(w, err.Error(), operationName)
+				writeGraphQLAuthError(w, "authentication failed", operationName)
 				return
 			}
 
@@ -108,17 +108,17 @@ func extractAccessToken(r *http.Request) (string, error) {
 		if len(parts) == 2 && strings.EqualFold(parts[0], "bearer") {
 			return parts[1], nil
 		}
-		return "", errors.New("invalid authorization header")
+		return "", errors.New("invalid token")
 	}
 
 	cookieManager, err := GetCookieManager(r.Context())
 	if err != nil {
-		return "", errors.New("missing cookie manager")
+		return "", errors.New("invalid token")
 	}
 
 	cookie, err := cookieManager.GetCookie("access_token")
 	if err != nil || cookie.Value == "" {
-		return "", errors.New("missing access token")
+		return "", errors.New("invalid token")
 	}
 	return cookie.Value, nil
 }
@@ -131,7 +131,7 @@ func validateAccessToken(ctx context.Context, r *http.Request, authClient *clien
 
 	res, err := authClient.ValidateSession(ctx, &pb.ValidateSessionReq{AccessToken: accessToken})
 	if err != nil {
-		return nil, "", errors.New("session validation failed")
+		return nil, "", errors.New("invalid token")
 	}
 	return types.ToAuth(res.Auth), res.SessionId, nil
 }
@@ -139,17 +139,17 @@ func validateAccessToken(ctx context.Context, r *http.Request, authClient *clien
 func refreshAccessToken(ctx context.Context, authClient *clients.AuthenticationClient) (*types.Auth, error) {
 	cookieManager, err := GetCookieManager(ctx)
 	if err != nil {
-		return nil, errors.New("missing cookie manager")
+		return nil, errors.New("invalid token")
 	}
 
 	refreshTokenCookie, err := cookieManager.GetCookie("refresh_token")
 	if err != nil || refreshTokenCookie.Value == "" {
-		return nil, errors.New("missing refresh token")
+		return nil, errors.New("invalid token")
 	}
 
 	res, err := authClient.RefreshAccessToken(ctx, &pb.RefreshAccessTokenReq{RefreshToken: refreshTokenCookie.Value})
 	if err != nil {
-		return nil, errors.New("failed to refresh access token")
+		return nil, errors.New("invalid token")
 	}
 
 	setAuthCookies(*cookieManager, res.AccessToken, res.RefreshToken)
@@ -188,14 +188,14 @@ func writeGraphQLAuthError(w http.ResponseWriter, message, operationName string)
 	w.WriteHeader(http.StatusUnauthorized)
 
 	if err := json.NewEncoder(w).Encode(map[string]any{"errors": []*gqlerror.Error{errResponse}}); err != nil {
-		http.Error(w, "failed to encode error response", http.StatusInternalServerError)
+		http.Error(w, "server error", http.StatusInternalServerError)
 	}
 }
 
 func GetCtxAuth(ctx context.Context) (*types.Auth, error) {
 	auth, ok := ctx.Value(AuthCtxKey).(*types.Auth)
 	if !ok {
-		return nil, errors.New("unauthenticated request")
+		return nil, errors.New("unauthorized")
 	}
 	return auth, nil
 }
@@ -203,7 +203,8 @@ func GetCtxAuth(ctx context.Context) (*types.Auth, error) {
 func GetCtxSessionId(ctx context.Context) (string, error) {
 	sessionID, ok := ctx.Value(SessionIdCtxKey).(string)
 	if !ok {
-		return "", errors.New("unauthenticated request")
+		return "", errors.New("unauthorized")
 	}
 	return sessionID, nil
 }
+

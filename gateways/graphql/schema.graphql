@@ -714,6 +714,11 @@ type DeleteOutput {
   message: String!
 }
 
+type LogOutOutput {
+  success: Boolean!
+  message: String!
+}
+
 type Query {
   # Authentication Service
   GetAuth(input: GetAuthInput!): Auth!
@@ -763,7 +768,7 @@ type Mutation {
   SignInWithPhone(input: SignInWithPhoneInput!): SignInOutput!
   SignInWithGoogle(input: SignInWithGoogleInput!): SignInOutput!
   RefreshAccessToken(refreshToken: String!): SignInOutput!
-  LogOut: SignInOutput!
+  LogOut: LogOutOutput!
 
   # User Service
   CreateProfile(input: CreateProfileInput!): Profile!

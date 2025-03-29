@@ -84,7 +84,7 @@ func (r *mutationResolver) RefreshAccessToken(ctx context.Context, refreshToken 
 	}, nil
 }
 
-func (r *mutationResolver) LogOut(ctx context.Context) (*SignInOutput, error) {
+func (r *mutationResolver) LogOut(ctx context.Context) (*LogOutOutput, error) {
 	sessionID, err := customMiddleware.GetCtxSessionId(ctx)
 	if err != nil {
 		return nil, err
@@ -97,7 +97,10 @@ func (r *mutationResolver) LogOut(ctx context.Context) (*SignInOutput, error) {
 
 	deleteSessionCookies(ctx)
 
-	return &SignInOutput{}, nil
+	return &LogOutOutput{
+		Success: true,
+		Message: "Successfully logged out",
+	}, nil
 }
 
 func (r *mutationResolver) CreateProfile(ctx context.Context, in CreateProfileInput) (*Profile, error) {
