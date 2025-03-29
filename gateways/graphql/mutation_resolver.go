@@ -3,8 +3,11 @@ package graphql
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
+	"github.com/yash91989201/superfast-delivery-api/common/utils"
 	customMiddleware "github.com/yash91989201/superfast-delivery-api/gateways/graphql/middleware"
 )
 
@@ -43,6 +46,11 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 	}
 
 	res.Profile = ToGQProfile(profile)
+
+	if err = setSessionTokens(ctx, signInRes.AccessToken, signInRes.RefreshToken); err != nil {
+		return &SignInOutput{}, err
+	}
+
 	return res, nil
 }
 
@@ -61,6 +69,10 @@ func (r *mutationResolver) RefreshAccessToken(ctx context.Context, refreshToken 
 	}
 
 	profile, _ := r.server.UserClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
+
+	if err = setSessionTokens(ctx, signInRes.AccessToken, signInRes.RefreshToken); err != nil {
+		return &SignInOutput{}, err
+	}
 
 	return &SignInOutput{
 		Auth:          ToGQAuth(signInRes.Auth),
@@ -629,4 +641,41 @@ func (r *mutationResolver) DeleteAddonStock(ctx context.Context, id string) (*De
 	}
 
 	return &DeleteOutput{Message: "Addon stock deleted successfully"}, nil
+}
+
+func setSessionTokens(ctx context.Context, accessToken, refreshToken string) error {
+	cookieManager, err := customMiddleware.GetCookieManager(ctx)
+	if err != nil {
+		return err
+	}
+
+	if accessToken == "" || refreshToken == "" {
+		return fmt.Errorf("access token/ refresh token empty")
+	}
+
+	cookieManager.SetCookie(
+		"access_token",
+		accessToken,
+		utils.CookieOptions{
+			Path:     "/",
+			MaxAge:   int((15 * time.Minute).Seconds()),
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteStrictMode,
+		},
+	)
+
+	cookieManager.SetCookie(
+		"refresh_token",
+		refreshToken,
+		utils.CookieOptions{
+			Path:     "/",
+			MaxAge:   int((30 * 24 * time.Hour).Seconds()),
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteStrictMode,
+		},
+	)
+
+	return nil
 }

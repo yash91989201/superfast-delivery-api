@@ -63,7 +63,8 @@ func main() {
 
 	r := chi.NewRouter()
 
-	r.Use(customMiddleware.AuthenticationMiddleware(s.AuthenticationClient))
+	r.Use(customMiddleware.WithCookieManager)
+	r.Use(customMiddleware.Authentication(s.AuthenticationClient))
 
 	r.Handle("/graphql", srv)
 	r.Handle("/playground", playground.Handler("GraphQL Playground", "/graphql"))

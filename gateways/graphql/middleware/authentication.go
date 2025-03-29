@@ -5,20 +5,24 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"github.com/yash91989201/superfast-delivery-api/common/clients"
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
 	"github.com/yash91989201/superfast-delivery-api/common/types"
+	"github.com/yash91989201/superfast-delivery-api/common/utils"
 )
 
-type contextKey string
+type authCtxKey string
 
-const AuthCtxKey contextKey = "auth"
-const SessionIdCtxKey contextKey = "session_id"
+const AuthCtxKey authCtxKey = "auth"
+const SessionIdCtxKey authCtxKey = "session_id"
 
 type gqlRequest struct {
 	Query         string         `json:"query"`
@@ -34,7 +38,7 @@ var publicOperations = map[string]bool{
 	"IntrospectionQuery": true,
 }
 
-func AuthenticationMiddleware(authClient *clients.AuthenticationClient) func(http.Handler) http.Handler {
+func Authentication(authClient *clients.AuthenticationClient) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -54,9 +58,10 @@ func AuthenticationMiddleware(authClient *clients.AuthenticationClient) func(htt
 				return
 			}
 
-			accessToken, err := extractToken(r)
+			accessToken, err := extractAccessToken(r)
 			if err != nil {
-				writeGraphQLAuthError(w, "UNAUTHENTICATED", operationName)
+				log.Print(err)
+				writeGraphQLAuthError(w, "UNAUTHENTICATED: Missing or invalid access token", operationName)
 				return
 			}
 
@@ -65,7 +70,14 @@ func AuthenticationMiddleware(authClient *clients.AuthenticationClient) func(htt
 			})
 
 			if err != nil {
-				writeGraphQLAuthError(w, "UNAUTHENTICATED", operationName)
+				auth, err := tryRefreshingAccessToken(r.Context(), authClient)
+				if err != nil {
+					writeGraphQLAuthError(w, "UNAUTHENTICATED: Failed to refresh access token", operationName)
+					return
+				}
+
+				ctx := context.WithValue(r.Context(), AuthCtxKey, auth)
+				next.ServeHTTP(w, r.WithContext(ctx))
 				return
 			}
 
@@ -86,6 +98,7 @@ func extractOperationName(r *http.Request) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	r.Body.Close()
 
 	r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
@@ -97,18 +110,80 @@ func extractOperationName(r *http.Request) (string, error) {
 	return req.OperationName, nil
 }
 
-func extractToken(r *http.Request) (string, error) {
-	authHeader := r.Header.Get("Authorization")
-	if authHeader == "" {
-		return "", errors.New("authorization header required")
+func extractAccessToken(r *http.Request) (string, error) {
+	if authHeader := r.Header.Get("Authorization"); authHeader != "" {
+		tokenParts := strings.Split(authHeader, " ")
+		if len(tokenParts) != 2 || strings.ToLower(tokenParts[0]) != "bearer" {
+			return "", fmt.Errorf("invalid authorization header format")
+		}
+
+		return tokenParts[1], nil
 	}
 
-	tokenParts := strings.Split(authHeader, " ")
-	if len(tokenParts) != 2 || strings.ToLower(tokenParts[0]) != "bearer" {
-		return "", errors.New("invalid authorization header")
+	cookieManager, err := GetCookieManager(r.Context())
+	if err != nil {
+		return "", err
 	}
 
-	return tokenParts[1], nil
+	accessTokenCookie, err := cookieManager.GetCookie("access_token")
+	if err != nil {
+		return "", err
+	}
+
+	if accessTokenCookie.Value == "" {
+		return "", fmt.Errorf("access_token cookie is empty")
+	}
+
+	return accessTokenCookie.Value, nil
+}
+
+func tryRefreshingAccessToken(ctx context.Context, authClient *clients.AuthenticationClient) (*types.Auth, error) {
+	cookieManager, err := GetCookieManager(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshTokenCookie, err := cookieManager.GetCookie("refresh_token")
+	if err != nil {
+		return nil, err
+	}
+
+	refreshAccessTokenRes, err := authClient.RefreshAccessToken(ctx, &pb.RefreshAccessTokenReq{
+		RefreshToken: refreshTokenCookie.Value,
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to refresh access token")
+	}
+
+	newAccessToken := refreshAccessTokenRes.AccessToken
+	newRefreshToken := refreshAccessTokenRes.RefreshToken
+
+	cookieManager.SetCookie(
+		"access_token",
+		newAccessToken,
+		utils.CookieOptions{
+			Path:     "/",
+			MaxAge:   int((15 * time.Minute).Seconds()),
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteStrictMode,
+		},
+	)
+
+	cookieManager.SetCookie(
+		"refresh_token",
+		newRefreshToken,
+		utils.CookieOptions{
+			Path:     "/",
+			MaxAge:   int((30 * 24 * time.Hour).Seconds()),
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteStrictMode,
+		},
+	)
+
+	return types.ToAuth(refreshAccessTokenRes.Auth), nil
 }
 
 func isPublicOperation(operationName string) bool {
