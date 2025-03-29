@@ -52,8 +52,12 @@ type CreateAuth struct {
 	AuthRole      AuthRole
 }
 
+type ClientSession struct {
+	AccessToken  string
+	RefreshToken string
+}
+
 type SignInRes struct {
-	Auth         *Auth
-	AccessToken  *string
-	RefreshToken *string
+	Auth    *Auth
+	Session *ClientSession
 }

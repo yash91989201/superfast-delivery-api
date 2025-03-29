@@ -97,9 +97,11 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 		}
 
 		signInRes := &types.SignInRes{
-			Auth:         auth,
-			AccessToken:  &accessToken,
-			RefreshToken: &refreshToken,
+			Auth: auth,
+			Session: &types.ClientSession{
+				AccessToken:  accessToken,
+				RefreshToken: refreshToken,
+			},
 		}
 
 		return types.ToPbSignInRes(signInRes), nil
@@ -205,9 +207,11 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 		}
 
 		signInRes := &types.SignInRes{
-			Auth:         auth,
-			AccessToken:  &accessToken,
-			RefreshToken: &refreshToken,
+			Auth: auth,
+			Session: &types.ClientSession{
+				AccessToken:  accessToken,
+				RefreshToken: refreshToken,
+			},
 		}
 
 		return types.ToPbSignInRes(signInRes), nil
@@ -320,9 +324,11 @@ func (s *grpcServer) RefreshAccessToken(ctx context.Context, req *pb.RefreshAcce
 	}
 
 	signInRes := &types.SignInRes{
-		Auth:         auth,
-		AccessToken:  &accessToken,
-		RefreshToken: &refreshToken,
+		Auth: auth,
+		Session: &types.ClientSession{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+		},
 	}
 
 	return types.ToPbSignInRes(signInRes), nil

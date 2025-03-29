@@ -152,7 +152,7 @@ func refreshAccessToken(ctx context.Context, authClient *clients.AuthenticationC
 		return nil, errors.New("invalid token")
 	}
 
-	setAuthCookies(*cookieManager, res.AccessToken, res.RefreshToken)
+	setAuthCookies(*cookieManager, res.Session.AccessToken, res.Session.RefreshToken)
 	return types.ToAuth(res.Auth), nil
 }
 
@@ -207,4 +207,3 @@ func GetCtxSessionId(ctx context.Context) (string, error) {
 	}
 	return sessionID, nil
 }
-

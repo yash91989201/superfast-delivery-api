@@ -34,10 +34,9 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 
 	profile, err := r.server.UserClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 	res := &SignInOutput{
-		Auth:         ToGQAuth(signInRes.Auth),
-		AccessToken:  &signInRes.AccessToken,
-		RefreshToken: &signInRes.RefreshToken,
-		VerifyOtp:    false,
+		Auth:      ToGQAuth(signInRes.Auth),
+		Session:   ToGQSession(signInRes.Session),
+		VerifyOtp: false,
 	}
 
 	if err != nil {
@@ -47,7 +46,7 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 
 	res.Profile = ToGQProfile(profile)
 
-	if err = setSessionCookies(ctx, signInRes.AccessToken, signInRes.RefreshToken); err != nil {
+	if err = setSessionCookies(ctx, signInRes.Session.AccessToken, signInRes.Session.RefreshToken); err != nil {
 		return &SignInOutput{}, err
 	}
 
@@ -70,15 +69,14 @@ func (r *mutationResolver) RefreshAccessToken(ctx context.Context, refreshToken 
 
 	profile, _ := r.server.UserClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
 
-	if err = setSessionCookies(ctx, signInRes.AccessToken, signInRes.RefreshToken); err != nil {
+	if err = setSessionCookies(ctx, signInRes.Session.AccessToken, signInRes.Session.RefreshToken); err != nil {
 		return &SignInOutput{}, err
 	}
 
 	return &SignInOutput{
 		Auth:          ToGQAuth(signInRes.Auth),
 		Profile:       ToGQProfile(profile),
-		AccessToken:   &signInRes.AccessToken,
-		RefreshToken:  &signInRes.RefreshToken,
+		Session:       ToGQSession(signInRes.Session),
 		CreateProfile: profile == nil,
 		VerifyOtp:     false,
 	}, nil

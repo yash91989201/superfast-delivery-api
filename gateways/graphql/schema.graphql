@@ -66,12 +66,6 @@ type Auth {
   deleted_at: DateTime
 }
 
-type Session {
-  id: String!
-  access_token: String!
-  access_token_expires_at: DateTime!
-}
-
 # User Types
 type Profile {
   id: String!
@@ -639,11 +633,15 @@ input UpdateAddonStockInput {
 }
 
 # Response Types
+type Session {
+  access_token: String!
+  refresh_token: String!
+}
+
 type SignInOutput {
   auth: Auth
   profile: Profile
-  access_token: String
-  refresh_token: String
+  session: Session
   create_profile: Boolean!
   verify_otp: Boolean!
 }

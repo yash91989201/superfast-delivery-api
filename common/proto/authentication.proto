@@ -25,9 +25,8 @@ message Auth {
 }
 
 message Session {
-  string id = 1;
-  string access_token = 2;
-  google.protobuf.Timestamp access_token_expires_at = 3;
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
 message SignInWithEmailReq {
@@ -49,8 +48,7 @@ message SignInWithGoogleReq {
 
 message SignInRes {
   Auth auth = 1;
-  string access_token = 2;
-  string refresh_token = 3;
+  Session session = 2;
 }
 
 message RefreshAccessTokenReq {

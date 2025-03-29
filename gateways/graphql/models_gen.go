@@ -421,9 +421,8 @@ type RetailItem struct {
 }
 
 type Session struct {
-	ID                   string `json:"id"`
-	AccessToken          string `json:"access_token"`
-	AccessTokenExpiresAt string `json:"access_token_expires_at"`
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 type Shop struct {
@@ -483,8 +482,7 @@ type ShopTiming struct {
 type SignInOutput struct {
 	Auth          *Auth    `json:"auth,omitempty"`
 	Profile       *Profile `json:"profile,omitempty"`
-	AccessToken   *string  `json:"access_token,omitempty"`
-	RefreshToken  *string  `json:"refresh_token,omitempty"`
+	Session       *Session `json:"session,omitempty"`
 	CreateProfile bool     `json:"create_profile"`
 	VerifyOtp     bool     `json:"verify_otp"`
 }

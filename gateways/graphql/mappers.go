@@ -259,9 +259,8 @@ func ToGQAuth(a *pb.Auth) *Auth {
 
 func ToGQSession(s *pb.Session) *Session {
 	return &Session{
-		ID:                   s.Id,
-		AccessToken:          s.AccessToken,
-		AccessTokenExpiresAt: *ToGQTimePtr(s.AccessTokenExpiresAt),
+		AccessToken:  s.AccessToken,
+		RefreshToken: s.RefreshToken,
 	}
 }
 
