@@ -764,63 +764,144 @@ type Mutation {
 
   # User Service
   CreateProfile(input: CreateProfileInput!): Profile!
+    @requireAuthRole(roles: [CUSTOMER])
+
   CreateDeliveryAddress(input: CreateDeliveryAddressInput!): DeliveryAddress!
     @requireAuthRole(roles: [CUSTOMER])
+
   UpdateProfile(input: UpdateProfileInput!): Profile!
     @requireAuthRole(roles: [CUSTOMER])
+
   UpdateDeliveryAddress(input: UpdateDeliveryAddressInput!): DeliveryAddress!
     @requireAuthRole(roles: [CUSTOMER])
+
   UpdateDefaultDeliveryAddress(deliveryAddressID: ID!): UpdateOutput!
     @requireAuthRole(roles: [CUSTOMER])
+
   DeleteDeliveryAddress(addressID: ID!): DeleteOutput!
     @requireAuthRole(roles: [CUSTOMER])
 
   # Shop Service
-  CreateShop(input: CreateShopInput!): Shop!
+  CreateShop(input: CreateShopInput!): Shop! @requireAuthRole(roles: [VENDOR])
+
   UpdateShop(input: UpdateShopInput!): UpdateShopOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateShopAddress(input: UpdateShopAddressInput!): UpdateShopOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateShopContact(input: UpdateShopContactInput!): UpdateShopOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateShopImages(input: [UpdateShopImageInput!]!): UpdateShopOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateShopTimings(input: [UpdateShopTimingInput!]!): UpdateShopOutput!
-  DeleteShop(id: ID!): UpdateShopOutput!
+    @requireAuthRole(roles: [VENDOR])
+
+  DeleteShop(id: ID!): UpdateShopOutput! @requireAuthRole(roles: [VENDOR])
 
   # Product Service
   CreateRestaurantMenu(input: CreateRestaurantMenuInput!): RestaurantMenu!
+    @requireAuthRole(roles: [VENDOR])
+
   CreateMenuItem(input: CreateMenuItemInput!): MenuItem!
+    @requireAuthRole(roles: [VENDOR])
+
   CreateMenuItemVariant(input: CreateItemVariantInput!): ItemVariant!
+    @requireAuthRole(roles: [VENDOR])
+
   CreateMenuItemAddon(input: CreateItemAddonInput!): ItemAddon!
+    @requireAuthRole(roles: [VENDOR])
+
   CreateRetailCategory(input: CreateRetailCategoryInput!): RetailCategory!
+    @requireAuthRole(roles: [VENDOR])
+
   CreateRetailItem(input: CreateRetailItemInput!): RetailItem!
+    @requireAuthRole(roles: [VENDOR])
+
   CreateRetailItemVariant(input: CreateItemVariantInput!): ItemVariant!
-  CreateMedicineCategory(input: CreateMedicineCategoryInput!): MedicineCategory!
+    @requireAuthRole(roles: [VENDOR])
+
+  CreateMedicineCategory(
+    input: CreateMedicineCategoryInput!
+  ): MedicineCategory! @requireAuthRole(roles: [VENDOR])
+
   CreateMedicineItem(input: CreateMedicineItemInput!): MedicineItem!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateRestaurantMenu(input: UpdateRestaurantMenuInput!): UpdateOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateMenuItem(input: UpdateMenuItemInput!): UpdateOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateMenuItemVariant(input: UpdateItemVariantInput!): UpdateOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateMenuItemAddon(input: UpdateItemAddonInput!): UpdateOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateRetailCategory(input: UpdateRetailCategoryInput!): UpdateOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateRetailItem(input: UpdateRetailItemInput!): UpdateOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateRetailItemVariant(input: UpdateItemVariantInput!): UpdateOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateMedicineCategory(input: UpdateMedicineCategoryInput!): UpdateOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateMedicineItem(input: UpdateMedicineItemInput!): UpdateOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   DeleteRestaurantMenu(menuID: ID!): DeleteOutput!
-  DeleteMenuItem(itemID: ID!): DeleteOutput!
+    @requireAuthRole(roles: [VENDOR])
+
+  DeleteMenuItem(itemID: ID!): DeleteOutput! @requireAuthRole(roles: [VENDOR])
+
   DeleteMenuItemVariant(input: DeleteItemVariantInput!): DeleteOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   DeleteMenuItemAddon(input: DeleteItemAddonInput!): DeleteOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   DeleteRetailCategory(categoryID: ID!): DeleteOutput!
-  DeleteRetailItem(itemID: ID!): DeleteOutput!
+    @requireAuthRole(roles: [VENDOR])
+
+  DeleteRetailItem(itemID: ID!): DeleteOutput! @requireAuthRole(roles: [VENDOR])
+
   DeleteRetailItemVariant(input: DeleteItemVariantInput!): DeleteOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   DeleteMedicineCategory(categoryID: ID!): DeleteOutput!
+    @requireAuthRole(roles: [VENDOR])
+
   DeleteMedicineItem(itemID: ID!): DeleteOutput!
+    @requireAuthRole(roles: [VENDOR])
 
   # Inventory Service
   CreateItemStock(input: CreateItemStockInput!): ItemStock!
+    @requireAuthRole(roles: [VENDOR])
+
   CreateVariantStock(input: CreateVariantStockInput!): VariantStock!
+    @requireAuthRole(roles: [VENDOR])
+
   CreateAddonStock(input: CreateAddonStockInput!): AddonStock!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateItemStock(input: UpdateItemStockInput!): ItemStock!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateVariantStock(input: UpdateVariantStockInput!): VariantStock!
+    @requireAuthRole(roles: [VENDOR])
+
   UpdateAddonStock(input: UpdateAddonStockInput!): AddonStock!
-  DeleteItemStock(id: ID!): DeleteOutput!
-  DeleteVariantStock(id: ID!): DeleteOutput!
-  DeleteAddonStock(id: ID!): DeleteOutput!
+    @requireAuthRole(roles: [VENDOR])
+
+  DeleteItemStock(id: ID!): DeleteOutput! @requireAuthRole(roles: [VENDOR])
+  DeleteVariantStock(id: ID!): DeleteOutput! @requireAuthRole(roles: [VENDOR])
+  DeleteAddonStock(id: ID!): DeleteOutput! @requireAuthRole(roles: [VENDOR])
 }

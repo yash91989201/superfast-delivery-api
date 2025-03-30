@@ -10453,8 +10453,35 @@ func (ec *executionContext) _Mutation_CreateProfile(ctx context.Context, field g
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateProfile(rctx, fc.Args["input"].(CreateProfileInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateProfile(rctx, fc.Args["input"].(CreateProfileInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *Profile
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *Profile
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*Profile); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.Profile`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11026,8 +11053,35 @@ func (ec *executionContext) _Mutation_CreateShop(ctx context.Context, field grap
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateShop(rctx, fc.Args["input"].(CreateShopInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateShop(rctx, fc.Args["input"].(CreateShopInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *Shop
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *Shop
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*Shop); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.Shop`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11107,8 +11161,35 @@ func (ec *executionContext) _Mutation_UpdateShop(ctx context.Context, field grap
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateShop(rctx, fc.Args["input"].(UpdateShopInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateShop(rctx, fc.Args["input"].(UpdateShopInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateShopOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateShopOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11166,8 +11247,35 @@ func (ec *executionContext) _Mutation_UpdateShopAddress(ctx context.Context, fie
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateShopAddress(rctx, fc.Args["input"].(UpdateShopAddressInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateShopAddress(rctx, fc.Args["input"].(UpdateShopAddressInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateShopOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateShopOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11225,8 +11333,35 @@ func (ec *executionContext) _Mutation_UpdateShopContact(ctx context.Context, fie
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateShopContact(rctx, fc.Args["input"].(UpdateShopContactInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateShopContact(rctx, fc.Args["input"].(UpdateShopContactInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateShopOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateShopOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11284,8 +11419,35 @@ func (ec *executionContext) _Mutation_UpdateShopImages(ctx context.Context, fiel
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateShopImages(rctx, fc.Args["input"].([]*UpdateShopImageInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateShopImages(rctx, fc.Args["input"].([]*UpdateShopImageInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateShopOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateShopOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11343,8 +11505,35 @@ func (ec *executionContext) _Mutation_UpdateShopTimings(ctx context.Context, fie
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateShopTimings(rctx, fc.Args["input"].([]*UpdateShopTimingInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateShopTimings(rctx, fc.Args["input"].([]*UpdateShopTimingInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateShopOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateShopOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11402,8 +11591,35 @@ func (ec *executionContext) _Mutation_DeleteShop(ctx context.Context, field grap
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteShop(rctx, fc.Args["id"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteShop(rctx, fc.Args["id"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateShopOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateShopOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateShopOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11461,8 +11677,35 @@ func (ec *executionContext) _Mutation_CreateRestaurantMenu(ctx context.Context, 
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateRestaurantMenu(rctx, fc.Args["input"].(CreateRestaurantMenuInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateRestaurantMenu(rctx, fc.Args["input"].(CreateRestaurantMenuInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *RestaurantMenu
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *RestaurantMenu
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*RestaurantMenu); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.RestaurantMenu`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11530,8 +11773,35 @@ func (ec *executionContext) _Mutation_CreateMenuItem(ctx context.Context, field 
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateMenuItem(rctx, fc.Args["input"].(CreateMenuItemInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateMenuItem(rctx, fc.Args["input"].(CreateMenuItemInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *MenuItem
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *MenuItem
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*MenuItem); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.MenuItem`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11607,8 +11877,35 @@ func (ec *executionContext) _Mutation_CreateMenuItemVariant(ctx context.Context,
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateMenuItemVariant(rctx, fc.Args["input"].(CreateItemVariantInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateMenuItemVariant(rctx, fc.Args["input"].(CreateItemVariantInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *ItemVariant
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *ItemVariant
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*ItemVariant); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.ItemVariant`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11680,8 +11977,35 @@ func (ec *executionContext) _Mutation_CreateMenuItemAddon(ctx context.Context, f
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateMenuItemAddon(rctx, fc.Args["input"].(CreateItemAddonInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateMenuItemAddon(rctx, fc.Args["input"].(CreateItemAddonInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *ItemAddon
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *ItemAddon
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*ItemAddon); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.ItemAddon`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11749,8 +12073,35 @@ func (ec *executionContext) _Mutation_CreateRetailCategory(ctx context.Context, 
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateRetailCategory(rctx, fc.Args["input"].(CreateRetailCategoryInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateRetailCategory(rctx, fc.Args["input"].(CreateRetailCategoryInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *RetailCategory
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *RetailCategory
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*RetailCategory); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.RetailCategory`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11818,8 +12169,35 @@ func (ec *executionContext) _Mutation_CreateRetailItem(ctx context.Context, fiel
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateRetailItem(rctx, fc.Args["input"].(CreateRetailItemInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateRetailItem(rctx, fc.Args["input"].(CreateRetailItemInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *RetailItem
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *RetailItem
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*RetailItem); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.RetailItem`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11893,8 +12271,35 @@ func (ec *executionContext) _Mutation_CreateRetailItemVariant(ctx context.Contex
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateRetailItemVariant(rctx, fc.Args["input"].(CreateItemVariantInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateRetailItemVariant(rctx, fc.Args["input"].(CreateItemVariantInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *ItemVariant
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *ItemVariant
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*ItemVariant); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.ItemVariant`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11966,8 +12371,35 @@ func (ec *executionContext) _Mutation_CreateMedicineCategory(ctx context.Context
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateMedicineCategory(rctx, fc.Args["input"].(CreateMedicineCategoryInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateMedicineCategory(rctx, fc.Args["input"].(CreateMedicineCategoryInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *MedicineCategory
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *MedicineCategory
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*MedicineCategory); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.MedicineCategory`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12037,8 +12469,35 @@ func (ec *executionContext) _Mutation_CreateMedicineItem(ctx context.Context, fi
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateMedicineItem(rctx, fc.Args["input"].(CreateMedicineItemInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateMedicineItem(rctx, fc.Args["input"].(CreateMedicineItemInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *MedicineItem
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *MedicineItem
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*MedicineItem); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.MedicineItem`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12112,8 +12571,35 @@ func (ec *executionContext) _Mutation_UpdateRestaurantMenu(ctx context.Context, 
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateRestaurantMenu(rctx, fc.Args["input"].(UpdateRestaurantMenuInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateRestaurantMenu(rctx, fc.Args["input"].(UpdateRestaurantMenuInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12171,8 +12657,35 @@ func (ec *executionContext) _Mutation_UpdateMenuItem(ctx context.Context, field 
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateMenuItem(rctx, fc.Args["input"].(UpdateMenuItemInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateMenuItem(rctx, fc.Args["input"].(UpdateMenuItemInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12230,8 +12743,35 @@ func (ec *executionContext) _Mutation_UpdateMenuItemVariant(ctx context.Context,
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateMenuItemVariant(rctx, fc.Args["input"].(UpdateItemVariantInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateMenuItemVariant(rctx, fc.Args["input"].(UpdateItemVariantInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12289,8 +12829,35 @@ func (ec *executionContext) _Mutation_UpdateMenuItemAddon(ctx context.Context, f
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateMenuItemAddon(rctx, fc.Args["input"].(UpdateItemAddonInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateMenuItemAddon(rctx, fc.Args["input"].(UpdateItemAddonInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12348,8 +12915,35 @@ func (ec *executionContext) _Mutation_UpdateRetailCategory(ctx context.Context, 
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateRetailCategory(rctx, fc.Args["input"].(UpdateRetailCategoryInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateRetailCategory(rctx, fc.Args["input"].(UpdateRetailCategoryInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12407,8 +13001,35 @@ func (ec *executionContext) _Mutation_UpdateRetailItem(ctx context.Context, fiel
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateRetailItem(rctx, fc.Args["input"].(UpdateRetailItemInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateRetailItem(rctx, fc.Args["input"].(UpdateRetailItemInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12466,8 +13087,35 @@ func (ec *executionContext) _Mutation_UpdateRetailItemVariant(ctx context.Contex
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateRetailItemVariant(rctx, fc.Args["input"].(UpdateItemVariantInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateRetailItemVariant(rctx, fc.Args["input"].(UpdateItemVariantInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12525,8 +13173,35 @@ func (ec *executionContext) _Mutation_UpdateMedicineCategory(ctx context.Context
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateMedicineCategory(rctx, fc.Args["input"].(UpdateMedicineCategoryInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateMedicineCategory(rctx, fc.Args["input"].(UpdateMedicineCategoryInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12584,8 +13259,35 @@ func (ec *executionContext) _Mutation_UpdateMedicineItem(ctx context.Context, fi
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateMedicineItem(rctx, fc.Args["input"].(UpdateMedicineItemInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateMedicineItem(rctx, fc.Args["input"].(UpdateMedicineItemInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12643,8 +13345,35 @@ func (ec *executionContext) _Mutation_DeleteRestaurantMenu(ctx context.Context, 
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteRestaurantMenu(rctx, fc.Args["menuID"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteRestaurantMenu(rctx, fc.Args["menuID"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12702,8 +13431,35 @@ func (ec *executionContext) _Mutation_DeleteMenuItem(ctx context.Context, field 
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteMenuItem(rctx, fc.Args["itemID"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteMenuItem(rctx, fc.Args["itemID"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12761,8 +13517,35 @@ func (ec *executionContext) _Mutation_DeleteMenuItemVariant(ctx context.Context,
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteMenuItemVariant(rctx, fc.Args["input"].(DeleteItemVariantInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteMenuItemVariant(rctx, fc.Args["input"].(DeleteItemVariantInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12820,8 +13603,35 @@ func (ec *executionContext) _Mutation_DeleteMenuItemAddon(ctx context.Context, f
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteMenuItemAddon(rctx, fc.Args["input"].(DeleteItemAddonInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteMenuItemAddon(rctx, fc.Args["input"].(DeleteItemAddonInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12879,8 +13689,35 @@ func (ec *executionContext) _Mutation_DeleteRetailCategory(ctx context.Context, 
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteRetailCategory(rctx, fc.Args["categoryID"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteRetailCategory(rctx, fc.Args["categoryID"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12938,8 +13775,35 @@ func (ec *executionContext) _Mutation_DeleteRetailItem(ctx context.Context, fiel
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteRetailItem(rctx, fc.Args["itemID"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteRetailItem(rctx, fc.Args["itemID"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12997,8 +13861,35 @@ func (ec *executionContext) _Mutation_DeleteRetailItemVariant(ctx context.Contex
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteRetailItemVariant(rctx, fc.Args["input"].(DeleteItemVariantInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteRetailItemVariant(rctx, fc.Args["input"].(DeleteItemVariantInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13056,8 +13947,35 @@ func (ec *executionContext) _Mutation_DeleteMedicineCategory(ctx context.Context
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteMedicineCategory(rctx, fc.Args["categoryID"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteMedicineCategory(rctx, fc.Args["categoryID"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13115,8 +14033,35 @@ func (ec *executionContext) _Mutation_DeleteMedicineItem(ctx context.Context, fi
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteMedicineItem(rctx, fc.Args["itemID"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteMedicineItem(rctx, fc.Args["itemID"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13174,8 +14119,35 @@ func (ec *executionContext) _Mutation_CreateItemStock(ctx context.Context, field
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateItemStock(rctx, fc.Args["input"].(CreateItemStockInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateItemStock(rctx, fc.Args["input"].(CreateItemStockInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *ItemStock
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *ItemStock
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*ItemStock); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.ItemStock`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13241,8 +14213,35 @@ func (ec *executionContext) _Mutation_CreateVariantStock(ctx context.Context, fi
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateVariantStock(rctx, fc.Args["input"].(CreateVariantStockInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateVariantStock(rctx, fc.Args["input"].(CreateVariantStockInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *VariantStock
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *VariantStock
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*VariantStock); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.VariantStock`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13308,8 +14307,35 @@ func (ec *executionContext) _Mutation_CreateAddonStock(ctx context.Context, fiel
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateAddonStock(rctx, fc.Args["input"].(CreateAddonStockInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateAddonStock(rctx, fc.Args["input"].(CreateAddonStockInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *AddonStock
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *AddonStock
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*AddonStock); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.AddonStock`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13375,8 +14401,35 @@ func (ec *executionContext) _Mutation_UpdateItemStock(ctx context.Context, field
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateItemStock(rctx, fc.Args["input"].(UpdateItemStockInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateItemStock(rctx, fc.Args["input"].(UpdateItemStockInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *ItemStock
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *ItemStock
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*ItemStock); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.ItemStock`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13442,8 +14495,35 @@ func (ec *executionContext) _Mutation_UpdateVariantStock(ctx context.Context, fi
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateVariantStock(rctx, fc.Args["input"].(UpdateVariantStockInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateVariantStock(rctx, fc.Args["input"].(UpdateVariantStockInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *VariantStock
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *VariantStock
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*VariantStock); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.VariantStock`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13509,8 +14589,35 @@ func (ec *executionContext) _Mutation_UpdateAddonStock(ctx context.Context, fiel
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateAddonStock(rctx, fc.Args["input"].(UpdateAddonStockInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateAddonStock(rctx, fc.Args["input"].(UpdateAddonStockInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *AddonStock
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *AddonStock
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*AddonStock); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.AddonStock`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13576,8 +14683,35 @@ func (ec *executionContext) _Mutation_DeleteItemStock(ctx context.Context, field
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteItemStock(rctx, fc.Args["id"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteItemStock(rctx, fc.Args["id"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13635,8 +14769,35 @@ func (ec *executionContext) _Mutation_DeleteVariantStock(ctx context.Context, fi
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteVariantStock(rctx, fc.Args["id"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteVariantStock(rctx, fc.Args["id"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13694,8 +14855,35 @@ func (ec *executionContext) _Mutation_DeleteAddonStock(ctx context.Context, fiel
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteAddonStock(rctx, fc.Args["id"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteAddonStock(rctx, fc.Args["id"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"VENDOR"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
