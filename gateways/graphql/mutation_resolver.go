@@ -159,10 +159,15 @@ func (r *mutationResolver) UpdateDeliveryAddress(ctx context.Context, in UpdateD
 	return nil, nil
 }
 
-func (r *mutationResolver) UpdateDefaultDeliveryAddress(ctx context.Context, in UpdateDefaultDeliveryAddressInput) (*UpdateOutput, error) {
-	_, err := r.server.UserClient.UpdateDefaultDeliveryAddress(ctx, &pb.UpdateDefaultDeliveryAddressReq{
-		DeliveryAddressId: in.DeliveryAddressID,
-		AuthId:            in.AuthID,
+func (r *mutationResolver) UpdateDefaultDeliveryAddress(ctx context.Context, deliveryAddressID string) (*UpdateOutput, error) {
+	auth, err := customMiddleware.GetCtxAuth(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = r.server.UserClient.UpdateDefaultDeliveryAddress(ctx, &pb.UpdateDefaultDeliveryAddressReq{
+		DeliveryAddressId: deliveryAddressID,
+		AuthId:            auth.ID,
 	})
 
 	if err != nil {

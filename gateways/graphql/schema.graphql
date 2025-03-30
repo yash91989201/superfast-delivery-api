@@ -330,10 +330,6 @@ input UpdateProfileInput {
   auth_id: String!
 }
 
-input GetProfileInput {
-  auth_id: String!
-}
-
 input CreateDeliveryAddressInput {
   receiver_name: String!
   receiver_phone: String!
@@ -349,6 +345,7 @@ input CreateDeliveryAddressInput {
 }
 
 input UpdateDeliveryAddressInput {
+  id: ID!
   receiver_name: String
   receiver_phone: String
   address_alias: AddressAlias
@@ -358,12 +355,6 @@ input UpdateDeliveryAddressInput {
   nearby_landmark: String
   delivery_instruction: String
   is_default: Boolean!
-  auth_id: String!
-}
-
-input UpdateDefaultDeliveryAddressInput {
-  delivery_address_id: String!
-  auth_id: String!
 }
 
 # Shop Inputs
@@ -723,11 +714,14 @@ type Query {
   GetAuthById(input: GetAuthByIdInput!): Auth!
 
   # User Service
-  GetProfile(input: GetProfileInput!): Profile!
+  GetProfile: Profile!
   GetDeliveryAddress(id: ID!): DeliveryAddress!
-  GetDefaultDeliveryAddress(authID: ID!): DeliveryAddress!
+    @requireAuthRole(roles: [CUSTOMER])
+  GetDefaultDeliveryAddress: DeliveryAddress!
+    @requireAuthRole(roles: [CUSTOMER])
   GetDeliveryAddressDetail(addressID: ID!): AddressDetail!
-  ListDeliveryAddress(authID: ID!): ListDeliveryAddressOutput!
+  ListDeliveryAddress: ListDeliveryAddressOutput!
+    @requireAuthRole(roles: [CUSTOMER])
 
   # Shop Service
   GetShop(id: ID!): Shop!
@@ -771,12 +765,15 @@ type Mutation {
   # User Service
   CreateProfile(input: CreateProfileInput!): Profile!
   CreateDeliveryAddress(input: CreateDeliveryAddressInput!): DeliveryAddress!
+    @requireAuthRole(roles: [CUSTOMER])
   UpdateProfile(input: UpdateProfileInput!): Profile!
+    @requireAuthRole(roles: [CUSTOMER])
   UpdateDeliveryAddress(input: UpdateDeliveryAddressInput!): DeliveryAddress!
-  UpdateDefaultDeliveryAddress(
-    input: UpdateDefaultDeliveryAddressInput!
-  ): UpdateOutput!
+    @requireAuthRole(roles: [CUSTOMER])
+  UpdateDefaultDeliveryAddress(deliveryAddressID: ID!): UpdateOutput!
+    @requireAuthRole(roles: [CUSTOMER])
   DeleteDeliveryAddress(addressID: ID!): DeleteOutput!
+    @requireAuthRole(roles: [CUSTOMER])
 
   # Shop Service
   CreateShop(input: CreateShopInput!): Shop!

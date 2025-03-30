@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/yash91989201/superfast-delivery-api/common/pb"
+	customMiddleware "github.com/yash91989201/superfast-delivery-api/gateways/graphql/middleware"
 )
 
 type queryResolver struct {
@@ -28,7 +29,7 @@ func (r *queryResolver) GetAuth(ctx context.Context, in GetAuthInput) (*Auth, er
 	return ToGQAuth(res), nil
 }
 
-func (r *queryResolver) GetProfile(ctx context.Context, in GetProfileInput) (*Profile, error) {
+func (r *queryResolver) GetProfile(ctx context.Context) (*Profile, error) {
 	return nil, nil
 }
 
@@ -44,9 +45,14 @@ func (r *queryResolver) GetDeliveryAddress(ctx context.Context, id string) (*Del
 	return ToGQDeliveryAddress(res), nil
 }
 
-func (r *queryResolver) GetDefaultDeliveryAddress(ctx context.Context, authID string) (*DeliveryAddress, error) {
+func (r *queryResolver) GetDefaultDeliveryAddress(ctx context.Context) (*DeliveryAddress, error) {
+	auth, err := customMiddleware.GetCtxAuth(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	res, err := r.server.UserClient.GetDefaultDeliveryAddress(ctx, &pb.GetDefaultDeliveryAddressReq{
-		AuthId: authID,
+		AuthId: auth.ID,
 	})
 
 	if err != nil {
@@ -75,10 +81,14 @@ func (r *queryResolver) GetDeliveryAddressDetail(ctx context.Context, addressId 
 	return ToGQAddressDetail(addressDetail), nil
 }
 
-func (r *queryResolver) ListDeliveryAddress(ctx context.Context, authId string) (*ListDeliveryAddressOutput, error) {
+func (r *queryResolver) ListDeliveryAddress(ctx context.Context) (*ListDeliveryAddressOutput, error) {
+	auth, err := customMiddleware.GetCtxAuth(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	res, err := r.server.UserClient.ListDeliveryAddress(ctx, &pb.ListDeliveryAddressReq{
-		AuthId: authId,
+		AuthId: auth.ID,
 	})
 
 	if err != nil {

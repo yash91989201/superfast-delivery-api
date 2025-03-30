@@ -267,7 +267,7 @@ type ComplexityRoot struct {
 		SignInWithGoogle             func(childComplexity int, input SignInWithGoogleInput) int
 		SignInWithPhone              func(childComplexity int, input SignInWithPhoneInput) int
 		UpdateAddonStock             func(childComplexity int, input UpdateAddonStockInput) int
-		UpdateDefaultDeliveryAddress func(childComplexity int, input UpdateDefaultDeliveryAddressInput) int
+		UpdateDefaultDeliveryAddress func(childComplexity int, deliveryAddressID string) int
 		UpdateDeliveryAddress        func(childComplexity int, input UpdateDeliveryAddressInput) int
 		UpdateItemStock              func(childComplexity int, input UpdateItemStockInput) int
 		UpdateMedicineCategory       func(childComplexity int, input UpdateMedicineCategoryInput) int
@@ -304,7 +304,7 @@ type ComplexityRoot struct {
 		GetAddonStock             func(childComplexity int, id string) int
 		GetAuth                   func(childComplexity int, input GetAuthInput) int
 		GetAuthByID               func(childComplexity int, input GetAuthByIDInput) int
-		GetDefaultDeliveryAddress func(childComplexity int, authID string) int
+		GetDefaultDeliveryAddress func(childComplexity int) int
 		GetDeliveryAddress        func(childComplexity int, id string) int
 		GetDeliveryAddressDetail  func(childComplexity int, addressID string) int
 		GetItemStock              func(childComplexity int, id string) int
@@ -313,14 +313,14 @@ type ComplexityRoot struct {
 		GetMenuItem               func(childComplexity int, itemID string) int
 		GetMenuItemAddon          func(childComplexity int, input GetItemAddonInput) int
 		GetMenuItemVariant        func(childComplexity int, input GetItemVariantInput) int
-		GetProfile                func(childComplexity int, input GetProfileInput) int
+		GetProfile                func(childComplexity int) int
 		GetRestaurantMenu         func(childComplexity int, id string) int
 		GetRetailCategory         func(childComplexity int, id string) int
 		GetRetailItem             func(childComplexity int, itemID string) int
 		GetRetailItemVariant      func(childComplexity int, input GetItemVariantInput) int
 		GetShop                   func(childComplexity int, id string) int
 		GetVariantStock           func(childComplexity int, id string) int
-		ListDeliveryAddress       func(childComplexity int, authID string) int
+		ListDeliveryAddress       func(childComplexity int) int
 		ListMedicineCategory      func(childComplexity int, shopID string) int
 		ListMedicineItem          func(childComplexity int, categoryID string) int
 		ListMenuItem              func(childComplexity int, menuID string) int
@@ -457,7 +457,7 @@ type MutationResolver interface {
 	CreateDeliveryAddress(ctx context.Context, input CreateDeliveryAddressInput) (*DeliveryAddress, error)
 	UpdateProfile(ctx context.Context, input UpdateProfileInput) (*Profile, error)
 	UpdateDeliveryAddress(ctx context.Context, input UpdateDeliveryAddressInput) (*DeliveryAddress, error)
-	UpdateDefaultDeliveryAddress(ctx context.Context, input UpdateDefaultDeliveryAddressInput) (*UpdateOutput, error)
+	UpdateDefaultDeliveryAddress(ctx context.Context, deliveryAddressID string) (*UpdateOutput, error)
 	DeleteDeliveryAddress(ctx context.Context, addressID string) (*DeleteOutput, error)
 	CreateShop(ctx context.Context, input CreateShopInput) (*Shop, error)
 	UpdateShop(ctx context.Context, input UpdateShopInput) (*UpdateShopOutput, error)
@@ -506,11 +506,11 @@ type MutationResolver interface {
 type QueryResolver interface {
 	GetAuth(ctx context.Context, input GetAuthInput) (*Auth, error)
 	GetAuthByID(ctx context.Context, input GetAuthByIDInput) (*Auth, error)
-	GetProfile(ctx context.Context, input GetProfileInput) (*Profile, error)
+	GetProfile(ctx context.Context) (*Profile, error)
 	GetDeliveryAddress(ctx context.Context, id string) (*DeliveryAddress, error)
-	GetDefaultDeliveryAddress(ctx context.Context, authID string) (*DeliveryAddress, error)
+	GetDefaultDeliveryAddress(ctx context.Context) (*DeliveryAddress, error)
 	GetDeliveryAddressDetail(ctx context.Context, addressID string) (*AddressDetail, error)
-	ListDeliveryAddress(ctx context.Context, authID string) (*ListDeliveryAddressOutput, error)
+	ListDeliveryAddress(ctx context.Context) (*ListDeliveryAddressOutput, error)
 	GetShop(ctx context.Context, id string) (*Shop, error)
 	ListShops(ctx context.Context, input *ListShopsInput) (*ListShopsOutput, error)
 	GetRestaurantMenu(ctx context.Context, id string) (*RestaurantMenu, error)
@@ -1757,7 +1757,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateDefaultDeliveryAddress(childComplexity, args["input"].(UpdateDefaultDeliveryAddressInput)), true
+		return e.complexity.Mutation.UpdateDefaultDeliveryAddress(childComplexity, args["deliveryAddressID"].(string)), true
 
 	case "Mutation.UpdateDeliveryAddress":
 		if e.complexity.Mutation.UpdateDeliveryAddress == nil {
@@ -2079,12 +2079,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Query_GetDefaultDeliveryAddress_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GetDefaultDeliveryAddress(childComplexity, args["authID"].(string)), true
+		return e.complexity.Query.GetDefaultDeliveryAddress(childComplexity), true
 
 	case "Query.GetDeliveryAddress":
 		if e.complexity.Query.GetDeliveryAddress == nil {
@@ -2187,12 +2182,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Query_GetProfile_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GetProfile(childComplexity, args["input"].(GetProfileInput)), true
+		return e.complexity.Query.GetProfile(childComplexity), true
 
 	case "Query.GetRestaurantMenu":
 		if e.complexity.Query.GetRestaurantMenu == nil {
@@ -2271,12 +2261,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Query_ListDeliveryAddress_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.ListDeliveryAddress(childComplexity, args["authID"].(string)), true
+		return e.complexity.Query.ListDeliveryAddress(childComplexity), true
 
 	case "Query.ListMedicineCategory":
 		if e.complexity.Query.ListMedicineCategory == nil {
@@ -2948,14 +2933,12 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputGetAuthInput,
 		ec.unmarshalInputGetItemAddonInput,
 		ec.unmarshalInputGetItemVariantInput,
-		ec.unmarshalInputGetProfileInput,
 		ec.unmarshalInputLatLngInput,
 		ec.unmarshalInputListShopsInput,
 		ec.unmarshalInputSignInWithEmailInput,
 		ec.unmarshalInputSignInWithGoogleInput,
 		ec.unmarshalInputSignInWithPhoneInput,
 		ec.unmarshalInputUpdateAddonStockInput,
-		ec.unmarshalInputUpdateDefaultDeliveryAddressInput,
 		ec.unmarshalInputUpdateDeliveryAddressInput,
 		ec.unmarshalInputUpdateItemAddonInput,
 		ec.unmarshalInputUpdateItemStockInput,
@@ -3902,23 +3885,23 @@ func (ec *executionContext) field_Mutation_UpdateAddonStock_argsInput(
 func (ec *executionContext) field_Mutation_UpdateDefaultDeliveryAddress_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
-	arg0, err := ec.field_Mutation_UpdateDefaultDeliveryAddress_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_UpdateDefaultDeliveryAddress_argsDeliveryAddressID(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["input"] = arg0
+	args["deliveryAddressID"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_UpdateDefaultDeliveryAddress_argsInput(
+func (ec *executionContext) field_Mutation_UpdateDefaultDeliveryAddress_argsDeliveryAddressID(
 	ctx context.Context,
 	rawArgs map[string]any,
-) (UpdateDefaultDeliveryAddressInput, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNUpdateDefaultDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDefaultDeliveryAddressInput(ctx, tmp)
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("deliveryAddressID"))
+	if tmp, ok := rawArgs["deliveryAddressID"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
 	}
 
-	var zeroVal UpdateDefaultDeliveryAddressInput
+	var zeroVal string
 	return zeroVal, nil
 }
 
@@ -4405,29 +4388,6 @@ func (ec *executionContext) field_Query_GetAuth_argsInput(
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Query_GetDefaultDeliveryAddress_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := ec.field_Query_GetDefaultDeliveryAddress_argsAuthID(ctx, rawArgs)
-	if err != nil {
-		return nil, err
-	}
-	args["authID"] = arg0
-	return args, nil
-}
-func (ec *executionContext) field_Query_GetDefaultDeliveryAddress_argsAuthID(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (string, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("authID"))
-	if tmp, ok := rawArgs["authID"]; ok {
-		return ec.unmarshalNID2string(ctx, tmp)
-	}
-
-	var zeroVal string
-	return zeroVal, nil
-}
-
 func (ec *executionContext) field_Query_GetDeliveryAddressDetail_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -4612,29 +4572,6 @@ func (ec *executionContext) field_Query_GetMenuItem_argsItemID(
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Query_GetProfile_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := ec.field_Query_GetProfile_argsInput(ctx, rawArgs)
-	if err != nil {
-		return nil, err
-	}
-	args["input"] = arg0
-	return args, nil
-}
-func (ec *executionContext) field_Query_GetProfile_argsInput(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (GetProfileInput, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNGetProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐGetProfileInput(ctx, tmp)
-	}
-
-	var zeroVal GetProfileInput
-	return zeroVal, nil
-}
-
 func (ec *executionContext) field_Query_GetRestaurantMenu_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -4766,29 +4703,6 @@ func (ec *executionContext) field_Query_GetVariantStock_argsID(
 ) (string, error) {
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
 	if tmp, ok := rawArgs["id"]; ok {
-		return ec.unmarshalNID2string(ctx, tmp)
-	}
-
-	var zeroVal string
-	return zeroVal, nil
-}
-
-func (ec *executionContext) field_Query_ListDeliveryAddress_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := ec.field_Query_ListDeliveryAddress_argsAuthID(ctx, rawArgs)
-	if err != nil {
-		return nil, err
-	}
-	args["authID"] = arg0
-	return args, nil
-}
-func (ec *executionContext) field_Query_ListDeliveryAddress_argsAuthID(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (string, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("authID"))
-	if tmp, ok := rawArgs["authID"]; ok {
 		return ec.unmarshalNID2string(ctx, tmp)
 	}
 
@@ -10614,8 +10528,35 @@ func (ec *executionContext) _Mutation_CreateDeliveryAddress(ctx context.Context,
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateDeliveryAddress(rctx, fc.Args["input"].(CreateDeliveryAddressInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateDeliveryAddress(rctx, fc.Args["input"].(CreateDeliveryAddressInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *DeliveryAddress
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeliveryAddress
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeliveryAddress); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeliveryAddress`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10699,8 +10640,35 @@ func (ec *executionContext) _Mutation_UpdateProfile(ctx context.Context, field g
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateProfile(rctx, fc.Args["input"].(UpdateProfileInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateProfile(rctx, fc.Args["input"].(UpdateProfileInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *Profile
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *Profile
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*Profile); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.Profile`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10774,8 +10742,35 @@ func (ec *executionContext) _Mutation_UpdateDeliveryAddress(ctx context.Context,
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateDeliveryAddress(rctx, fc.Args["input"].(UpdateDeliveryAddressInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateDeliveryAddress(rctx, fc.Args["input"].(UpdateDeliveryAddressInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *DeliveryAddress
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeliveryAddress
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeliveryAddress); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeliveryAddress`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10859,8 +10854,35 @@ func (ec *executionContext) _Mutation_UpdateDefaultDeliveryAddress(ctx context.C
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateDefaultDeliveryAddress(rctx, fc.Args["input"].(UpdateDefaultDeliveryAddressInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateDefaultDeliveryAddress(rctx, fc.Args["deliveryAddressID"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *UpdateOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*UpdateOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.UpdateOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10918,8 +10940,35 @@ func (ec *executionContext) _Mutation_DeleteDeliveryAddress(ctx context.Context,
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteDeliveryAddress(rctx, fc.Args["addressID"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteDeliveryAddress(rctx, fc.Args["addressID"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeleteOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeleteOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeleteOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14235,7 +14284,7 @@ func (ec *executionContext) _Query_GetProfile(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetProfile(rctx, fc.Args["input"].(GetProfileInput))
+		return ec.resolvers.Query().GetProfile(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14252,7 +14301,7 @@ func (ec *executionContext) _Query_GetProfile(ctx context.Context, field graphql
 	return ec.marshalNProfile2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐProfile(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_GetProfile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_GetProfile(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -14282,17 +14331,6 @@ func (ec *executionContext) fieldContext_Query_GetProfile(ctx context.Context, f
 			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
 		},
 	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_GetProfile_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
 	return fc, nil
 }
 
@@ -14309,8 +14347,35 @@ func (ec *executionContext) _Query_GetDeliveryAddress(ctx context.Context, field
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetDeliveryAddress(rctx, fc.Args["id"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().GetDeliveryAddress(rctx, fc.Args["id"].(string))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *DeliveryAddress
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeliveryAddress
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeliveryAddress); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeliveryAddress`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14394,8 +14459,35 @@ func (ec *executionContext) _Query_GetDefaultDeliveryAddress(ctx context.Context
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetDefaultDeliveryAddress(rctx, fc.Args["authID"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().GetDefaultDeliveryAddress(rctx)
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *DeliveryAddress
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *DeliveryAddress
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*DeliveryAddress); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.DeliveryAddress`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14412,7 +14504,7 @@ func (ec *executionContext) _Query_GetDefaultDeliveryAddress(ctx context.Context
 	return ec.marshalNDeliveryAddress2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐDeliveryAddress(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_GetDefaultDeliveryAddress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_GetDefaultDeliveryAddress(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -14451,17 +14543,6 @@ func (ec *executionContext) fieldContext_Query_GetDefaultDeliveryAddress(ctx con
 			}
 			return nil, fmt.Errorf("no field named %q was found under type DeliveryAddress", field.Name)
 		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_GetDefaultDeliveryAddress_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
 	}
 	return fc, nil
 }
@@ -14562,8 +14643,35 @@ func (ec *executionContext) _Query_ListDeliveryAddress(ctx context.Context, fiel
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().ListDeliveryAddress(rctx, fc.Args["authID"].(string))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().ListDeliveryAddress(rctx)
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			roles, err := ec.unmarshalNAuthRole2ᚕgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐAuthRoleᚄ(ctx, []any{"CUSTOMER"})
+			if err != nil {
+				var zeroVal *ListDeliveryAddressOutput
+				return zeroVal, err
+			}
+			if ec.directives.RequireAuthRole == nil {
+				var zeroVal *ListDeliveryAddressOutput
+				return zeroVal, errors.New("directive requireAuthRole is not implemented")
+			}
+			return ec.directives.RequireAuthRole(ctx, nil, directive0, roles)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*ListDeliveryAddressOutput); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/yash91989201/superfast-delivery-api/gateways/graphql.ListDeliveryAddressOutput`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14580,7 +14688,7 @@ func (ec *executionContext) _Query_ListDeliveryAddress(ctx context.Context, fiel
 	return ec.marshalNListDeliveryAddressOutput2ᚖgithubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐListDeliveryAddressOutput(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_ListDeliveryAddress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_ListDeliveryAddress(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -14593,17 +14701,6 @@ func (ec *executionContext) fieldContext_Query_ListDeliveryAddress(ctx context.C
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ListDeliveryAddressOutput", field.Name)
 		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_ListDeliveryAddress_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
 	}
 	return fc, nil
 }
@@ -22720,33 +22817,6 @@ func (ec *executionContext) unmarshalInputGetItemVariantInput(ctx context.Contex
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputGetProfileInput(ctx context.Context, obj any) (GetProfileInput, error) {
-	var it GetProfileInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"auth_id"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "auth_id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_id"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AuthID = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputLatLngInput(ctx context.Context, obj any) (LatLngInput, error) {
 	var it LatLngInput
 	asMap := map[string]any{}
@@ -23000,40 +23070,6 @@ func (ec *executionContext) unmarshalInputUpdateAddonStockInput(ctx context.Cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateDefaultDeliveryAddressInput(ctx context.Context, obj any) (UpdateDefaultDeliveryAddressInput, error) {
-	var it UpdateDefaultDeliveryAddressInput
-	asMap := map[string]any{}
-	for k, v := range obj.(map[string]any) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"delivery_address_id", "auth_id"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "delivery_address_id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("delivery_address_id"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.DeliveryAddressID = data
-		case "auth_id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_id"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AuthID = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputUpdateDeliveryAddressInput(ctx context.Context, obj any) (UpdateDeliveryAddressInput, error) {
 	var it UpdateDeliveryAddressInput
 	asMap := map[string]any{}
@@ -23041,13 +23077,20 @@ func (ec *executionContext) unmarshalInputUpdateDeliveryAddressInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"receiver_name", "receiver_phone", "address_alias", "other_alias", "latitude", "longitude", "nearby_landmark", "delivery_instruction", "is_default", "auth_id"}
+	fieldsInOrder := [...]string{"id", "receiver_name", "receiver_phone", "address_alias", "other_alias", "latitude", "longitude", "nearby_landmark", "delivery_instruction", "is_default"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
 		case "receiver_name":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("receiver_name"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -23111,13 +23154,6 @@ func (ec *executionContext) unmarshalInputUpdateDeliveryAddressInput(ctx context
 				return it, err
 			}
 			it.IsDefault = data
-		case "auth_id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("auth_id"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AuthID = data
 		}
 	}
 
@@ -27981,11 +28017,6 @@ func (ec *executionContext) unmarshalNGetItemVariantInput2githubᚗcomᚋyash919
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNGetProfileInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐGetProfileInput(ctx context.Context, v any) (GetProfileInput, error) {
-	res, err := ec.unmarshalInputGetProfileInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v any) (string, error) {
 	res, err := graphql.UnmarshalID(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -28901,11 +28932,6 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 
 func (ec *executionContext) unmarshalNUpdateAddonStockInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateAddonStockInput(ctx context.Context, v any) (UpdateAddonStockInput, error) {
 	res, err := ec.unmarshalInputUpdateAddonStockInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpdateDefaultDeliveryAddressInput2githubᚗcomᚋyash91989201ᚋsuperfastᚑdeliveryᚑapiᚋgatewaysᚋgraphqlᚐUpdateDefaultDeliveryAddressInput(ctx context.Context, v any) (UpdateDefaultDeliveryAddressInput, error) {
-	res, err := ec.unmarshalInputUpdateDefaultDeliveryAddressInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

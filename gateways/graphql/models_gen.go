@@ -232,10 +232,6 @@ type GetItemVariantInput struct {
 	VariantID string `json:"variant_id"`
 }
 
-type GetProfileInput struct {
-	AuthID string `json:"auth_id"`
-}
-
 type ItemAddon struct {
 	ID          string  `json:"id"`
 	AddonName   string  `json:"addon_name"`
@@ -510,12 +506,8 @@ type UpdateAddonStockInput struct {
 	RestockQty int32  `json:"restock_qty"`
 }
 
-type UpdateDefaultDeliveryAddressInput struct {
-	DeliveryAddressID string `json:"delivery_address_id"`
-	AuthID            string `json:"auth_id"`
-}
-
 type UpdateDeliveryAddressInput struct {
+	ID                  string        `json:"id"`
 	ReceiverName        *string       `json:"receiver_name,omitempty"`
 	ReceiverPhone       *string       `json:"receiver_phone,omitempty"`
 	AddressAlias        *AddressAlias `json:"address_alias,omitempty"`
@@ -525,7 +517,6 @@ type UpdateDeliveryAddressInput struct {
 	NearbyLandmark      *string       `json:"nearby_landmark,omitempty"`
 	DeliveryInstruction *string       `json:"delivery_instruction,omitempty"`
 	IsDefault           bool          `json:"is_default"`
-	AuthID              string        `json:"auth_id"`
 }
 
 type UpdateItemAddonInput struct {
