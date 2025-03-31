@@ -173,7 +173,7 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 				ctx,
 				&types.CreateAuth{
 					Email:         nil,
-					EmailVerified: true,
+					EmailVerified: false,
 					Phone:         &pv.Phone,
 					AuthRole:      types.ToAuthRole(req.AuthRole),
 				})

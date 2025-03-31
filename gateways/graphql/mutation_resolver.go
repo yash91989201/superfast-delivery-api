@@ -54,7 +54,41 @@ func (r *mutationResolver) SignInWithEmail(ctx context.Context, in SignInWithEma
 }
 
 func (r *mutationResolver) SignInWithPhone(ctx context.Context, in SignInWithPhoneInput) (*SignInOutput, error) {
-	return nil, nil
+	signInRes, err := r.server.AuthenticationClient.SignInWithPhone(
+		ctx,
+		&pb.SignInWithPhoneReq{
+			Phone:    in.Phone,
+			AuthRole: ToPbAuthRole(in.AuthRole),
+			Otp:      in.Otp,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if signInRes.Auth == nil {
+		return &SignInOutput{VerifyOtp: true}, nil
+	}
+
+	profile, err := r.server.UserClient.GetProfile(ctx, &pb.GetProfileReq{AuthId: signInRes.Auth.Id})
+	res := &SignInOutput{
+		Auth:      ToGQAuth(signInRes.Auth),
+		Session:   ToGQSession(signInRes.Session),
+		VerifyOtp: false,
+	}
+
+	if err != nil {
+		res.CreateProfile = true
+		return res, nil
+	}
+
+	res.Profile = ToGQProfile(profile)
+
+	if err = setSessionCookies(ctx, signInRes.Session.AccessToken, signInRes.Session.RefreshToken); err != nil {
+		return &SignInOutput{}, err
+	}
+
+	return res, nil
 }
 
 func (r *mutationResolver) SignInWithGoogle(ctx context.Context, in SignInWithGoogleInput) (*SignInOutput, error) {
