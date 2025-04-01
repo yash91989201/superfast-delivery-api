@@ -17,7 +17,7 @@ const (
 	GET_EMAIL_VERIFICATION    = "SELECT * FROM email_verification WHERE email = ?"
 	GET_PHONE_VERIFICATION    = "SELECT * FROM phone_verification WHERE phone = ?"
 	DELETE_EMAIL_VERIFICATION = "DELETE FROM email_verification WHERE email = ?"
-	DELETE_PHONE_VERIFICATION = "DELETE FROM email_verification WHERE phone = ?"
+	DELETE_PHONE_VERIFICATION = "DELETE FROM phone_verification WHERE phone = ?"
 
 	CREATE_SESSION = "INSERT INTO session " +
 		"(id, auth_id, refresh_token, is_revoked, expires_at)" +

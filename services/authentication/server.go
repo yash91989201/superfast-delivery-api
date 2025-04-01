@@ -52,7 +52,10 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 			return nil, fmt.Errorf("Otp incorrect, try again")
 		}
 
-		_ = s.service.DeleteEmailVerification(ctx, ev.Email)
+		err = s.service.DeleteEmailVerification(ctx, ev.Email)
+		if err != nil {
+			return nil, fmt.Errorf("Verification failed, try again :%w", err)
+		}
 
 		// user has now verified themselves using otp
 		// Get auth, if not found then create
@@ -126,7 +129,10 @@ func (s *grpcServer) SignInWithEmail(ctx context.Context, req *pb.SignInWithEmai
 	}
 
 	if isTokenExpired(ev.ExpiresAt) {
-		_ = s.service.DeleteEmailVerification(ctx, ev.Email)
+		err = s.service.DeleteEmailVerification(ctx, ev.Email)
+		if err != nil {
+			return nil, fmt.Errorf("Verification failed, try again :%w", err)
+		}
 
 		err := s.service.CreateEmailVerification(
 			ctx,
@@ -155,15 +161,18 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 			return nil, fmt.Errorf("Verification failed, try again: %w", err)
 		}
 
-		if isTokenExpired(pv.ExpiresAt) {
-			return nil, fmt.Errorf("Otp expired, try again")
-		}
-
 		if !isTokenValid(req.Otp, pv.Token) {
 			return nil, fmt.Errorf("Otp incorrect, try again")
 		}
 
-		_ = s.service.DeletePhoneVerification(ctx, pv.Phone)
+		if isTokenExpired(pv.ExpiresAt) {
+			return nil, fmt.Errorf("Otp expired, try again")
+		}
+
+		err = s.service.DeletePhoneVerification(ctx, pv.Phone)
+		if err != nil {
+			return nil, fmt.Errorf("Verification failed, try again :%w", err)
+		}
 
 		// Get auth, if not found then create
 		var auth *types.Auth
@@ -236,7 +245,10 @@ func (s *grpcServer) SignInWithPhone(ctx context.Context, req *pb.SignInWithPhon
 	}
 
 	if isTokenExpired(pv.ExpiresAt) {
-		_ = s.service.DeletePhoneVerification(ctx, pv.Phone)
+		err = s.service.DeletePhoneVerification(ctx, pv.Phone)
+		if err != nil {
+			return nil, fmt.Errorf("Verification failed, try again :%w", err)
+		}
 
 		err := s.service.CreatePhoneVerification(
 			ctx,
