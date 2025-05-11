@@ -35,7 +35,7 @@ type mysqlRepository struct {
 func NewMysqlRepository(dbUrl string) (Repository, error) {
 	db, err := sqlx.Open("mysql", dbUrl)
 	if err != nil {
-		return nil, fmt.Errorf("Database connection failed: %w", err)
+		return nil, fmt.Errorf("database connection failed: %w", err)
 	}
 
 	return &mysqlRepository{
@@ -50,11 +50,11 @@ func (r *mysqlRepository) Close() error {
 func (r *mysqlRepository) CreateProfile(ctx context.Context, p *types.Profile) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_PROFILE, p)
 	if err != nil {
-		return fmt.Errorf("Failed to create profile: %w", err)
+		return fmt.Errorf("failed to create profile: %w", err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to create profile, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to create profile, 0 rows affected: %w", err)
 	}
 
 	return nil
@@ -63,7 +63,7 @@ func (r *mysqlRepository) CreateProfile(ctx context.Context, p *types.Profile) e
 func (r *mysqlRepository) GetProfileById(ctx context.Context, id string) (*types.Profile, error) {
 	p := &types.Profile{}
 	if err := r.db.GetContext(ctx, p, queries.GET_PROFILE_BY_ID, id); err != nil {
-		return nil, fmt.Errorf("Profile not found: %w", err)
+		return nil, fmt.Errorf("profile not found: %w", err)
 	}
 
 	return p, nil
@@ -72,7 +72,7 @@ func (r *mysqlRepository) GetProfileById(ctx context.Context, id string) (*types
 func (r *mysqlRepository) GetProfileByAuthId(ctx context.Context, authID string) (*types.Profile, error) {
 	p := &types.Profile{}
 	if err := r.db.GetContext(ctx, p, queries.GET_PROFILE_BY_AUTH_ID, authID); err != nil {
-		return nil, fmt.Errorf("Profile not found: %w", err)
+		return nil, fmt.Errorf("profile not found: %w", err)
 	}
 
 	return p, nil
@@ -81,10 +81,10 @@ func (r *mysqlRepository) GetProfileByAuthId(ctx context.Context, authID string)
 func (r *mysqlRepository) UpdateProfile(ctx context.Context, p *types.Profile) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.UPDATE_PROFILE, p)
 	if err != nil {
-		return fmt.Errorf("Failed to update profile id %s : %w", p.ID, err)
+		return fmt.Errorf("failed to update profile id %s : %w", p.ID, err)
 	}
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to update profile, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to update profile, 0 rows affected: %w", err)
 	}
 
 	return nil
@@ -93,11 +93,11 @@ func (r *mysqlRepository) UpdateProfile(ctx context.Context, p *types.Profile) e
 func (r *mysqlRepository) DeleteProfile(ctx context.Context, id string) error {
 	queryRes, err := r.db.ExecContext(ctx, queries.DELETE_PROFILE, id)
 	if err != nil {
-		return fmt.Errorf("Failed to delete profile id %s : %w", id, err)
+		return fmt.Errorf("failed to delete profile id %s : %w", id, err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to delete profile, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to delete profile, 0 rows affected: %w", err)
 	}
 
 	return nil
@@ -106,11 +106,11 @@ func (r *mysqlRepository) DeleteProfile(ctx context.Context, id string) error {
 func (r *mysqlRepository) CreateDeliveryAddress(ctx context.Context, d *types.DeliveryAddress) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_DELIVERY_ADDRESS, d)
 	if err != nil {
-		return fmt.Errorf("Failed to create delivery address: %w", err)
+		return fmt.Errorf("failed to create delivery address: %w", err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to create profile, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to create profile, 0 rows affected: %w", err)
 	}
 
 	return nil
@@ -119,11 +119,11 @@ func (r *mysqlRepository) CreateDeliveryAddress(ctx context.Context, d *types.De
 func (r *mysqlRepository) DeleteDeliveryAddress(ctx context.Context, id string) error {
 	queryRes, err := r.db.ExecContext(ctx, queries.DELETE_DELIVERY_ADDRESS, id)
 	if err != nil {
-		return fmt.Errorf("Failed to delete delivery address: %w", err)
+		return fmt.Errorf("failed to delete delivery address: %w", err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to delete delivery address, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to delete delivery address, 0 rows affected: %w", err)
 	}
 
 	return nil
@@ -134,16 +134,15 @@ func (r *mysqlRepository) GetDeliveryAddressById(ctx context.Context, id string)
 	err := r.db.GetContext(ctx, &d, queries.GET_DELIVERY_ADDRESS_BY_ID, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("Failed to get delivery address, no rows found")
+			return nil, fmt.Errorf("failed to get delivery address, no rows found")
 		}
 
-		return nil, fmt.Errorf("Failed to get delivery address by id: %w", err)
+		return nil, fmt.Errorf("failed to get delivery address by id: %w", err)
 	}
 	return &d, nil
 }
 
 func (r *mysqlRepository) GetDefaultDeliveryAddress(ctx context.Context, authID string) (*types.DeliveryAddress, error) {
-
 	var d types.DeliveryAddress
 	err := r.db.GetContext(ctx, &d, queries.GET_DEFAULT_DELIVERY_ADDRESS, authID)
 	if err != nil {
@@ -161,7 +160,7 @@ func (r *mysqlRepository) GetDeliveryAddresses(ctx context.Context, authID strin
 	var addresses []*types.DeliveryAddress
 	err := r.db.SelectContext(ctx, &addresses, queries.GET_DELIVERY_ADDRESSES_BY_AUTH_ID, authID)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to get delivery addresses: %w", err)
+		return nil, fmt.Errorf("failed to get delivery addresses: %w", err)
 	}
 	return addresses, nil
 }
@@ -169,7 +168,7 @@ func (r *mysqlRepository) GetDeliveryAddresses(ctx context.Context, authID strin
 func (r *mysqlRepository) UpdateDeliveryAddress(ctx context.Context, d *types.DeliveryAddress) error {
 	_, err := r.db.NamedExecContext(ctx, queries.UPDATE_DELIVERY_ADDRESS, d)
 	if err != nil {
-		return fmt.Errorf("Failed to update delivery address: %w", err)
+		return fmt.Errorf("failed to update delivery address: %w", err)
 	}
 	return nil
 }

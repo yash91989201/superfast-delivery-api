@@ -42,8 +42,7 @@ type mysqlRepository struct {
 func NewMysqlRepository(dbUrl string) (Repository, error) {
 	db, err := sqlx.Open("mysql", dbUrl)
 	if err != nil {
-		return nil, fmt.Errorf("Database connection failed: %w", err)
-
+		return nil, fmt.Errorf("database connection failed: %w", err)
 	}
 
 	return &mysqlRepository{
@@ -62,11 +61,12 @@ func (r *mysqlRepository) CreateAuth(ctx context.Context, a *types.Auth) error {
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to insert product, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to insert product, 0 rows affected: %w", err)
 	}
 
 	return nil
 }
+
 func (r *mysqlRepository) GetAuthById(ctx context.Context, id string) (*types.Auth, error) {
 	auth := &types.Auth{}
 	if err := r.db.GetContext(ctx, auth, queries.GET_AUTH_BY_ID, id); err != nil {
@@ -75,6 +75,7 @@ func (r *mysqlRepository) GetAuthById(ctx context.Context, id string) (*types.Au
 
 	return auth, nil
 }
+
 func (r *mysqlRepository) GetAuthByEmail(ctx context.Context, email string) (*types.Auth, error) {
 	auth := &types.Auth{}
 	if err := r.db.GetContext(ctx, auth, queries.GET_AUTH_BY_EMAIL, email); err != nil {
@@ -101,7 +102,7 @@ func (r *mysqlRepository) DeleteAuth(ctx context.Context, id string) error {
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to delete auth with id %s, 0 rows affected : %w", id, err)
+		return fmt.Errorf("failed to delete auth with id %s, 0 rows affected : %w", id, err)
 	}
 
 	return nil
@@ -114,7 +115,7 @@ func (r *mysqlRepository) UpdateEmail(ctx context.Context, email string, id stri
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to update email, 0 rows affected :%w", err)
+		return fmt.Errorf("failed to update email, 0 rows affected :%w", err)
 	}
 
 	return nil
@@ -127,7 +128,7 @@ func (r *mysqlRepository) UpdatePhone(ctx context.Context, phone string, id stri
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to update phone, 0 rows affected :%w", err)
+		return fmt.Errorf("failed to update phone, 0 rows affected :%w", err)
 	}
 
 	return nil
@@ -136,11 +137,11 @@ func (r *mysqlRepository) UpdatePhone(ctx context.Context, phone string, id stri
 func (r *mysqlRepository) CreateEmailVerification(ctx context.Context, v *types.EmailVerification) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_EMAIL_VERIFICATION, v)
 	if err != nil {
-		return fmt.Errorf("Error creating email verification: %w", err)
+		return fmt.Errorf("error creating email verification: %w", err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to create email verification, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to create email verification, 0 rows affected: %w", err)
 	}
 
 	return nil
@@ -149,11 +150,11 @@ func (r *mysqlRepository) CreateEmailVerification(ctx context.Context, v *types.
 func (r *mysqlRepository) CreatePhoneVerification(ctx context.Context, v *types.PhoneVerification) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_PHONE_VERIFICATION, v)
 	if err != nil {
-		return fmt.Errorf("Error creating phone verification: %w", err)
+		return fmt.Errorf("error creating phone verification: %w", err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to create email verification, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to create email verification, 0 rows affected: %w", err)
 	}
 
 	return nil
@@ -162,7 +163,7 @@ func (r *mysqlRepository) CreatePhoneVerification(ctx context.Context, v *types.
 func (r *mysqlRepository) GetEmailVerification(ctx context.Context, email string) (*types.EmailVerification, error) {
 	ev := &types.EmailVerification{}
 	if err := r.db.GetContext(ctx, ev, queries.GET_EMAIL_VERIFICATION, email); err != nil {
-		return nil, fmt.Errorf("Error getting email verification")
+		return nil, fmt.Errorf("error getting email verification")
 	}
 
 	return ev, nil
@@ -171,7 +172,7 @@ func (r *mysqlRepository) GetEmailVerification(ctx context.Context, email string
 func (r *mysqlRepository) GetPhoneVerification(ctx context.Context, phone string) (*types.PhoneVerification, error) {
 	pv := &types.PhoneVerification{}
 	if err := r.db.GetContext(ctx, pv, queries.GET_PHONE_VERIFICATION, phone); err != nil {
-		return nil, fmt.Errorf("Error getting phone verification")
+		return nil, fmt.Errorf("error getting phone verification")
 	}
 
 	return pv, nil
@@ -180,11 +181,11 @@ func (r *mysqlRepository) GetPhoneVerification(ctx context.Context, phone string
 func (r *mysqlRepository) DeleteEmailVerification(ctx context.Context, email string) error {
 	queryRes, err := r.db.ExecContext(ctx, queries.DELETE_EMAIL_VERIFICATION, email)
 	if err != nil {
-		return fmt.Errorf("Failed to delete email verification with email %s: %w", email, err)
+		return fmt.Errorf("failed to delete email verification with email %s: %w", email, err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to delete email verification with email %s, 0 rows affected : %w", email, err)
+		return fmt.Errorf("failed to delete email verification with email %s, 0 rows affected : %w", email, err)
 	}
 
 	return nil
@@ -193,11 +194,11 @@ func (r *mysqlRepository) DeleteEmailVerification(ctx context.Context, email str
 func (r *mysqlRepository) DeletePhoneVerification(ctx context.Context, phone string) error {
 	queryRes, err := r.db.ExecContext(ctx, queries.DELETE_PHONE_VERIFICATION, phone)
 	if err != nil {
-		return fmt.Errorf("Failed to delete phone verification with phone %s: %w", phone, err)
+		return fmt.Errorf("failed to delete phone verification with phone %s: %w", phone, err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to delete phone verification with phone %s, 0 rows affected : %w", phone, err)
+		return fmt.Errorf("failed to delete phone verification with phone %s, 0 rows affected : %w", phone, err)
 	}
 
 	return nil
@@ -206,11 +207,11 @@ func (r *mysqlRepository) DeletePhoneVerification(ctx context.Context, phone str
 func (r *mysqlRepository) CreateSession(ctx context.Context, session *types.Session) error {
 	queryRes, err := r.db.NamedExecContext(ctx, queries.CREATE_SESSION, session)
 	if err != nil {
-		return fmt.Errorf("Failed to create session: %w", err)
+		return fmt.Errorf("failed to create session: %w", err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to create session, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to create session, 0 rows affected: %w", err)
 	}
 
 	return nil
@@ -219,7 +220,7 @@ func (r *mysqlRepository) CreateSession(ctx context.Context, session *types.Sess
 func (r *mysqlRepository) GetSession(ctx context.Context, refreshToken string) (*types.Session, error) {
 	s := &types.Session{}
 	if err := r.db.GetContext(ctx, s, queries.GET_SESSION, refreshToken); err != nil {
-		return nil, fmt.Errorf("Failed to get session: %w", err)
+		return nil, fmt.Errorf("failed to get session: %w", err)
 	}
 
 	return s, nil
@@ -228,7 +229,7 @@ func (r *mysqlRepository) GetSession(ctx context.Context, refreshToken string) (
 func (r *mysqlRepository) GetSessionById(ctx context.Context, id string) (*types.Session, error) {
 	s := &types.Session{}
 	if err := r.db.GetContext(ctx, s, queries.GET_SESSION_BY_ID, id); err != nil {
-		return nil, fmt.Errorf("Failed to get session: %w", err)
+		return nil, fmt.Errorf("failed to get session: %w", err)
 	}
 
 	return s, nil
@@ -237,7 +238,7 @@ func (r *mysqlRepository) GetSessionById(ctx context.Context, id string) (*types
 func (r *mysqlRepository) GetSessionByAuthId(ctx context.Context, authID string) (*types.Session, error) {
 	s := &types.Session{}
 	if err := r.db.GetContext(ctx, s, queries.GET_SESSION_BY_AUTH_ID, authID); err != nil {
-		return nil, fmt.Errorf("Failed to get session: %w", err)
+		return nil, fmt.Errorf("failed to get session: %w", err)
 	}
 
 	return s, nil
@@ -246,11 +247,11 @@ func (r *mysqlRepository) GetSessionByAuthId(ctx context.Context, authID string)
 func (r *mysqlRepository) RevokeSession(ctx context.Context, id string) error {
 	queryRes, err := r.db.ExecContext(ctx, queries.REVOKE_SESSION, id)
 	if err != nil {
-		return fmt.Errorf("Failed to create session: %w", err)
+		return fmt.Errorf("failed to create session: %w", err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to revoke session, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to revoke session, 0 rows affected: %w", err)
 	}
 
 	return nil
@@ -259,11 +260,11 @@ func (r *mysqlRepository) RevokeSession(ctx context.Context, id string) error {
 func (r *mysqlRepository) DeleteSession(ctx context.Context, id string) error {
 	queryRes, err := r.db.ExecContext(ctx, queries.DELETE_SESSION, id)
 	if err != nil {
-		return fmt.Errorf("Failed to delete session: %w", err)
+		return fmt.Errorf("failed to delete session: %w", err)
 	}
 
 	if rowsAffected, err := queryRes.RowsAffected(); rowsAffected == 0 || err != nil {
-		return fmt.Errorf("Failed to delete session, 0 rows affected: %w", err)
+		return fmt.Errorf("failed to delete session, 0 rows affected: %w", err)
 	}
 
 	return nil

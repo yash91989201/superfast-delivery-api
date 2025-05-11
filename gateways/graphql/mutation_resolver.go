@@ -144,7 +144,6 @@ func (r *mutationResolver) CreateProfile(ctx context.Context, in CreateProfileIn
 		Gender:      ToPbGenderPtr(in.Gender),
 		AuthId:      in.AuthID,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +161,6 @@ func (r *mutationResolver) UpdateProfile(ctx context.Context, in UpdateProfileIn
 		Gender:      ToPbGenderPtr(in.Gender),
 		AuthId:      in.AuthID,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -181,7 +179,6 @@ func (r *mutationResolver) CreateDeliveryAddress(ctx context.Context, in CreateD
 		Longitude: in.Longitude,
 		AddressId: newDeliveryAddress.Id,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -203,7 +200,6 @@ func (r *mutationResolver) UpdateDefaultDeliveryAddress(ctx context.Context, del
 		DeliveryAddressId: deliveryAddressID,
 		AuthId:            auth.ID,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +213,6 @@ func (r *mutationResolver) DeleteDeliveryAddress(ctx context.Context, addressId 
 	_, err := r.server.UserClient.DeleteDeliveryAddress(ctx, &pb.DeleteDeliveryAddressReq{
 		Id: addressId,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -528,7 +523,6 @@ func (r *mutationResolver) DeleteMenuItemVariant(ctx context.Context, in DeleteI
 		ItemId:    in.ItemID,
 		VariantId: in.VariantID,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -541,7 +535,6 @@ func (r *mutationResolver) DeleteMenuItemAddon(ctx context.Context, in DeleteIte
 		ItemId:  in.ItemID,
 		AddonId: in.AddonID,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -574,7 +567,6 @@ func (r *mutationResolver) DeleteRetailItemVariant(ctx context.Context, in Delet
 		ItemId:    in.ItemID,
 		VariantId: in.VariantID,
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -741,5 +733,4 @@ func deleteSessionCookies(ctx context.Context) {
 		Secure:   true,
 		SameSite: http.SameSiteStrictMode,
 	})
-
 }
